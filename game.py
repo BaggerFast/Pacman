@@ -32,9 +32,21 @@ class Game:
         if Game.exit_button_pressed(event) or Game.exit_hotkey_pressed(event):
             self.exit_game()
 
+    def resize_scenes(self):
+        for scene in self.scenes:
+            scene.on_window_resize()
+
+    def process_resize_event(self, event):
+        if event.type != pygame.VIDEORESIZE:
+            return
+        self.SIZE = self.WIDTH, self.HEIGHT = event.w, event.h
+        self.screen = pygame.display.set_mode(self.SIZE, pygame.RESIZABLE)
+        self.resize_scenes()
+
     def process_all_events(self):
         for event in pygame.event.get():
             self.process_exit_events(event)
+            self.process_resize_event(event)
             self.scenes[self.current_scene_index].process_event(event)
 
     def process_all_logic(self):

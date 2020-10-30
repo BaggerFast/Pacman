@@ -18,4 +18,8 @@ class MenuScene(BaseScene):
         self.objects = [self.button_start, self.button_exit]
 
     def start_game(self):
-        self.game.set_scene(self.game.MAIN_SCENE_INDEX)
+        self.game.set_scene(self.game.GAMEOVER_SCENE_INDEX)
+
+    def on_window_resize(self):
+        self.button_start.move(self.game.WIDTH // 2 - 100, self.game.HEIGHT // 2 - 20 - 25)
+        self.button_exit.move(self.game.WIDTH // 2 - 100, self.game.HEIGHT // 2 + 25)

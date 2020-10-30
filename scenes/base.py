@@ -11,6 +11,9 @@ class BaseScene:
     def on_activate(self):
         pass
 
+    def on_window_resize(self):
+        pass
+
     def process_event(self, event):
         for item in self.objects:
             item.process_event(event)

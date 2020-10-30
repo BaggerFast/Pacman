@@ -7,7 +7,7 @@ from scenes.base import BaseScene
 
 class FinalScene(BaseScene):
     TEXT_FMT = 'Game over ({})'
-    seconds_to_end = 3
+    seconds_to_end = 1500
 
     def __init__(self, game):
         self.last_seconds_passed = 0
@@ -39,3 +39,6 @@ class FinalScene(BaseScene):
             self.objects[0].update_text(self.get_gameover_text_formatted())
         if seconds_passed >= self.seconds_to_end:
             self.game.set_scene(self.game.MENU_SCENE_INDEX)
+
+    def on_window_resize(self):
+        self.text.move_center(x=self.game.WIDTH // 2, y=self.game.HEIGHT // 2)
