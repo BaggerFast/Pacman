@@ -7,7 +7,7 @@ from objects.image import Image
 class BallObject(Image):
     filename = 'images/basketball.png'
     image = pygame.image.load(filename)
-    max_speed = 2
+    MAX_SPEED = 2
 
     def __init__(self, game, x=0, y=0, speed=None):
         super().__init__(game)
@@ -15,8 +15,8 @@ class BallObject(Image):
         self.rect.y = y
         self.radius = self.rect.width // 2
         self.speed = speed if speed else [
-            get_nonzero_random_value(BallObject.max_speed),
-            get_nonzero_random_value(BallObject.max_speed)
+            get_nonzero_random_value(BallObject.MAX_SPEED),
+            get_nonzero_random_value(BallObject.MAX_SPEED)
         ]
 
     def collides_with(self, other):
@@ -26,10 +26,10 @@ class BallObject(Image):
         self.speed, other.speed = other.speed, self.speed
 
     def vertical_edge_collision(self):
-        return self.rect.right >= self.game.width or self.rect.left <= 0
+        return self.rect.right >= self.game.WIDTH or self.rect.left <= 0
 
     def horisontal_edge_collision(self):
-        return self.rect.bottom >= self.game.height or self.rect.top <= 0
+        return self.rect.bottom >= self.game.HEIGHT or self.rect.top <= 0
 
     def edge_collision(self):
         return self.horisontal_edge_collision() or self.vertical_edge_collision()
@@ -47,4 +47,3 @@ class BallObject(Image):
     def process_logic(self):
         self.check_borders()
         self.step()
-

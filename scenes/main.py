@@ -28,7 +28,7 @@ class MainScene(BaseScene):
                 self.game.set_scene(self.game.MENU_SCENE_INDEX)
 
     def get_random_position(self, radius):
-        return randint(10, self.game.width - radius*2 - 10), randint(10, self.game.height - radius*2 - 10)
+        return randint(10, self.game.WIDTH - radius * 2 - 10), randint(10, self.game.HEIGHT - radius * 2 - 10)
 
     def set_random_position(self, ball):
         pos = self.get_random_position(ball.radius)
@@ -36,7 +36,7 @@ class MainScene(BaseScene):
 
     def reset_balls_position(self):
         for ball in self.balls:
-            ball.move(self.game.width, self.game.height)
+            ball.move(self.game.WIDTH, self.game.HEIGHT)
 
     def set_random_unique_position(self):
         for index in range(len(self.balls)):

@@ -27,7 +27,7 @@ class FinalScene(BaseScene):
         self.text = Text(
             self.game,
             text=self.get_gameover_text_formatted(), color=Color.RED,
-            x=self.game.width // 2, y=self.game.height // 2
+            x=self.game.WIDTH // 2, y=self.game.HEIGHT // 2
         )
         self.objects.append(self.text)
 
