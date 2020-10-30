@@ -1,28 +1,41 @@
+from datetime import datetime
+
 from constants import Color
 from objects.text import Text
-from scenes.base import Scene
+from scenes.base import BaseScene
 
 
-class FinalScene(Scene):
-    MAX_TICKS = 300
-    GAMEOVER_FMT = 'Game over ({})'
+class FinalScene(BaseScene):
+    TEXT_FMT = 'Game over ({})'
+    seconds_to_end = 3
 
     def __init__(self, game):
-        self.seconds_left = self.MAX_TICKS // 100
+        self.last_seconds_passed = 0
         super().__init__(game)
+        self.update_start_time()
 
-    def get_gameover_str(self):
-        return self.GAMEOVER_FMT.format(self.seconds_left)
+    def on_activate(self):
+        self.update_start_time()
+
+    def update_start_time(self):
+        self.time_start = datetime.now()
+
+    def get_gameover_text_formatted(self):
+        return self.TEXT_FMT.format(self.seconds_to_end - self.last_seconds_passed)
 
     def create_objects(self):
-        self.text_gameover = Text(self.game, text=self.get_gameover_str(), color=Color.RED, x=310, y=290)
-        self.objects = [self.text_gameover]
+        self.text = Text(
+            self.game,
+            text=self.get_gameover_text_formatted(), color=Color.RED,
+            x=self.game.WIDTH // 2, y=self.game.HEIGHT // 2
+        )
+        self.objects.append(self.text)
 
     def additional_logic(self):
-        self.game.ticks += 1
-        seconds_left = self.MAX_TICKS // 100 - self.game.ticks // 100
-        if seconds_left < self.seconds_left:  # Оптимизация производительности:
-            self.seconds_left = seconds_left  # вызываем font.render только тогда,
-            self.text_gameover.update_text(self.get_gameover_str())  # когда текст изменился
-        if self.seconds_left == 0:
-            self.game.game_over = True
+        time_current = datetime.now()
+        seconds_passed = (time_current - self.time_start).seconds
+        if self.last_seconds_passed != seconds_passed:
+            self.last_seconds_passed = seconds_passed
+            self.objects[0].update_text(self.get_gameover_text_formatted())
+        if seconds_passed >= self.seconds_to_end:
+            self.game.set_scene(self.game.MENU_SCENE_INDEX)
