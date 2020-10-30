@@ -25,7 +25,7 @@ class MainScene(BaseScene):
     def process_event(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
-                self.game.set_scene(self.game.MENU_SCENE_INDEX)
+                self.game.set_scene(self.game.PAUSE_SCENE_INDEX)
 
     def get_random_position(self, radius):
         return randint(10, self.game.WIDTH - radius * 2 - 10), randint(10, self.game.HEIGHT - radius * 2 - 10)

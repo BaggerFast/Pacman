@@ -4,6 +4,7 @@ from constants import Color
 from scenes.final import FinalScene
 from scenes.main import MainScene
 from scenes.menu import MenuScene
+from scenes.pause import PauseScene
 
 
 class Game:
@@ -11,11 +12,12 @@ class Game:
     MENU_SCENE_INDEX = 0
     MAIN_SCENE_INDEX = 1
     GAMEOVER_SCENE_INDEX = 2
+    PAUSE_SCENE_INDEX = 3
     current_scene_index = MENU_SCENE_INDEX
 
     def __init__(self):
         self.screen = pygame.display.set_mode(self.SIZE, pygame.RESIZABLE)
-        self.scenes = [MenuScene(self), MainScene(self), FinalScene(self)]
+        self.scenes = [MenuScene(self), MainScene(self), FinalScene(self), PauseScene(self)]
         self.game_over = False
 
     @staticmethod

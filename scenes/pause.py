@@ -1,0 +1,19 @@
+import pygame
+
+from constants import Color
+from objects.text import Text
+from scenes.base import BaseScene
+
+
+class PauseScene(BaseScene):
+    def create_objects(self):
+        self.text = Text(
+            game=self.game,
+            text='Game paused', color=Color.RED,
+            x=self.game.WIDTH // 2, y=self.game.HEIGHT // 2
+        )
+        self.objects.append(self.text)
+
+    def additional_event_check(self, event):
+        if event.type == pygame.KEYDOWN:
+            self.game.set_scene(self.game.MAIN_SCENE_INDEX, resume=True)
