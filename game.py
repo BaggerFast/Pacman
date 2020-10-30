@@ -47,3 +47,7 @@ class Game:
         self.scenes[self.current_scene].on_deactivate()
         self.current_scene = index
         self.scenes[self.current_scene].on_activate()
+
+    def exit_game(self):
+        print('Bye bye')
+        self.game_over = True

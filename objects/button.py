@@ -9,7 +9,7 @@ class ButtonObject(DrawableObject):
     BUTTON_STYLE = {
         "hover_color": Color.BLUE,
         "clicked_color": Color.GREEN,
-        "font_color": Color.RED,
+        "font_color": Color.WHITE,
         "clicked_font_color": Color.BLACK,
         "hover_font_color": Color.ORANGE,
     }
