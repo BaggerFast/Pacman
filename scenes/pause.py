@@ -17,3 +17,6 @@ class PauseScene(BaseScene):
     def additional_event_check(self, event):
         if event.type == pygame.KEYDOWN:
             self.game.set_scene(self.game.MAIN_SCENE_INDEX, resume=True)
+
+    def on_window_resize(self):
+        self.text.move_center(x=self.game.WIDTH // 2, y=self.game.HEIGHT // 2)

@@ -7,7 +7,7 @@ from scenes.base import BaseScene
 
 class FinalScene(BaseScene):
     TEXT_FMT = 'Game over ({})'
-    seconds_to_end = 1500
+    seconds_to_end = 3
 
     def __init__(self, game):
         self.last_seconds_passed = 0

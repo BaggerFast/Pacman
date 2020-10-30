@@ -12,16 +12,17 @@ class Text(DrawableObject):
         self.is_bold = is_bold
         self.is_italic = is_italic
         self.color = color
-        self.x = x
-        self.y = y
         self.font = pygame.font.SysFont(self.font_name, self.font_size, self.is_bold, self.is_italic)
+        self.rect = pygame.rect.Rect(x, y, 10, 10)
         self.update_text(text)
 
     def update_text(self, text):
         self.text = text
         self.surface = self.font.render(self.text, True, self.color)
+        x = self.rect.centerx
+        y = self.rect.centery
         self.rect = self.surface.get_rect()
-        self.move_center(self.x, self.y)
+        self.move_center(x, y)
 
     def process_draw(self):
         self.game.screen.blit(self.surface, self.rect)
