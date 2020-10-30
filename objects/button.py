@@ -1,9 +1,9 @@
 from third_party.button import Button
 from constants import Color
-from objects.base import DrawObject
+from objects.base import DrawableObject
 
 
-class Btn(DrawObject):
+class Btn(DrawableObject):
     BUTTON_STYLE = {
         "hover_color": Color.BLUE,
         "font_color": Color.RED,

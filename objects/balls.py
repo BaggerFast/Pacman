@@ -1,10 +1,10 @@
 import pygame
 from random import randint
 
-from objects.base import DrawObject
+from objects.base import DrawableObject
 
 
-class Ball(DrawObject):
+class Ball(DrawableObject):
     filename = 'images/basketball.png'
 
     def __init__(self, game, x=100, y=100):

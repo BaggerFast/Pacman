@@ -1,9 +1,9 @@
 import pygame
 
-from objects.base import DrawObject
+from objects.base import DrawableObject
 
 
-class Text(DrawObject):
+class Text(DrawableObject):
     def __init__(self, game, font_name='Comic Sans', font_size=35, is_bold=True, is_italic=False, text='Define me!',
                  color=(255, 255, 255), x=100, y=100):
         super().__init__(game)
