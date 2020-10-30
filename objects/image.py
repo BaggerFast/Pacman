@@ -3,7 +3,7 @@ import pygame
 from objects.base import DrawableObject
 
 
-class ImageObject(DrawableObject):
+class Image(DrawableObject):
     filename = 'images/basketball.png'
 
     def __init__(self, game, filename=None, x=None, y=None):
