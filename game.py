@@ -1,10 +1,7 @@
 import pygame
 
 from constants import Color
-from scenes.final import FinalScene
-from scenes.main import MainScene
-from scenes.menu import MenuScene
-from scenes.pause import PauseScene
+from scenes import MainScene, MenuScene, FinalScene, PauseScene
 
 
 class Game:

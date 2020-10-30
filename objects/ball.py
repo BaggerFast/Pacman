@@ -2,10 +2,10 @@ from __future__ import annotations
 import pygame
 
 from misc import get_nonzero_random_value
-from objects.image import Image
+from objects.image import ImageObject
 
 
-class BallObject(Image):
+class BallObject(ImageObject):
     filename = 'images/basketball.png'
     image = pygame.image.load(filename)
     MAX_SPEED = 2

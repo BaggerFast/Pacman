@@ -4,9 +4,8 @@ from typing import Tuple
 import pygame
 
 from constants import Color
-from objects.ball import BallObject
-from objects.text import Text
-from scenes.base import BaseScene
+from objects import BallObject, TextObject
+from scenes import BaseScene
 
 
 class MainScene(BaseScene):
@@ -16,7 +15,7 @@ class MainScene(BaseScene):
     def create_objects(self) -> None:
         self.balls = [BallObject(self.game) for _ in range(MainScene.BALLS_COUNT)]
         self.collision_count = 0
-        self.status_text = Text(self.game, text=self.get_collisions_text(), color=Color.RED, x=0, y=0)
+        self.status_text = TextObject(self.game, text=self.get_collisions_text(), color=Color.RED, x=0, y=0)
         self.status_text.move(10, 10)
         self.objects += self.balls
         self.objects.append(self.status_text)

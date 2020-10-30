@@ -3,7 +3,7 @@ import pygame
 from objects.base import DrawableObject
 
 
-class Text(DrawableObject):
+class TextObject(DrawableObject):
     def __init__(self, game,
                  font_name: str = 'Comic Sans',
                  font_size: int = 35, is_bold: bool = True, is_italic: bool = False, text: str = 'Define me!',

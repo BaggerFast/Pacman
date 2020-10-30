@@ -1,6 +1,6 @@
 from constants import Color
-from objects.button import ButtonObject
-from scenes.base import BaseScene
+from objects import ButtonObject
+from scenes import BaseScene
 
 
 class MenuScene(BaseScene):

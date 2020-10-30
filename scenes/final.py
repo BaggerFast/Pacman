@@ -1,8 +1,8 @@
 from datetime import datetime
 
 from constants import Color
-from objects.text import Text
-from scenes.base import BaseScene
+from objects import TextObject
+from scenes import BaseScene
 
 
 class FinalScene(BaseScene):
@@ -24,7 +24,7 @@ class FinalScene(BaseScene):
         return self.TEXT_FMT.format(self.seconds_to_end - self.last_seconds_passed)
 
     def create_objects(self) -> None:
-        self.text = Text(
+        self.text = TextObject(
             self.game,
             text=self.get_gameover_text_formatted(), color=Color.RED,
             x=self.game.WIDTH // 2, y=self.game.HEIGHT // 2
