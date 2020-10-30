@@ -19,7 +19,9 @@ class Text(DrawableObject):
 
     def update_text(self, text):
         self.text = text
-        self.text_surface = self.font.render(self.text, True, self.color)
+        self.surface = self.font.render(self.text, True, self.color)
+        self.rect = self.surface.get_rect()
+        self.move_center(self.x, self.y)
 
     def process_draw(self):
-        self.game.screen.blit(self.text_surface, [self.x, self.y])
+        self.game.screen.blit(self.surface, self.rect)
