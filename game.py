@@ -1,6 +1,7 @@
 import sys
 import pygame
 
+from constants import Color
 from scenes.final import FinalScene
 from scenes.main import MainScene
 from scenes.menu import MenuScene
@@ -34,5 +35,15 @@ class Game:
                 if event.type == pygame.QUIT:
                     print('Пользователь нажал крестик')
                     self.game_over = True
-            self.scenes[self.current_scene].process_frame(eventlist)
+                self.scenes[self.current_scene].process_event(event)
+            self.scenes[self.current_scene].process_logic()
+            self.screen.fill(Color.BLACK)
+            self.scenes[self.current_scene].process_draw()
+            pygame.display.flip()
+            pygame.time.wait(10)
         sys.exit(0)
+
+    def set_scene(self, index):
+        self.scenes[self.current_scene].on_deactivate()
+        self.current_scene = index
+        self.scenes[self.current_scene].on_activate()

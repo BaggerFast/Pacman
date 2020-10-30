@@ -3,10 +3,10 @@ from random import randint
 from constants import Color
 from objects.ball import BallObject
 from objects.text import Text
-from scenes.base import Scene
+from scenes.base import BaseScene
 
 
-class MainScene(Scene):
+class MainScene(BaseScene):
     MAX_COLLISIONS = 15
     balls_count = 3
 
@@ -26,7 +26,7 @@ class MainScene(Scene):
             )
         )
         if self.game.wall_collision_count >= self.MAX_COLLISIONS:
-            self.set_next_scene(self.game.GAMEOVER_SCENE_INDEX)
+            self.game.set_scene(self.game.GAMEOVER_SCENE_INDEX)
 
     def process_ball_collisions(self):
         for i in range(len(self.balls) - 1):

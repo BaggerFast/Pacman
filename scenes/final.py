@@ -1,9 +1,9 @@
 from constants import Color
 from objects.text import Text
-from scenes.base import Scene
+from scenes.base import BaseScene
 
 
-class FinalScene(Scene):
+class FinalScene(BaseScene):
     MAX_TICKS = 300
     GAMEOVER_FMT = 'Game over ({})'
 
