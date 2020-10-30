@@ -1,32 +1,46 @@
+import pygame
+
 from third_party.button import Button
 from constants import Color
 from objects.base import DrawableObject
 
 
-class Btn(DrawableObject):
+class ButtonObject(DrawableObject):
     BUTTON_STYLE = {
         "hover_color": Color.BLUE,
-        "font_color": Color.RED,
         "clicked_color": Color.GREEN,
+        "font_color": Color.RED,
         "clicked_font_color": Color.BLACK,
-        "hover_font_color": Color.ORANGE
+        "hover_font_color": Color.ORANGE,
     }
 
-    def __init__(self, game, geometry=(10, 10, 100, 40), color=(255, 255, 0), text='Test', function=None):
+    def __init__(self, game, x, y, width, height, color=None, function=None, text='Define me!'):
         super().__init__(game)
-        self.geometry = geometry
-        self.color = color
-        self.function = function if function else Btn.no_action
-        self.internal_button = Button(self.geometry, self.color, self.function, **Btn.BUTTON_STYLE)
-        self.internal_button.text = text
-        self.internal_button.render_text()
+        self.color = color if color else Color.WHITE
+        self.function = function if function else ButtonObject.no_action
+        self.text = text
+        self.rect = pygame.rect.Rect(x, y, width, height)
+        self.button = Button(
+            rect=self.rect,
+            color=self.color,
+            function=self.function,
+            text=self.text,
+            **self.BUTTON_STYLE
+        )
 
     @staticmethod
     def no_action(self):
         pass
 
+    def set_text(self, text):
+        self.text = text
+        self.button.text = text
+        self.button.render_text()
+
     def process_event(self, event):
-        self.internal_button.check_event(event)
+        self.button.check_event(event)
 
     def process_draw(self):
-        self.internal_button.update(self.game.screen)
+        self.button.update(self.game.screen)
+
+
