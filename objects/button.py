@@ -1,3 +1,5 @@
+from typing import Callable
+
 import pygame
 
 from third_party.button import Button
@@ -14,7 +16,10 @@ class ButtonObject(DrawableObject):
         "hover_font_color": Color.ORANGE,
     }
 
-    def __init__(self, game, x, y, width, height, color=None, function=None, text='Define me!'):
+    def __init__(self, game,
+                 x: int, y: int, width: int, height: int, color: pygame.color.Color = None,
+                 function: Callable[[None], None] = None,
+                 text: str = 'Define me!') -> None:
         super().__init__(game)
         self.color = color if color else Color.WHITE
         self.function = function if function else ButtonObject.no_action
@@ -28,27 +33,25 @@ class ButtonObject(DrawableObject):
             **self.BUTTON_STYLE
         )
 
-    def move_center(self, x, y):
+    def move_center(self, x: int, y: int) -> None:
         super(ButtonObject, self).move_center(x, y)
         self.button.rect = self.rect
 
-    def move(self, x, y):
+    def move(self, x: int, y: int) -> None:
         super().move(x, y)
         self.button.rect = self.rect
 
     @staticmethod
-    def no_action(self):
+    def no_action(self) -> None:
         pass
 
-    def set_text(self, text):
+    def set_text(self, text) -> None:
         self.text = text
         self.button.text = text
         self.button.render_text()
 
-    def process_event(self, event):
+    def process_event(self, event) -> None:
         self.button.check_event(event)
 
-    def process_draw(self):
+    def process_draw(self) -> None:
         self.button.update(self.game.screen)
-
-

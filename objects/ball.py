@@ -1,3 +1,4 @@
+from __future__ import annotations
 import pygame
 
 from misc import get_nonzero_random_value
@@ -9,7 +10,7 @@ class BallObject(Image):
     image = pygame.image.load(filename)
     MAX_SPEED = 2
 
-    def __init__(self, game, x=0, y=0, speed=None):
+    def __init__(self, game, x: int = 0, y: int = 0, speed: int = None) -> None:
         super().__init__(game)
         self.rect.x = x
         self.rect.y = y
@@ -19,31 +20,31 @@ class BallObject(Image):
             get_nonzero_random_value(BallObject.MAX_SPEED)
         ]
 
-    def collides_with(self, other):
+    def collides_with(self, other: BallObject) -> bool:
         return pygame.sprite.collide_circle(self, other)
 
-    def bounce(self, other):
+    def bounce(self, other: BallObject) -> None:
         self.speed, other.speed = other.speed, self.speed
 
-    def vertical_edge_collision(self):
+    def vertical_edge_collision(self) -> bool:
         return self.rect.right >= self.game.WIDTH or self.rect.left <= 0
 
-    def horisontal_edge_collision(self):
+    def horisontal_edge_collision(self) -> bool:
         return self.rect.bottom >= self.game.HEIGHT or self.rect.top <= 0
 
-    def edge_collision(self):
+    def edge_collision(self) -> bool:
         return self.horisontal_edge_collision() or self.vertical_edge_collision()
 
-    def check_borders(self):
+    def check_borders(self) -> None:
         if self.vertical_edge_collision():
             self.speed[0] *= -1
         if self.horisontal_edge_collision():
             self.speed[1] *= -1
 
-    def step(self):
+    def step(self) -> None:
         self.rect.x += self.speed[0]
         self.rect.y += self.speed[1]
 
-    def process_logic(self):
+    def process_logic(self) -> None:
         self.check_borders()
         self.step()

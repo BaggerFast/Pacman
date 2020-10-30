@@ -15,7 +15,7 @@ class PauseScene(BaseScene):
         self.objects.append(self.text)
 
     def additional_event_check(self, event):
-        if event.type == pygame.KEYDOWN:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.game.set_scene(self.game.MAIN_SCENE_INDEX, resume=True)
 
     def on_window_resize(self):
