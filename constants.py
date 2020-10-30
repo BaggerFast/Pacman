@@ -11,3 +11,4 @@ class Color:
     BLACK = pygame.color.Color('black')
     WHITE = pygame.color.Color('white')
     ORANGE = pygame.color.Color('orange')
+    YELLOW = pygame.color.Color('yellow')

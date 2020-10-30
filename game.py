@@ -2,6 +2,7 @@ import pygame
 
 from constants import Color
 from scenes import MainScene, MenuScene, FinalScene, PauseScene
+from scenes.overlay import OverlayScene
 
 
 class Game:
@@ -11,10 +12,13 @@ class Game:
     GAMEOVER_SCENE_INDEX = 2
     PAUSE_SCENE_INDEX = 3
     current_scene_index = MENU_SCENE_INDEX
+    USE_FPS_OVERLAY = False
 
     def __init__(self) -> None:
         self.screen = pygame.display.set_mode(self.SIZE, pygame.RESIZABLE)
         self.scenes = [MenuScene(self), MainScene(self), FinalScene(self), PauseScene(self)]
+        if self.USE_FPS_OVERLAY:
+            self.overlay = OverlayScene(self)
         self.game_over = False
 
     @staticmethod
@@ -32,6 +36,8 @@ class Game:
     def resize_scenes(self) -> None:
         for scene in self.scenes:
             scene.on_window_resize()
+        if self.USE_FPS_OVERLAY:
+            self.overlay.on_window_resize()
 
     def process_resize_event(self, event: pygame.event.Event) -> None:
         if event.type != pygame.VIDEORESIZE:
@@ -45,13 +51,19 @@ class Game:
             self.process_exit_events(event)
             self.process_resize_event(event)
             self.scenes[self.current_scene_index].process_event(event)
+            if self.USE_FPS_OVERLAY:
+                self.overlay.process_event(event)
 
     def process_all_logic(self) -> None:
         self.scenes[self.current_scene_index].process_logic()
+        if self.USE_FPS_OVERLAY:
+            self.overlay.process_logic()
 
     def process_all_draw(self) -> None:
         self.screen.fill(Color.BLACK)
         self.scenes[self.current_scene_index].process_draw()
+        if self.USE_FPS_OVERLAY:
+            self.overlay.process_draw()
         pygame.display.flip()
 
     def main_loop(self) -> None:
