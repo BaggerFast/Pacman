@@ -1,7 +1,14 @@
+import pygame
+
+
+# https://www.pygame.org/docs/ref/color.html
+# https://github.com/pygame/pygame/blob/master/src_py/colordict.py
+
 class Color:
-    RED = (255, 0, 0)
-    BLUE = (0, 0, 255)
-    GREEN = (0, 255, 0)
-    BLACK = (0, 0, 0)
-    WHITE = (255, 255, 255)
-    ORANGE = (255, 180, 0)
+    RED = pygame.color.Color('red')
+    BLUE = pygame.color.Color('blue')
+    GREEN = pygame.color.Color('green')
+    BLACK = pygame.color.Color('black')
+    WHITE = pygame.color.Color('white')
+    ORANGE = pygame.color.Color('orange')
+    YELLOW = pygame.color.Color('yellow')

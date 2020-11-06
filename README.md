@@ -14,11 +14,11 @@ DEFINE ME
 4. Открыть терминал в PyCharm
 5. **Проверить, что виртуальное окружение активировано**.
 6. Обновить pip:
-```bash
-pip install --upgrade pip
-```
+    ```bash
+    pip install --upgrade pip
+    ```
 7. Установить в виртуальное окружение необходимые пакеты: 
-```bash
-pip install -r requirements.txt
-```
+    ```bash
+    pip install -r requirements.txt
+    ```
 8. Создать конфигурацию запуска в PyCharm (файл `run.py`)
