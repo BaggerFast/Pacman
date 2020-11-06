@@ -1,4 +1,3 @@
-from __future__ import annotations
 import pygame
 
 from misc import get_nonzero_random_value
@@ -20,10 +19,10 @@ class BallObject(ImageObject):
             get_nonzero_random_value(BallObject.MAX_SPEED)
         ]
 
-    def collides_with(self, other: BallObject) -> bool:
+    def collides_with(self, other) -> bool:
         return pygame.sprite.collide_circle(self, other)
 
-    def bounce(self, other: BallObject) -> None:
+    def bounce(self, other) -> None:
         self.speed, other.speed = other.speed, self.speed
 
     def vertical_edge_collision(self) -> bool:
