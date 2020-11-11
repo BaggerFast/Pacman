@@ -15,7 +15,7 @@ class Game:
     USE_FPS_OVERLAY = False
 
     def __init__(self) -> None:
-        self.screen = pygame.display.set_mode(self.SIZE, pygame.RESIZABLE)
+        self.screen = pygame.display.set_mode(self.SIZE, flags=pygame.SCALED)
         self.scenes = [MenuScene(self), MainScene(self), FinalScene(self), PauseScene(self)]
         if self.USE_FPS_OVERLAY:
             self.overlay = OverlayScene(self)
