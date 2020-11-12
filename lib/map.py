@@ -9,7 +9,7 @@ def get_maps_list():
 
 
 def load_map(name):
-    return Map(name)
+    return Map(map_file=name)
 
 
 class Map:
@@ -18,7 +18,7 @@ class Map:
             with archive.open("map.json") as f:
                 loaded_map = json.load(f)
                 pass
-            self.surface = pygame.Surface((224, 264))
+            self.surface = pygame.Surface((224, 248))
             loaded_map["tiles"] = \
                 [pygame.image.load(archive.open("tiles/" + i)) for i in
                  loaded_map["tiles"]]
@@ -29,12 +29,13 @@ class Map:
             for y in range(len(loaded_map["map"])):
                 for x in range(len(loaded_map["map"][y])):
                     temp_surface = loaded_map["tiles"][loaded_map["map"][y][x][0]]
-                    temp_surface = pygame.transform.flip(temp_surface,
-                                                         loaded_map["map"][y][x][1]
-                                                         // 4, False)
-                    temp_surface = pygame.transform.rotate(temp_surface,
-                                                           loaded_map["map"][y][x][1]
-                                                           % 4 * -90)
+                    if len(loaded_map["map"][y][x])==2:
+                        temp_surface = pygame.transform.flip(temp_surface,
+                                                             loaded_map["map"][y][x][1]
+                                                             // 4, False)
+                        temp_surface = pygame.transform.rotate(temp_surface,
+                                                               loaded_map["map"][y][x][1]
+                                                               % 4 * -90)
                     self.surface.blit(temp_surface, (x * 8, y * 8)) # поверхность картинки карты
             self.collision_map = loaded_map["collision_map"]
             #  колизия 1 - вправо можно, 2 - вниз , 4 - влево, 8 - вверх
@@ -47,7 +48,7 @@ def map_test():
         print('  ' + i)
     map_name = input("\nВведите название карты: ")
     pygame.display.init()
-    pygame.display.set_mode((224, 264), flags=pygame.SCALED).blit(
+    pygame.display.set_mode((224, 248), flags=pygame.SCALED).blit(
         load_map(map_name).surface, (0, 0))
     pygame.display.flip()
     while not sum([i.type == pygame.QUIT for i in pygame.event.get()]):
