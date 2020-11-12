@@ -2,7 +2,7 @@ import pygame
 from lib.BasicObjects.button import Button
 from lib.BasicObjects.text import Text
 from scenes.base import BaseScene
-from constants import Color
+from py.constants import Color
 
 
 class PauseScene(BaseScene):
