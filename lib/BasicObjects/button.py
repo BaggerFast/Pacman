@@ -1,7 +1,6 @@
 import pygame as pg
 from lib.BasicObjects.text import Text
 
-
 class BaseButton:
     def __init__(self, screen, cord, function, base_image, clicked_image=None, hover_image=None):
         self.screen = screen
