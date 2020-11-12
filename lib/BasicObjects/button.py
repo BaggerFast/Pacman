@@ -3,7 +3,8 @@ from lib.BasicObjects.text import Text
 
 
 class BaseButton:
-    def __init__(self, screen, cord, function, base_image, clicked_image=None, hover_image=None):
+    def __init__(self, screen, cord, function, base_image, clicked_image=None,
+                 hover_image=None):
         self.screen = screen
         self.base_image = base_image
         self.rect = self.base_image.get_rect()
@@ -54,8 +55,10 @@ class BaseButton:
 
 
 class Button(BaseButton):
-    def __init__(self, screen, rect: pg.Rect, function, text, static_text_color, static_button_color, hover_text_color=None,
-                 hover_button_color=None,  clicked_text_color=None, clicked_button_color=None,
+    def __init__(self, screen, rect: pg.Rect, function, text, static_text_color,
+                 static_button_color, hover_text_color=None,
+                 hover_button_color=None,  clicked_text_color=None,
+                 clicked_button_color=None,
                  text_size=30, text_font='Arial'):
 
         if clicked_text_color is None:
@@ -68,11 +71,15 @@ class Button(BaseButton):
         base_image = self.drawImage(static_button_color, static_text_color, text, text_font, text_size, rect)
 
         if hover_button_color is not None:
-            hover_image = self.drawImage(hover_button_color, hover_text_color, text, text_font, text_size, rect)
+            hover_image = self.drawImage(hover_button_color, hover_text_color,
+                                         text, text_font, text_size, rect)
         if clicked_button_color is not None:
-            clicked_image = self.drawImage(clicked_button_color, clicked_text_color, text, text_font, text_size, rect)
+            clicked_image = self.drawImage(clicked_button_color,
+                                           clicked_text_color, text, text_font,
+                                        text_size, rect)
 
-        BaseButton.__init__(self, screen, (rect[0], rect[1]), function, base_image, clicked_image, hover_image)
+        BaseButton.__init__(self, screen, (rect[0], rect[1]), function,
+                            base_image, clicked_image, hover_image)
 
     def drawImage(self, color, text_color, text, text_font, text_size, rect):
         temp_surface = pg.Surface((rect[2], rect[3]))
@@ -82,7 +89,8 @@ class Button(BaseButton):
         pg.draw.rect(temp_surface, color, (0, 5, rect[2], rect[3] - 10))
 
         main_text = Text(text, color=text_color, font=text_font, size=text_size)
-        main_text.update_position(main_text.surface.get_rect(center=(rect[2] // 2, rect[3] // 2)))
+        main_text.update_position(main_text.surface.get_rect(
+            center=(rect[2] // 2, rect[3] // 2)))
         main_text.draw(temp_surface)
         return temp_surface
 

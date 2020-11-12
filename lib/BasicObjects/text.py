@@ -2,7 +2,8 @@ import pygame as pg
 
 
 class Text:
-    def __init__(self, text, size, rect=(0, 0), color=(255, 255, 255), font="Arial"):
+    def __init__(self, text, size, rect=(0, 0), color=(255, 255, 255),
+                 font="Arial"):
         pg.font.init()
         self.pos = rect
         self.text = text
