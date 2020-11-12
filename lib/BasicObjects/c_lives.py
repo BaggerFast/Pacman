@@ -4,14 +4,15 @@ from constants import *
 
 
 class Lives:
-    def __init__(self, screen, coord, size, lives=4):
+    def __init__(self, screen, coord, size, lives=4, font="Arial"):
         self.screen = screen
+        self.font = font
         self.x = coord[0]
         self.y = coord[1]
         self.size = size
         self.lives = lives
         self.text = Text(self.format_live_text(), self.size, [self.x, self.y],
-                         color=Color.WHITE)
+                         color=Color.WHITE, font=self.font)
 
     def format_live_text(self):  # Функция форматирования текста для вывода
         return f'Lives: {self.lives}'
