@@ -6,7 +6,7 @@ from py.constants import Color
 
 
 class PauseScene(BaseScene):
-    def create_objects(self) -> None:
+    def CreateObjects(self) -> None:
         self.screen_width = self.screen.get_width()
 
         # Создание и обработка текста
@@ -49,7 +49,7 @@ class PauseScene(BaseScene):
             (0, 0, 0), (64, 64, 64)
         )
 
-    def update_objects(self):
+    def UpdateObjects(self):
         self.main_text.draw(self.screen)
         self.continue_button.draw()
         self.continue_button.update()
@@ -58,7 +58,7 @@ class PauseScene(BaseScene):
         self.menu_button.draw()
         self.menu_button.update()
 
-    def event_update(self, event):
+    def EventUpdate(self, event):
         self.continue_button.checkEvents(event)
         self.restart_button.checkEvents(event)
         self.menu_button.checkEvents(event)
@@ -86,9 +86,9 @@ def test_pause():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-            pause.event_update(event)
+            pause.EventUpdate(event)
         screen.fill(Color.BLACK)
-        pause.update_objects()
+        pause.UpdateObjects()
         pygame.display.flip()
         pygame.time.wait(10)
 
