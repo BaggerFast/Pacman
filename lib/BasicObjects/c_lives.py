@@ -4,13 +4,14 @@ from py.constants import *
 
 
 class Lives:
-    def __init__(self, screen, coord, size, lives=4, font="Arial"):
+    def __init__(self, screen, coord, size, lives=1, max_lives=5, font="Arial"):
         self.screen = screen
         self.font = font
         self.x = coord[0]
         self.y = coord[1]
         self.size = size
         self.lives = lives
+        self.max_lives = max_lives
         self.text = Text(self.format_live_text(), self.size, [self.x, self.y],
                          color=Color.WHITE, font=self.font)
 
@@ -18,7 +19,8 @@ class Lives:
         return f'Lives: {self.lives}'
 
     def change_count_lives(self, number):  # Функция для изменеия количества жизней
-        self.lives += number
+        if self.max_lives >= self.lives + number >= 0:
+            self.lives += number
 
     def process_logic(self):  # Логика класса
         self.text.update_text(self.format_live_text())
@@ -45,8 +47,8 @@ def main():
                 elif event.key == pygame.K_a:
                     lives.change_count_lives(-1)
 
-        lives.process_draw()
         lives.process_logic()
+        lives.process_draw()
         pygame.display.flip()
 
 
