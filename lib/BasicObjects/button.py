@@ -23,7 +23,7 @@ class BaseButton:
     def getPos(self):
         pos = pg.mouse.get_pos()
         return self.rect[0] <= pos[0] <= self.rect[2] + self.rect[0] \
-               and self.rect[1] <= pos[1] <= self.rect[3] + self.rect[1]
+            and self.rect[1] <= pos[1] <= self.rect[3] + self.rect[1]
 
     def checkEvents(self, event):
         if event.type == pg.MOUSEBUTTONDOWN and self.getPos():
@@ -68,7 +68,8 @@ class Button(BaseButton):
 
         hover_image = clicked_image = None
 
-        base_image = self.drawImage(static_button_color, static_text_color, text, text_font, text_size, rect)
+        base_image = self.drawImage(static_button_color, static_text_color,
+                                    text, text_font, text_size, rect)
 
         if hover_button_color is not None:
             hover_image = self.drawImage(hover_button_color, hover_text_color,
@@ -76,7 +77,7 @@ class Button(BaseButton):
         if clicked_button_color is not None:
             clicked_image = self.drawImage(clicked_button_color,
                                            clicked_text_color, text, text_font,
-                                        text_size, rect)
+                                           text_size, rect)
 
         BaseButton.__init__(self, screen, (rect[0], rect[1]), function,
                             base_image, clicked_image, hover_image)
@@ -93,4 +94,3 @@ class Button(BaseButton):
             center=(rect[2] // 2, rect[3] // 2)))
         main_text.draw(temp_surface)
         return temp_surface
-
