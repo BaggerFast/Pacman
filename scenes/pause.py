@@ -86,10 +86,7 @@ class PauseScene(BaseScene):
         self.is_on = False
 
 
-# Тест работы меню паузы. Нужен только для разработчиков самого меню
-def test_pause():
-    pygame.init()
-    screen = pygame.display.set_mode([224, 285], pygame.SCALED)
+def launch_pause_menu(screen):
     pause = PauseScene(screen)
     while pause.isOn():
         for event in pygame.event.get():
@@ -100,6 +97,13 @@ def test_pause():
         pause.updateObjects()
         pygame.display.flip()
         pygame.time.wait(10)
+
+
+# Тест работы меню паузы. Нужен только для разработчиков самого меню
+def test_pause():
+    pygame.init()
+    screen = pygame.display.set_mode([224, 285], pygame.SCALED)
+    launch_pause_menu(screen)
 
 
 if __name__ == '__main__':
