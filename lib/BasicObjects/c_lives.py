@@ -1,6 +1,6 @@
 import pygame
 from lib.BasicObjects.text import Text
-from constants import *
+from py.constants import *
 
 
 class Lives:
