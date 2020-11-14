@@ -25,6 +25,7 @@ class Pacman(Character):
             if keys[pg.K_s]:
                 self.set_dir("down")
 
+
 def main():
     pg.init()
     screen_size = width, height = 800, 600

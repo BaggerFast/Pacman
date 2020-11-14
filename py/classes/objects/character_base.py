@@ -1,5 +1,6 @@
 from scenes.base import BaseScene as Scene
 import pygame as pg
+from lib.BasicObjects.health import Health
 
 
 class Character:
@@ -13,11 +14,15 @@ class Character:
 
     def __init__(self, scene: Scene, image: pg.Surface, start_pos: tuple):
         self.scene = scene
+        self.hp = Health()
         self.image = pg.transform.scale(image, (45, 45))
         self.rect = self.image.get_rect()
         self.shift_x = self.shift_y = 0
         self.change_pos(*start_pos)
         self.speed = 3
+
+    def change_life(self, points):
+        self.hp.change_count_lives(points)
 
     def change_pos(self, x, y):
         self.rect.x = x
