@@ -14,40 +14,40 @@ class PauseScene(BaseScene):
         self.main_text = Text('PAUSE', 40, (self.screen_width // 2, 100),
                               Color.WHITE)
         self.text_width = self.main_text.surface.get_width()
-        self.main_text = Text('PAUSE', 40,
-                              (self.screen_width // 2 - (self.text_width // 2),
-                               10), Color.WHITE)
+
+        self.main_text.update_position(self.main_text.surface.get_rect(
+            center=(self.screen_width // 2, 35)))
 
         # Создание и обработка кнопок
         self.continue_button = Button(
             self.screen, pygame.Rect(self.screen_width // 2, 200, 180, 60),
-            self.continue_game, 'CONTINUE', (128, 128, 128),
-            (64, 64, 64), (255, 255, 255), (64, 64, 64),
-            (0, 0, 0), (64, 64, 64)
+            self.continue_game, 'CONTINUE', Color.GRAY,
+            Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
+            Color.BLACK, Color.DARK_GRAY
         )
         self.continue_button = Button(
             self.screen, pygame.Rect(
                 self.screen_width // 2 - self.continue_button.rect.w // 2,
                 75, 180, 45),
-            self.continue_game, 'CONTINUE', (128, 128, 128),
-            (64, 64, 64), (255, 255, 255), (64, 64, 64),
-            (0, 0, 0), (64, 64, 64), 30
+            self.continue_game, 'CONTINUE', Color.GRAY,
+            Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
+            Color.BLACK, Color.DARK_GRAY
         )
         self.restart_button = Button(
             self.screen, pygame.Rect(
                 self.screen_width // 2 - self.continue_button.rect.w // 2,
                 138, 180, 45),
-            self.restart_game, 'RESTART', (128, 128, 128),
-            (64, 64, 64), (255, 255, 255), (64, 64, 64),
-            (0, 0, 0), (64, 64, 64), 30
+            self.restart_game, 'RESTART', Color.GRAY,
+            Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
+            Color.BLACK, Color.DARK_GRAY
         )
         self.menu_button = Button(
             self.screen, pygame.Rect(
                 self.screen_width // 2 - self.continue_button.rect.w // 2,
                 201, 180, 45),
-            self.main_menu, 'MAIN MENU', (128, 128, 128),
-            (64, 64, 64), (255, 255, 255), (64, 64, 64),
-            (0, 0, 0), (64, 64, 64), 30
+            self.main_menu, 'MAIN MENU', Color.GRAY,
+            Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
+            Color.BLACK, Color.DARK_GRAY
         )
 
     def updateObjects(self):
