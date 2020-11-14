@@ -1,4 +1,3 @@
-from lib.BasicObjects.text import Text
 from py.constants import *
 
 
