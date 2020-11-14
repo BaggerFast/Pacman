@@ -29,6 +29,7 @@ class Map:
         self.__load_tiles()
         self.__load_surface()
         self.__load()
+        self.__file_close()
 
     def __file_open(self):
         self.archive = zipfile.ZipFile("maps/" + self.map_name + ".map")
