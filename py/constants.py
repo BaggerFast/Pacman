@@ -12,3 +12,5 @@ class Color:
     WHITE = pygame.color.Color('white')
     ORANGE = pygame.color.Color('orange')
     YELLOW = pygame.color.Color('yellow')
+    TILE_SIZE = 8
+    CHARTER_SIZE = 16
