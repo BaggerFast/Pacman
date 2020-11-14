@@ -20,16 +20,16 @@ class RecordsScene(BaseScene):
             center=(self.screen_width // 2, 25)))
 
         # Создание и обработка рекордов
-        self.one_text = Text('1: ' + str(self.records[4]), 30,
-                             (25, 45), Color.GOLD)
+        self.one_text = Text(str(self.records[4]), 30,
+                             (60, 45), Color.GOLD)
         self.one_text_width = self.one_text.surface.get_width()
 
-        self.two_text = Text('2: ' + str(self.records[3]), 30,
-                             (25, 80), Color.SILVER)
+        self.two_text = Text(str(self.records[3]), 30,
+                             (60, 80), Color.SILVER)
         self.two_text_width = self.two_text.surface.get_width()
 
-        self.three_text = Text('3: ' + str(self.records[2]), 30,
-                               (25, 115), Color.BRONZE)
+        self.three_text = Text(str(self.records[2]), 30,
+                               (60, 115), Color.BRONZE)
         self.three_text_width = self.three_text.surface.get_width()
 
         self.four_text = Text('4: ' + str(self.records[1]), 30,
@@ -70,24 +70,24 @@ class RecordsScene(BaseScene):
 
     def updateObjects(self):
         self.main_text.draw(self.screen)
+        self.one_text.draw(self.screen)
         self.screen.blit(
             self.gold_medal,
-            (25 + self.one_text_width, 45)
+            (16, 45)
         )
 
-        self.one_text.draw(self.screen)
         if self.records[3] != 0:
             self.two_text.draw(self.screen)
             self.screen.blit(
                 self.silver_medal,
-                (25 + self.two_text_width, 80)
+                (16, 80)
             )
 
         if self.records[2] != 0:
             self.three_text.draw(self.screen)
             self.screen.blit(
                 self.bronze_medal,
-                (25 + self.three_text_width, 115)
+                (16, 115)
             )
 
         if self.records[1] != 0:
