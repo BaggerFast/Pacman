@@ -2,10 +2,18 @@ from scenes.base import BaseScene as Scene
 import pygame as pg
 from py.constants import *
 import sys
-from os import path
+import os
 
 
 class Character:
+    direction = {
+        "up": (0, -1),
+        "down": (0, 1),
+        "right": (1, 0),
+        "left": (-1, 0),
+        "none": (0, 0)
+    }
+
     def __init__(self, scene: Scene, image: pg.Surface, start_pos: tuple):
         self.scene = scene
         self.image = pg.transform.scale(image, (35, 35))
@@ -22,25 +30,23 @@ class Character:
         self.rect.x += self.shift_x * self.speed
         self.rect.y += self.shift_y * self.speed
 
+    def set_dir(self, dir="none"):
+        self.shift_x, self.shift_y = self.direction[dir]
+
     def check_event(self, event):
-        if event.type == pg.KEYDOWN:
-            if event.key == pg.K_d:
-                self.shift_x = 1
-            if event.key == pg.K_a:
-                self.shift_x = -1
-            if event.key == pg.K_w:
-                self.shift_y = -1
-            if event.key == pg.K_s:
-                self.shift_y = 1
-        if event.type == pg.KEYUP:
-            if event.key == pg.K_d:
-                self.shift_x = 0
-            if event.key == pg.K_a:
-                self.shift_x = 0
-            if event.key == pg.K_w:
-                self.shift_y = 0
-            if event.key == pg.K_s:
-                self.shift_y = 0
+        keys = pg.key.get_pressed()
+        check_sum = keys[pg.K_a] + keys[pg.K_d] + keys[pg.K_s] + keys[pg.K_w]
+        if check_sum > 1 or check_sum < 1:
+            self.set_dir()
+        else:
+            if keys[pg.K_a]:
+                self.set_dir("left")
+            if keys[pg.K_d]:
+                self.set_dir("right")
+            if keys[pg.K_w]:
+                self.set_dir("up")
+            if keys[pg.K_s]:
+                self.set_dir("down")
 
     def draw(self):
         self.scene.screen.blit(self.image, self.rect)
@@ -52,7 +58,8 @@ def main():
     screen = pg.display.set_mode(screen_size, pg.SCALED)
     exit = True
     char = Character(Scene(screen),
-                     pg.image.load(path.join('..', '..', '..', 'images', 'pacman.png')), (10, 10))
+                     pg.image.load(os.path.join("images", "pacman.png")),
+                     (10, 10))
 
     while exit:
         for event in pg.event.get():
