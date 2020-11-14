@@ -3,10 +3,22 @@ import pygame as pg
 
 
 class Character:
-    def __init__(self, image, scene: Scene, start_pos: tuple):
+    def __init__(self, scene: Scene, image: pg.Surface, start_pos: tuple):
         self.image = image
+        self.rect = self.image.get_rect()
+        self.shift_x = self.shift_y = 0
+        self.change_pos(*start_pos)
         self.scene = scene
-        self.rect_collision = pg.Rect(0, 0, 50, 50)
 
-    def update_pos(self, x, y):
-        pass
+    def change_pos(self, x, y):
+        self.rect.x = x
+        self.rect.y = y
+
+    def move(self):
+        self.rect.x += self.shift_x
+        self.rect.y += self.shift_y
+
+    def check_event(self, event):
+        if event.type == pg.KEYDOWN:
+            pass
+
