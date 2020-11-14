@@ -70,29 +70,40 @@ class RecordsScene(BaseScene):
 
     def updateObjects(self):
         self.main_text.draw(self.screen)
-        self.one_text.draw(self.screen)
-        self.two_text.draw(self.screen)
-        self.three_text.draw(self.screen)
-        self.four_text.draw(self.screen)
-        self.five_text.draw(self.screen)
-        self.back_button.draw()
-        self.back_button.update()
-
         self.screen.blit(
             self.gold_medal,
             (25 + self.one_text_width, 45)
         )
-        self.screen.blit(
-            self.silver_medal,
-            (25 + self.two_text_width, 80)
-        )
-        self.screen.blit(
-            self.bronze_medal,
-            (25 + self.three_text_width, 115)
-        )
+
+        self.one_text.draw(self.screen)
+        if self.records[3] != 0:
+            self.two_text.draw(self.screen)
+            self.screen.blit(
+                self.silver_medal,
+                (25 + self.two_text_width, 80)
+            )
+
+        if self.records[2] != 0:
+            self.three_text.draw(self.screen)
+            self.screen.blit(
+                self.bronze_medal,
+                (25 + self.three_text_width, 115)
+            )
+
+        if self.records[1] != 0:
+            self.four_text.draw(self.screen)
+
+        if self.records[0] != 0:
+            self.five_text.draw(self.screen)
+
+        self.back_button.draw()
+        self.back_button.update()
 
     def eventUpdate(self, event):
         self.back_button.checkEvents(event)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.back()
 
     def isOn(self):
         if self.is_on:

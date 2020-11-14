@@ -34,4 +34,3 @@ class HighScore:
             file.write(str(self.record_table[i]))
             file.write('\n')
         file.close()
-

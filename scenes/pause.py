@@ -63,6 +63,9 @@ class PauseScene(BaseScene):
         self.continue_button.checkEvents(event)
         self.restart_button.checkEvents(event)
         self.menu_button.checkEvents(event)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                self.continue_game()
 
     def isOn(self):
         if self.is_on:
