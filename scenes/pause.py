@@ -8,6 +8,7 @@ from py.constants import Color
 class PauseScene(BaseScene):
     def createObjects(self) -> None:
         self.is_on = True
+        self.check = None
         self.screen_width = self.screen.get_width()
 
         # Создание и обработка текста
@@ -85,7 +86,7 @@ class PauseScene(BaseScene):
         self.is_on = False
 
     def main_menu(self):
-        print('Заглушка MAIN MENU')
+        self.check = 'MAIN MENU'
         self.is_on = False
 
 
@@ -100,6 +101,9 @@ def launch_pause_menu(screen):
         pause.updateObjects()
         pygame.display.flip()
         pygame.time.wait(10)
+    if pause.check == 'MAIN MENU':
+        from scenes.main_menu import launch_main_menu
+        launch_main_menu(screen)
 
 
 # Тест работы меню паузы. Нужен только для разработчиков самого меню

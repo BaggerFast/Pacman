@@ -11,6 +11,7 @@ class RecordsScene(BaseScene):
     def createObjects(self) -> None:
         self.records = HighScore().record_table
         self.is_on = True
+        self.check = None
         self.screen_width = self.screen.get_width()
 
         # Создание и обработка текста
@@ -115,7 +116,7 @@ class RecordsScene(BaseScene):
         self.is_on = False
 
     def back(self):
-        print('Заглушка BACK')
+        self.check = 'BACK'
         self.is_on = False
 
 
@@ -130,6 +131,9 @@ def launch_records_menu(screen):
         records_menu.updateObjects()
         pygame.display.flip()
         pygame.time.wait(10)
+    if records_menu.check == 'BACK':
+        from scenes.main_menu import launch_main_menu
+        launch_main_menu(screen)
 
 
 # Тест работы меню рекордов. Нужен только для разработчиков самого меню
