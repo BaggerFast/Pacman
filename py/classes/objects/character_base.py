@@ -1,15 +1,17 @@
 from scenes.base import BaseScene as Scene
 import pygame as pg
 from py.constants import *
+import sys
+from os import path
 
 
 class Character:
     def __init__(self, scene: Scene, image: pg.Surface, start_pos: tuple):
-        self.image = image
+        self.scene = scene
+        self.image = pg.transform.scale(image, (35, 35))
         self.rect = self.image.get_rect()
         self.shift_x = self.shift_y = 0
         self.change_pos(*start_pos)
-        self.scene = scene
         self.speed = 2
 
     def change_pos(self, x, y):
@@ -48,17 +50,14 @@ def main():
     pg.init()
     screen_size = width, height = 800, 600
     screen = pg.display.set_mode(screen_size, pg.SCALED)
-
+    exit = True
     char = Character(Scene(screen),
-                     pg.image.load(
-                         "E:/MyCodes/Py/EduApp/pacman/py/classes/objects"
-                         "/intranet.png"),
-                     (10, 10))
+                     pg.image.load(path.join('..', '..', '..', 'images', 'pacman.png')), (10, 10))
 
-    while True:
+    while exit:
         for event in pg.event.get():
             if event.type == pg.QUIT:
-                exit()
+                exit = False
 
             char.check_event(event)
 
@@ -72,3 +71,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    sys.exit()
