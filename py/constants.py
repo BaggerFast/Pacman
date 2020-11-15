@@ -16,6 +16,7 @@ class Color:
     GOLD = (255, 215, 0)
     SILVER = (192, 192, 192)
     BRONZE = (205, 127, 50)
+    WOODEN = (101, 67, 33)
     GRAY = (128, 128, 128)
     DARK_GRAY = (64, 64, 64)
 

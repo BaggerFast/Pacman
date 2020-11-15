@@ -15,36 +15,33 @@ class RecordsScene(BaseScene):
         self.screen_width = self.screen.get_width()
 
         # Создание и обработка текста
-        self.main_text = Text('RECORDS', 30, color=Color.WHITE)
+        self.main_text = Text('RECORDS', 60, color=Color.WHITE)
         self.main_text_width = self.main_text.surface.get_width()
         self.main_text.update_position(self.main_text.surface.get_rect(
             center=(self.screen_width // 2, 25)))
 
         # Создание и обработка рекордов
-        self.one_text = Text(str(self.records[4]), 30,
-                             (60, 45), Color.GOLD)
-        self.one_text_width = self.one_text.surface.get_width()
+        self.one_text = Text(str(self.records[4]), 50,
+                             (55, 40), Color.GOLD)
 
-        self.two_text = Text(str(self.records[3]), 30,
-                             (60, 80), Color.SILVER)
-        self.two_text_width = self.two_text.surface.get_width()
+        self.two_text = Text(str(self.records[3]), 50,
+                             (55, 75), Color.SILVER)
 
-        self.three_text = Text(str(self.records[2]), 30,
-                               (60, 115), Color.BRONZE)
-        self.three_text_width = self.three_text.surface.get_width()
+        self.three_text = Text(str(self.records[2]), 50,
+                               (55, 110), Color.BRONZE)
 
-        self.four_text = Text('4: ' + str(self.records[1]), 30,
-                              (25, 150), Color.WHITE)
+        self.four_text = Text(str(self.records[1]), 50,
+                              (55, 145), Color.GRAY)
 
-        self.five_text = Text('5: ' + str(self.records[0]), 30,
-                              (25, 185), Color.WHITE)
+        self.five_text = Text(str(self.records[0]), 50,
+                              (55, 180), Color.WOODEN)
 
         # Создание и обработка кнопок
         self.back_button = Button(
             self.screen, pygame.Rect(self.screen_width // 2, 200, 120, 60),
             self.back, 'BACK', Color.GRAY,
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
-            Color.BLACK, Color.DARK_GRAY
+            Color.BLACK, Color.DARK_GRAY, 50
         )
 
         self.back_button = Button(
@@ -53,21 +50,27 @@ class RecordsScene(BaseScene):
                 230, 120, 45),
             self.back, 'BACK', Color.GRAY,
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
-            Color.BLACK, Color.DARK_GRAY
+            Color.BLACK, Color.DARK_GRAY, 50
         )
 
         # Создание и обработка изображений
         self.gold_medal_path = join('images', 'golden_medal.png')
         self.silver_medal_path = join('images', 'silver_medal.png')
         self.bronze_medal_path = join('images', 'bronze_medal.png')
+        self.stone_medal_path = join('images', 'stone_medal.png')
+        self.wooden_medal_path = join('images', 'wooden_medal.png')
 
         self.gold_medal = pygame.image.load(self.gold_medal_path)
         self.silver_medal = pygame.image.load(self.silver_medal_path)
         self.bronze_medal = pygame.image.load(self.bronze_medal_path)
+        self.stone_medal = pygame.image.load(self.stone_medal_path)
+        self.wooden_medal = pygame.image.load(self.wooden_medal_path)
 
         self.gold_medal = pygame.transform.scale(self.gold_medal, (35, 35))
         self.silver_medal = pygame.transform.scale(self.silver_medal, (35, 35))
         self.bronze_medal = pygame.transform.scale(self.bronze_medal, (35, 35))
+        self.stone_medal = pygame.transform.scale(self.stone_medal, (35, 35))
+        self.wooden_medal = pygame.transform.scale(self.wooden_medal, (35, 35))
 
     def updateObjects(self):
         self.main_text.draw(self.screen)
@@ -93,9 +96,17 @@ class RecordsScene(BaseScene):
 
         if self.records[1] != 0:
             self.four_text.draw(self.screen)
+            self.screen.blit(
+                self.stone_medal,
+                (16, 150)
+            )
 
         if self.records[0] != 0:
             self.five_text.draw(self.screen)
+            self.screen.blit(
+                self.wooden_medal,
+                (16, 185)
+            )
 
         self.back_button.draw()
         self.back_button.update()

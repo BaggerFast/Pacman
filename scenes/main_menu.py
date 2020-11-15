@@ -12,10 +12,10 @@ class MainMenuScene(BaseScene):
         self.screen_width = self.screen.get_width()
 
         # Создание и обработка текста
-        self.main_text = Text('Pacman', 40, (self.screen_width // 2, 100),
+        self.main_text = Text('Pacman', 60, (self.screen_width // 2, 100),
                               Color.WHITE)
         self.text_width = self.main_text.surface.get_width()
-        self.main_text = Text('Pacman', 40,
+        self.main_text = Text('Pacman', 60,
                               (self.screen_width // 2 - (self.text_width // 2),
                                10), Color.WHITE)
 
@@ -24,7 +24,7 @@ class MainMenuScene(BaseScene):
             self.screen, pygame.Rect(self.screen_width // 2, 200, 180, 60),
             self.play_game, 'PLAY', Color.GRAY,
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
-            Color.BLACK, Color.DARK_GRAY
+            Color.BLACK, Color.DARK_GRAY, 50
         )
         self.play_button = Button(
             self.screen, pygame.Rect(
@@ -32,7 +32,7 @@ class MainMenuScene(BaseScene):
                 75, 180, 45),
             self.play_game, 'PLAY', Color.GRAY,
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
-            Color.BLACK, Color.DARK_GRAY
+            Color.BLACK, Color.DARK_GRAY, 50
         )
         self.records_button = Button(
             self.screen, pygame.Rect(
@@ -40,7 +40,7 @@ class MainMenuScene(BaseScene):
                 138, 180, 45),
             self.records_game, 'RECORDS', Color.GRAY,
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
-            Color.BLACK, Color.DARK_GRAY
+            Color.BLACK, Color.DARK_GRAY, 50
         )
         self.exit_button = Button(
             self.screen, pygame.Rect(
@@ -48,7 +48,7 @@ class MainMenuScene(BaseScene):
                 201, 180, 45),
             self.exit_game, 'EXIT', Color.GRAY,
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
-            Color.BLACK, Color.DARK_GRAY
+            Color.BLACK, Color.DARK_GRAY, 50
         )
 
     def updateObjects(self):

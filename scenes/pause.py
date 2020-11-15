@@ -12,7 +12,7 @@ class PauseScene(BaseScene):
         self.screen_width = self.screen.get_width()
 
         # Создание и обработка текста
-        self.main_text = Text('PAUSE', 40, (self.screen_width // 2, 100),
+        self.main_text = Text('PAUSE', 60, (self.screen_width // 2, 100),
                               Color.WHITE)
         self.text_width = self.main_text.surface.get_width()
 
@@ -24,7 +24,7 @@ class PauseScene(BaseScene):
             self.screen, pygame.Rect(self.screen_width // 2, 200, 180, 60),
             self.continue_game, 'CONTINUE', Color.GRAY,
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
-            Color.BLACK, Color.DARK_GRAY
+            Color.BLACK, Color.DARK_GRAY, 50
         )
         self.continue_button = Button(
             self.screen, pygame.Rect(
@@ -32,7 +32,7 @@ class PauseScene(BaseScene):
                 75, 180, 45),
             self.continue_game, 'CONTINUE', Color.GRAY,
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
-            Color.BLACK, Color.DARK_GRAY
+            Color.BLACK, Color.DARK_GRAY, 50
         )
         self.restart_button = Button(
             self.screen, pygame.Rect(
@@ -40,7 +40,7 @@ class PauseScene(BaseScene):
                 138, 180, 45),
             self.restart_game, 'RESTART', Color.GRAY,
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
-            Color.BLACK, Color.DARK_GRAY
+            Color.BLACK, Color.DARK_GRAY, 50
         )
         self.menu_button = Button(
             self.screen, pygame.Rect(
@@ -48,7 +48,7 @@ class PauseScene(BaseScene):
                 201, 180, 45),
             self.main_menu, 'MAIN MENU', Color.GRAY,
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
-            Color.BLACK, Color.DARK_GRAY
+            Color.BLACK, Color.DARK_GRAY, 50
         )
 
     def updateObjects(self):
