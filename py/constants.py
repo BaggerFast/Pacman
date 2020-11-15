@@ -1,4 +1,5 @@
 import pygame
+import os.path
 
 
 # https://www.pygame.org/docs/ref/color.html
@@ -12,3 +13,7 @@ class Color:
     WHITE = pygame.color.Color('white')
     ORANGE = pygame.color.Color('orange')
     YELLOW = pygame.color.Color('yellow')
+
+
+class Font:
+    FONT0 = os.path.join('fonts', 'font0.ttf')
