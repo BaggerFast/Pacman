@@ -1,9 +1,8 @@
 import os.path
-from py.constants import ROOT_DIR
 
 
 class HighScore:
-    def __init__(self, file_name=os.path.join(ROOT_DIR, 'saves',
+    def __init__(self, file_name=os.path.join('saves',
                                               'records.txt'), record_count=5):
         self.file_name = file_name
         self.records_count = record_count

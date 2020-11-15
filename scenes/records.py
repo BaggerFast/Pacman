@@ -2,7 +2,7 @@ import pygame
 from lib.BasicObjects.button import Button
 from lib.BasicObjects.text import Text
 from scenes.base import BaseScene
-from py.constants import Color, ROOT_DIR
+from py.constants import Color
 from os.path import join
 from lib.BasicObjects.highscores import HighScore
 
@@ -57,9 +57,9 @@ class RecordsScene(BaseScene):
         )
 
         # Создание и обработка изображений
-        self.gold_medal_path = join(ROOT_DIR, 'images', 'golden_medal.png')
-        self.silver_medal_path = join(ROOT_DIR, 'images', 'silver_medal.png')
-        self.bronze_medal_path = join(ROOT_DIR, 'images', 'bronze_medal.png')
+        self.gold_medal_path = join('images', 'golden_medal.png')
+        self.silver_medal_path = join('images', 'silver_medal.png')
+        self.bronze_medal_path = join('images', 'bronze_medal.png')
 
         self.gold_medal = pygame.image.load(self.gold_medal_path)
         self.silver_medal = pygame.image.load(self.silver_medal_path)
