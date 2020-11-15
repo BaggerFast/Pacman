@@ -20,9 +20,4 @@ class Color:
     DARK_GRAY = (64, 64, 64)
 
 
-ROOT_DIR = os.path.dirname(os.path.abspath(
-    os.path.join('..', '.gitignore')
-))
-
-
 
