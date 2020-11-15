@@ -1,9 +1,9 @@
 import pygame
 import os.path
 
+
 # https://www.pygame.org/docs/ref/color.html
 # https://github.com/pygame/pygame/blob/master/src_py/colordict.py
-
 
 class Color:
     RED = pygame.color.Color('red')
@@ -20,4 +20,5 @@ class Color:
     DARK_GRAY = (64, 64, 64)
 
 
-
+class Font:
+    FONT0 = os.path.join('fonts', 'font0.ttf')

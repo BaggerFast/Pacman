@@ -1,5 +1,6 @@
 import pygame as pg
 from lib.BasicObjects.text import Text
+import os.path
 
 
 class BaseButton:
@@ -59,7 +60,7 @@ class Button(BaseButton):
                  static_button_color, hover_text_color=None,
                  hover_button_color=None,  clicked_text_color=None,
                  clicked_button_color=None,
-                 text_size=30, text_font='Arial'):
+                 text_size=30, text_font=os.path.join('fonts', 'font0.ttf')):
 
         if clicked_text_color is None:
             clicked_text_color = static_text_color
@@ -94,3 +95,4 @@ class Button(BaseButton):
             center=(rect[2] // 2, rect[3] // 2)))
         main_text.draw(temp_surface)
         return temp_surface
+
