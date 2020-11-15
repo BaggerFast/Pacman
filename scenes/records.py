@@ -20,6 +20,11 @@ class RecordsScene(BaseScene):
         self.main_text.update_position(self.main_text.surface.get_rect(
             center=(self.screen_width // 2, 25)))
 
+        self.error_text = Text('NO RECORDS', 60, color=Color.RED)
+        self.error_text_width = self.error_text.surface.get_width()
+        self.error_text.update_position(self.error_text.surface.get_rect(
+            center=(self.screen_width // 2, 70)))
+
         # Создание и обработка рекордов
         self.one_text = Text(str(self.records[4]), 50,
                              (55, 40), Color.GOLD)
@@ -74,11 +79,14 @@ class RecordsScene(BaseScene):
 
     def updateObjects(self):
         self.main_text.draw(self.screen)
-        self.one_text.draw(self.screen)
-        self.screen.blit(
-            self.gold_medal,
-            (16, 45)
-        )
+        if self.records[4] != 0:
+            self.one_text.draw(self.screen)
+            self.screen.blit(
+                self.gold_medal,
+                (16, 45)
+            )
+        else:
+            self.error_text.draw(self.screen)
 
         if self.records[3] != 0:
             self.two_text.draw(self.screen)
