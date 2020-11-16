@@ -11,11 +11,7 @@ def get_maps_list():
 
 
 def load_map(name="original"):
-    map = Map(map_file=name)
-    return {"map_name": name, "surface": map.surface,
-            "player_pos": map.player_pos, "ghost_pos": map.ghost_pos,
-            "collision": map.collision, "dots": map.dots,
-            "big_dots": map.big_dots, "fruit_pos": map.fruit_pos}
+    return Map(map_file=name)
 
 
 class Map:
@@ -86,7 +82,7 @@ class Map:
         del self.__json
 
 
-'''def map_test():
+def map_test():
     print("\nMap list")
     for i in get_maps_list():
         print('  ' + i)
@@ -130,4 +126,4 @@ class Map:
 
 
 if __name__ == "__main__":
-    map_test()'''
+    map_test()
