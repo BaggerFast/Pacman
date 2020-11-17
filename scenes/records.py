@@ -1,5 +1,5 @@
 import pygame
-from lib.BasicObjects.button import Button
+from lib.BasicObjects.button import Button, ButtonControl
 from lib.BasicObjects.text import Text
 from scenes.base import BaseScene
 from py.constants import Color
@@ -12,6 +12,7 @@ class RecordsScene(BaseScene):
         self.records = HighScore().record_table
         self.is_on = True
         self.check = None
+        self.current_button = -1
         self.screen_width = self.screen.get_width()
 
         # Создание и обработка текста
@@ -80,8 +81,12 @@ class RecordsScene(BaseScene):
         self.stone_medal = pygame.transform.scale(self.stone_medal, (35, 35))
         self.wooden_medal = pygame.transform.scale(self.wooden_medal, (35, 35))
 
+        self.buttons = []
+        self.buttons.append(self.back_button)
+
     def updateObjects(self):
         self.main_text.draw(self.screen)
+        self.control.mouse_action()
         if self.records[4] != 0:
             self.one_text.draw(self.screen)
             self.screen.blit(
@@ -120,13 +125,26 @@ class RecordsScene(BaseScene):
             )
 
         self.back_button.draw()
-        self.back_button.update()
 
     def eventUpdate(self, event):
         self.back_button.checkEvents(event)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.back()
+            if event.key == pygame.K_w or event.key == pygame.K_UP:
+                self.current_button -= 1
+                if self.current_button < 0:
+                    self.current_button = 0
+                self.control.set_current_button(self.current_button)
+            if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                self.current_button += 1
+                if self.current_button > 0:
+                    self.current_button = 0
+                self.control.set_current_button(self.current_button)
+            if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                self.buttons[self.current_button].onClick()
+
+        self.buttons[0].checkEvents(event)
 
     def isOn(self):
         if self.is_on:
@@ -144,6 +162,8 @@ class RecordsScene(BaseScene):
 
 def launch_records_menu(screen):
     records_menu = RecordsScene(screen)
+    control = ButtonControl(records_menu.buttons)
+    records_menu.control = control
     while records_menu.isOn():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

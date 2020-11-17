@@ -9,6 +9,7 @@ class PauseScene(BaseScene):
     def createObjects(self) -> None:
         self.is_on = True
         self.check = None
+        self.current_button = -1
         self.screen_width = self.screen.get_width()
 
         # Создание и обработка текста
@@ -61,16 +62,31 @@ class PauseScene(BaseScene):
         self.main_text.draw(self.screen)
         self.control.mouse_action()
         self.continue_button.draw()
-        self.continue_button.update()
         self.restart_button.draw()
-        self.restart_button.update()
         self.menu_button.draw()
-        self.menu_button.update()
 
     def eventUpdate(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.continue_game()
+            if event.key == pygame.K_w or event.key == pygame.K_UP:
+                self.control.unset_previous_button(self.current_button)
+                self.current_button -= 1
+                if self.current_button < 0:
+                    self.current_button = 2
+                self.control.set_current_button(self.current_button)
+            if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                self.control.unset_previous_button(self.current_button)
+                self.current_button += 1
+                if self.current_button > 2:
+                    self.current_button = 0
+                self.control.set_current_button(self.current_button)
+            if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                self.buttons[self.current_button].onClick()
+
+        self.buttons[0].checkEvents(event)
+        self.buttons[1].checkEvents(event)
+        self.buttons[2].checkEvents(event)
 
     def isOn(self):
         if self.is_on:

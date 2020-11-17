@@ -1,5 +1,5 @@
 import pygame
-from lib.BasicObjects.button import Button
+from lib.BasicObjects.button import Button, ButtonControl
 from lib.BasicObjects.text import Text
 from scenes.base import BaseScene
 from py.constants import Color
@@ -9,6 +9,7 @@ class MainMenuScene(BaseScene):
     def createObjects(self) -> None:
         self.is_on = True
         self.check = None
+        self.current_button = -1
         self.screen_width = self.screen.get_width()
 
         # Создание и обработка текста
@@ -50,20 +51,38 @@ class MainMenuScene(BaseScene):
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
             Color.BLACK, Color.DARK_GRAY, 50
         )
+        self.buttons = []
+        self.buttons.append(self.play_button)
+        self.buttons.append(self.records_button)
+        self.buttons.append(self.exit_button)
 
     def updateObjects(self):
         self.main_text.draw(self.screen)
+        self.control.mouse_action()
         self.play_button.draw()
-        self.play_button.update()
         self.records_button.draw()
-        self.records_button.update()
         self.exit_button.draw()
-        self.exit_button.update()
 
     def eventUpdate(self, event):
-        self.play_button.checkEvents(event)
-        self.records_button.checkEvents(event)
-        self.exit_button.checkEvents(event)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_w or event.key == pygame.K_UP:
+                self.control.unset_previous_button(self.current_button)
+                self.current_button -= 1
+                if self.current_button < 0:
+                    self.current_button = 2
+                self.control.set_current_button(self.current_button)
+            if event.key == pygame.K_s or event.key == pygame.K_DOWN:
+                self.control.unset_previous_button(self.current_button)
+                self.current_button += 1
+                if self.current_button > 2:
+                    self.current_button = 0
+                self.control.set_current_button(self.current_button)
+            if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
+                self.buttons[self.current_button].onClick()
+
+        self.buttons[0].checkEvents(event)
+        self.buttons[1].checkEvents(event)
+        self.buttons[2].checkEvents(event)
 
     def isOn(self):
         if self.is_on:
@@ -89,6 +108,8 @@ class MainMenuScene(BaseScene):
 
 def launch_main_menu(screen):
     main_menu = MainMenuScene(screen)
+    control = ButtonControl(main_menu.buttons)
+    main_menu.control = control
     while main_menu.isOn():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
