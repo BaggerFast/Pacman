@@ -1,8 +1,16 @@
-from scenes.main_menu import test_main_menu
+import sys
+
+import pygame
+
+from game import Game
 
 
 def main():
-    test_main_menu()
+    pygame.init()
+    pygame.font.init()
+    game = Game()
+    game.main_loop()
+    sys.exit(0)
 
 
 if __name__ == '__main__':
