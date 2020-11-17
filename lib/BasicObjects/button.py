@@ -102,7 +102,7 @@ class Button(BaseButton):
 class ButtonControl:
     def __init__(self, buttons: list):
         self.buttons = buttons
-        self.button_number = None
+        self.button_number = 0
 
     def set_current_button(self, number):
         self.current_button = self.buttons[number]

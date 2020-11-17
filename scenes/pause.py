@@ -59,13 +59,13 @@ class PauseScene(BaseScene):
 
     def updateObjects(self):
         self.main_text.draw(self.screen)
+        self.control.mouse_action()
         self.continue_button.draw()
         self.continue_button.update()
         self.restart_button.draw()
         self.restart_button.update()
         self.menu_button.draw()
         self.menu_button.update()
-        self.control.mouse_action()
 
     def eventUpdate(self, event):
         if event.type == pygame.KEYDOWN:
