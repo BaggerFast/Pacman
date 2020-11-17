@@ -3,7 +3,7 @@ class Health:
         self.lives = lives
         self.max_lives = max_lives
 
-    def change_count_lives(self, number):  # Функция для изменеия количества жизней
+    def change_count_lives(self, number):
         if self.max_lives >= self.lives + number >= 0:
             self.lives += number
         elif self.lives + number >= self.max_lives:
