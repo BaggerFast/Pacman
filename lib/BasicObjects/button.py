@@ -27,13 +27,13 @@ class BaseButton:
             and self.rect[1] <= pos[1] <= self.rect[3] + self.rect[1]
 
     def checkEvents(self):
-        event = pg.event.get()
-        if event.type == pg.MOUSEBUTTONDOWN and self.getPos():
-            self.click = 'click'
-        elif event.type == pg.MOUSEBUTTONUP:
-            self.click = 'initial'
-            if self.getPos():
-                self.onClick()
+        for event in pg.event.get():
+            if event.type == pg.MOUSEBUTTONDOWN and self.getPos():
+                self.click = 'click'
+            elif event.type == pg.MOUSEBUTTONUP:
+                self.click = 'initial'
+                if self.getPos():
+                    self.onClick()
 
     def update(self):
         if self.getPos() and self.click == 'initial':
@@ -105,13 +105,14 @@ class ButtonControl:
         self.button_number = None
 
     def set_current_button(self, number):
-        self.current_button.hover_state = False
+        self.current_button = self.buttons[number]
+        self.current_button.click = 'initial'
         self.button_number = number
         self.buttons[self.button_number].click = 'hover'
 
     def mouse_action(self):
         if sum(pg.mouse.get_rel()):
-            self.buttons[self.current_button].hover_state = False
+            self.buttons[self.button_number].click = 'initial'
             for i in range(len(self.buttons)):
                 self.buttons[i].update()
                 if self.buttons[i].click == 'hover':

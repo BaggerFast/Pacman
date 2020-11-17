@@ -1,5 +1,5 @@
 import pygame
-from lib.BasicObjects.button import Button
+from lib.BasicObjects.button import Button, ButtonControl
 from lib.BasicObjects.text import Text
 from scenes.base import BaseScene
 from py.constants import Color
@@ -51,6 +51,12 @@ class PauseScene(BaseScene):
             Color.BLACK, Color.DARK_GRAY, 50
         )
 
+        # Работа со списками
+        self.buttons = []
+        self.buttons.append(self.continue_button)
+        self.buttons.append(self.restart_button)
+        self.buttons.append(self.menu_button)
+
     def updateObjects(self):
         self.main_text.draw(self.screen)
         self.continue_button.draw()
@@ -59,11 +65,9 @@ class PauseScene(BaseScene):
         self.restart_button.update()
         self.menu_button.draw()
         self.menu_button.update()
+        self.control.mouse_action()
 
     def eventUpdate(self, event):
-        self.continue_button.checkEvents(event)
-        self.restart_button.checkEvents(event)
-        self.menu_button.checkEvents(event)
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.continue_game()
@@ -92,6 +96,8 @@ class PauseScene(BaseScene):
 
 def launch_pause_menu(screen):
     pause = PauseScene(screen)
+    control = ButtonControl(pause.buttons)
+    pause.control = control
     while pause.isOn():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

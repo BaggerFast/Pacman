@@ -2,8 +2,9 @@ import pygame
 
 
 class BaseScene:
-    def __init__(self, screen) -> None:
+    def __init__(self, screen, control=None) -> None:
         self.screen = screen
+        self.control = control
         self.objects = []
         self.createObjects()
 
