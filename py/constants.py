@@ -5,6 +5,7 @@ import os.path
 # https://www.pygame.org/docs/ref/color.html
 # https://github.com/pygame/pygame/blob/master/src_py/colordict.py
 
+
 class Color:
     RED = pygame.color.Color('red')
     BLUE = pygame.color.Color('blue')

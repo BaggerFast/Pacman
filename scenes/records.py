@@ -15,7 +15,7 @@ class RecordsScene(BaseScene):
         self.screen_width = self.screen.get_width()
 
         # Создание и обработка текста
-        self.main_text = Text('RECORDS', 60, color=Color.WHITE)
+        self.main_text = Text('RECORDS', 30, color=Color.WHITE)
         self.main_text_width = self.main_text.surface.get_width()
         self.main_text.update_position(self.main_text.surface.get_rect(
             center=(self.screen_width // 2, 25)))
@@ -26,20 +26,23 @@ class RecordsScene(BaseScene):
             center=(self.screen_width // 2, 70)))
 
         # Создание и обработка рекордов
-        self.one_text = Text(str(self.records[4]), 50,
-                             (55, 40), Color.GOLD)
+        self.one_text = Text(str(self.records[4]), 30,
+                             (60, 45), Color.GOLD)
+        self.one_text_width = self.one_text.surface.get_width()
 
-        self.two_text = Text(str(self.records[3]), 50,
-                             (55, 75), Color.SILVER)
+        self.two_text = Text(str(self.records[3]), 30,
+                             (60, 80), Color.SILVER)
+        self.two_text_width = self.two_text.surface.get_width()
 
-        self.three_text = Text(str(self.records[2]), 50,
-                               (55, 110), Color.BRONZE)
+        self.three_text = Text(str(self.records[2]), 30,
+                               (60, 115), Color.BRONZE)
+        self.three_text_width = self.three_text.surface.get_width()
 
-        self.four_text = Text(str(self.records[1]), 50,
-                              (55, 145), Color.GRAY)
+        self.four_text = Text('4: ' + str(self.records[1]), 30,
+                              (25, 150), Color.WHITE)
 
-        self.five_text = Text(str(self.records[0]), 50,
-                              (55, 180), Color.WOODEN)
+        self.five_text = Text('5: ' + str(self.records[0]), 30,
+                              (25, 185), Color.WHITE)
 
         # Создание и обработка кнопок
         self.back_button = Button(
