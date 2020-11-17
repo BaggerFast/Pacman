@@ -10,5 +10,3 @@ class Health:
             self.lives = 5
         elif self.lives + number <= 0:
             self.lives = 0
-
-

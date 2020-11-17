@@ -5,40 +5,40 @@ class BaseScene:
     def __init__(self, screen) -> None:
         self.screen = screen
         self.objects = []
-        self.create_objects()
+        self.createObjects()
 
-    def create_objects(self) -> None:
+    def createObjects(self) -> None:
         pass
 
-    def on_activate(self) -> None:
+    def onActivate(self) -> None:
         pass
 
-    def on_window_resize(self) -> None:
+    def onWindowResize(self) -> None:
         pass
 
-    def process_event(self, event: pygame.event.Event) -> None:
+    def processEvent(self, event: pygame.event.Event) -> None:
         for item in self.objects:
-            item.process_event(event)
-        self.additional_event_check(event)
+            item.processEvent(event)
+        self.additionalEventCheck(event)
 
-    def additional_event_check(self, event: pygame.event.Event) -> None:
+    def additionalEventCheck(self, event: pygame.event.Event) -> None:
         pass
 
-    def process_logic(self) -> None:
+    def processLogic(self) -> None:
         for item in self.objects:
-            item.process_logic()
-        self.additional_logic()
+            item.processLogic()
+        self.additionalLogic()
 
-    def additional_logic(self) -> None:
+    def additionalLogic(self) -> None:
         pass
 
-    def process_draw(self) -> None:
+    def processDraw(self) -> None:
         for item in self.objects:
             item.process_draw()
-        self.additional_draw()
+        self.additionalDraw()
 
-    def additional_draw(self) -> None:
+    def additionalDraw(self) -> None:
         pass
 
-    def on_deactivate(self) -> None:
+    def onDeactivate(self) -> None:
         pass
