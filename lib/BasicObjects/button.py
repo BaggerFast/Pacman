@@ -26,7 +26,8 @@ class BaseButton:
         return self.rect[0] <= pos[0] <= self.rect[2] + self.rect[0] \
             and self.rect[1] <= pos[1] <= self.rect[3] + self.rect[1]
 
-    def checkEvents(self, event):
+    def checkEvents(self):
+        event = pg.event.get()
         if event.type == pg.MOUSEBUTTONDOWN and self.getPos():
             self.click = 'click'
         elif event.type == pg.MOUSEBUTTONUP:
@@ -39,6 +40,7 @@ class BaseButton:
             self.click = 'hover'
         elif not self.getPos() and self.click == 'hover':
             self.click = 'initial'
+        self.checkEvents()
 
     def onClick(self):
         self.function()
@@ -96,3 +98,34 @@ class Button(BaseButton):
         main_text.draw(temp_surface)
         return temp_surface
 
+
+class ButtonControl:
+    def __init__(self, buttons: list):
+        self.buttons = buttons
+        self.button_number = None
+
+    def set_current_button(self, number):
+        self.current_button.hover_state = False
+        self.button_number = number
+        self.buttons[self.button_number].click = 'hover'
+
+    def mouse_action(self):
+        if sum(pg.mouse.get_rel()):
+            self.buttons[self.current_button].hover_state = False
+            for i in range(len(self.buttons)):
+                self.buttons[i].update()
+                if self.buttons[i].click == 'hover':
+                    self.button_number = i
+
+
+def main():
+    a = ButtonControl([2, 2, 3])
+    pg.display.init()
+    pg.display.set_mode((100, 100))
+    while True:
+        pg.event.get()
+        a.mouse_action()
+
+
+if __name__ == "__main__":
+    main()
