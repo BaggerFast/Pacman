@@ -2,23 +2,23 @@ import pygame as pg
 
 from lib.BasicObjects.health import Health
 from scenes.base import BaseScene as Scene
+from py.classes.objects.animator import Animator
 
 
 class Character:
     direction = {
-        "up": (0, -1, 3),
-        "down": (0, 1, 1),
         "right": (1, 0, 0),
+        "down": (0, 1, 1),
         "left": (-1, 0, 2),
+        "up": (0, -1, 3),
         "none": (0, 0, None)
     }
 
-    def __init__(self, scene: Scene, image: pg.Surface, start_pos: tuple):
+    def __init__(self, scene: Scene, animator: Animator, start_pos: tuple):
         self.scene = scene
         self.hp = Health()
-        self.image = image
-        self.draw_image = self.image
-        self.rect = self.image.get_rect()
+        self.animator = animator
+        self.rect = self.animator.current_image.get_rect()
         self.shift_x = self.shift_y = 0
         self.change_pos(*start_pos)
         self.speed = 1
@@ -44,13 +44,11 @@ class Character:
             self.shift_x, self.shift_y, rotate = self.direction[dir]
             if self.rotate != rotate:
                 self.rotate = rotate
-                self.draw_image = pg.transform.rotate(self.image, -90 * rotate)
+                self.animator.rotate = rotate
+                self.animator.change_rotation()
         else:
-            self.draw_image = pg.transform.rotate(self.image, -90 * self.rotate)
+            self.animator.rotate = self.rotate
+            self.animator.change_rotation()
 
     def draw(self):
-        self.scene.screen.blit(self.draw_image, self.rect)
-        self.scene.screen.blit(self.draw_image, (self.rect.x+self.scene.screen.get_width(), self.rect.y))
-        self.scene.screen.blit(self.draw_image, (self.rect.x-self.scene.screen.get_width(), self.rect.y))
-        self.scene.screen.blit(self.draw_image, (self.rect.x, self.rect.y+self.scene.screen.get_height()))
-        self.scene.screen.blit(self.draw_image, (self.rect.x, self.rect.y-self.scene.screen.get_height()))
+        self.scene.screen.blit(self.animator.current_image, self.rect)

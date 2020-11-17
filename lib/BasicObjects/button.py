@@ -16,7 +16,9 @@ class BaseButton:
         self.draw_image = self.base_image
 
         self.function = function
-        self.click = 'initial'
+        self.click = 'base'
+        self.hover = self.base = self.clicked = False
+        self.keyboard = False
 
     def getPos(self):
         pos = pg.mouse.get_pos()
@@ -27,15 +29,15 @@ class BaseButton:
         if event.type == pg.MOUSEBUTTONDOWN and self.getPos():
             self.click = 'click'
         elif event.type == pg.MOUSEBUTTONUP:
-            self.click = 'initial'
+            self.click = 'base'
             if self.getPos():
                 self.onClick()
 
     def update(self):
-        if self.getPos() and self.click == 'initial':
+        if self.getPos() and self.click == 'base':
             self.click = 'hover'
         elif not self.getPos() and self.click == 'hover':
-            self.click = 'initial'
+            self.click = 'base'
 
     def onClick(self):
         self.function()
@@ -43,7 +45,7 @@ class BaseButton:
     def draw(self):
         if self.click == 'click':
             self.draw_image = self.clicked_image
-        elif self.click == 'initial':
+        elif self.click == 'base':
             self.draw_image = self.base_image
         elif self.click == 'hover':
             self.draw_image = self.hover_image

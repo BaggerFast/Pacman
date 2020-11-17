@@ -5,16 +5,15 @@ import pygame as pg
 from py.classes.objects.character_base import Character
 from py.constants import *
 from scenes.base import BaseScene as Scene
+from py.classes.objects.animator import Animator
 
 
 class Pacman(Character):
     def __init__(self, scene: Scene, start_pos: tuple):
-        image = pygame.image.load("images/Pacman1.png")
-        super().__init__(scene, image, start_pos)
-        self.image_2 = pygame.image.load("images/Pacman2.png")
-        self.animate_timer = pg.time.get_ticks()
+        self.a = Animator("images/Pacman1.png", 'images/Pacman2.png')
+        super().__init__(scene, self.a, start_pos)
 
-    def check_event(self, event):
+    def check_event(self):
         keys = pg.key.get_pressed()
         check_sum = keys[pg.K_a] + keys[pg.K_d] + keys[pg.K_s] + keys[pg.K_w]
         if check_sum == 0:
@@ -29,12 +28,6 @@ class Pacman(Character):
             if keys[pg.K_s]:
                 self.set_dir("down")
 
-    def update(self):
-        if pg.time.get_ticks()-self.animate_timer > 500:
-            self.animate_timer = pg.time.get_ticks()
-            self.image, self.image_2 = self.image_2, self.image
-            self.set_dir()
-
 
 def main():
     pg.init()
@@ -46,9 +39,8 @@ def main():
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 exit = False
-            char.check_event(event)
-        char.update()
-
+            char.check_event()
+        char.a.timer_check()
         char.move()
         screen.fill(Color.BLACK)
 
