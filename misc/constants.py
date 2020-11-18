@@ -24,3 +24,12 @@ class Color:
 
 class Font:
     FONT0 = os.path.join('fonts', 'font0.ttf')
+
+BUTTON_DEFAULT_COLORS = {
+    'static_text_color': Color.GRAY,
+    'static_button_color': Color.DARK_GRAY,
+    'hover_text_color': Color.WHITE,
+    'hover_button_color': Color.DARK_GRAY,
+    'clicked_text_color': Color.BLACK,
+    'clicked_button_color': Color.DARK_GRAY
+}

@@ -302,4 +302,5 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm+all,windows,linux,macos
-Будет удалено lib/BasicObjects/c_lives.py
+saves/
+!.gitkeep
