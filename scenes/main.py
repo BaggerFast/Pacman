@@ -3,10 +3,15 @@ import pygame
 from misc.loader import LevelLoader
 from objects.map import Map
 from objects.seed import SeedContainer
+from misc.constants import Color
+from misc.path import get_image_path
+from objects.image import ImageObject
+from objects.text import Text
 from scenes.base import BaseScene
 
 
 class GameScene(BaseScene):
+
     def __init__(self, game):
         self.loader = LevelLoader()
         self.map_data = self.loader.get_map_data()
@@ -18,11 +23,34 @@ class GameScene(BaseScene):
         self.fruit_position = self.loader.get_fruit_position()
         super().__init__(game)
 
+    def prepare_lives_meter(self):
+        for i in range(self.game.lives):
+            hp_image = ImageObject(self.game, get_image_path('pacman.png'), 5 + i * 20, 271)
+            hp_image.scale(12, 12)
+            hp_image.rotate(180)
+            self.objects.append(hp_image)
+
     def create_objects(self) -> None:
         self.map = Map(self.game, self.map_data)
         self.objects.append(self.map)
         self.seeds = SeedContainer(self.game, self.seed_data, self.energizer_data)
         self.objects.append(self.seeds)
+
+        self.prepare_lives_meter()
+
+        self.scores_label_text = Text(self.game, 'SCORE', 8, rect=pygame.Rect(10, 2, 20, 20), color=Color.WHITE)
+        self.objects.append(self.scores_label_text)
+        self.scores_value_text = Text(self.game, str(self.game.score), 8, rect=pygame.Rect(10, 9, 20, 20),
+                                      color=Color.WHITE)
+        self.objects.append(self.scores_value_text)
+
+        self.highscores_label_text = Text(self.game, 'HIGHSCORE', 8, rect=pygame.Rect(130, 2, 20, 20),
+                                          color=Color.WHITE)
+        self.objects.append(self.highscores_label_text)
+        self.highscores_value_text = Text(self.game, str(self.game.records.data[-1]), 8,
+                                          rect=pygame.Rect(130, 9, 20, 20),
+                                          color=Color.WHITE)
+        self.objects.append(self.highscores_value_text)
 
     def additional_event_check(self, event: pygame.event.Event) -> None:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
@@ -30,6 +58,13 @@ class GameScene(BaseScene):
 
     def start_pause(self):
         self.game.set_scene(self.game.SCENE_PAUSE)
+
+    def draw_ghost(self, index, color, x, y):
+        pygame.draw.circle(
+            self.screen, color,
+            (x + self.ghost_positions[index][0] * 8 + 4, y + self.ghost_positions[index][1] * 8 + 4),
+            8
+        )
 
     def additional_draw(self) -> None:
         # Temporary draw
@@ -41,19 +76,15 @@ class GameScene(BaseScene):
                            (x_shift + self.player_position[0] * 8 + 4, y_shift + self.player_position[1] * 8 + 4), 8)
 
         # ghosts
-        pygame.draw.circle(self.screen, (255, 0, 0),
-                           (x_shift + self.ghost_positions[0][0] * 8 + 4, y_shift + self.ghost_positions[0][1] * 8 + 4),
-                           8)
-        pygame.draw.circle(self.screen, (255, 0, 255),
-                           (x_shift + self.ghost_positions[1][0] * 8 + 4, y_shift + self.ghost_positions[1][1] * 8 + 4),
-                           8)
-        pygame.draw.circle(self.screen, (0, 0, 255),
-                           (x_shift + self.ghost_positions[2][0] * 8 + 4, y_shift + self.ghost_positions[2][1] * 8 + 4),
-                           8)
-        pygame.draw.circle(self.screen, (0, 255, 0),
-                           (x_shift + self.ghost_positions[3][0] * 8 + 4, y_shift + self.ghost_positions[3][1] * 8 + 4),
-                           8)
+        self.draw_ghost(0, (255, 0, 0), x_shift, y_shift)
+        self.draw_ghost(1, (255, 0, 255), x_shift, y_shift)
+        self.draw_ghost(2, (0, 0, 255), x_shift, y_shift)
+        self.draw_ghost(3, (0, 255, 0), x_shift, y_shift)
 
         # fruit
         pygame.draw.circle(self.screen, (255, 0, 0),
                            (x_shift + self.fruit_position[0] * 8 + 4, y_shift + self.fruit_position[1] * 8 + 4), 4)
+
+    def process_logic(self) -> None:
+        # todo: make text update only when new value appeares
+        self.scores_value_text.update_text(str(self.game.score))

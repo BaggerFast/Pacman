@@ -18,7 +18,8 @@ class Game:
 
     def __init__(self) -> None:
         self.screen = pygame.display.set_mode(self.size, pygame.SCALED)
-
+        self.lives = 3
+        self.score = 0
         self.records = HighScore()
 
         self.scenes = [

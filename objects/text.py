@@ -18,11 +18,9 @@ class Text(DrawableObject):
         self.text = new_text
         self.surface = self.font.render(self.text, False, self.color)
         if type(self.rect) != tuple:
-            centerx = self.rect.centerx
-            centery = self.rect.centery
+            topleft = self.rect.topleft
             self.rect = self.surface.get_rect()
-            self.rect.centerx = centerx
-            self.rect.centery = centery
+            self.rect.topleft = topleft
         else:
             print('tuple')
 

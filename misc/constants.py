@@ -1,8 +1,9 @@
 import pygame
+import os.path
+
 
 # https://www.pygame.org/docs/ref/color.html
 # https://github.com/pygame/pygame/blob/master/src_py/colordict.py
-
 class Color:
     RED = pygame.color.Color('red')
     BLUE = pygame.color.Color('blue')
@@ -17,7 +18,6 @@ class Color:
     GRAY = (128, 128, 128)
     DARK_GRAY = (64, 64, 64)
 
-
 BUTTON_DEFAULT_COLORS = {
     'static_text_color': Color.GRAY,
     'static_button_color': Color.DARK_GRAY,
@@ -26,3 +26,5 @@ BUTTON_DEFAULT_COLORS = {
     'clicked_text_color': Color.BLACK,
     'clicked_button_color': Color.DARK_GRAY
 }
+
+ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
