@@ -1,0 +1,33 @@
+import pygame
+import pygame as pg
+
+from objects.base import DrawableObject
+
+
+class Text(DrawableObject):
+    def __init__(self, game, text, size, rect=None, color=(255, 255, 255), font="Arial"):
+        super().__init__(game)
+        self.rect = rect if rect else pygame.rect.Rect(0, 0, 0, 0)
+        self.pos = rect if rect else (0, 0)
+        self.size = size
+        self.color = color
+        self.font = pg.font.SysFont(font, self.size, True)
+        self.update_text(text)
+
+    def update_text(self, new_text):
+        self.text = new_text
+        self.surface = self.font.render(self.text, False, self.color)
+        if type(self.rect) != tuple:
+            centerx = self.rect.centerx
+            centery = self.rect.centery
+            self.rect = self.surface.get_rect()
+            self.rect.centerx = centerx
+            self.rect.centery = centery
+        else:
+            print('tuple')
+
+    def update_position(self, a=()):
+        self.pos = a
+
+    def process_draw(self):
+        self.game.screen.blit(self.surface, self.rect)

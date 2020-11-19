@@ -2,8 +2,8 @@ import pygame
 
 
 class BaseScene:
-    def __init__(self, screen) -> None:
-        self.screen = screen
+    def __init__(self, game) -> None:
+        self.game = game
         self.screen = self.game.screen
         self.objects = []
         self.create_objects()
