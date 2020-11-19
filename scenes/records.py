@@ -1,147 +1,66 @@
+import os
 import pygame
-from lib.BasicObjects.button import Button
-from lib.BasicObjects.text import Text
+
+from misc.path import get_image_path
+from objects.button import Button
+from objects.image import ImageObject
+from objects.text import Text
 from scenes.base import BaseScene
-from py.constants import Color, ROOT_DIR
-from os.path import join
-from lib.BasicObjects.highscores import HighScore
+from misc.constants import Color
 
 
 class RecordsScene(BaseScene):
-    def createObjects(self) -> None:
-        self.records = HighScore().record_table
-        self.is_on = True
-        self.check = None
+    def create_objects(self) -> None:
+        self.records = self.game.records.data
         self.screen_width = self.screen.get_width()
 
         # Создание и обработка текста
-        self.main_text = Text('RECORDS', 30, color=Color.WHITE)
-        self.main_text_width = self.main_text.surface.get_width()
-        self.main_text.update_position(self.main_text.surface.get_rect(
-            center=(self.screen_width // 2, 25)))
+        self.main_text = Text(self.game, 'RECORDS', 30, color=Color.WHITE)
+        self.main_text.move_center(self.screen_width // 2, 25)
+        self.objects.append(self.main_text)
 
         # Создание и обработка рекордов
-        self.one_text = Text(str(self.records[4]), 30,
-                             (60, 45), Color.GOLD)
-        self.one_text_width = self.one_text.surface.get_width()
+        self.one_text = Text(self.game, str(self.records[4]), 30, (60, 45), Color.GOLD)
+        self.objects.append(self.one_text)
 
-        self.two_text = Text(str(self.records[3]), 30,
-                             (60, 80), Color.SILVER)
-        self.two_text_width = self.two_text.surface.get_width()
+        self.two_text = Text(self.game, str(self.records[3]), 30, (60, 80), Color.SILVER)
+        self.objects.append(self.two_text)
 
-        self.three_text = Text(str(self.records[2]), 30,
-                               (60, 115), Color.BRONZE)
-        self.three_text_width = self.three_text.surface.get_width()
+        self.three_text = Text(self.game, str(self.records[2]), 30, (60, 115), Color.BRONZE)
+        self.objects.append(self.three_text)
 
-        self.four_text = Text('4: ' + str(self.records[1]), 30,
-                              (25, 150), Color.WHITE)
+        self.four_text = Text(self.game, '4: ' + str(self.records[1]), 30,(25, 150), Color.WHITE)
+        self.objects.append(self.four_text)
 
-        self.five_text = Text('5: ' + str(self.records[0]), 30,
-                              (25, 185), Color.WHITE)
+        self.five_text = Text(self.game, '5: ' + str(self.records[0]), 30,(25, 185), Color.WHITE)
+        self.objects.append(self.five_text)
 
         # Создание и обработка кнопок
         self.back_button = Button(
-            self.screen, pygame.Rect(self.screen_width // 2, 200, 120, 60),
-            self.back, 'BACK', Color.GRAY,
+            self.game, pygame.Rect(self.screen_width // 2, 200, 120, 60),
+            self.start_menu, 'BACK', Color.GRAY,
             Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
             Color.BLACK, Color.DARK_GRAY
         )
-
-        self.back_button = Button(
-            self.screen, pygame.Rect(
-                self.screen_width // 2 - self.back_button.rect.w // 2,
-                230, 120, 45),
-            self.back, 'BACK', Color.GRAY,
-            Color.DARK_GRAY, Color.WHITE, Color.DARK_GRAY,
-            Color.BLACK, Color.DARK_GRAY
-        )
+        self.back_button.move_center(self.screen_width // 2, 250)
+        self.objects.append(self.back_button)
 
         # Создание и обработка изображений
-        self.gold_medal_path = join(ROOT_DIR, 'images', 'golden_medal.png')
-        self.silver_medal_path = join(ROOT_DIR, 'images', 'silver_medal.png')
-        self.bronze_medal_path = join(ROOT_DIR, 'images', 'bronze_medal.png')
+        self.gold_medal = ImageObject(self.game, get_image_path('golden_medal.png'), 16, 45)
+        self.gold_medal.scale(35, 35)
+        self.objects.append(self.gold_medal)
 
-        self.gold_medal = pygame.image.load(self.gold_medal_path)
-        self.silver_medal = pygame.image.load(self.silver_medal_path)
-        self.bronze_medal = pygame.image.load(self.bronze_medal_path)
+        self.silver_medal = ImageObject(self.game, get_image_path('silver_medal.png'), 16, 80)
+        self.silver_medal.scale(35, 35)
+        self.objects.append(self.silver_medal)
 
-        self.gold_medal = pygame.transform.scale(self.gold_medal, (35, 35))
-        self.silver_medal = pygame.transform.scale(self.silver_medal, (35, 35))
-        self.bronze_medal = pygame.transform.scale(self.bronze_medal, (35, 35))
+        self.bronze_medal = ImageObject(self.game, get_image_path('bronze_medal.png'), 16, 115)
+        self.bronze_medal.scale(35, 35)
+        self.objects.append(self.bronze_medal)
 
-    def updateObjects(self):
-        self.main_text.draw(self.screen)
-        self.one_text.draw(self.screen)
-        self.screen.blit(
-            self.gold_medal,
-            (16, 45)
-        )
+    def additional_event_check(self, event: pygame.event.Event) -> None:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.start_menu()
 
-        if self.records[3] != 0:
-            self.two_text.draw(self.screen)
-            self.screen.blit(
-                self.silver_medal,
-                (16, 80)
-            )
-
-        if self.records[2] != 0:
-            self.three_text.draw(self.screen)
-            self.screen.blit(
-                self.bronze_medal,
-                (16, 115)
-            )
-
-        if self.records[1] != 0:
-            self.four_text.draw(self.screen)
-
-        if self.records[0] != 0:
-            self.five_text.draw(self.screen)
-
-        self.back_button.draw()
-        self.back_button.update()
-
-    def eventUpdate(self, event):
-        self.back_button.checkEvents(event)
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                self.back()
-
-    def isOn(self):
-        if self.is_on:
-            return 1
-        else:
-            return 0
-
-    def close(self):
-        self.is_on = False
-
-    def back(self):
-        self.check = 'BACK'
-        self.is_on = False
-
-
-def launch_records_menu(screen):
-    records_menu = RecordsScene(screen)
-    while records_menu.isOn():
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                records_menu.close()
-            records_menu.eventUpdate(event)
-        screen.fill(Color.BLACK)
-        records_menu.updateObjects()
-        pygame.display.flip()
-        pygame.time.wait(10)
-    if records_menu.check == 'BACK':
-        from scenes.main_menu import launch_main_menu
-        launch_main_menu(screen)
-
-
-# Тест работы меню рекордов. Нужен только для разработчиков самого меню
-def test_records():
-    pygame.init()
-    screen = pygame.display.set_mode([224, 285], pygame.SCALED)
-    launch_records_menu(screen)
-
-
-if __name__ == '__main__':
-    test_records()
+    def start_menu(self):
+        self.game.set_scene(self.game.SCENE_MENU)
