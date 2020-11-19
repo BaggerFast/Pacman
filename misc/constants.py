@@ -28,3 +28,4 @@ BUTTON_DEFAULT_COLORS = {
 }
 
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
+CELL_SIZE = 8
