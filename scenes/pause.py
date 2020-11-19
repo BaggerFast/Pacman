@@ -38,7 +38,6 @@ class PauseScene(BaseScene):
         self.menu_button.move_center(self.game.width // 2, 224)
         self.objects.append(self.menu_button)
 
-        # Работа со списками
         self.buttons = []
         self.buttons.append(self.continue_button)
         self.buttons.append(self.restart_button)
@@ -50,7 +49,6 @@ class PauseScene(BaseScene):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 self.continue_game()
-        self.control.mouse_action()
 
         if event.key == pygame.K_w or event.key == pygame.K_UP:
             self.control.unset_previous_button(self.current_button)
@@ -66,6 +64,18 @@ class PauseScene(BaseScene):
             self.control.set_current_button(self.current_button)
         if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
             self.buttons[self.current_button].on_click()
+
+        self.control.mouse_action()
+
+    def restart_game(self):
+        self.game.set_scene(self.game.SCENE_GAME, resume=False)
+
+    def continue_game(self):
+        self.game.set_scene(self.game.SCENE_GAME, resume=True)
+
+    def start_menu(self):
+        self.game.set_scene(self.game.SCENE_MENU)
+
 
     def process_event(self, event: pygame.event.Event) -> None:
         self.continue_button.process_event(event)

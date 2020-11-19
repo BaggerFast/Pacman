@@ -1,10 +1,17 @@
+import os
 import pygame
+
+from misc.path import get_image_path
+from objects.button import Button
+from objects.image import ImageObject
+from objects.text import Text
 
 from misc.path import get_image_path
 from objects.button import Button, ButtonControl
 from objects.image import ImageObject
 from objects.text import Text
 from scenes.base import BaseScene
+from misc.constants import Color
 from misc.constants import Color, BUTTON_DEFAULT_COLORS
 
 
@@ -42,7 +49,7 @@ class RecordsScene(BaseScene):
 
         # Создание и обработка кнопок
         self.back_button = Button(
-            self.game, pygame.Rect(self.screen_width // 2, 200, 120, 45),
+            self.game, pygame.Rect(self.screen_width // 2, 200, 120, 60),
             self.start_menu, 'BACK', **BUTTON_DEFAULT_COLORS
         )
         self.back_button.move_center(self.screen_width // 2, 250)
@@ -73,6 +80,14 @@ class RecordsScene(BaseScene):
         self.buttons.append(self.back_button)
 
         self.control = ButtonControl(self.buttons)
+
+    def additional_event_check(self, event: pygame.event.Event) -> None:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+            self.start_menu()
+
+    def start_menu(self):
+        self.game.set_scene(self.game.SCENE_MENU)
+
 
     def additional_event_check(self, event: pygame.event.Event) -> None:
         if event.type == pygame.KEYDOWN:

@@ -17,6 +17,15 @@ class ImageObject(DrawableObject):
 
     def scale(self, x, y):
         self.image = pygame.transform.scale(self.image, (x, y))
+        topleft = self.rect.topleft
+        self.rect = self.image.get_rect()
+        self.rect.topleft = topleft
+
+    def rotate(self, angle):
+        self.image = pygame.transform.rotate(self.image, angle)
+        topleft = self.rect.topleft
+        self.rect = self.image.get_rect()
+        self.rect.topleft = topleft
 
     def process_draw(self):
         self.game.screen.blit(self.image, self.rect)

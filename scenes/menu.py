@@ -1,5 +1,4 @@
 import sys
-
 import pygame
 
 from objects.button import Button, ButtonControl
