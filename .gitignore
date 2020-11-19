@@ -302,7 +302,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm+all,windows,linux,macos
-<<<<<<<<< Temporary merge branch 1
-=========
-Будет удалено lib/BasicObjects/c_lives.py
->>>>>>>>> Temporary merge branch 2
+
+saves/
+!.gitkeep
+

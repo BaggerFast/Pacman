@@ -7,6 +7,7 @@ from misc.constants import Color
 from misc.path import get_image_path
 from objects.image import ImageObject
 from objects.text import Text
+from objects.pacman import Pacman
 from scenes.base import BaseScene
 
 
@@ -52,6 +53,10 @@ class GameScene(BaseScene):
                                           color=Color.WHITE)
         self.objects.append(self.highscores_value_text)
 
+
+        self.pacman = Pacman(self.game, (-6 + self.player_position[0] * 8 + 4, 14 + self.player_position[1] * 8 + 4))
+        self.objects.append(self.pacman)
+
     def additional_event_check(self, event: pygame.event.Event) -> None:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
             self.start_pause()
@@ -71,10 +76,6 @@ class GameScene(BaseScene):
         x_shift = 0
         y_shift = 20
 
-        # pacman
-        pygame.draw.circle(self.screen, (255, 255, 0),
-                           (x_shift + self.player_position[0] * 8 + 4, y_shift + self.player_position[1] * 8 + 4), 8)
-
         # ghosts
         self.draw_ghost(0, (255, 0, 0), x_shift, y_shift)
         self.draw_ghost(1, (255, 0, 255), x_shift, y_shift)
@@ -86,5 +87,6 @@ class GameScene(BaseScene):
                            (x_shift + self.fruit_position[0] * 8 + 4, y_shift + self.fruit_position[1] * 8 + 4), 4)
 
     def process_logic(self) -> None:
+        super(GameScene, self).process_logic()
         # todo: make text update only when new value appeares
         self.scores_value_text.update_text(str(self.game.score))
