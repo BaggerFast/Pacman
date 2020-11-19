@@ -1,15 +1,24 @@
 import pygame
 
-from misc.constants import Color
-from objects.text import Text
+from misc.loader import LevelLoader
+from objects.map import Map
+from objects.seed import SeedContainer
 from scenes.base import BaseScene
 
 
 class GameScene(BaseScene):
+    def __init__(self, game):
+        self.loader = LevelLoader()
+        self.map_data = self.loader.get_map_data()
+        self.seed_data = self.loader.get_seed_data()
+        self.energizer_data = self.loader.get_energizer_data()
+        super().__init__(game)
+
     def create_objects(self) -> None:
-        self.text = Text(self.game, "GAME IS HERE", 30, color=Color.WHITE)
-        self.text.move_center(self.game.width // 2, self.game.height // 2)
-        self.objects.append(self.text)
+        self.map = Map(self.game, self.map_data)
+        self.objects.append(self.map)
+        self.seeds = SeedContainer(self.game, self.seed_data, self.energizer_data)
+        self.objects.append(self.seeds)
 
     def additional_event_check(self, event: pygame.event.Event) -> None:
         if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
