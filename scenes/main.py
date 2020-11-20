@@ -24,7 +24,7 @@ class GameScene(BaseScene):
         self.fruit_position = self.loader.get_fruit_position()
         super().__init__(game)
 
-    def prepare_lives_meter(self):
+    def prepare_lives_meter(self): # prepare lives matter :)
         for i in range(self.game.lives):
             hp_image = ImageObject(self.game, get_image_path('pacman.png'), 5 + i * 20, 271)
             hp_image.scale(12, 12)
@@ -88,5 +88,7 @@ class GameScene(BaseScene):
 
     def process_logic(self) -> None:
         super(GameScene, self).process_logic()
+        self.seeds.process_collision(self.pacman)
+
         # todo: make text update only when new value appeares
         self.scores_value_text.update_text(str(self.game.score))
