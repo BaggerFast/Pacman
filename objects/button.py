@@ -1,122 +1,148 @@
+from typing import List, Union, Callable, Tuple
+
 import pygame
-import pygame as pg
-from typing import List
 
-from misc.constants import Color
+from misc.constants import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor
 from objects.base import DrawableObject
-from objects.text import Text
 
 
-class BaseButton(DrawableObject):
-    def __init__(self, game, cord, function, base_image, clicked_image=None, hover_image=None):
+class SimpleButton(DrawableObject):
+    def __init__(self, game, geometry: Union[tuple, pygame.Rect], function: Callable[[], None]) -> None:
         super().__init__(game)
-        self.base_image = base_image
-        self.rect = self.base_image.get_rect()
-        self.rect.x = cord[0]
-        self.rect.y = cord[1]
-        self.hover_image = base_image if hover_image is None else hover_image
-        self.clicked_image = base_image if clicked_image is None else clicked_image
-        self.draw_image = self.base_image
+        if type(geometry) == tuple:
+            self.rect = pygame.Rect(*geometry)
+        else:
+            self.rect = geometry
         self.function = function
-        self.click = 'initial'
 
-    def mouse_hover(self):
-        pos = pg.mouse.get_pos()
-        return self.rect[0] <= pos[0] <= self.rect[2] + self.rect[0] \
-            and self.rect[1] <= pos[1] <= self.rect[3] + self.rect[1]
+    def parse_rect(self, geometry: Union[tuple, pygame.Rect]) -> pygame.Rect:
+        if type(geometry) == tuple:
+            return pygame.Rect(*geometry)
+        elif type(geometry) == pygame.Rect:
+            return geometry
+        raise TypeError('Invalid geometry type (can only be tuple or pygame.Rect')
 
-    def process_event(self, event):
-        if event.type == pg.MOUSEBUTTONDOWN and self.mouse_hover():
-            self.click = 'click'
-        elif event.type == pg.MOUSEBUTTONUP:
-            self.click = 'initial'
-            if self.mouse_hover():
-                self.on_click()
+    def process_event(self, event: pygame.event.Event) -> None:
+        if event.type == pygame.MOUSEBUTTONUP:
+            if self.rect.collidepoint(event.pos):
+                self.click()
 
-    def process_logic(self):
-        if self.mouse_hover() and self.click == 'initial':
-            self.click = 'hover'
-        elif not self.mouse_hover() and self.click == 'hover':
-            self.click = 'initial'
+    def process_draw(self) -> None:
+        pygame.draw.rect(self.game.screen, Color.WHITE, self.rect, 0)
 
-    def on_click(self):
+    def click(self) -> None:
         self.function()
 
-    def process_draw(self):
-        if self.click == 'click':
-            self.draw_image = self.clicked_image
-        elif self.click == 'initial':
-            self.draw_image = self.base_image
-        elif self.click == 'hover':
-            self.draw_image = self.hover_image
+
+class Button(SimpleButton):
+    STATE_INITIAL = 0
+    STATE_HOVER = 1
+    STATE_CLICK = 2
+
+    def __init__(self, game, geometry: Union[tuple, pygame.Rect],
+                 function: Callable[[], None], text: str = 'Define me',
+                 colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
+                 center: Tuple[float, float] = None) -> None:
+        super().__init__(game, geometry, function)
+        self.text = text
+        self.font = pygame.font.Font(Font.FILENAME, 60)
+        self.colors: ButtonColor = self.parse_colors(colors)
+        self.state = self.STATE_INITIAL
+        self.surfaces = self.prepare_surfaces()
+        self.left_button_pressed = False
+        if center:
+            self.move_center(*center)
+
+    @staticmethod
+    def parse_colors(colors: Union[dict, ButtonColor]) -> ButtonColor:
+        if type(colors) == dict:
+            result = ButtonColor()
+            result.from_dict(colors)
+            return result
+        elif type(colors) == ButtonColor:
+            return colors
         else:
-            self.draw_image = self.base_image
-        self.game.screen.blit(self.draw_image, self.rect)
+            raise TypeError('Invalid button colors type (can only be dict or ButtonColor)')
+
+    def mouse_hover(self, pos: Tuple[Union[int, float], Union[int, float]]) -> bool:
+        return bool(self.rect.collidepoint(pos))
+
+    def process_mouse_motion(self, event: pygame.event.Event) -> None:
+        if event.type != pygame.MOUSEMOTION:
+            return
+        if self.mouse_hover(event.pos):
+            if not self.left_button_pressed:
+                self.state = self.STATE_HOVER
+        else:
+            self.state = self.STATE_INITIAL
+
+    def process_mouse_button_down(self, event: pygame.event.Event) -> None:
+        if event.type != pygame.MOUSEBUTTONDOWN:
+            return
+        if event.button == pygame.BUTTON_LEFT:
+            self.left_button_pressed = True
+        if self.mouse_hover(event.pos):
+            self.state = self.STATE_CLICK
+
+    def process_mouse_button_up(self, event: pygame.event.Event) -> None:
+        if event.type != pygame.MOUSEBUTTONUP:
+            return
+        if event.button == pygame.BUTTON_LEFT:
+            self.left_button_pressed = False
+        if self.mouse_hover(event.pos) and event.button == pygame.BUTTON_LEFT:
+            self.state = self.STATE_INITIAL
+
+    def process_event(self, event: pygame.event.Event) -> None:
+        self.process_mouse_motion(event)
+        self.process_mouse_button_down(event)
+        self.process_mouse_button_up(event)
+        super().process_event(event)
+
+    def update_text(self, text: str) -> None:
+        self.text = text
+        self.prepare_surfaces()
+
+    def prepare_surfaces(self) -> List[pygame.Surface]:
+        surfaces = []
+        for index in range(len(self.colors.get_members_list())):
+            surfaces.append(self.prepare_surface(index))
+        return surfaces
+
+    def prepare_surface(self, state_index: int) -> pygame.Surface:
+        surface = pygame.surface.Surface(self.rect.size)
+        zero_rect = surface.get_rect()
+
+        text_surface = self.font.render(self.text, True, self.colors[state_index].text)
+        zero_text_rect = text_surface.get_rect()
+        zero_text_rect.center = zero_rect.center
+
+        pygame.draw.rect(surface, self.colors[state_index].background, zero_rect, 0)
+        surface.blit(text_surface, zero_text_rect)
+
+        return surface
+
+    def process_draw(self) -> None:
+        self.game.screen.blit(self.surfaces[self.state], self.rect.topleft)
 
 
-class Button(BaseButton):
-    def __init__(self, game, rect: pg.Rect, function, text, static_text_color,
-                 static_button_color, hover_text_color=None,
-                 hover_button_color=None,  clicked_text_color=None,
-                 clicked_button_color=None,
-                 text_size=30, text_font='Arial'):
-        self.game = game
-        if clicked_text_color is None:
-            clicked_text_color = static_text_color
-        if hover_text_color is None:
-            hover_text_color = static_text_color
-
-        hover_image = clicked_image = None
-
-        base_image = self.prepare_surface(
-            static_button_color, static_text_color,
-            text, text_font, text_size, rect
-        )
-
-        if hover_button_color:
-            hover_image = self.prepare_surface(
-                hover_button_color, hover_text_color,
-                text, text_font, text_size, rect
-            )
-        if clicked_button_color:
-            clicked_image = self.prepare_surface(
-                clicked_button_color, clicked_text_color,
-                text, text_font, text_size, rect
-            )
-
-        BaseButton.__init__(self, game, (rect.x, rect.y), function,
-                            base_image, clicked_image, hover_image)
-
-    def prepare_surface(self, color, text_color, text, text_font, text_size, rect):
-        temp_surface = pg.Surface((rect.width, rect.height))
-        temp_surface.fill(Color.BLACK)
-
-        pg.draw.rect(temp_surface, color, (5, 0, rect.width - 10, rect.height))
-        pg.draw.rect(temp_surface, color, (0, 5, rect.width, rect.height - 10))
-
-        main_text = Text(None, text, color=text_color, font=text_font, size=text_size)
-        main_text.move_center(rect.width // 2, rect.height // 2)
-        temp_surface.blit(main_text.surface, main_text.rect)
-        return temp_surface
-
-
-class ButtonControl:
-    def __init__(self, buttons: List[Button]):
+class ButtonContainer(DrawableObject):
+    def __init__(self, game, buttons: List[Button]) -> None:
+        super().__init__(game)
         self.buttons = buttons
         self.button_number = -1
 
-    def set_current_button(self, number):
+    def set_current_button(self, number: int) -> None:
         self.button_number = number
-        self.buttons[self.button_number].click = 'hover'
+        self.buttons[self.button_number].state = Button.STATE_HOVER
 
-    def unset_previous_button(self, number):
+    def unset_previous_button(self, number: int) -> None:
         self.button_number = number
-        self.buttons[self.button_number].click = 'initial'
+        self.buttons[self.button_number].state = Button.STATE_INITIAL
 
-    def mouse_action(self):
+    def mouse_action(self) -> None:
         if sum(pygame.mouse.get_rel()):
-            self.buttons[self.button_number].click = 'initial'
+            self.buttons[self.button_number].state = Button.STATE_INITIAL
             for i in range(len(self.buttons)):
                 self.buttons[i].process_logic()
-                if self.buttons[i].click == 'hover':
+                if self.buttons[i].state == Button.STATE_HOVER:
                     self.button_number = i

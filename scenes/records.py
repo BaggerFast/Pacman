@@ -1,18 +1,12 @@
-import os
 import pygame
 
+from misc.constants import Color
 from misc.path import get_image_path
 from objects.button import Button
-from objects.image import ImageObject
-from objects.text import Text
-
-from misc.path import get_image_path
-from objects.button import Button, ButtonControl
+from objects.button import ButtonContainer
 from objects.image import ImageObject
 from objects.text import Text
 from scenes.base import BaseScene
-from misc.constants import Color
-from misc.constants import Color, BUTTON_DEFAULT_COLORS
 
 
 class RecordsScene(BaseScene):
@@ -41,18 +35,15 @@ class RecordsScene(BaseScene):
         self.three_text = Text(self.game, str(self.records[2]), 30, (60, 115), Color.BRONZE)
         self.objects.append(self.three_text)
 
-        self.four_text = Text(self.game, '4: ' + str(self.records[1]), 30,(25, 150), Color.WHITE)
+        self.four_text = Text(self.game, '4: ' + str(self.records[1]), 30, (25, 150), Color.WHITE)
         self.objects.append(self.four_text)
 
-        self.five_text = Text(self.game, '5: ' + str(self.records[0]), 30,(25, 185), Color.WHITE)
+        self.five_text = Text(self.game, '5: ' + str(self.records[0]), 30, (25, 185), Color.WHITE)
         self.objects.append(self.five_text)
 
         # Создание и обработка кнопок
-        self.back_button = Button(
-            self.game, pygame.Rect(self.screen_width // 2, 200, 120, 60),
-            self.start_menu, 'BACK', **BUTTON_DEFAULT_COLORS
-        )
-        self.back_button.move_center(self.screen_width // 2, 250)
+        self.back_button = Button(self.game, pygame.Rect(self.screen_width // 2, 200, 120, 45),
+                                  self.start_menu, 'BACK', center=(self.screen_width // 2, 250))
         self.objects.append(self.back_button)
 
         # Создание и обработка изображений
@@ -79,15 +70,10 @@ class RecordsScene(BaseScene):
         self.buttons = []
         self.buttons.append(self.back_button)
 
-        self.control = ButtonControl(self.buttons)
-
-    def additional_event_check(self, event: pygame.event.Event) -> None:
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            self.start_menu()
+        self.control = ButtonContainer(self.game, self.buttons)
 
     def start_menu(self):
         self.game.set_scene(self.game.SCENE_MENU)
-
 
     def additional_event_check(self, event: pygame.event.Event) -> None:
         if event.type == pygame.KEYDOWN:
