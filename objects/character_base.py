@@ -17,9 +17,9 @@ class Character(DrawableObject):
         self.hp = Health()
         self.animator = animator
         self.rect = self.animator.current_image.get_rect()
-        self.shift_x = self.shift_y = 0
+        self.shift_x, self.shift_y = self.direction["right"][:2]
         self.move(*start_pos)
-        self.speed = 1
+        self.speed = 0
         self.rotate = 0
 
     def step(self):
