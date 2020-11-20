@@ -94,5 +94,3 @@ CELL_SIZE = 8
 
 class Font:
     FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')
-
-

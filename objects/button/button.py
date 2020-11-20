@@ -6,7 +6,7 @@ from misc.constants import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor
 from objects.base import DrawableObject
 
 
-class SimpleButton(DrawableObject):
+class BaseButton(DrawableObject):
     def __init__(self, game, geometry: Union[tuple, pygame.Rect], function: Callable[[], None]) -> None:
         super().__init__(game)
         if type(geometry) == tuple:
@@ -34,7 +34,7 @@ class SimpleButton(DrawableObject):
         self.function()
 
 
-class Button(SimpleButton):
+class Button(BaseButton):
     STATE_INITIAL = 0
     STATE_HOVER = 1
     STATE_CLICK = 2
@@ -124,25 +124,11 @@ class Button(SimpleButton):
     def process_draw(self) -> None:
         self.game.screen.blit(self.surfaces[self.state], self.rect.topleft)
 
+    def select(self):
+        self.state = self.STATE_HOVER
 
-class ButtonContainer(DrawableObject):
-    def __init__(self, game, buttons: List[Button]) -> None:
-        super().__init__(game)
-        self.buttons = buttons
-        self.button_number = -1
+    def deselect(self):
+        self.state = self.STATE_INITIAL
 
-    def set_current_button(self, number: int) -> None:
-        self.button_number = number
-        self.buttons[self.button_number].state = Button.STATE_HOVER
-
-    def unset_previous_button(self, number: int) -> None:
-        self.button_number = number
-        self.buttons[self.button_number].state = Button.STATE_INITIAL
-
-    def mouse_action(self) -> None:
-        if sum(pygame.mouse.get_rel()):
-            self.buttons[self.button_number].state = Button.STATE_INITIAL
-            for i in range(len(self.buttons)):
-                self.buttons[i].process_logic()
-                if self.buttons[i].state == Button.STATE_HOVER:
-                    self.button_number = i
+    def activate(self):
+        self.state = self.STATE_CLICK

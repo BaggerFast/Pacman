@@ -1,57 +1,46 @@
 import sys
+
 import pygame
 
-from objects.button import ButtonContainer, Button
+from objects.button import ButtonController, Button
 from objects.text import Text
 from scenes.base import BaseScene
 from misc.constants import Color
 
 
 class MenuScene(BaseScene):
+    def __init__(self, game):
+        super().__init__(game)
+
     def create_objects(self) -> None:
+        self.create_title()
+        self.create_buttons()
 
-        self.current_button = -1
+    def create_title(self) -> None:
+        title = Text(self.game, 'Pacman', 40, color=Color.WHITE)
+        title.move_center(self.game.width // 2, 30)
+        self.objects.append(title)
 
-        # Создание и обработка текста
-        self.main_text = Text(self.game, 'Pacman', 40, color=Color.WHITE)
-        self.main_text.move_center(self.game.width // 2, 30)
-        self.objects.append(self.main_text)
-
-        # Создание и обработка кнопок
-        self.play_button = Button(self.game, pygame.Rect(0, 0, 180, 45),
-                                  self.start_game, 'PLAY', center=(self.game.width // 2, 100))
-        self.records_button = Button(self.game, pygame.Rect(0, 0, 180, 45),
-                                     self.start_records, 'RECORDS', center=(self.game.width // 2, 163))
-        self.exit_button = Button(self.game, pygame.Rect(0, 0, 180, 45),
-                                  sys.exit, 'EXIT', center=(self.game.width // 2, 226))
-
-        self.buttons = [
-            self.play_button,
-            self.records_button,
-            self.exit_button
+    def create_buttons(self) -> None:
+        buttons = [
+            Button(self.game, pygame.Rect(0, 0, 180, 45),
+                   self.start_game, 'PLAY',
+                   center=(self.game.width // 2, 100)),
+            Button(self.game, pygame.Rect(0, 0, 180, 45),
+                   self.start_records, 'RECORDS',
+                   center=(self.game.width // 2, 163)),
+            Button(self.game, pygame.Rect(0, 0, 180, 45),
+                   sys.exit, 'EXIT',
+                   center=(self.game.width // 2, 226))
         ]
-        self.objects += self.buttons
-        self.control = ButtonContainer(self.game, self.buttons)
+        self.button_controller = ButtonController(self.game, buttons)
+        self.objects.append(self.button_controller)
 
-    def additional_event_check(self, event: pygame.event.Event) -> None:
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w or event.key == pygame.K_UP:
-                self.control.unset_previous_button(self.current_button)
-                self.current_button = (self.current_button - 1 + len(self.buttons)) % len(self.buttons)
-                if self.current_button < 0:
-                    self.current_button = 2
-                self.control.set_current_button(self.current_button)
-            if event.key == pygame.K_s or event.key == pygame.K_DOWN:
-                self.control.unset_previous_button(self.current_button)
-                self.current_button += 1
-                if self.current_button > 2:
-                    self.current_button = 0
-                self.control.set_current_button(self.current_button)
-            if event.key == pygame.K_SPACE or event.key == pygame.K_RETURN:
-                self.buttons[self.current_button].on_click()
+    def on_activate(self) -> None:
+        self.button_controller.reset_state()
 
-    def start_game(self):
+    def start_game(self) -> None:
         self.game.set_scene(self.game.SCENE_GAME)
 
-    def start_records(self):
+    def start_records(self) -> None:
         self.game.set_scene(self.game.SCENE_RECORDS)
