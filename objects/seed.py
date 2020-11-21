@@ -1,7 +1,8 @@
 import pygame
 
-from objects.base import DrawableObject
 from misc.constants import CELL_SIZE
+from objects.base import DrawableObject
+
 
 def main():
     pass

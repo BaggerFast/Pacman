@@ -2,9 +2,9 @@ import pygame
 
 
 class Animator:
-    TIMEOUT = 500
+    TIMEOUT = 150
 
-    def __init__(self, *path_to_images):
+    def __init__(self, path_to_images):
         self.animate_timer = 0
         self.images = self.add_image(path_to_images)
         self.current_image_index = 0

@@ -3,6 +3,9 @@ class Health:
         self.lives = lives
         self.max_lives = max_lives
 
+    def __int__(self):
+        return self.lives
+
     def change_count_lives(self, number):
         if self.max_lives >= self.lives + number >= 0:
             self.lives += number
