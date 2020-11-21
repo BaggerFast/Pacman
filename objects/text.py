@@ -1,4 +1,3 @@
-import pygame
 import pygame as pg
 
 from objects.base import DrawableObject
@@ -7,7 +6,7 @@ from objects.base import DrawableObject
 class Text(DrawableObject):
     def __init__(self, game, text, size, rect=None, color=(255, 255, 255), font="Arial"):
         super().__init__(game)
-        self.rect = rect if rect else pygame.rect.Rect(0, 0, 0, 0)
+        self.rect = rect if rect else pg.rect.Rect(0, 0, 0, 0)
         self.pos = rect if rect else (0, 0)
         self.size = size
         self.color = color

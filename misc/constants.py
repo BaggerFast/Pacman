@@ -2,34 +2,34 @@ import inspect
 import os.path
 from typing import NamedTuple
 
-import pygame
+import pygame as pg
 
 
 # https://www.pygame.org/docs/ref/color.html
 # https://github.com/pygame/pygame/blob/master/src_py/colordict.py
 class Color:
-    RED = pygame.color.Color('red')
-    BLUE = pygame.color.Color('blue')
-    GREEN = pygame.color.Color('green')
-    BLACK = pygame.color.Color('black')
-    WHITE = pygame.color.Color('white')
-    ORANGE = pygame.color.Color('orange')
-    YELLOW = pygame.color.Color('yellow')
-    GOLD = pygame.color.Color('gold')
-    GRAY = pygame.color.Color('gray50')
-    DARK_GRAY = pygame.color.Color('gray26')
-    SILVER = pygame.color.Color(192, 192, 192)
-    BRONZE = pygame.color.Color(205, 127, 50)
-    WOODEN = pygame.color.Color(101, 67, 33)
+    RED = pg.color.Color('red')
+    BLUE = pg.color.Color('blue')
+    GREEN = pg.color.Color('green')
+    BLACK = pg.color.Color('black')
+    WHITE = pg.color.Color('white')
+    ORANGE = pg.color.Color('orange')
+    YELLOW = pg.color.Color('yellow')
+    GOLD = pg.color.Color('gold')
+    GRAY = pg.color.Color('gray50')
+    DARK_GRAY = pg.color.Color('gray26')
+    SILVER = pg.color.Color(192, 192, 192)
+    BRONZE = pg.color.Color(205, 127, 50)
+    WOODEN = pg.color.Color(101, 67, 33)
 
 
 class ButtonStateColor(NamedTuple):
-    text: pygame.Color = Color.WHITE
-    background: pygame.Color = Color.BLACK
+    text: pg.Color = Color.WHITE
+    background: pg.Color = Color.BLACK
 
     @staticmethod
     def get_members_list():
-        members = inspect.getmembers(BUTTON_DEFAULT_COLORS, lambda member: type(member) == pygame.Color)
+        members = inspect.getmembers(BUTTON_DEFAULT_COLORS, lambda member: type(member) == pg.Color)
         return [item[0] for item in members]
 
 

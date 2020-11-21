@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 
 
 class BaseScene:
@@ -17,12 +17,12 @@ class BaseScene:
     def on_window_resize(self) -> None:
         pass
 
-    def process_event(self, event: pygame.event.Event) -> None:
+    def process_event(self, event: pg.event.Event) -> None:
         for item in self.objects:
             item.process_event(event)
         self.additional_event_check(event)
 
-    def additional_event_check(self, event: pygame.event.Event) -> None:
+    def additional_event_check(self, event: pg.event.Event) -> None:
         pass
 
     def process_logic(self) -> None:

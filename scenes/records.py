@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 
 from misc.constants import Color
 from misc.path import get_image_path
@@ -38,7 +38,7 @@ class RecordsScene(BaseScene):
         self.wooden_medal.scale(35, 35)
 
     def create_buttons(self) -> None:
-        self.back_button = Button(self.game, pygame.Rect(self.game.width // 2, 200, 120, 45),
+        self.back_button = Button(self.game, pg.Rect(self.game.width // 2, 200, 120, 45),
                                   self.start_menu, 'BACK', center=(self.game.width // 2, 250))
         self.button_controller = ButtonController(self.game, [self.back_button])
         self.objects.append(self.button_controller)
