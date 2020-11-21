@@ -24,7 +24,6 @@ class Game:
         self.score = Score()
         self.records = HighScore()
         self.delay = 15
-        self.clock = pg.time.Clock()
         self.scenes = [
             MenuScene(self),
             GameScene(self),

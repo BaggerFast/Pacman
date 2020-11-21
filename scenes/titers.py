@@ -40,13 +40,6 @@ class TitersScene(BaseScene):
         self.game = game
         self.on_screen = []
 
-    def create_objects(self) -> None:
-        self.create_titles()
-
-    def create_titles(self) -> None:
-        pass
-
-
     def process_logic(self) -> None:
         if len(self.objects) == 0:
             self.create_objects()
