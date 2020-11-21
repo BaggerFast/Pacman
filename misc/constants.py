@@ -92,5 +92,10 @@ ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 CELL_SIZE = 8
 
 
+class Points:
+    POINT_PER_SEED = 10
+    POINT_PER_ENERGIZER = 50
+
+
 class Font:
     FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')

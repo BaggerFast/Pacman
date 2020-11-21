@@ -1,3 +1,6 @@
+from misc.constants import Points
+
+
 class Score:
     def __init__(self):
         self.__score = 0
@@ -15,10 +18,10 @@ class Score:
         self.__score += amount
 
     def eat_seed(self):
-        self.__add_to_score(10)
+        self.__add_to_score(Points.POINT_PER_SEED)
 
     def eat_energizer(self):
-        self.__add_to_score(50)
+        self.__add_to_score(Points.POINT_PER_ENERGIZER)
 
     def activate_fear_mode(self):
         self.fear_mode = True

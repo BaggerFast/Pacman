@@ -3,7 +3,7 @@ import pygame
 from misc.loader import LevelLoader
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color
+from misc.constants import Color, Points
 from misc.path import get_image_path
 from objects.image import ImageObject
 from objects.text import Text
@@ -86,9 +86,18 @@ class GameScene(BaseScene):
         pygame.draw.circle(self.screen, (255, 0, 0),
                            (x_shift + self.fruit_position[0] * 8 + 4, y_shift + self.fruit_position[1] * 8 + 4), 4)
 
+    def process_collision(self) -> None:
+        if_eats, type = self.seeds.process_collision(self.pacman)
+        if if_eats:
+            if type == "seed":
+                self.game.score.eat_seed()
+            elif type == "energizer":
+                self.game.score.eat_energizer()
+
+
     def process_logic(self) -> None:
         super(GameScene, self).process_logic()
-        self.seeds.process_collision(self.pacman)
+        self.process_collision()
 
         # todo: make text update only when new value appeares
         self.scores_value_text.update_text(str(self.game.score))

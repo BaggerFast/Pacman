@@ -48,5 +48,5 @@ class SeedContainer(DrawableObject):
             if energizer[1] * CELL_SIZE + 18 == object.rect.y:
                 if energizer[0] * CELL_SIZE - 2 == object.rect.x:
                     self.energizers.remove(energizer)
-                    return True, "enrgizer"
-        return False
+                    return True, "energizer"
+        return False, ""
