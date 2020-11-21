@@ -25,16 +25,16 @@ class Pacman(Character):
             self.go()
             self.feature_rotate = action[event.key]
 
-    def process_logic(s):
-        s.animator.timer_check()
-        if s.in_center():
-            if s.move_to(s.rotate):
-                s.go()
+    def process_logic(self):
+        self.animator.timer_check()
+        if self.in_center():
+            if self.move_to(self.rotate):
+                self.go()
             else:
-                s.stop()
-            c = s.direction[s.feature_rotate][2]
-            if s.move_to(c):
-                s.set_direction(s.feature_rotate)
+                self.stop()
+            c = self.direction[self.feature_rotate][2]
+            if self.move_to(c):
+                self.set_direction(self.feature_rotate)
         super().process_logic()
 
     def movement_cell(self):
@@ -42,7 +42,7 @@ class Pacman(Character):
         cell = scene.movements_data[(self.rect.y-12) // CELL_SIZE][self.rect.x // CELL_SIZE+1]
         return "{0:04b}".format(cell)[::-1]
 
-    def move_to(self,direction):
+    def move_to(self, direction):
         return self.movement_cell()[direction] == "1"
 
     def in_center(self) -> bool:
