@@ -26,15 +26,15 @@ class RecordsScene(BaseScene):
         self.five_text = Text(self.game, '5: ' + str(self.records[0]), 30, (25, 185), Color.WHITE)
 
     def create_medals(self) -> None:
-        self.gold_medal = ImageObject(self.game, get_image_path('golden_medal.png'), 16, 45)
+        self.gold_medal = ImageObject(self.game, get_image_path('1_golden', 'medal'), 16, 45)
         self.gold_medal.scale(35, 35)
-        self.silver_medal = ImageObject(self.game, get_image_path('silver_medal.png'), 16, 80)
+        self.silver_medal = ImageObject(self.game, get_image_path('2_silver', 'medal'), 16, 80)
         self.silver_medal.scale(35, 35)
-        self.bronze_medal = ImageObject(self.game, get_image_path('bronze_medal.png'), 16, 115)
+        self.bronze_medal = ImageObject(self.game, get_image_path('3_bronze', 'medal'), 16, 115)
         self.bronze_medal.scale(35, 35)
-        self.stone_medal = ImageObject(self.game, get_image_path('stone_medal.png'), 16, 150)
+        self.stone_medal = ImageObject(self.game, get_image_path('4_stone', 'medal'), 16, 150)
         self.stone_medal.scale(35, 35)
-        self.wooden_medal = ImageObject(self.game, get_image_path('wooden_medal.png'), 16, 185)
+        self.wooden_medal = ImageObject(self.game, get_image_path('5_wooden', 'medal'), 16, 185)
         self.wooden_medal.scale(35, 35)
 
     def create_buttons(self) -> None:
