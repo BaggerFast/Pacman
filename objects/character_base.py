@@ -16,14 +16,14 @@ class Character(DrawableObject):
         self.hp = Health()
         self.animator = animator
         self.rect = self.animator.current_image.get_rect()
-        self.shift_x = self.shift_y = 0
+        self.shift_x, self.shift_y = self.direction["right"][:2]
         self.move(*start_pos)
-        self.speed = 1
+        self.speed = 0
         self.rotate = 0
 
     def step(self):
-        self.rect.x = (self.rect.x + self.shift_x * self.speed + self.game.width) % self.game.width
-        self.rect.y = (self.rect.y + self.shift_y * self.speed + self.game.height) % self.game.height
+        self.rect.centerx = (self.rect.centerx + self.shift_x * self.speed + self.game.width) % self.game.width
+        self.rect.centery = (self.rect.centery + self.shift_y * self.speed + self.game.height) % self.game.height
 
     def go(self):
         self.speed = 1
@@ -43,4 +43,5 @@ class Character(DrawableObject):
         self.step()
 
     def process_draw(self):
-        self.game.screen.blit(self.animator.current_image, self.rect)
+        for i in range(-1,2):
+            self.game.screen.blit(self.animator.current_image, (self.rect.x+self.game.width*i ,self.rect.y))
