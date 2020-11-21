@@ -3,7 +3,8 @@ import pygame as pg
 from misc.loader import LevelLoader
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color, Points
+from misc.constants import Color
+from misc.constants import CELL_SIZE
 from misc.path import get_image_path
 from objects.image import ImageObject
 from objects.text import Text
@@ -54,7 +55,7 @@ class GameScene(BaseScene):
         self.objects.append(self.highscores_value_text)
 
 
-        self.pacman = Pacman(self.game, (-6 + self.player_position[0] * 8 + 4, 14 + self.player_position[1] * 8 + 4))
+        self.pacman = Pacman(self.game, (-6 + self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
         self.objects.append(self.pacman)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
@@ -67,7 +68,7 @@ class GameScene(BaseScene):
     def draw_ghost(self, index, color, x, y):
         pg.draw.circle(
             self.screen, color,
-            (x + self.ghost_positions[index][0] * 8 + 4, y + self.ghost_positions[index][1] * 8 + 4),
+            (x + self.ghost_positions[index][0] * 8 + 4, y + self.ghost_positions[index][1] * CELL_SIZE + CELL_SIZE//2),
             8
         )
 
@@ -84,7 +85,7 @@ class GameScene(BaseScene):
 
         # fruit
         pg.draw.circle(self.screen, (255, 0, 0),
-                           (x_shift + self.fruit_position[0] * 8 + 4, y_shift + self.fruit_position[1] * 8 + 4), 4)
+                           (x_shift + self.fruit_position[0] *CELL_SIZE + CELL_SIZE//2, y_shift + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2), 4)
 
     def process_collision(self) -> None:
         if_eats, type = self.seeds.process_collision(self.pacman)
