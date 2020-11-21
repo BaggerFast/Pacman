@@ -7,23 +7,25 @@ from misc.animator import Animator
 
 
 class Pacman(Character):
+    action = {
+        pg.K_w: 'up',
+        pg.K_a: 'left',
+        pg.K_s: 'down',
+        pg.K_d: 'right'
+    }
+
     def __init__(self, game, start_pos: tuple):
-        self.animator = Animator(
+        self.walk_anim = Animator(
             get_image_path_for_animator('Pacman', 'walk')
         )
-        super().__init__(game, self.animator, start_pos)
+        self.current_anim = self.walk_anim
+        super().__init__(game, self.current_anim, start_pos)
         self.feature_rotate = "none"
 
     def process_event(self, event):
-        action = {
-            pg.K_w: 'up',
-            pg.K_a: 'left',
-            pg.K_s: 'down',
-            pg.K_d: 'right'
-        }
-        if event.type == pg.KEYDOWN and event.key in action.keys():
+        if event.type == pg.KEYDOWN and event.key in self.action.keys():
             self.go()
-            self.feature_rotate = action[event.key]
+            self.feature_rotate = self.action[event.key]
 
     def process_logic(self):
         self.animator.timer_check()
