@@ -6,6 +6,7 @@ from scenes.main import GameScene
 from scenes.menu import MenuScene
 from scenes.pause import PauseScene
 from scenes.records import RecordsScene
+from scenes.titers import TitersScene
 
 
 class Game:
@@ -21,7 +22,7 @@ class Game:
         self.lives = 3
         self.score = 0
         self.records = HighScore()
-
+        self.delay = 15
         self.scenes = [
             MenuScene(self),
             GameScene(self),
@@ -73,7 +74,7 @@ class Game:
             self.process_all_events()
             self.process_all_logic()
             self.process_all_draw()
-            pygame.time.wait(10)
+            pygame.time.wait(self.delay)
 
     def set_scene(self, index: int, resume: bool = False) -> None:
         if not resume:
