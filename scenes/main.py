@@ -55,7 +55,7 @@ class GameScene(BaseScene):
         self.objects.append(self.highscores_value_text)
 
 
-        self.pacman = Pacman(self.game, (-6 + self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
+        self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
         self.objects.append(self.pacman)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
@@ -68,7 +68,7 @@ class GameScene(BaseScene):
     def draw_ghost(self, index, color, x, y):
         pg.draw.circle(
             self.screen, color,
-            (x + self.ghost_positions[index][0] * 8 + 4, y + self.ghost_positions[index][1] * CELL_SIZE + CELL_SIZE//2),
+            (x + self.ghost_positions[index][0] * CELL_SIZE + CELL_SIZE//2, y + self.ghost_positions[index][1] * CELL_SIZE + CELL_SIZE//2),
             8
         )
 
@@ -94,7 +94,6 @@ class GameScene(BaseScene):
                 self.game.score.eat_seed()
             elif type == "energizer":
                 self.game.score.eat_energizer()
-
 
     def process_logic(self) -> None:
         super(GameScene, self).process_logic()

@@ -26,9 +26,12 @@ class Character(DrawableObject):
         self.rect.centery = (self.rect.centery + self.shift_y * self.speed + self.game.height) % self.game.height
 
     def go(self):
+        if self.speed != 0:
+            self.animator.start()
         self.speed = 1
 
     def stop(self):
+        self.animator.stop()
         self.speed = 0
 
     def set_direction(self, new_direction=None):
@@ -43,5 +46,5 @@ class Character(DrawableObject):
         self.step()
 
     def process_draw(self):
-        for i in range(-1,2):
-            self.game.screen.blit(self.animator.current_image, (self.rect.x+self.game.width*i ,self.rect.y))
+        for i in range(-1, 2):
+            self.game.screen.blit(self.animator.current_image, (self.rect.x+self.game.width*i, self.rect.y))

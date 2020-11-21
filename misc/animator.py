@@ -10,6 +10,7 @@ class Animator:
         self.current_image_index = 0
         self.current_image = self.images[self.current_image_index]
         self.rotate = 0
+        self.run = False
 
     def add_image(self, path_to_images):
         images = []
@@ -17,8 +18,15 @@ class Animator:
             images.append(pg.image.load(path_to_images[i]))
         return images
 
+    def stop(self):
+        self.run = False
+
+    def start(self):
+        self.run = True
+
+
     def timer_check(self):
-        if pg.time.get_ticks() - self.animate_timer > self.TIMEOUT:
+        if pg.time.get_ticks() - self.animate_timer > self.TIMEOUT and self.run:
             self.animate_timer = pg.time.get_ticks()
             self.current_image_index += 1
             self.image_swap()

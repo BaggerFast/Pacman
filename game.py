@@ -74,7 +74,7 @@ class Game:
             self.process_all_events()
             self.process_all_logic()
             self.process_all_draw()
-            pg.time.wait(10)
+            pg.time.wait(15)
 
     def set_scene(self, index: int, resume: bool = False) -> None:
         if not resume:
