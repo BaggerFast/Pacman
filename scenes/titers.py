@@ -44,9 +44,9 @@ class TitersScene(BaseScene):
         self.alpha_delta = -15
 
     def process_logic(self) -> None:
-        if len(self.objects) == len(self.students):
+        if len(self.objects) == len(self.students) and not self.on_screen:
             self.objects.clear()
-        if pg.time.get_ticks() % 190 == 0:
+        elif pg.time.get_ticks() % 190 == 0 and not len(self.objects) == len(self.students):
             students = list(set(self.students) - set((obj.text for obj in self.objects)))
             student = Text(self.game, students[randint(0,len(students)-1)], 10, color=Color.WHITE)
             student.move_center(self.start_pos, randint(10, self.game.height-10))
@@ -56,8 +56,8 @@ class TitersScene(BaseScene):
         for student in self.objects:
             if student.rect.x >= self.game.width:
                 self.on_screen -= 1
-                student.rect.x = -101
-            elif student.rect.x != -101:
+                student.rect.x = -105
+            elif student.rect.x != -105:
                 student.ttl += 1
                 student.rect.x = student.ttl * self.speed + self.start_pos
                 student.surface.set_alpha(min(255, self.game.width-((student.rect.midbottom[0] - self.game.width//2)**2
