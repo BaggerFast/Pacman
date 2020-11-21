@@ -38,20 +38,36 @@ class TitersScene(BaseScene):
     def __init__(self, game):
         super().__init__(game)
         self.game = game
-        self.on_screen = []
+        self.on_screen = 0
+        self.start_pos = -100
+        self.speed = 0.3
+        self.alpha_delta = -15
 
     def process_logic(self) -> None:
-        if len(self.objects) == 0:
-            self.create_objects()
-        if pg.time.get_ticks() % 100 == 0:
-            student = Text(self.game, self.students[randint(0,len(self.students)-1)], 10, color=Color.WHITE)
-            student.move_center(-90, randint(10, self.game.height))
+        if len(self.objects) == len(self.students):
+            self.objects.clear()
+        if pg.time.get_ticks() % 190 == 0:
+            students = list(set(self.students) - set((obj.text for obj in self.objects)))
+            student = Text(self.game, students[randint(0,len(students)-1)], 10, color=Color.WHITE)
+            student.move_center(self.start_pos, randint(10, self.game.height-10))
+            student.ttl = 0
             self.objects.append(student)
+            self.on_screen += 1
         for student in self.objects:
-            student.surface.set_alpha(abs((student.rect.x % self.game.width/2) - self.game.width))
-            student.rect.x += 1
-            self.game.screen.blit(student.surface, (student.rect.x, student.rect.y))
             if student.rect.x >= self.game.width:
-                self.objects.remove(student)
+                self.on_screen -= 1
+                student.rect.x = -101
+            elif student.rect.x != -101:
+                student.ttl += 1
+                student.rect.x = student.ttl * self.speed + self.start_pos
+                student.surface.set_alpha(min(255, self.game.width-((student.rect.midbottom[0] - self.game.width//2)**2
+                                                                    * 0.06 - self.alpha_delta)))
+                self.game.screen.blit(student.surface, (student.rect.x, student.rect.y))
+
+    def additional_event_check(self, event: pg.event.Event) -> None:
+        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+            self.game.set_scene(0)
+            self.on_screen = 0
+            self.objects = []
 
 
