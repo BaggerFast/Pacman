@@ -24,11 +24,13 @@ class Game:
         self.score = Score()
         self.records = HighScore()
         self.delay = 15
+        self.clock = pg.time.Clock()
         self.scenes = [
             MenuScene(self),
             GameScene(self),
             PauseScene(self),
             RecordsScene(self),
+            TitersScene(self),
         ]
 
         self.game_over = False
@@ -58,6 +60,7 @@ class Game:
 
     def process_all_events(self) -> None:
         for event in pg.event.get():
+            if event.type == pg.KEYDOWN and event.key == pg.K_SPACE: self.set_scene(4)
             self.process_exit_events(event)
             self.process_resize_event(event)
             self.scenes[self.current_scene_index].process_event(event)

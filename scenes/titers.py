@@ -1,6 +1,7 @@
 import sys
 
-import pygame
+import pygame as pg
+from random import choice, randint
 
 from objects.button import ButtonController, Button
 from objects.text import Text
@@ -37,17 +38,27 @@ class TitersScene(BaseScene):
     def __init__(self, game):
         super().__init__(game)
         self.game = game
+        self.on_screen = []
 
     def create_objects(self) -> None:
         self.create_titles()
 
     def create_titles(self) -> None:
-        for index in range(len(self.students)):
-            title = Text(self.game, self.students[index], 10, color=Color.WHITE)
-            title.move_center(self.game.width // 2, self.game.height + 15 + index * 15)
-            self.objects.append(title)
+        pass
+
 
     def process_logic(self) -> None:
-        for index in range(len(self.students)):
-            self.objects[index].move_center(self.game.width // 2, self.objects[index].rect.y - 1)
+        if len(self.objects) == 0:
+            self.create_objects()
+        if pg.time.get_ticks() % 100 == 0:
+            student = Text(self.game, self.students[randint(0,len(self.students)-1)], 10, color=Color.WHITE)
+            student.move_center(-90, randint(10, self.game.height))
+            self.objects.append(student)
+        for student in self.objects:
+            student.surface.set_alpha(abs((student.rect.x % self.game.width/2) - self.game.width))
+            student.rect.x += 1
+            self.game.screen.blit(student.surface, (student.rect.x, student.rect.y))
+            if student.rect.x >= self.game.width:
+                self.objects.remove(student)
+
 
