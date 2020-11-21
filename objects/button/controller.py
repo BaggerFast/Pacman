@@ -1,15 +1,15 @@
 from typing import List, Tuple, Union
 
-import pygame
+import pygame as pg
 
 from objects.base import DrawableObject
 from objects.button.button import Button
 
 
 class ButtonController(DrawableObject):
-    keys_previous = [pygame.K_UP, pygame.K_LEFT, pygame.K_w, pygame.K_a]
-    keys_next = [pygame.K_DOWN, pygame.K_RIGHT, pygame.K_s, pygame.K_d, pygame.K_TAB]
-    keys_activate = [pygame.K_SPACE, pygame.K_RETURN]
+    keys_previous = [pg.K_UP, pg.K_LEFT, pg.K_w, pg.K_a]
+    keys_next = [pg.K_DOWN, pg.K_RIGHT, pg.K_s, pg.K_d, pg.K_TAB]
+    keys_activate = [pg.K_SPACE, pg.K_RETURN]
 
     def __init__(self, game, buttons: List[Button]) -> None:
         super().__init__(game)
@@ -43,8 +43,8 @@ class ButtonController(DrawableObject):
     def click_current_button(self) -> None:
         self.buttons[self.active_button_index].click()
 
-    def process_keydown(self, event: pygame.event.Event) -> None:
-        if event.type != pygame.KEYDOWN:
+    def process_keydown(self, event: pg.event.Event) -> None:
+        if event.type != pg.KEYDOWN:
             return
         if event.key in self.keys_previous:
             self.select_previous_button()
@@ -53,10 +53,10 @@ class ButtonController(DrawableObject):
         elif event.key in self.keys_activate:
             self.activate_current_button()
 
-    def process_keyup(self, event: pygame.event.Event) -> None:
-        if event.type != pygame.KEYUP:
+    def process_keyup(self, event: pg.event.Event) -> None:
+        if event.type != pg.KEYUP:
             return
-        if event.key in [pygame.K_SPACE, pygame.K_RETURN]:
+        if event.key in [pg.K_SPACE, pg.K_RETURN]:
             self.click_current_button()
 
     def get_button_under_mouse(self, pos: Tuple[Union[int, float], Union[int, float]]) -> Union[int, None]:
@@ -65,18 +65,18 @@ class ButtonController(DrawableObject):
                 return index
         return None
 
-    def process_mouse_motion(self, event: pygame.event.Event) -> None:
-        if event.type != pygame.MOUSEMOTION:
+    def process_mouse_motion(self, event: pg.event.Event) -> None:
+        if event.type != pg.MOUSEMOTION:
             return
         index = self.get_button_under_mouse(event.pos)
         if index:
             self.active_button_index = index
 
-    def process_button_events(self, event: pygame.event.Event) -> None:
+    def process_button_events(self, event: pg.event.Event) -> None:
         for button in self.buttons:
             button.process_event(event)
 
-    def process_event(self, event: pygame.event.Event) -> None:
+    def process_event(self, event: pg.event.Event) -> None:
         self.process_button_events(event)
         self.process_keydown(event)
         self.process_keyup(event)

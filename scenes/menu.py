@@ -1,6 +1,6 @@
 import sys
 
-import pygame
+import pygame as pg
 
 from objects.button import ButtonController, Button
 from objects.text import Text
@@ -23,13 +23,13 @@ class MenuScene(BaseScene):
 
     def create_buttons(self) -> None:
         buttons = [
-            Button(self.game, pygame.Rect(0, 0, 180, 45),
+            Button(self.game, pg.Rect(0, 0, 180, 45),
                    self.start_game, 'PLAY',
                    center=(self.game.width // 2, 100)),
-            Button(self.game, pygame.Rect(0, 0, 180, 45),
+            Button(self.game, pg.Rect(0, 0, 180, 45),
                    self.start_records, 'RECORDS',
                    center=(self.game.width // 2, 163)),
-            Button(self.game, pygame.Rect(0, 0, 180, 45),
+            Button(self.game, pg.Rect(0, 0, 180, 45),
                    sys.exit, 'EXIT',
                    center=(self.game.width // 2, 226))
         ]

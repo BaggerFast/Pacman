@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 from objects.button import ButtonController, Button
 from objects.text import Text
 from scenes.base import BaseScene
@@ -13,13 +13,13 @@ class PauseScene(BaseScene):
 
     def create_buttons(self) -> None:
         buttons = [
-            Button(self.game, pygame.Rect(0, 0, 180, 45),
+            Button(self.game, pg.Rect(0, 0, 180, 45),
                    self.continue_game, 'CONTINUE',
                    center=(self.game.width // 2, 100)),
-            Button(self.game, pygame.Rect(0, 0, 180, 45),
+            Button(self.game, pg.Rect(0, 0, 180, 45),
                    self.restart_game, 'RESTART',
                    center=(self.game.width // 2, 161)),
-            Button(self.game, pygame.Rect(0, 0, 180, 45),
+            Button(self.game, pg.Rect(0, 0, 180, 45),
                    self.start_menu, 'MAIN MENU',
                    center=(self.game.width // 2, 224)),
         ]
@@ -40,10 +40,10 @@ class PauseScene(BaseScene):
     def start_menu(self) -> None:
         self.game.set_scene(self.game.SCENE_MENU)
 
-    def process_event(self, event: pygame.event.Event) -> None:
+    def process_event(self, event: pg.event.Event) -> None:
         super().process_event(event)
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
+        if event.type == pg.KEYDOWN:
+            if event.key == pg.K_ESCAPE:
                 self.continue_game()
 
     def on_activate(self) -> None:

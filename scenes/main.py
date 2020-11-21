@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 
 from misc.loader import LevelLoader
 from objects.map import Map
@@ -39,17 +39,17 @@ class GameScene(BaseScene):
 
         self.prepare_lives_meter()
 
-        self.scores_label_text = Text(self.game, 'SCORE', 8, rect=pygame.Rect(10, 2, 20, 20), color=Color.WHITE)
+        self.scores_label_text = Text(self.game, 'SCORE', 8, rect=pg.Rect(10, 2, 20, 20), color=Color.WHITE)
         self.objects.append(self.scores_label_text)
-        self.scores_value_text = Text(self.game, str(self.game.score), 8, rect=pygame.Rect(10, 9, 20, 20),
+        self.scores_value_text = Text(self.game, str(self.game.score), 8, rect=pg.Rect(10, 9, 20, 20),
                                       color=Color.WHITE)
         self.objects.append(self.scores_value_text)
 
-        self.highscores_label_text = Text(self.game, 'HIGHSCORE', 8, rect=pygame.Rect(130, 2, 20, 20),
+        self.highscores_label_text = Text(self.game, 'HIGHSCORE', 8, rect=pg.Rect(130, 2, 20, 20),
                                           color=Color.WHITE)
         self.objects.append(self.highscores_label_text)
         self.highscores_value_text = Text(self.game, str(self.game.records.data[-1]), 8,
-                                          rect=pygame.Rect(130, 9, 20, 20),
+                                          rect=pg.Rect(130, 9, 20, 20),
                                           color=Color.WHITE)
         self.objects.append(self.highscores_value_text)
 
@@ -57,15 +57,15 @@ class GameScene(BaseScene):
         self.pacman = Pacman(self.game, (-6 + self.player_position[0] * 8 + 4, 14 + self.player_position[1] * 8 + 4))
         self.objects.append(self.pacman)
 
-    def additional_event_check(self, event: pygame.event.Event) -> None:
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+    def additional_event_check(self, event: pg.event.Event) -> None:
+        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.start_pause()
 
     def start_pause(self):
         self.game.set_scene(self.game.SCENE_PAUSE)
 
     def draw_ghost(self, index, color, x, y):
-        pygame.draw.circle(
+        pg.draw.circle(
             self.screen, color,
             (x + self.ghost_positions[index][0] * 8 + 4, y + self.ghost_positions[index][1] * 8 + 4),
             8
@@ -83,7 +83,7 @@ class GameScene(BaseScene):
         self.draw_ghost(3, (0, 255, 0), x_shift, y_shift)
 
         # fruit
-        pygame.draw.circle(self.screen, (255, 0, 0),
+        pg.draw.circle(self.screen, (255, 0, 0),
                            (x_shift + self.fruit_position[0] * 8 + 4, y_shift + self.fruit_position[1] * 8 + 4), 4)
 
     def process_collision(self) -> None:

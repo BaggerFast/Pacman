@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 
 from misc.constants import Color
 from misc.health import Health
@@ -20,7 +20,7 @@ class Game:
     current_scene_index = SCENE_MENU
 
     def __init__(self) -> None:
-        self.screen = pygame.display.set_mode(self.size, pygame.SCALED)
+        self.screen = pg.display.set_mode(self.size, pg.SCALED)
         self.lives = Health(lives=3, max_lives=3)
         self.score = Score()
         self.records = HighScore()
@@ -35,14 +35,14 @@ class Game:
         self.game_over = False
 
     @staticmethod
-    def exit_button_pressed(event: pygame.event.Event) -> bool:
-        return event.type == pygame.QUIT
+    def exit_button_pressed(event: pg.event.Event) -> bool:
+        return event.type == pg.QUIT
 
     @staticmethod
-    def exit_hotkey_pressed(event: pygame.event.Event) -> bool:
-        return event.type == pygame.KEYDOWN and event.mod & pygame.KMOD_CTRL and event.key == pygame.K_q
+    def exit_hotkey_pressed(event: pg.event.Event) -> bool:
+        return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
 
-    def process_exit_events(self, event: pygame.event.Event) -> None:
+    def process_exit_events(self, event: pg.event.Event) -> None:
         if Game.exit_button_pressed(event) or Game.exit_hotkey_pressed(event):
             self.exit_game()
 
@@ -50,15 +50,15 @@ class Game:
         for scene in self.scenes:
             scene.on_window_resize()
 
-    def process_resize_event(self, event: pygame.event.Event) -> None:
-        if event.type != pygame.VIDEORESIZE:
+    def process_resize_event(self, event: pg.event.Event) -> None:
+        if event.type != pg.VIDEORESIZE:
             return
         self.SIZE = self.WIDTH, self.HEIGHT = event.w, event.h
-        self.screen = pygame.display.set_mode(self.SIZE, pygame.RESIZABLE)
+        self.screen = pg.display.set_mode(self.SIZE, pg.RESIZABLE)
         self.resize_scenes()
 
     def process_all_events(self) -> None:
-        for event in pygame.event.get():
+        for event in pg.event.get():
             self.process_exit_events(event)
             self.process_resize_event(event)
             self.scenes[self.current_scene_index].process_event(event)
@@ -69,14 +69,14 @@ class Game:
     def process_all_draw(self) -> None:
         self.screen.fill(Color.BLACK)
         self.scenes[self.current_scene_index].process_draw()
-        pygame.display.flip()
+        pg.display.flip()
 
     def main_loop(self) -> None:
         while not self.game_over:
             self.process_all_events()
             self.process_all_logic()
             self.process_all_draw()
-            pygame.time.wait(self.delay)
+            pg.time.wait(self.delay)
 
     def set_scene(self, index: int, resume: bool = False) -> None:
         if not resume:

@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 
 from misc.path import get_image_path_for_animator
 from misc.constants import CELL_SIZE
@@ -16,12 +16,12 @@ class Pacman(Character):
 
     def process_event(self, event):
         action = {
-            pygame.K_w: 'up',
-            pygame.K_a: 'left',
-            pygame.K_s: 'down',
-            pygame.K_d: 'right'
+            pg.K_w: 'up',
+            pg.K_a: 'left',
+            pg.K_s: 'down',
+            pg.K_d: 'right'
         }
-        if event.type == pygame.KEYDOWN and event.key in action.keys():
+        if event.type == pg.KEYDOWN and event.key in action.keys():
             self.go()
             self.feature_rotate = action[event.key]
 

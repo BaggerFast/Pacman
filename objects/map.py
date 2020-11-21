@@ -1,4 +1,4 @@
-import pygame
+import pygame as pg
 
 from misc.constants import CELL_SIZE
 from misc.path import get_image_path
@@ -21,7 +21,7 @@ class Map(DrawableObject):
         self.x = x
         self.y = y
         self.map = map_data
-        self.surface = pygame.Surface((224, 248))
+        self.surface = pg.Surface((224, 248))
         self.__load_tiles()
         self.__render_map_surface()
 
@@ -29,15 +29,15 @@ class Map(DrawableObject):
         self.tiles = []
         for i in self.tile_names:
             tile_path = get_image_path(i, "map")
-            tile = pygame.image.load(tile_path)
+            tile = pg.image.load(tile_path)
             self.tiles.append(tile)
 
     def __corner_preprocess(self, x, y, temp_surface):
         flip_x = self.map[y][x][1] // (CELL_SIZE//2)
         flip_y = False
-        temp_surface = pygame.transform.flip(temp_surface, flip_x, flip_y)
+        temp_surface = pg.transform.flip(temp_surface, flip_x, flip_y)
         rotate_angle = self.map[y][x][1] % (CELL_SIZE//2) * -90
-        temp_surface = pygame.transform.rotate(temp_surface, rotate_angle)
+        temp_surface = pg.transform.rotate(temp_surface, rotate_angle)
         return temp_surface
 
     def __draw_cell(self, x, y):
