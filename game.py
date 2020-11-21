@@ -8,7 +8,6 @@ from scenes.menu import MenuScene
 from scenes.pause import PauseScene
 from scenes.records import RecordsScene
 
-
 class Game:
     size = width, height = 224, 285
     SCENE_MENU = 0

@@ -10,6 +10,7 @@ from objects.image import ImageObject
 from objects.text import Text
 from objects.pacman import Pacman
 from scenes.base import BaseScene
+from objects.base_ghost import BaseGhost
 
 
 class GameScene(BaseScene):
@@ -55,7 +56,7 @@ class GameScene(BaseScene):
         self.objects.append(self.highscores_value_text)
 
 
-        self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
+        self.pacman = BaseGhost(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
         self.objects.append(self.pacman)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
