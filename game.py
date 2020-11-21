@@ -59,10 +59,9 @@ class Game:
 
     def process_all_events(self) -> None:
         for event in pg.event.get():
-            print(self.current_scene_index)
-            if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.current_scene_index != 4:
+            if event.type == pg.KEYDOWN and event.key == pg.K_0 and self.current_scene_index != 4:
                 self.set_scene(4)
-            elif event.type == pg.KEYDOWN and event.key == pg.K_SPACE and self.current_scene_index == 4:
+            elif event.type == pg.KEYDOWN and event.key == pg.K_0 and self.current_scene_index == 4:
                 self.set_scene(0)
             self.process_exit_events(event)
             self.process_resize_event(event)
