@@ -1,6 +1,6 @@
 import pygame
 
-from misc.path import get_image_path
+from misc.path import get_image_path_for_animator
 from objects.character_base import Character
 from misc.animator import Animator
 
@@ -8,8 +8,7 @@ from misc.animator import Animator
 class Pacman(Character):
     def __init__(self, game, start_pos: tuple):
         self.animator = Animator(
-            get_image_path("Pacman1.png"),
-            get_image_path('Pacman2.png')
+            get_image_path_for_animator('Pacman', 'walk')
         )
         super().__init__(game, self.animator, start_pos)
 

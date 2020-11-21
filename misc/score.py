@@ -4,6 +4,9 @@ class Score:
         self.fear_mode = False
         self.fear_count = 0
 
+    def __str__(self):
+        return str(self.__score)
+
     @property
     def score(self):
         return self.__score

@@ -1,6 +1,6 @@
 import pygame
-import os
 
+from misc.constants import CELL_SIZE
 from misc.path import get_image_path
 from objects.base import DrawableObject
 
@@ -28,15 +28,15 @@ class Map(DrawableObject):
     def __load_tiles(self):
         self.tiles = []
         for i in self.tile_names:
-            tile_path = get_image_path(os.path.join("map", i))
+            tile_path = get_image_path(i, "map")
             tile = pygame.image.load(tile_path)
             self.tiles.append(tile)
 
     def __corner_preprocess(self, x, y, temp_surface):
-        flip_x = self.map[y][x][1] // 4
+        flip_x = self.map[y][x][1] // (CELL_SIZE//2)
         flip_y = False
         temp_surface = pygame.transform.flip(temp_surface, flip_x, flip_y)
-        rotate_angle = self.map[y][x][1] % 4 * -90
+        rotate_angle = self.map[y][x][1] % (CELL_SIZE//2) * -90
         temp_surface = pygame.transform.rotate(temp_surface, rotate_angle)
         return temp_surface
 
@@ -44,7 +44,7 @@ class Map(DrawableObject):
         temp_surface = self.tiles[self.map[y][x][0]]
         if len(self.map[y][x]) == 2:
             temp_surface = self.__corner_preprocess(x, y, temp_surface)
-        self.surface.blit(temp_surface, (x * 8, y * 8))
+        self.surface.blit(temp_surface, (x * CELL_SIZE, y * CELL_SIZE))
 
     def __render_map_surface(self):
         for y in range(len(self.map)):

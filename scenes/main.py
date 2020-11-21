@@ -24,9 +24,9 @@ class GameScene(BaseScene):
         self.fruit_position = self.loader.get_fruit_position()
         super().__init__(game)
 
-    def prepare_lives_meter(self): # prepare lives matter :)
-        for i in range(self.game.lives):
-            hp_image = ImageObject(self.game, get_image_path('pacman.png'), 5 + i * 20, 271)
+    def prepare_lives_meter(self):
+        for i in range(int(self.game.lives)):
+            hp_image = ImageObject(self.game, get_image_path('1.png', 'Pacman', 'Walk'), 5 + i * 20, 271)
             hp_image.scale(12, 12)
             hp_image.rotate(180)
             self.objects.append(hp_image)

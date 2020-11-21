@@ -1,7 +1,9 @@
 import pygame
 
 from misc.constants import Color
+from misc.health import Health
 from misc.highscore import HighScore
+from misc.score import Score
 from scenes.main import GameScene
 from scenes.menu import MenuScene
 from scenes.pause import PauseScene
@@ -19,8 +21,8 @@ class Game:
 
     def __init__(self) -> None:
         self.screen = pygame.display.set_mode(self.size, pygame.SCALED)
-        self.lives = 3
-        self.score = 0
+        self.lives = Health(lives=3, max_lives=3)
+        self.score = Score()
         self.records = HighScore()
         self.delay = 15
         self.scenes = [
