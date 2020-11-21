@@ -1,5 +1,4 @@
 import pygame as pg
-
 from misc.constants import Color
 from misc.health import Health
 from misc.highscore import HighScore
