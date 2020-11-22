@@ -2,6 +2,8 @@ import pygame as pg
 from misc.constants import Color, INDEX_SCENES
 from misc.health import Health
 from misc.highscore import HighScore
+from misc.score import Score
+from scenes.levels import LevelsScene
 from scenes.main import GameScene
 from scenes.menu import MenuScene
 from scenes.pause import PauseScene
@@ -20,9 +22,10 @@ class Game:
         self.records = HighScore()
         self.delay = 15
         self.scenes = [
+            PauseScene(self),
             MenuScene(self),
             GameScene(self),
-            PauseScene(self),
+            LevelsScene(self),
             RecordsScene(self),
             TitersScene(self),
         ]

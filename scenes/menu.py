@@ -5,7 +5,8 @@ import pygame as pg
 from objects.button import ButtonController, Button
 from objects.text import Text
 from scenes.base import BaseScene
-from misc.constants import Color, INDEX_SCENES
+from misc.constants import INDEX_SCENES
+from misc.constants import Color
 
 
 class MenuScene(BaseScene):
@@ -27,7 +28,7 @@ class MenuScene(BaseScene):
                    self.start_game, 'PLAY',
                    center=(self.game.width // 2, 80), text_size=50),
             Button(self.game, pg.Rect(0, 0, 180, 30),
-                   sys.exit, 'LEVELS',
+                   self.start_levels, 'LEVELS',
                    center=(self.game.width // 2, 120), text_size=50),
             Button(self.game, pg.Rect(0, 0, 180, 30),
                    self.start_records, 'RECORDS',
@@ -53,3 +54,6 @@ class MenuScene(BaseScene):
 
     def start_titres(self) -> None:
         self.game.set_scene(INDEX_SCENES["SCENE_TITERS"])
+
+    def start_levels(self) -> None:
+        self.game.set_scene(INDEX_SCENES["SCENE_LEVELS"])

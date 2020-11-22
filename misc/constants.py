@@ -92,11 +92,12 @@ ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 CELL_SIZE = 8
 
 INDEX_SCENES = {
-    "SCENE_MENU": 0,
-    "SCENE_GAME": 1,
-    "SCENE_PAUSE": 2,
-    "SCENE_RECORDS": 3,
-    "SCENE_TITERS": 4
+    "SCENE_PAUSE": 0,
+    "SCENE_MENU": 1,
+    "SCENE_GAME": 2,
+    "SCENE_LEVELS": 3,
+    "SCENE_RECORDS": 4,
+    "SCENE_TITERS": 5,
 }
 
 class Points:
