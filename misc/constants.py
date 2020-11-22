@@ -91,6 +91,19 @@ BUTTON_DEFAULT_COLORS = ButtonColor(
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 CELL_SIZE = 8
 
+INDEX_SCENES = {
+    "SCENE_PAUSE": 0,
+    "SCENE_MENU": 1,
+    "SCENE_GAME": 2,
+    "SCENE_LEVELS": 3,
+    "SCENE_RECORDS": 4,
+    "SCENE_TITERS": 5,
+}
+
+class Points:
+    POINT_PER_SEED = 10
+    POINT_PER_ENERGIZER = 50
+
 
 class Points:
     POINT_PER_SEED = 10
@@ -99,3 +112,5 @@ class Points:
 
 class Font:
     FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')
+    MAIN_SCENE_SIZE = 15
+    TITERS_SCENE_SIZE = 20

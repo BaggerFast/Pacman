@@ -1,6 +1,7 @@
 import pygame as pg
 
 from misc.path import get_image_path_for_animator
+from misc.constants import CELL_SIZE
 from objects.character_base import Character
 from misc.animator import Animator
 
@@ -37,3 +38,14 @@ class Pacman(Character):
             if self.move_to(c):
                 self.set_direction(self.feature_rotate)
         super().process_logic()
+
+    def movement_cell(self):
+        scene = self.game.scenes[self.game.current_scene_index]
+        cell = scene.movements_data[(self.rect.y-12) // CELL_SIZE][self.rect.x // CELL_SIZE+1]
+        return "{0:04b}".format(cell)[::-1]
+
+    def move_to(self, direction):
+        return self.movement_cell()[direction] == "1"
+
+    def in_center(self) -> bool:
+        return self.rect.x % CELL_SIZE == 6 and (self.rect.y-20) % CELL_SIZE == 6

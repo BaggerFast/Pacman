@@ -10,6 +10,7 @@ class Character(DrawableObject):
         "down": (0, 1, 1),
         "left": (-1, 0, 2),
         "up": (0, -1, 3),
+        "none": (0, 0, None)
     }
 
     def __init__(self, game, animator: Animator, start_pos: tuple):

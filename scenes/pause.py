@@ -2,7 +2,7 @@ import pygame as pg
 from objects.button import ButtonController, Button
 from objects.text import Text
 from scenes.base import BaseScene
-from misc.constants import Color
+from misc.constants import Color, INDEX_SCENES
 
 
 class PauseScene(BaseScene):
@@ -32,13 +32,13 @@ class PauseScene(BaseScene):
         self.objects.append(self.main_text)
 
     def restart_game(self) -> None:
-        self.game.set_scene(self.game.SCENE_GAME, resume=False)
+        self.game.set_scene(INDEX_SCENES['SCENE_MENU'], resume=False)
 
     def continue_game(self) -> None:
-        self.game.set_scene(self.game.SCENE_GAME, resume=True)
+        self.game.set_scene(INDEX_SCENES['SCENE_GAME'], resume=True)
 
     def start_menu(self) -> None:
-        self.game.set_scene(self.game.SCENE_MENU)
+        self.game.set_scene(INDEX_SCENES['SCENE_MENU'])
 
     def process_event(self, event: pg.event.Event) -> None:
         super().process_event(event)
