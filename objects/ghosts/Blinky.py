@@ -25,7 +25,6 @@ class Blinky(BaseGhost):
             0: self.right_walk_anim
         }
 
-
         super().__init__(game, self.top_walk_anim, start_pos, self.animations)
         self.feature_rotate = "none"
 
