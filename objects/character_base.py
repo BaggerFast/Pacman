@@ -1,3 +1,4 @@
+from misc.constants import CELL_SIZE
 from misc.health import Health
 from objects.base import DrawableObject
 from misc.animator import Animator
@@ -40,7 +41,8 @@ class Character(DrawableObject):
             if self.rotate != rotate:
                 self.rotate = rotate
                 self.animator.rotate = rotate
-                self.animator.change_rotation()
+                if self.animator.is_rotation:
+                    self.animator.change_rotation()
 
     def process_logic(self):
         self.step()
@@ -48,3 +50,16 @@ class Character(DrawableObject):
     def process_draw(self):
         for i in range(-1, 2):
             self.game.screen.blit(self.animator.current_image, (self.rect.x+self.game.width*i, self.rect.y))
+
+# Обработка коллизий (не трогайте пажожда, я сам не понимаю как это работает, я пытался понять, но я так и не смог)
+
+    def movement_cell(self):
+        scene = self.game.scenes[self.game.current_scene_index]
+        cell = scene.movements_data[(self.rect.y-12) // CELL_SIZE][self.rect.x // CELL_SIZE+1]
+        return "{0:04b}".format(cell)[::-1]
+
+    def move_to(self, direction):
+        return self.movement_cell()[direction] == "1"
+
+    def in_center(self) -> bool:
+        return self.rect.x % CELL_SIZE == 6 and (self.rect.y-20) % CELL_SIZE == 6

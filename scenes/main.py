@@ -1,6 +1,10 @@
 import pygame as pg
 
 from misc.loader import LevelLoader
+from objects.Blinky import Blinky
+from objects.Clyde import Clyde
+from objects.Inky import Inky
+from objects.Pinky import Pinky
 from objects.map import Map
 from objects.seed import SeedContainer
 from misc.constants import Color
@@ -10,7 +14,6 @@ from objects.image import ImageObject
 from objects.text import Text
 from objects.pacman import Pacman
 from scenes.base import BaseScene
-from objects.base_ghost import BaseGhost
 
 
 class GameScene(BaseScene):
@@ -56,8 +59,18 @@ class GameScene(BaseScene):
         self.objects.append(self.highscores_value_text)
 
 
-        self.pacman = BaseGhost(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
+        self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14+self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
+
+        self.blinky = Blinky(self.game, (-6+self.ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2))
+        self.pinky = Pinky(self.game, (-6+self.ghost_positions[1][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[2][1] * CELL_SIZE + CELL_SIZE // 2))
+        self.inky = Inky(self.game, (-6+self.ghost_positions[0][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[1][1] * CELL_SIZE + CELL_SIZE // 2))
+        self.clyde = Clyde(self.game, (-6+self.ghost_positions[2][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[0][1] * CELL_SIZE + CELL_SIZE // 2))
+
         self.objects.append(self.pacman)
+        self.objects.append(self.blinky)
+        self.objects.append(self.pinky)
+        self.objects.append(self.inky)
+        self.objects.append(self.clyde)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
@@ -77,12 +90,6 @@ class GameScene(BaseScene):
         # Temporary draw
         x_shift = 0
         y_shift = 20
-
-        # ghosts
-        self.draw_ghost(0, (255, 0, 0), x_shift, y_shift)
-        self.draw_ghost(1, (255, 0, 255), x_shift, y_shift)
-        self.draw_ghost(2, (0, 0, 255), x_shift, y_shift)
-        self.draw_ghost(3, (0, 255, 0), x_shift, y_shift)
 
         # fruit
         pg.draw.circle(self.screen, (255, 0, 0),

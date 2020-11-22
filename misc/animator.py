@@ -4,7 +4,8 @@ import pygame as pg
 class Animator:
     TIMEOUT = 150
 
-    def __init__(self, path_to_images):
+    def __init__(self, path_to_images, is_rotation = True):
+        self.is_rotation = is_rotation
         self.animate_timer = 0
         self.images = self.add_image(path_to_images)
         self.current_image_index = 0
@@ -35,7 +36,8 @@ class Animator:
         if self.current_image_index == len(self.images):
             self.current_image_index = 0
         self.current_image = self.images[self.current_image_index]
-        self.change_rotation()
+        if self.is_rotation:
+            self.change_rotation()
 
     def change_rotation(self):
         self.current_image = pg.transform.rotate(self.images[self.current_image_index], -90 * self.rotate)
