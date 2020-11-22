@@ -1,32 +1,33 @@
 import pygame as pg
-from misc.constants import Color
+from misc.constants import Color, INDEX_SCENES
 from misc.health import Health
 from misc.highscore import HighScore
 from misc.score import Score
+from scenes.levels import LevelsScene
 from scenes.main import GameScene
 from scenes.menu import MenuScene
 from scenes.pause import PauseScene
 from scenes.records import RecordsScene
+from scenes.titers import TitersScene
+
 
 class Game:
     size = width, height = 224, 285
-    SCENE_MENU = 0
-    SCENE_GAME = 1
-    SCENE_PAUSE = 2
-    SCENE_RECORDS = 3
-    current_scene_index = SCENE_MENU
+    current_scene_index = INDEX_SCENES['SCENE_MENU']
 
     def __init__(self) -> None:
         self.screen = pg.display.set_mode(self.size, pg.SCALED)
         self.lives = Health(lives=3, max_lives=3)
         self.score = Score()
         self.records = HighScore()
-
+        self.delay = 15
         self.scenes = [
+            PauseScene(self),
             MenuScene(self),
             GameScene(self),
-            PauseScene(self),
+            LevelsScene(self),
             RecordsScene(self),
+            TitersScene(self),
         ]
 
         self.game_over = False
@@ -73,7 +74,7 @@ class Game:
             self.process_all_events()
             self.process_all_logic()
             self.process_all_draw()
-            pg.time.wait(15)
+            pg.time.wait(self.delay)
 
     def set_scene(self, index: int, resume: bool = False) -> None:
         if not resume:

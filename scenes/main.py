@@ -7,13 +7,14 @@ from objects.ghosts.Inky import Inky
 from objects.ghosts.Pinky import Pinky
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color
+from misc.constants import Color, INDEX_SCENES
 from misc.constants import CELL_SIZE
 from misc.path import get_image_path
 from objects.image import ImageObject
 from objects.text import Text
 from objects.pacman import Pacman
 from scenes.base import BaseScene
+from misc.constants import Font
 
 
 class GameScene(BaseScene):
@@ -44,21 +45,22 @@ class GameScene(BaseScene):
 
         self.prepare_lives_meter()
 
-        self.scores_label_text = Text(self.game, 'SCORE', 8, rect=pg.Rect(10, 2, 20, 20), color=Color.WHITE)
+        self.scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 2, 20, 20), color=Color.WHITE)
         self.objects.append(self.scores_label_text)
-        self.scores_value_text = Text(self.game, str(self.game.score), 8, rect=pg.Rect(10, 9, 20, 20),
+        self.scores_value_text = Text(self.game, str(self.game.score),Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 10, 20, 20),
                                       color=Color.WHITE)
         self.objects.append(self.scores_value_text)
 
-        self.highscores_label_text = Text(self.game, 'HIGHSCORE', 8, rect=pg.Rect(130, 2, 20, 20),
+        self.highscores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 2, 20, 20),
                                           color=Color.WHITE)
         self.objects.append(self.highscores_label_text)
-        self.highscores_value_text = Text(self.game, str(self.game.records.data[-1]), 8,
-                                          rect=pg.Rect(130, 9, 20, 20),
+        self.highscores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
+                                          rect=pg.Rect(130, 10, 20, 20),
                                           color=Color.WHITE)
         self.objects.append(self.highscores_value_text)
 
 
+        self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
         self.pacman = Pacman(self.game, (-7+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14+self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
 
         self.blinky = Blinky(self.game, (-7+self.ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2))
@@ -77,7 +79,7 @@ class GameScene(BaseScene):
             self.start_pause()
 
     def start_pause(self):
-        self.game.set_scene(self.game.SCENE_PAUSE)
+        self.game.set_scene(INDEX_SCENES['SCENE_PAUSE'])
 
     def draw_ghost(self, index, color, x, y):
         pg.draw.circle(
@@ -94,6 +96,16 @@ class GameScene(BaseScene):
         # fruit
         pg.draw.circle(self.screen, (255, 0, 0),
                            (x_shift + self.fruit_position[0] *CELL_SIZE + CELL_SIZE//2, y_shift + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2), 4)
+
+    def process_collision(self) -> None:
+        if_eats, type = self.seeds.process_collision(self.pacman)
+        if if_eats:
+            if type == "seed":
+                self.game.score.eat_seed()
+            elif type == "energizer":
+                self.game.score.eat_energizer()
+        pg.draw.circle(self.screen, (255, 0, 0),
+                           (x_shift + self.fruit_position[0] * CELL_SIZE + CELL_SIZE//2, y_shift + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2), 4)
 
     def process_collision(self) -> None:
         if_eats, type = self.seeds.process_collision(self.pacman)
