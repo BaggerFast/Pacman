@@ -20,7 +20,7 @@ from misc.constants import Font
 class GameScene(BaseScene):
 
     def __init__(self, game):
-        self.loader = LevelLoader()
+        self.loader = LevelLoader("new_map.json")
         self.map_data = self.loader.get_map_data()
         self.seed_data = self.loader.get_seed_data()
         self.energizer_data = self.loader.get_energizer_data()
