@@ -7,10 +7,10 @@ from misc.animator import Animator
 
 class BaseGhost(Character):
     action = {
-        pg.K_w: 'up',
-        pg.K_a: 'left',
-        pg.K_s: 'down',
-        pg.K_d: 'right'
+        pg.K_UP: 'up',
+        pg.K_LEFT: 'left',
+        pg.K_DOWN: 'down',
+        pg.K_RIGHT: 'right'
     }
 
     def __init__(self, game, animator: Animator, start_pos: tuple, animations):

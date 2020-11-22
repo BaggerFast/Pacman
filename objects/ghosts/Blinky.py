@@ -1,24 +1,22 @@
-import pygame as pg
-
 from misc.animator import Animator
 from misc.path import get_image_path_for_animator
-from objects.base_ghost import BaseGhost
+from objects.ghosts.base_ghost import BaseGhost
 
 
-class Clyde(BaseGhost):
+class Blinky(BaseGhost):
 
     def __init__(self, game, start_pos: tuple):
         self.top_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'clyde', 'top'), False
+            get_image_path_for_animator('ghost', 'blinky', 'top'), False
         )
         self.bottom_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'clyde', 'bottom'), False
+            get_image_path_for_animator('ghost', 'blinky', 'bottom'), False
         )
         self.left_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'clyde', 'left'), False
+            get_image_path_for_animator('ghost', 'blinky', 'left'), False
         )
         self.right_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'clyde', 'right'), False
+            get_image_path_for_animator('ghost', 'blinky', 'right'), False
         )
         self.animations = {
             3: self.top_walk_anim,

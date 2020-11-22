@@ -1,10 +1,10 @@
 import pygame as pg
 
 from misc.loader import LevelLoader
-from objects.Blinky import Blinky
-from objects.Clyde import Clyde
-from objects.Inky import Inky
-from objects.Pinky import Pinky
+from objects.ghosts.Blinky import Blinky
+from objects.ghosts.Clyde import Clyde
+from objects.ghosts.Inky import Inky
+from objects.ghosts.Pinky import Pinky
 from objects.map import Map
 from objects.seed import SeedContainer
 from misc.constants import Color
@@ -59,12 +59,12 @@ class GameScene(BaseScene):
         self.objects.append(self.highscores_value_text)
 
 
-        self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14+self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
+        self.pacman = Pacman(self.game, (-7+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14+self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
 
-        self.blinky = Blinky(self.game, (-6+self.ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2))
-        self.pinky = Pinky(self.game, (-6+self.ghost_positions[1][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[2][1] * CELL_SIZE + CELL_SIZE // 2))
-        self.inky = Inky(self.game, (-6+self.ghost_positions[0][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[1][1] * CELL_SIZE + CELL_SIZE // 2))
-        self.clyde = Clyde(self.game, (-6+self.ghost_positions[2][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[0][1] * CELL_SIZE + CELL_SIZE // 2))
+        self.blinky = Blinky(self.game, (-7+self.ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2))
+        self.pinky = Pinky(self.game, (-7+self.ghost_positions[1][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[2][1] * CELL_SIZE + CELL_SIZE // 2))
+        self.inky = Inky(self.game, (-7+self.ghost_positions[0][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[1][1] * CELL_SIZE + CELL_SIZE // 2))
+        self.clyde = Clyde(self.game, (-7+self.ghost_positions[2][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[0][1] * CELL_SIZE + CELL_SIZE // 2))
 
         self.objects.append(self.pacman)
         self.objects.append(self.blinky)

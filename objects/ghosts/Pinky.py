@@ -1,8 +1,6 @@
-import pygame as pg
-
 from misc.animator import Animator
 from misc.path import get_image_path_for_animator
-from objects.base_ghost import BaseGhost
+from objects.ghosts.base_ghost import BaseGhost
 
 
 class Pinky(BaseGhost):
