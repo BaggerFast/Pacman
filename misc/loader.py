@@ -36,7 +36,7 @@ class SeedLoader:
 
 
 class LevelLoader:
-    def __init__(self, filename="original.map"):
+    def __init__(self, filename="original.json"):
         self.filename = filename
         self.__load_map_json()
         self.movements_map = self.get_movements_data()
@@ -45,7 +45,7 @@ class LevelLoader:
         self.energizer_data = self.seed_loader.get_energizer_data()
 
     def __load_map_json(self):
-        with open(os.path.join('maps', 'map.json')) as f:
+        with open(os.path.join('maps', self.filename)) as f:
             self.__json = json.load(f)
 
     def get_map_data(self):
