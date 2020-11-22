@@ -1,5 +1,6 @@
 import pygame as pg
 
+from misc.constants import CELL_SIZE
 from misc.path import get_image_path_for_animator
 from objects.character_base import Character
 from misc.animator import Animator
@@ -13,10 +14,13 @@ class BaseGhost(Character):
         pg.K_RIGHT: 'right'
     }
 
-    def __init__(self, game, animator: Animator, start_pos: tuple, animations, enable_collision=True):
+    def __init__(self, game, animator: Animator, start_pos: tuple, animations, enable_collision=True, max_count_eat_seeds_in_home=0):
         super().__init__(game, animator, start_pos)
         self.animations = animations
         self.enable_collision = enable_collision
+        self.count_eat_seeds_in_home = 0
+        self.max_count_eat_seeds_in_home = max_count_eat_seeds_in_home
+        self.timer = pg.time.get_ticks()
 
     def process_event(self, event):
         if event.type == pg.KEYDOWN and event.key in self.action.keys():
@@ -36,3 +40,16 @@ class BaseGhost(Character):
                 self.set_direction(self.feature_direction)
         self.animator = self.animations[self.rotate]
         super().process_logic()
+
+    def collision_check(self, object): #pacman only
+        return self.rect.centerx//CELL_SIZE == object.rect.centerx//CELL_SIZE and self.rect.centery//CELL_SIZE == object.rect.centery//CELL_SIZE and self.enable_collision
+
+    def counter(self):
+        self.count_eat_seeds_in_home += 1
+
+    def can_leave_home(self):
+        #print(self.max_count_eat_seeds_in_home, ': ', pg.time.get_ticks()-self.timer)
+        return self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home or pg.time.get_ticks()-self.timer >= 4000
+
+    def update_timer(self):
+        self.timer = pg.time.get_ticks()
