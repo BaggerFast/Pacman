@@ -1,4 +1,5 @@
 from misc.animator import Animator
+from misc.constants import CELL_SIZE
 from misc.path import get_image_path_for_animator
 from objects.ghosts.base_ghost import BaseGhost
 
@@ -6,6 +7,7 @@ from objects.ghosts.base_ghost import BaseGhost
 class Pinky(BaseGhost):
 
     def __init__(self, game, start_pos: tuple):
+        self.ghost_positions = None
         self.top_walk_anim = Animator(
             get_image_path_for_animator('ghost', 'pinky', 'top'), False
         )
@@ -25,8 +27,22 @@ class Pinky(BaseGhost):
             0: self.right_walk_anim
         }
 
-
-        super().__init__(game, self.top_walk_anim, start_pos, self.animations)
+        super().__init__(game, self.top_walk_anim, start_pos, self.animations, False)
         self.feature_rotate = "none"
 
+    def process_logic(self):
+        super().process_logic()
+        if not self.enable_collision:
+            self.animator = self.top_walk_anim
+            self.shift_x = 0
+            self.shift_y = -1
+            self.speed = 1
+            scene = self.game.scenes[self.game.current_scene_index]
+            if (self.rect.y == scene.blinky.start_pos[1]):
+                self.shift_x = 1
+                self.shift_y = 0
+                self.speed = 0
+                self.enable_collision = True
+
+# -7+self.ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2)
 

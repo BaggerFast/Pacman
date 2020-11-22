@@ -1,4 +1,3 @@
-from objects.ghosts.base_ghost import BaseGhost
 from misc.animator import Animator
 from misc.path import get_image_path_for_animator
 from objects.ghosts.base_ghost import BaseGhost
@@ -25,8 +24,25 @@ class Inky(BaseGhost):
             1: self.bottom_walk_anim,
             0: self.right_walk_anim
         }
-
-        super().__init__(game, self.top_walk_anim, start_pos, self.animations)
+        super().__init__(game, self.top_walk_anim, start_pos, self.animations, False)
         self.feature_rotate = "none"
+
+    def process_logic(self):
+        super().process_logic()
+        if not self.enable_collision:
+            self.animator = self.right_walk_anim
+            self.shift_x = 1
+            self.shift_y = 0
+            self.speed = 1
+            scene = self.game.scenes[self.game.current_scene_index]
+            if (self.rect.x == scene.pinky.start_pos[0]):
+                self.animator = self.top_walk_anim
+                self.shift_x = 0
+                self.shift_y = -1
+            if (self.rect.y == scene.blinky.start_pos[1]):
+                self.shift_x = 1
+                self.shift_y = 0
+                self.speed = 0
+                self.enable_collision = True
 
 
