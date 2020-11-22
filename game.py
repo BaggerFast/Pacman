@@ -1,5 +1,5 @@
 import pygame as pg
-from misc.constants import Color
+from misc.constants import Color, INDEX_SCENES
 from misc.health import Health
 from misc.highscore import HighScore
 from misc.score import Score
@@ -12,11 +12,7 @@ from scenes.titers import TitersScene
 
 class Game:
     size = width, height = 224, 285
-    SCENE_MENU = 0
-    SCENE_GAME = 1
-    SCENE_PAUSE = 2
-    SCENE_RECORDS = 3
-    current_scene_index = SCENE_MENU
+    current_scene_index = INDEX_SCENES['SCENE_MENU']
 
     def __init__(self) -> None:
         self.screen = pg.display.set_mode(self.size, pg.SCALED)
@@ -59,10 +55,6 @@ class Game:
 
     def process_all_events(self) -> None:
         for event in pg.event.get():
-            if event.type == pg.KEYDOWN and event.key == pg.K_0 and self.current_scene_index != 4:
-                self.set_scene(4)
-            elif event.type == pg.KEYDOWN and event.key == pg.K_0 and self.current_scene_index == 4:
-                self.set_scene(0)
             self.process_exit_events(event)
             self.process_resize_event(event)
             self.scenes[self.current_scene_index].process_event(event)

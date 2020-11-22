@@ -1,12 +1,8 @@
-import sys
-
 import pygame as pg
-from random import choice, randint
-
-from objects.button import ButtonController, Button
+from random import randint
 from objects.text import Text
 from scenes.base import BaseScene
-from misc.constants import Color
+from misc.constants import Color, INDEX_SCENES, Font
 
 
 class TitersScene(BaseScene):
@@ -47,7 +43,7 @@ class TitersScene(BaseScene):
 
     def create_student(self):
         students = list(set(self.students) - set((obj.text for obj in self.objects)))
-        student = Text(self.game, students[randint(0, len(students) - 1)], 10, color=Color.WHITE)
+        student = Text(self.game, students[randint(0, len(students) - 1)], Font.TITERS_SCENE_SIZE, color=Color.WHITE)
         student.move_center(self.start_pos, randint(10, self.game.height - 10))
         student.speed = self.speed + randint(-5, 15) / 100
         student.ttl = 0
@@ -77,8 +73,8 @@ class TitersScene(BaseScene):
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.scenes[self.game.current_scene_index] == self:
-            if event.type == pg.KEYDOWN and (event.key == pg.K_ESCAPE):
-                self.game.set_scene(0)
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                self.game.set_scene(INDEX_SCENES['SCENE_MENU'])
                 self.on_screen = 0
                 self.objects = []
 

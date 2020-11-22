@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc.constants import Color
+from misc.constants import Color, INDEX_SCENES
 from misc.path import get_image_path
 from objects.button import Button
 from objects.button import ButtonController
@@ -22,8 +22,8 @@ class RecordsScene(BaseScene):
         self.one_text = Text(self.game, str(self.records[4]), 30, (60, 45), Color.GOLD)
         self.two_text = Text(self.game, str(self.records[3]), 30, (60, 80), Color.SILVER)
         self.three_text = Text(self.game, str(self.records[2]), 30, (60, 115), Color.BRONZE)
-        self.four_text = Text(self.game, '4: ' + str(self.records[1]), 30, (25, 150), Color.WHITE)
-        self.five_text = Text(self.game, '5: ' + str(self.records[0]), 30, (25, 185), Color.WHITE)
+        self.four_text = Text(self.game, str(self.records[1]), 30, (25, 150), Color.WHITE)
+        self.five_text = Text(self.game, str(self.records[0]), 30, (25, 185), Color.WHITE)
 
     def create_medals(self) -> None:
         self.gold_medal = ImageObject(self.game, get_image_path('1_golden', 'medal'), 16, 45)
@@ -53,7 +53,7 @@ class RecordsScene(BaseScene):
         self.error_text.move_center(self.game.width // 2, 100)
 
     def start_menu(self) -> None:
-        self.game.set_scene(self.game.SCENE_MENU)
+        self.game.set_scene(INDEX_SCENES["SCENE_MENU"])
 
     def on_activate(self) -> None:
         self.button_controller.reset_state()

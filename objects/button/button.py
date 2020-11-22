@@ -4,6 +4,7 @@ import pygame as pg
 
 from misc.constants import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor
 from objects.base import DrawableObject
+from objects.text import Text
 
 
 class BaseButton(DrawableObject):
@@ -42,10 +43,11 @@ class Button(BaseButton):
     def __init__(self, game, geometry: Union[tuple, pg.Rect],
                  function: Callable[[], None], text: str = 'Define me',
                  colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
-                 center: Tuple[float, float] = None) -> None:
+                 center: Tuple[float, float] = None, text_size=60) -> None:
         super().__init__(game, geometry, function)
         self.text = text
-        self.font = pg.font.Font(Font.FILENAME, 60)
+        self.font = pg.font.Font(Font.FILENAME, text_size)
+        # self.text = Text(self.game, text)
         self.colors: ButtonColor = self.parse_colors(colors)
         self.state = self.STATE_INITIAL
         self.surfaces = self.prepare_surfaces()

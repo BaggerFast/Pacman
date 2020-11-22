@@ -10,6 +10,7 @@ from objects.image import ImageObject
 from objects.text import Text
 from objects.pacman import Pacman
 from scenes.base import BaseScene
+from misc.constants import Font
 
 
 class GameScene(BaseScene):
@@ -40,17 +41,17 @@ class GameScene(BaseScene):
 
         self.prepare_lives_meter()
 
-        self.scores_label_text = Text(self.game, 'SCORE', 8, rect=pg.Rect(10, 2, 20, 20), color=Color.WHITE)
+        self.scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 2, 20, 20), color=Color.WHITE)
         self.objects.append(self.scores_label_text)
-        self.scores_value_text = Text(self.game, str(self.game.score), 8, rect=pg.Rect(10, 9, 20, 20),
+        self.scores_value_text = Text(self.game, str(self.game.score),Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 10, 20, 20),
                                       color=Color.WHITE)
         self.objects.append(self.scores_value_text)
 
-        self.highscores_label_text = Text(self.game, 'HIGHSCORE', 8, rect=pg.Rect(130, 2, 20, 20),
+        self.highscores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 2, 20, 20),
                                           color=Color.WHITE)
         self.objects.append(self.highscores_label_text)
-        self.highscores_value_text = Text(self.game, str(self.game.records.data[-1]), 8,
-                                          rect=pg.Rect(130, 9, 20, 20),
+        self.highscores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
+                                          rect=pg.Rect(130, 10, 20, 20),
                                           color=Color.WHITE)
         self.objects.append(self.highscores_value_text)
 
@@ -85,7 +86,7 @@ class GameScene(BaseScene):
 
         # fruit
         pg.draw.circle(self.screen, (255, 0, 0),
-                           (x_shift + self.fruit_position[0] *CELL_SIZE + CELL_SIZE//2, y_shift + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2), 4)
+                           (x_shift + self.fruit_position[0] * CELL_SIZE + CELL_SIZE//2, y_shift + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2), 4)
 
     def process_collision(self) -> None:
         if_eats, type = self.seeds.process_collision(self.pacman)

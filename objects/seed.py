@@ -3,14 +3,6 @@ import pygame as pg
 from objects.base import DrawableObject
 from misc.constants import CELL_SIZE
 
-def main():
-    pass
-
-
-if __name__ == '__main__':
-    main()
-
-
 class SeedContainer(DrawableObject):
     def __init__(self, game, seed_data, energizer_data, x=0, y=20):
         super().__init__(game)
