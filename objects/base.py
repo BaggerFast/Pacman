@@ -1,10 +1,10 @@
-import pygame
+import pygame as pg
 
 
 class DrawableObject:
     def __init__(self, game):
         self.game = game
-        self.rect = pygame.rect.Rect(0, 0, 0, 0)
+        self.rect = pg.rect.Rect(0, 0, 0, 0)
 
     def move(self, x, y):
         self.rect.x = x

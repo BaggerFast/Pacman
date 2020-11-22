@@ -1,13 +1,11 @@
 import sys
-
-import pygame
-
+import pygame as pg
 from game import Game
 
 
 def main():
-    pygame.init()
-    pygame.font.init()
+    pg.init()
+    pg.font.init()
     game = Game()
     game.main_loop()
     sys.exit(0)

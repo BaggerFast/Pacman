@@ -1,14 +1,16 @@
-import pygame
+import pygame as pg
 
 from misc.loader import LevelLoader
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color
+from misc.constants import Color, INDEX_SCENES
+from misc.constants import CELL_SIZE
 from misc.path import get_image_path
 from objects.image import ImageObject
 from objects.text import Text
 from objects.pacman import Pacman
 from scenes.base import BaseScene
+from misc.constants import Font
 
 
 class GameScene(BaseScene):
@@ -25,8 +27,8 @@ class GameScene(BaseScene):
         super().__init__(game)
 
     def prepare_lives_meter(self):
-        for i in range(self.game.lives):
-            hp_image = ImageObject(self.game, get_image_path('pacman.png'), 5 + i * 20, 271)
+        for i in range(int(self.game.lives)):
+            hp_image = ImageObject(self.game, get_image_path('1.png', 'Pacman', 'Walk'), 5 + i * 20, 271)
             hp_image.scale(12, 12)
             hp_image.rotate(180)
             self.objects.append(hp_image)
@@ -39,35 +41,35 @@ class GameScene(BaseScene):
 
         self.prepare_lives_meter()
 
-        self.scores_label_text = Text(self.game, 'SCORE', 8, rect=pygame.Rect(10, 2, 20, 20), color=Color.WHITE)
+        self.scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 2, 20, 20), color=Color.WHITE)
         self.objects.append(self.scores_label_text)
-        self.scores_value_text = Text(self.game, str(self.game.score), 8, rect=pygame.Rect(10, 9, 20, 20),
+        self.scores_value_text = Text(self.game, str(self.game.score),Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 10, 20, 20),
                                       color=Color.WHITE)
         self.objects.append(self.scores_value_text)
 
-        self.highscores_label_text = Text(self.game, 'HIGHSCORE', 8, rect=pygame.Rect(130, 2, 20, 20),
+        self.highscores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 2, 20, 20),
                                           color=Color.WHITE)
         self.objects.append(self.highscores_label_text)
-        self.highscores_value_text = Text(self.game, str(self.game.records.data[-1]), 8,
-                                          rect=pygame.Rect(130, 9, 20, 20),
+        self.highscores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
+                                          rect=pg.Rect(130, 10, 20, 20),
                                           color=Color.WHITE)
         self.objects.append(self.highscores_value_text)
 
 
-        self.pacman = Pacman(self.game, (-6 + self.player_position[0] * 8 + 4, 14 + self.player_position[1] * 8 + 4))
+        self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
         self.objects.append(self.pacman)
 
-    def additional_event_check(self, event: pygame.event.Event) -> None:
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+    def additional_event_check(self, event: pg.event.Event) -> None:
+        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.start_pause()
 
     def start_pause(self):
-        self.game.set_scene(self.game.SCENE_PAUSE)
+        self.game.set_scene(INDEX_SCENES['SCENE_PAUSE'])
 
     def draw_ghost(self, index, color, x, y):
-        pygame.draw.circle(
+        pg.draw.circle(
             self.screen, color,
-            (x + self.ghost_positions[index][0] * 8 + 4, y + self.ghost_positions[index][1] * 8 + 4),
+            (x + self.ghost_positions[index][0] * CELL_SIZE + CELL_SIZE//2, y + self.ghost_positions[index][1] * CELL_SIZE + CELL_SIZE//2),
             8
         )
 
@@ -83,10 +85,20 @@ class GameScene(BaseScene):
         self.draw_ghost(3, (0, 255, 0), x_shift, y_shift)
 
         # fruit
-        pygame.draw.circle(self.screen, (255, 0, 0),
-                           (x_shift + self.fruit_position[0] * 8 + 4, y_shift + self.fruit_position[1] * 8 + 4), 4)
+        pg.draw.circle(self.screen, (255, 0, 0),
+                           (x_shift + self.fruit_position[0] * CELL_SIZE + CELL_SIZE//2, y_shift + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2), 4)
+
+    def process_collision(self) -> None:
+        if_eats, type = self.seeds.process_collision(self.pacman)
+        if if_eats:
+            if type == "seed":
+                self.game.score.eat_seed()
+            elif type == "energizer":
+                self.game.score.eat_energizer()
 
     def process_logic(self) -> None:
         super(GameScene, self).process_logic()
+        self.process_collision()
+
         # todo: make text update only when new value appeares
         self.scores_value_text.update_text(str(self.game.score))
