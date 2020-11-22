@@ -2,6 +2,7 @@ import pygame
 
 from misc.constants import Color
 from misc.highscore import HighScore
+from scenes.levels import LevelsScene
 from scenes.main import GameScene
 from scenes.menu import MenuScene
 from scenes.pause import PauseScene
@@ -14,6 +15,7 @@ class Game:
     SCENE_GAME = 1
     SCENE_PAUSE = 2
     SCENE_RECORDS = 3
+    SCENE_LEVELS = 4
     current_scene_index = SCENE_MENU
 
     def __init__(self) -> None:
@@ -27,6 +29,7 @@ class Game:
             GameScene(self),
             PauseScene(self),
             RecordsScene(self),
+            LevelsScene(self),
         ]
 
         self.game_over = False

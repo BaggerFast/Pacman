@@ -1,49 +1,42 @@
-import sys
-
 import pygame
 
+
 from objects.button import ButtonController, Button
-from objects.text import Text
 from scenes.base import BaseScene
+from objects.text import Text
 from misc.constants import Color
-from scenes.levels import LevelsScene
 
-
-class MenuScene(BaseScene):
-    def __init__(self, game):
-        super().__init__(game)
-
+class LevelsScene(BaseScene):
     def create_objects(self) -> None:
         self.create_title()
         self.create_buttons()
 
     def create_title(self) -> None:
-        title = Text(self.game, 'Pacman', 40, color=Color.WHITE)
+        title = Text(self.game, 'Level select', 40, color=Color.WHITE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
 
     def create_buttons(self) -> None:
         buttons = [
             Button(self.game, pygame.Rect(0, 0, 180, 45),
-                   self.start_game, 'PLAY',
+                   self.level1, 'Level 1',
                    center=(self.game.width // 2, 100)),
-
             Button(self.game, pygame.Rect(0, 0, 180, 45),
-                   self.start_records, 'RECORDS',
+                   self.level2, 'Level 2',
                    center=(self.game.width // 2, 163)),
-
             Button(self.game, pygame.Rect(0, 0, 180, 45),
-                   sys.exit, 'EXIT',
+                   self.level3, 'Level 3',
                    center=(self.game.width // 2, 226))
         ]
+
         self.button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.button_controller)
 
-    def on_activate(self) -> None:
-        self.button_controller.reset_state()
+    def level1(self) -> None:
+        pass
 
-    def start_game(self) -> None:
-        self.game.set_scene(self.game.SCENE_GAME)
+    def level2(self) -> None:
+        pass
 
-    def start_records(self) -> None:
-        self.game.set_scene(self.game.SCENE_RECORDS)
+    def level3(self) -> None:
+        pass
