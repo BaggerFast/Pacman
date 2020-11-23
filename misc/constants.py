@@ -82,27 +82,14 @@ class ButtonColor(NamedTuple):
 
 
 BUTTON_DEFAULT_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Color.GRAY, background=Color.DARK_GRAY),
-    hover=ButtonStateColor(text=Color.WHITE, background=Color.DARK_GRAY),
-    click=ButtonStateColor(text=Color.BLACK, background=Color.DARK_GRAY)
+    static=ButtonStateColor(text=Color.GRAY, background=Color.BLACK),
+    hover=ButtonStateColor(text=Color.WHITE, background=(10, 10, 10)),
+    click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK)
 )
 
 
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 CELL_SIZE = 8
-
-INDEX_SCENES = {
-    "SCENE_PAUSE": 0,
-    "SCENE_MENU": 1,
-    "SCENE_GAME": 2,
-    "SCENE_LEVELS": 3,
-    "SCENE_RECORDS": 4,
-    "SCENE_TITERS": 5,
-}
-
-class Points:
-    POINT_PER_SEED = 10
-    POINT_PER_ENERGIZER = 50
 
 
 class Points:
@@ -112,5 +99,15 @@ class Points:
 
 class Font:
     FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')
-    MAIN_SCENE_SIZE = 15
-    TITERS_SCENE_SIZE = 20
+    ALTFONT = os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')
+    MAIN_SCENE_SIZE = 10
+    BUTTON_TEXT_SIZE = 30
+    TITERS_SCENE_SIZE = 14
+
+
+MAPS = {
+    "level_1": "original.json",
+    "level_2": "new_map.json"
+}
+
+MAPS_COUNT = len(MAPS)

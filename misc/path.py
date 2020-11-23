@@ -35,3 +35,14 @@ def get_image_path_for_animator(*folder):
     for i in range(frames_count):
         images.append(os.path.join(*folder_path + [str(i) + extension]))
     return images
+
+
+def create_file_if_not_exist(filepath: str, data="") -> bool:
+    """
+    :param filepath: path to file
+    :param data: string which will written in file if it doesn't exist
+    """
+    if not os.path.exists(filepath):
+        file = open(filepath, 'w')
+        file.write(data)
+        file.close()

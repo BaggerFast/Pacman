@@ -7,7 +7,7 @@ from objects.ghosts.inky import Inky
 from objects.ghosts.pinky import Pinky
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color, INDEX_SCENES
+from misc.constants import Color, MAPS
 from misc.constants import CELL_SIZE
 from misc.path import get_image_path
 from objects.image import ImageObject
@@ -20,7 +20,7 @@ from misc.constants import Font
 class GameScene(BaseScene):
 
     def __init__(self, game):
-        self.loader = LevelLoader()
+        self.loader = LevelLoader(MAPS[game.level_name])
         self.map_data = self.loader.get_map_data()
         self.seed_data = self.loader.get_seed_data()
         self.energizer_data = self.loader.get_energizer_data()
@@ -38,8 +38,7 @@ class GameScene(BaseScene):
     def prepare_lives_meter(self):
         self.last_hp = []
         for i in range(int(self.pacman.hp)):
-            hp_image = ImageObject(self.game, get_image_path('1.png', 'pacman', 'walk'), 5 + i * 20, 271)
-            hp_image.scale(12, 12)
+            hp_image = ImageObject(self.game, get_image_path('1.png', 'pacman', 'walk'), 5 + i * 20, 270)
             hp_image.rotate(180)
             self.last_hp.append(hp_image)
 
@@ -50,17 +49,17 @@ class GameScene(BaseScene):
         self.seeds = SeedContainer(self.game, self.seed_data, self.energizer_data)
         self.objects.append(self.seeds)
 
-        self.scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 2, 20, 20), color=Color.WHITE)
+        self.scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20), color=Color.WHITE)
         self.objects.append(self.scores_label_text)
-        self.scores_value_text = Text(self.game, str(self.game.score),Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 10, 20, 20),
+        self.scores_value_text = Text(self.game, str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20),
                                       color=Color.WHITE)
         self.objects.append(self.scores_value_text)
 
-        self.highscores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 2, 20, 20),
+        self.highscores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20),
                                           color=Color.WHITE)
         self.objects.append(self.highscores_label_text)
         self.highscores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
-                                          rect=pg.Rect(130, 10, 20, 20),
+                                          rect=pg.Rect(130, 8, 20, 20),
                                           color=Color.WHITE)
         self.objects.append(self.highscores_value_text)
 
@@ -100,7 +99,7 @@ class GameScene(BaseScene):
             self.start_pause()
 
     def start_pause(self):
-        self.game.set_scene(INDEX_SCENES['SCENE_PAUSE'])
+        self.game.set_scene('SCENE_PAUSE')
 
     def draw_ghost(self, index, color, x, y):
         pg.draw.circle(

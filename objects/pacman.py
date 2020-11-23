@@ -1,9 +1,8 @@
 import pygame as pg
-
-from misc.health import Health
-from misc.path import get_image_path_for_animator
 from misc.constants import CELL_SIZE
+from misc.path import get_image_path_for_animator
 from objects.character_base import Character
+from misc.health import Health
 from misc.animator import Animator
 
 
@@ -46,7 +45,7 @@ class Pacman(Character):
             super().process_logic()
 
     def movement_cell(self):
-        scene = self.game.scenes[self.game.current_scene_index]
+        scene = self.game.scenes[self.game.current_scene_name]
         cell = scene.movements_data[(self.rect.y-12) // CELL_SIZE][self.rect.x // CELL_SIZE+1]
         return "{0:04b}".format(cell)[::-1]
 

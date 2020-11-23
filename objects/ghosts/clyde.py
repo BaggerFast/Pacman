@@ -35,7 +35,7 @@ class Clyde(BaseGhost):
             self.shift_x = -1
             self.shift_y = 0
             self.speed = 1
-            scene = self.game.scenes[self.game.current_scene_index]
+            scene = self.game.scenes[self.game.current_scene_name]
             if (self.rect.x == scene.pinky.start_pos[0]):
                 self.animator = self.top_walk_anim
                 self.shift_x = 0
