@@ -8,7 +8,7 @@ from objects.ghosts.inky import Inky
 from objects.ghosts.pinky import Pinky
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color, INDEX_SCENES
+from misc.constants import Color
 from misc.constants import CELL_SIZE
 from misc.path import get_image_path
 from objects.image import ImageObject
@@ -46,7 +46,7 @@ class GameScene(BaseScene):
         self.seeds = SeedContainer(self.game, self.seed_data, self.energizer_data)
         self.objects.append(self.seeds)
 
-        self.scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 2, 20, 20), color=Color.WHITE)
+        self.scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20), color=Color.WHITE)
         self.objects.append(self.scores_label_text)
         self.scores_value_text = Text(self.game, str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20),
                                       color=Color.WHITE)

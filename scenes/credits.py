@@ -6,7 +6,7 @@ from misc.constants import Font
 
 
 class CreditsScene(BaseScene):
-    students = [
+    data = [
         "Архипов Евгений",
         "Смирнов Андрей",
         "Грачев Егор",
