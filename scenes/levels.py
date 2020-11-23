@@ -20,22 +20,36 @@ class LevelsScene(BaseScene):
 
     def create_buttons(self) -> None:
         buttons = [
-            Button(self.game, pg.Rect(0, 0, 180, 45),
+            Button(self.game, pg.Rect(0, 0, 180, 40),
                    self.level1, 'LEVEL 1',
-                   center=(self.game.width // 2, 100),
+                   center=(self.game.width // 2, 90),
                    text_size=Font.BUTTON_TEXT_SIZE),
-            Button(self.game, pg.Rect(0, 0, 180, 45),
+            Button(self.game, pg.Rect(0, 0, 180, 40),
                    self.level2, 'LEVEL 2',
-                   center=(self.game.width // 2, 163),
+                   center=(self.game.width // 2, 140),
                    text_size=Font.BUTTON_TEXT_SIZE),
-            Button(self.game, pg.Rect(0, 0, 180, 45),
+            Button(self.game, pg.Rect(0, 0, 180, 40),
                    self.level3, 'LEVEL 3',
-                   center=(self.game.width // 2, 226),
+                   center=(self.game.width // 2, 190),
+                   text_size=Font.BUTTON_TEXT_SIZE),
+            Button(self.game, pg.Rect(0, 0, 180, 40),
+                   self.start_menu, 'MENU',
+                   center=(self.game.width // 2, 250),
                    text_size=Font.BUTTON_TEXT_SIZE)
-        ]
 
+        ]
         self.button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.button_controller)
+
+    def on_activate(self) -> None:
+        self.create_objects()
+        self.button_controller.reset_state()
+
+    def start_menu(self) -> None:
+        self.game.set_scene('SCENE_MENU')
+        self.on_screen = 0
+        self.students = []
+        self.objects = []
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.scenes[self.game.current_scene_name] == self:
