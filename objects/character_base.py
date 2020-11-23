@@ -18,10 +18,10 @@ class Character(DrawableObject):
         self.hp = Health()
         self.animator = animator
         self.rect = self.animator.current_image.get_rect()
-        self.shift_x, self.shift_y = self.direction["right"][:2]
+        self.shift_x, self.shift_y = self.direction["none"][:2]
         self.move(*start_pos)
         self.speed = 0
-        self.rotate = 0
+        self.rotate = None
 
     def step(self):
         self.rect.centerx = (self.rect.centerx + self.shift_x * self.speed + self.game.width) % self.game.width

@@ -1,9 +1,9 @@
 import pygame as pg
 
-from misc.path import get_image_path_for_animator
-from misc.constants import CELL_SIZE
-from objects.character_base import Character
 from misc.animator import Animator
+from misc.constants import CELL_SIZE
+from misc.path import get_image_path_for_animator
+from objects.character_base import Character
 
 
 class Pacman(Character):
@@ -24,7 +24,9 @@ class Pacman(Character):
 
     def process_event(self, event):
         if event.type == pg.KEYDOWN and event.key in self.action.keys():
-            self.go()
+            if self.rotate is None and 'up' != self.action[event.key] != 'down':
+                self.go()
+                self.set_direction(self.action[event.key])
             self.feature_rotate = self.action[event.key]
 
     def process_logic(self):
@@ -41,11 +43,11 @@ class Pacman(Character):
 
     def movement_cell(self):
         scene = self.game.scenes[self.game.current_scene_index]
-        cell = scene.movements_data[(self.rect.y-12) // CELL_SIZE][self.rect.x // CELL_SIZE+1]
+        cell = scene.movements_data[(self.rect.y - 12) // CELL_SIZE][self.rect.x // CELL_SIZE + 1]
         return "{0:04b}".format(cell)[::-1]
 
     def move_to(self, direction):
         return self.movement_cell()[direction] == "1"
 
     def in_center(self) -> bool:
-        return self.rect.x % CELL_SIZE == 6 and (self.rect.y-20) % CELL_SIZE == 6
+        return self.rect.x % CELL_SIZE == 6 and (self.rect.y - 20) % CELL_SIZE == 6

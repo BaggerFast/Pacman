@@ -22,7 +22,6 @@ class BaseGhost(Character):
             self.go()
             self.feature_rotate = self.action[event.key]
 
-
     def process_logic(self):
         self.animator.timer_check()
         if self.in_center():
@@ -33,5 +32,7 @@ class BaseGhost(Character):
             c = self.direction[self.feature_rotate][2]
             if self.move_to(c):
                 self.set_direction(self.feature_rotate)
+        if self.rotate is None:
+            self.rotate = 0
         self.animator = self.animations[self.rotate]
         super().process_logic()
