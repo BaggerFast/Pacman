@@ -82,9 +82,9 @@ class ButtonColor(NamedTuple):
 
 
 BUTTON_DEFAULT_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Color.GRAY, background=Color.DARK_GRAY),
-    hover=ButtonStateColor(text=Color.WHITE, background=Color.DARK_GRAY),
-    click=ButtonStateColor(text=Color.BLACK, background=Color.DARK_GRAY)
+    static=ButtonStateColor(text=Color.GRAY, background=Color.BLACK),
+    hover=ButtonStateColor(text=Color.WHITE, background=(10, 10, 10)),
+    click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK)
 )
 
 
@@ -107,5 +107,7 @@ class Points:
 
 class Font:
     FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')
-    MAIN_SCENE_SIZE = 15
-    TITERS_SCENE_SIZE = 20
+    ALTFONT = os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')
+    MAIN_SCENE_SIZE = 10
+    BUTTON_TEXT_SIZE = 30
+    TITERS_SCENE_SIZE = 14

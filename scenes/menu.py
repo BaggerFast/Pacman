@@ -7,6 +7,7 @@ from objects.text import Text
 from scenes.base import BaseScene
 from misc.constants import INDEX_SCENES
 from misc.constants import Color
+from misc.constants import Font
 
 
 class MenuScene(BaseScene):
@@ -18,7 +19,7 @@ class MenuScene(BaseScene):
         self.create_buttons()
 
     def create_title(self) -> None:
-        title = Text(self.game, 'Pacman', 40, color=Color.WHITE)
+        title = Text(self.game, 'PACMAN', 40, color=Color.WHITE, font=Font.FILENAME)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
 
@@ -26,19 +27,24 @@ class MenuScene(BaseScene):
         buttons = [
             Button(self.game, pg.Rect(0, 0, 180, 30),
                    self.start_game, 'PLAY',
-                   center=(self.game.width // 2, 80), text_size=50),
+                   center=(self.game.width // 2, 80),
+                   text_size=Font.BUTTON_TEXT_SIZE),
             Button(self.game, pg.Rect(0, 0, 180, 30),
                    self.start_levels, 'LEVELS',
-                   center=(self.game.width // 2, 120), text_size=50),
+                   center=(self.game.width // 2, 120),
+                   text_size=Font.BUTTON_TEXT_SIZE),
             Button(self.game, pg.Rect(0, 0, 180, 30),
                    self.start_records, 'RECORDS',
-                   center=(self.game.width // 2, 160), text_size=50),
+                   center=(self.game.width // 2, 160),
+                   text_size=Font.BUTTON_TEXT_SIZE),
             Button(self.game, pg.Rect(0, 0, 180, 30),
                    self.start_titres, 'TITERS',
-                   center=(self.game.width // 2, 200), text_size=50),
+                   center=(self.game.width // 2, 200),
+                   text_size=Font.BUTTON_TEXT_SIZE),
             Button(self.game, pg.Rect(0, 0, 180, 30),
                    sys.exit, 'EXIT',
-                   center=(self.game.width // 2, 240), text_size=50),
+                   center=(self.game.width // 2, 240),
+                   text_size=Font.BUTTON_TEXT_SIZE),
         ]
         self.button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.button_controller)
