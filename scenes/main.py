@@ -8,7 +8,7 @@ from objects.ghosts.inky import Inky
 from objects.ghosts.pinky import Pinky
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color, INDEX_SCENES
+from misc.constants import Color
 from misc.constants import CELL_SIZE
 from misc.path import get_image_path
 from objects.image import ImageObject
@@ -97,7 +97,7 @@ class GameScene(BaseScene):
             self.start_pause()
 
     def start_pause(self):
-        self.game.set_scene(INDEX_SCENES['SCENE_PAUSE'])
+        self.game.set_scene('SCENE_PAUSE')
 
     def draw_ghost(self, index, color, x, y):
         pg.draw.circle(

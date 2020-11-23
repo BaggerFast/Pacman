@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc.constants import Color, INDEX_SCENES
+from misc.constants import Color
 from misc.path import get_image_path
 from objects.button import Button
 from objects.button import ButtonController
@@ -53,7 +53,7 @@ class RecordsScene(BaseScene):
         self.error_text.move_center(self.game.width // 2, 100)
 
     def start_menu(self) -> None:
-        self.game.set_scene(INDEX_SCENES["SCENE_MENU"])
+        self.game.set_scene("SCENE_MENU")
 
     def on_activate(self) -> None:
         self.button_controller.reset_state()
@@ -85,6 +85,6 @@ class RecordsScene(BaseScene):
             self.wooden_medal.process_draw()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
-        if self.game.scenes[self.game.current_scene_index] == self:
+        if self.game.scenes_dict[self.game.current_scene_name] == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene(INDEX_SCENES['SCENE_MENU'])
+                self.game.set_scene('SCENE_MENU')

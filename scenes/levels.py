@@ -4,7 +4,7 @@ import pygame as pg
 from objects.button import ButtonController, Button
 from scenes.base import BaseScene
 from objects.text import Text
-from misc.constants import Color, INDEX_SCENES
+from misc.constants import Color
 
 
 class LevelsScene(BaseScene):
@@ -34,9 +34,9 @@ class LevelsScene(BaseScene):
         self.objects.append(self.button_controller)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
-        if self.game.scenes[self.game.current_scene_index] == self:
+        if self.game.scenes_dict[self.game.current_scene_name] == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene(INDEX_SCENES['SCENE_MENU'])
+                self.game.set_scene('SCENE_MENU')
 
     def level1(self) -> None:
         pass

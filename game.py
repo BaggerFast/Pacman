@@ -1,6 +1,5 @@
 import pygame as pg
-from misc.constants import Color, INDEX_SCENES
-from misc.health import Health
+from misc.constants import Color
 from misc.highscore import HighScore
 from misc.score import Score
 from scenes.levels import LevelsScene
@@ -13,21 +12,21 @@ from scenes.titers import TitersScene
 
 class Game:
     size = width, height = 224, 285
-    current_scene_index = INDEX_SCENES['SCENE_MENU']
+    current_scene_name = 'SCENE_MENU'
 
     def __init__(self) -> None:
         self.screen = pg.display.set_mode(self.size, pg.SCALED)
         self.score = Score()
         self.records = HighScore()
         self.delay = 15
-        self.scenes = [
-            PauseScene(self),
-            MenuScene(self),
-            GameScene(self),
-            LevelsScene(self),
-            RecordsScene(self),
-            TitersScene(self),
-        ]
+        self.scenes_dict = {
+            "SCENE_PAUSE": PauseScene(self),
+            "SCENE_MENU": MenuScene(self),
+            "SCENE_GAME": GameScene(self),
+            "SCENE_LEVELS": LevelsScene(self),
+            "SCENE_RECORDS": RecordsScene(self),
+            "SCENE_TITERS": TitersScene(self),
+        }
 
         self.game_over = False
 
@@ -44,7 +43,7 @@ class Game:
             self.exit_game()
 
     def resize_scenes(self) -> None:
-        for scene in self.scenes:
+        for scene in self.scenes_dict.values():
             scene.on_window_resize()
 
     def process_resize_event(self, event: pg.event.Event) -> None:
@@ -58,14 +57,14 @@ class Game:
         for event in pg.event.get():
             self.process_exit_events(event)
             self.process_resize_event(event)
-            self.scenes[self.current_scene_index].process_event(event)
+            self.scenes_dict[self.current_scene_name].process_event(event)
 
     def process_all_logic(self) -> None:
-        self.scenes[self.current_scene_index].process_logic()
+        self.scenes_dict[self.current_scene_name].process_logic()
 
     def process_all_draw(self) -> None:
         self.screen.fill(Color.BLACK)
-        self.scenes[self.current_scene_index].process_draw()
+        self.scenes_dict[self.current_scene_name].process_draw()
         pg.display.flip()
 
     def main_loop(self) -> None:
@@ -75,12 +74,12 @@ class Game:
             self.process_all_draw()
             pg.time.wait(self.delay)
 
-    def set_scene(self, index: int, resume: bool = False) -> None:
+    def set_scene(self, name: str, resume: bool = False) -> None:
         if not resume:
-            self.scenes[self.current_scene_index].on_deactivate()
-        self.current_scene_index = index
+            self.scenes_dict[self.current_scene_name].on_deactivate()
+        self.current_scene_name = name
         if not resume:
-            self.scenes[self.current_scene_index].on_activate()
+            self.scenes_dict[self.current_scene_name].on_activate()
 
     def exit_game(self) -> None:
         print('Bye bye')

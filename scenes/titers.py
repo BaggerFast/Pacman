@@ -2,7 +2,7 @@ import pygame as pg
 from random import randint
 from objects.text import Text
 from scenes.base import BaseScene
-from misc.constants import Color, INDEX_SCENES, Font
+from misc.constants import Color, Font
 
 
 class TitersScene(BaseScene):
@@ -72,9 +72,9 @@ class TitersScene(BaseScene):
         self.process_students()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
-        if self.game.scenes[self.game.current_scene_index] == self:
+        if self.game.scenes_dict[self.game.current_scene_name] == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene(INDEX_SCENES['SCENE_MENU'])
+                self.game.set_scene('SCENE_MENU')
                 self.on_screen = 0
                 self.objects = []
 
