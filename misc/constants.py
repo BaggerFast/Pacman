@@ -109,5 +109,7 @@ MAPS = {
     "level_1": "original.json",
     "level_2": "new_map.json"
 }
-
+SOUNDS = {
+    "Click": "NAV"
+}
 MAPS_COUNT = len(MAPS)

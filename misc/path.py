@@ -14,6 +14,17 @@ def get_image_path(filename, *folder):
         filename += extension
     return os.path.join(*[ROOT_DIR, 'images'] + list(folder) + [filename])
 
+def get_sound_path(filename, *folder):
+    """
+    :param filename: имя файла с расширением или без
+    :param folder: указать папки через пробел слева на право без image
+    :return: возращает полный путь файла строкой
+    """
+    extension = '.wav'
+    if extension not in filename:
+        filename += extension
+    return os.path.join(*[ROOT_DIR, 'sounds'] + list(folder) + [filename])
+
 
 def get_files_count(path):
     count = 0

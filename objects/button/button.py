@@ -1,13 +1,17 @@
 from typing import List, Union, Callable, Tuple
 
 import pygame as pg
-
-from misc.constants import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor
+from misc.constants import *
+from misc.path import get_sound_path
 from objects.base import DrawableObject
-from objects.text import Text
 
 
 class BaseButton(DrawableObject):
+    pg.mixer.init()
+    Click_sound = None
+    Hover_sound = None
+    Initial_sound = None
+
     def __init__(self, game, geometry: Union[tuple, pg.Rect], function: Callable[[], None]) -> None:
         super().__init__(game)
         if type(geometry) == tuple:
@@ -39,7 +43,8 @@ class Button(BaseButton):
     STATE_INITIAL = 0
     STATE_HOVER = 1
     STATE_CLICK = 2
-
+    Click_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Click"]))
+    Click_sound.set_volume(0.5)
     def __init__(self, game, geometry: Union[tuple, pg.Rect],
                  function: Callable[[], None], text: str = 'Define me',
                  colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
@@ -86,6 +91,7 @@ class Button(BaseButton):
             self.left_button_pressed = True
         if self.mouse_hover(event.pos):
             self.state = self.STATE_CLICK
+            self.Click_sound.play()
 
     def process_mouse_button_up(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONUP:
