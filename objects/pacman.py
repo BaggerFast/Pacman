@@ -55,16 +55,19 @@ class Pacman(Character):
 
     def death(self):
         self.hp.change_count_lives(-1)
-        if not int(self.hp):
-            self.animator = self.dead_anim
-            self.animator.run = True
-            self.dead = True
-        else:
-            self.move(*self.start_pos)
-            self.speed = 0
-            self.shift_x, self.shift_y = self.direction["right"][:2]
-            self.animator.stop()
-            self.animator.change_cur_image(0)
+        self.animator = self.dead_anim
+        self.animator.run = True
+        self.dead = True
+
+    def reset(self):
+        self.animator = self.walk_anim
+        self.dead_anim.reset()
+        self.move(*self.start_pos)
+        self.speed = 0
+        self.shift_x, self.shift_y = self.direction["right"][:2]
+        self.animator.stop()
+        self.animator.change_cur_image(0)
+        self.dead = False
 
     def in_center(self) -> bool:
         return self.rect.x % CELL_SIZE == 6 and (self.rect.y-20) % CELL_SIZE == 6

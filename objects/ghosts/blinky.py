@@ -28,4 +28,11 @@ class Blinky(BaseGhost):
         super().__init__(game, self.top_walk_anim, start_pos, self.animations)
         self.feature_rotate = "none"
 
+    def process_logic(self):
+        if not self.is_invisible:
+            super().process_logic()
 
+    def reset(self):
+        self.is_invisible = False
+        self.enable_collision = True
+        self.rect.x, self.rect.y = self.start_pos

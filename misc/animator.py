@@ -13,6 +13,7 @@ class Animator:
         self.current_image = self.images[self.current_image_index]
         self.rotate = 0
         self.repeat = repeat
+        self.anim_finished = False
         self.run = False
 
     def add_image(self, path_to_images):
@@ -42,10 +43,16 @@ class Animator:
             self.current_image_index = 0
             if self.repeat:
                 self.stop()
-                self.change_cur_image(10)
+                self.change_cur_image(len(self.images)-1)
+                self.anim_finished = True
         self.current_image = self.images[self.current_image_index]
         if self.is_rotation:
             self.change_rotation()
+
+    def reset(self):
+        self.current_image_index = 0
+        self.current_image = self.images[self.current_image_index]
+        self.anim_finished = False
 
     def change_rotation(self):
         self.current_image = pg.transform.rotate(self.images[self.current_image_index], -90 * self.rotate)

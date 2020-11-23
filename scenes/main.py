@@ -30,6 +30,9 @@ class GameScene(BaseScene):
         self.ghost_positions = self.loader.get_ghost_positions()
         self.fruit_position = self.loader.get_fruit_position()
         self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not False
+        self.timer_reset_pacman = 0
+        self.seeds_eaten = 0
+        self.work_ghost_counters = True
         super().__init__(game)
 
     def prepare_lives_meter(self):
@@ -117,21 +120,25 @@ class GameScene(BaseScene):
                         y_shift + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2), 4)
 
     def change_prefered_ghost(self):
-        self.count_prefered_ghost += 1
-        self.not_prefered_ghosts.pop(0)
-        if self.count_prefered_ghost < 4:
-            self.prefered_ghost = self.ghosts[self.count_prefered_ghost]
-        else:
-            self.prefered_ghost = None
-            self.count_prefered_ghost = 0
+        if self.prefered_ghost != None and self.prefered_ghost.can_leave_home():
+            self.count_prefered_ghost += 1
+            self.not_prefered_ghosts.pop(0)
+            if self.count_prefered_ghost < 4:
+                self.prefered_ghost = self.ghosts[self.count_prefered_ghost]
+            else:
+                self.prefered_ghost = None
+                self.count_prefered_ghost = 0
 
     def process_collision(self) -> None:
         is_eaten, type = self.seeds.process_collision(self.pacman)
         for ghost in self.ghosts:
             if ghost.collision_check(self.pacman):
+                self.timer_reset_pacman = pg.time.get_ticks()
                 if not self.pacman.dead:
                     self.pacman.death()
                     self.prepare_lives_meter()
+                for ghost2 in self.ghosts:
+                    ghost2.invisible()
         if is_eaten:
             if type == "seed":
                 self.game.score.eat_seed()
@@ -141,15 +148,29 @@ class GameScene(BaseScene):
                 self.prefered_ghost.counter()
                 self.prefered_ghost.update_timer()
 
-    def process_logic(self) -> None:
-        super(GameScene, self).process_logic()
+    def global_counter(self):
+        self.seads_eaten += 1
+
+    def check_first_run(self):
         if self.first_run:
             self.create_objects()
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
+
+
+
+    def process_logic(self) -> None:
+        super(GameScene, self).process_logic()
+        self.check_first_run()
         self.process_collision()
-        if self.prefered_ghost != None and self.prefered_ghost.can_leave_home():
-            self.change_prefered_ghost()
+        if pg.time.get_ticks()-self.timer_reset_pacman >= 2000 and self.pacman.animator.anim_finished:
+            self.pacman.reset()
+            for ghost in self.ghosts:
+                ghost.reset()
+            self.prefered_ghost = self.pinky
+            self.not_prefered_ghosts = [self.pinky, self.inky, self.clyde]
+            self.work_ghost_counters = False
+        self.change_prefered_ghost()
         for ghost in self.not_prefered_ghosts:
             if ghost != self.prefered_ghost:
                 ghost.update_timer()
