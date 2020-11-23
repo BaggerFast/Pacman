@@ -3,6 +3,7 @@ from objects.button import ButtonController, Button
 from objects.text import Text
 from scenes.base import BaseScene
 from misc.constants import Color, INDEX_SCENES
+from scenes.main import GameScene
 
 
 class PauseScene(BaseScene):
@@ -32,7 +33,9 @@ class PauseScene(BaseScene):
         self.objects.append(self.main_text)
 
     def restart_game(self) -> None:
-        self.game.set_scene(INDEX_SCENES['SCENE_MENU'], resume=False)
+        self.game.scenes[INDEX_SCENES["SCENE_GAME"]] = GameScene(self.game)
+        self.game.score.score = 0
+        self.game.set_scene(INDEX_SCENES['SCENE_GAME'], resume=False)
 
     def continue_game(self) -> None:
         self.game.set_scene(INDEX_SCENES['SCENE_GAME'], resume=True)

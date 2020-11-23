@@ -14,6 +14,10 @@ class Score:
     def score(self):
         return self.__score
 
+    @score.setter
+    def score(self, val):
+        self.__score = val
+
     def __add_to_score(self, amount):
         self.__score += amount
 
