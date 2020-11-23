@@ -10,6 +10,6 @@ class Health:
         if self.max_lives >= self.lives + number >= 0:
             self.lives += number
         elif self.lives + number >= self.max_lives:
-            self.lives = 5
+            self.lives = self.max_lives
         elif self.lives + number <= 0:
             self.lives = 0

@@ -15,13 +15,13 @@ class Character(DrawableObject):
 
     def __init__(self, game, animator: Animator, start_pos: tuple):
         super().__init__(game)
-        self.hp = Health()
         self.animator = animator
         self.rect = self.animator.current_image.get_rect()
-        self.shift_x, self.shift_y = self.direction["none"][:2]
-        self.move(*start_pos)
+        self.shift_x, self.shift_y = self.direction["right"][:2]
+        self.start_pos = start_pos
+        self.move(*self.start_pos)
         self.speed = 0
-        self.rotate = None
+        self.rotate = 0
 
     def step(self):
         self.rect.centerx = (self.rect.centerx + self.shift_x * self.speed + self.game.width) % self.game.width
@@ -36,7 +36,7 @@ class Character(DrawableObject):
         self.animator.stop()
         self.speed = 0
 
-    def set_direction(self, new_direction=None):
+    def set_direction(self, new_direction='none'):
         if new_direction:
             self.shift_x, self.shift_y, rotate = self.direction[new_direction]
             if self.rotate != rotate:
