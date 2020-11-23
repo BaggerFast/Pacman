@@ -2,7 +2,7 @@ import pygame as pg
 from objects.button import ButtonController, Button
 from objects.text import Text
 from scenes.base import BaseScene
-from misc.constants import Color
+from misc.constants import Color, Font
 from scenes.main import GameScene
 
 
@@ -16,19 +16,22 @@ class PauseScene(BaseScene):
         buttons = [
             Button(self.game, pg.Rect(0, 0, 180, 45),
                    self.continue_game, 'CONTINUE',
-                   center=(self.game.width // 2, 100)),
+                   center=(self.game.width // 2, 100),
+                   text_size=Font.BUTTON_TEXT_SIZE),
             Button(self.game, pg.Rect(0, 0, 180, 45),
                    self.restart_game, 'RESTART',
-                   center=(self.game.width // 2, 161)),
+                   center=(self.game.width // 2, 161),
+                   text_size=Font.BUTTON_TEXT_SIZE),
             Button(self.game, pg.Rect(0, 0, 180, 45),
-                   self.start_menu, 'MAIN MENU',
-                   center=(self.game.width // 2, 224)),
+                   self.start_menu, 'MENU',
+                   center=(self.game.width // 2, 224),
+                   text_size=Font.BUTTON_TEXT_SIZE),
         ]
         self.button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.button_controller)
 
     def create_title(self) -> None:
-        self.main_text = Text(self.game, 'PAUSE', 40, color=Color.WHITE)
+        self.main_text = Text(self.game, 'PAUSE', 40, color=Color.WHITE, font=Font.FILENAME)
         self.main_text.move_center(self.game.width // 2, 35)
         self.objects.append(self.main_text)
 

@@ -43,10 +43,11 @@ class Button(BaseButton):
     def __init__(self, game, geometry: Union[tuple, pg.Rect],
                  function: Callable[[], None], text: str = 'Define me',
                  colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
-                 center: Tuple[float, float] = None, text_size=60) -> None:
+                 center: Tuple[float, float] = None, text_size=60,
+                 font=Font.ALTFONT) -> None:
         super().__init__(game, geometry, function)
         self.text = text
-        self.font = pg.font.Font(Font.FILENAME, text_size)
+        self.font = pg.font.Font(font, text_size)
         # self.text = Text(self.game, text)
         self.colors: ButtonColor = self.parse_colors(colors)
         self.state = self.STATE_INITIAL
@@ -114,7 +115,7 @@ class Button(BaseButton):
         surface = pg.surface.Surface(self.rect.size)
         zero_rect = surface.get_rect()
 
-        text_surface = self.font.render(self.text, True, self.colors[state_index].text)
+        text_surface = self.font.render(self.text, False, self.colors[state_index].text)
         zero_text_rect = text_surface.get_rect()
         zero_text_rect.center = zero_rect.center
 

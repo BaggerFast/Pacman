@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc.constants import Color
+from misc.constants import Color, Font
 from misc.path import get_image_path
 from objects.button import Button
 from objects.button import ButtonController
@@ -39,12 +39,13 @@ class RecordsScene(BaseScene):
 
     def create_buttons(self) -> None:
         self.back_button = Button(self.game, pg.Rect(self.game.width // 2, 200, 120, 45),
-                                  self.start_menu, 'BACK', center=(self.game.width // 2, 250))
+                                  self.start_menu, 'BACK', center=(self.game.width // 2, 250),
+                                  text_size=Font.BUTTON_TEXT_SIZE)
         self.button_controller = ButtonController(self.game, [self.back_button])
         self.objects.append(self.button_controller)
 
     def create_title(self) -> None:
-        title = Text(self.game, 'RECORDS', 30, color=Color.WHITE)
+        title = Text(self.game, 'RECORDS', 30, color=Color.WHITE, font=Font.FILENAME)
         title.move_center(self.game.width // 2, 25)
         self.objects.append(title)
 
