@@ -37,8 +37,8 @@ class RecordsScene(BaseScene):
         self.wooden_medal.scale(35, 35)
 
     def create_buttons(self) -> None:
-        self.back_button = Button(self.game, pg.Rect(self.game.width // 2, 200, 120, 45),
-                                  self.start_menu, 'BACK', center=(self.game.width // 2, 250),
+        self.back_button = Button(self.game, pg.Rect(0, 0, 180, 40),
+                                  self.start_menu, 'MENU', center=(self.game.width // 2, 250),
                                   text_size=Font.BUTTON_TEXT_SIZE)
         self.button_controller = ButtonController(self.game, [self.back_button])
         self.objects.append(self.button_controller)

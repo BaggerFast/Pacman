@@ -42,7 +42,7 @@ class MenuScene(BaseScene):
             Button(self.game, pg.Rect(0, 0, 180, 30),
                    sys.exit, 'EXIT',
                    center=(self.game.width // 2, 240),
-                   text_size=Font.BUTTON_TEXT_SIZE),
+                   text_size=Font.BUTTON_TEXT_SIZE)
         ]
         self.button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.button_controller)
