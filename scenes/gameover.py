@@ -26,13 +26,13 @@ class GameoverScene(BaseScene):
 
     def create_buttons(self) -> None:
         buttons = [
-            Button(self.game, pg.Rect(0, 0, 110, 30),
-                   self.start_menu, 'MENU',
-                   center=(self.game.width // 2 + 180 // 3 - 10, self.game.height - 30),
-                   text_size=Font.BUTTON_TEXT_SIZE),
-            Button(self.game, pg.Rect(0, 0, 110, 30),
+            Button(self.game, pg.Rect(0, 0, 180, 35),
                    self.restart_game, 'RESTART',
-                   center=(self.game.width // 2 - 180 // 3 + 10, self.game.height - 30),
+                   center=(self.game.width // 2, 210),
+                   text_size=Font.BUTTON_TEXT_SIZE),
+            Button(self.game, pg.Rect(0, 0, 180, 35),
+                   self.start_menu, 'MENU',
+                   center=(self.game.width // 2, 250),
                    text_size=Font.BUTTON_TEXT_SIZE)
         ]
         self.button_controller = ButtonController(self.game, buttons)
@@ -59,3 +59,8 @@ class GameoverScene(BaseScene):
         self.game.scenes["SCENE_GAME"] = GameScene(self.game)
         self.game.score.score = 0
         self.game.set_scene('SCENE_GAME')
+
+    def additional_event_check(self, event: pg.event.Event) -> None:
+        if self.game.scenes[self.game.current_scene_name] == self:
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                self.game.set_scene('SCENE_MENU')
