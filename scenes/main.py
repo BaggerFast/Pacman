@@ -1,6 +1,5 @@
 import pygame as pg
 
-from misc.health import Health
 from misc.loader import LevelLoader
 from objects.ghosts.blinky import Blinky
 from objects.ghosts.clyde import Clyde

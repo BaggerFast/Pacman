@@ -6,7 +6,6 @@ from misc.path import create_file_if_not_exist
 
 
 class HighScore:
-    filename = os.path.join('saves', 'records.txt')
     json_filename = os.path.join('saves', 'records.json')
     RECORDS_COUNT = 5
 
@@ -17,9 +16,7 @@ class HighScore:
         self.data = sorted(self.json_data[self.level_name])
 
     def __del__(self):
-        file = open(self.filename, 'w')
-        file.write('\n'.join([str(record) for record in self.data]))
-        file.close()
+        self.save_json_record()
 
     def load_json_record(self) -> dict:
         create_file_if_not_exist(self.json_filename, json.dumps({f"level_{index + 1}": [0 for _ in range(
