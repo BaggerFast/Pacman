@@ -1,10 +1,10 @@
 import pygame as pg
 
 from misc.loader import LevelLoader
-from objects.ghosts.Blinky import Blinky
-from objects.ghosts.Clyde import Clyde
-from objects.ghosts.Inky import Inky
-from objects.ghosts.Pinky import Pinky
+from objects.ghosts.blinky import Blinky
+from objects.ghosts.clyde import Clyde
+from objects.ghosts.inky import Inky
+from objects.ghosts.pinky import Pinky
 from objects.map import Map
 from objects.seed import SeedContainer
 from misc.constants import Color, INDEX_SCENES
