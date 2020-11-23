@@ -38,7 +38,7 @@ class HighScore:
 
     def set_new_record(self, score):
         self.json_data[self.level_name].append(score)
-        sorted(self.json_data[self.level_name])
+        self.json_data[self.level_name] = sorted(self.json_data[self.level_name])
         self.json_data[self.level_name] = self.json_data[self.level_name][-self.RECORDS_COUNT:]
         self.data = self.json_data[self.level_name]
 

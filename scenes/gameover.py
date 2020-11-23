@@ -57,10 +57,10 @@ class GameoverScene(BaseScene):
         self.button_controller.reset_state()
 
     def start_menu(self) -> None:
+        self.game.score.score = 0
         self.game.set_scene('SCENE_MENU')
 
     def restart_game(self) -> None:
-        self.game.scenes["SCENE_GAME"] = GameScene(self.game)
         self.game.score.score = 0
         self.game.set_scene('SCENE_GAME')
 
