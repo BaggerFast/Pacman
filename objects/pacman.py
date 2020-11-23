@@ -21,7 +21,7 @@ class Pacman(Character):
             get_image_path_for_animator('pacman', 'walk')
         )
         self.dead_anim = Animator(
-            get_image_path_for_animator('pacman', 'dead'), False
+            get_image_path_for_animator('pacman', 'dead'), 100, False, True
         )
         super().__init__(game, self.walk_anim, start_pos)
         self.dead = False
@@ -62,8 +62,9 @@ class Pacman(Character):
         else:
             self.move(*self.start_pos)
             self.speed = 0
+            self.shift_x, self.shift_y = self.direction["right"][:2]
             self.animator.stop()
-
+            self.animator.change_cur_image(0)
 
     def in_center(self) -> bool:
         return self.rect.x % CELL_SIZE == 6 and (self.rect.y-20) % CELL_SIZE == 6

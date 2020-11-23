@@ -7,16 +7,16 @@ class Inky(BaseGhost):
 
     def __init__(self, game, start_pos: tuple, max_count_eat_seeds_in_home=0):
         self.top_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'inky', 'top'), False
+            get_image_path_for_animator('ghost', 'inky', 'top'),  is_rotation=False
         )
         self.bottom_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'inky', 'bottom'), False
+            get_image_path_for_animator('ghost', 'inky', 'bottom'),  is_rotation=False
         )
         self.left_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'inky', 'left'), False
+            get_image_path_for_animator('ghost', 'inky', 'left'), is_rotation=False
         )
         self.right_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'inky', 'right'), False
+            get_image_path_for_animator('ghost', 'inky', 'right'),  is_rotation=False
         )
         self.animations = {
             3: self.top_walk_anim,

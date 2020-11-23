@@ -129,8 +129,9 @@ class GameScene(BaseScene):
         is_eaten, type = self.seeds.process_collision(self.pacman)
         for ghost in self.ghosts:
             if ghost.collision_check(self.pacman):
-                 self.pacman.death()
-                 self.prepare_lives_meter()
+                if not self.pacman.dead:
+                    self.pacman.death()
+                    self.prepare_lives_meter()
         if is_eaten:
             if type == "seed":
                 self.game.score.eat_seed()

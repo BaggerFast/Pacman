@@ -7,16 +7,16 @@ class Blinky(BaseGhost):
 
     def __init__(self, game, start_pos: tuple):
         self.top_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'blinky', 'top'), False
+            get_image_path_for_animator('ghost', 'blinky', 'top'), is_rotation=False
         )
         self.bottom_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'blinky', 'bottom'), False
+            get_image_path_for_animator('ghost', 'blinky', 'bottom'),  is_rotation=False
         )
         self.left_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'blinky', 'left'), False
+            get_image_path_for_animator('ghost', 'blinky', 'left'), is_rotation=False
         )
         self.right_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'blinky', 'right'), False
+            get_image_path_for_animator('ghost', 'blinky', 'right'), is_rotation=False
         )
         self.animations = {
             3: self.top_walk_anim,
