@@ -101,7 +101,7 @@ class Font:
     FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')
     ALTFONT = os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')
     MAIN_SCENE_SIZE = 10
-    BUTTON_TEXT_SIZE = 30
+    BUTTON_TEXT_SIZE = 24
     TITERS_SCENE_SIZE = 14
 
 

@@ -4,7 +4,7 @@ import pygame as pg
 from objects.button import ButtonController, Button
 from scenes.base import BaseScene
 from objects.text import Text
-from misc.constants import Color, Font
+from misc.constants import Color, Font, ButtonColor, ButtonStateColor
 from scenes.main import GameScene
 
 
@@ -12,7 +12,6 @@ class LevelsScene(BaseScene):
     def create_objects(self) -> None:
         self.create_title()
         self.create_buttons()
-        self.create_indicator()
 
     def create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, color=Color.WHITE, font=Font.FILENAME)
@@ -23,15 +22,15 @@ class LevelsScene(BaseScene):
         buttons = [
             Button(self.game, pg.Rect(0, 0, 180, 40),
                    self.level1, 'LEVEL 1',
-                   center=(self.game.width // 2, 100),
+                   center=(self.game.width // 2, 90),
                    text_size=Font.BUTTON_TEXT_SIZE),
             Button(self.game, pg.Rect(0, 0, 180, 40),
                    self.level2, 'LEVEL 2',
-                   center=(self.game.width // 2, 150),
+                   center=(self.game.width // 2, 140),
                    text_size=Font.BUTTON_TEXT_SIZE),
             Button(self.game, pg.Rect(0, 0, 180, 40),
                    self.level3, 'LEVEL 3',
-                   center=(self.game.width // 2, 200),
+                   center=(self.game.width // 2, 190),
                    text_size=Font.BUTTON_TEXT_SIZE),
             Button(self.game, pg.Rect(0, 0, 180, 40),
                    self.start_menu, 'MENU',
@@ -39,20 +38,17 @@ class LevelsScene(BaseScene):
                    text_size=Font.BUTTON_TEXT_SIZE)
 
         ]
+        for index in range(len(buttons)):
+            if self.game.level_name == buttons[index].text.lower().replace(' ', '_'):
+                buttons[index] = Button(self.game, pg.Rect(0, 0, 180, 40),
+                   buttons[index].function, '< ' + buttons[index].text + ' >',
+                   center=(buttons[index].rect.centerx, buttons[index].rect.centery),
+                   text_size=Font.BUTTON_TEXT_SIZE)
         self.button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.button_controller)
 
-    def create_indicator(self) -> None:
-        self.indicator = Text(self.game, self.game.level_name.replace('_', ' '),
-                         15, color=Color.WHITE, font=Font.FILENAME)
-        self.indicator.move_center(self.game.width // 2, 60)
-        self.objects.append(self.indicator)
-
-    def level_indicator(self) -> None:
-        self.indicator.update_text(self.game.level_name.replace('_', ' '))
-
     def on_activate(self) -> None:
-        self.level_indicator()
+        self.create_objects()
         self.button_controller.reset_state()
 
     def start_menu(self) -> None:

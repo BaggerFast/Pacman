@@ -30,23 +30,23 @@ class MenuScene(BaseScene):
 
     def create_buttons(self) -> None:
         buttons = [
-            Button(self.game, pg.Rect(0, 0, 180, 30),
+            Button(self.game, pg.Rect(0, 0, 180, 35),
                    self.start_game, 'PLAY',
                    center=(self.game.width // 2, 95),
                    text_size=Font.BUTTON_TEXT_SIZE),
-            Button(self.game, pg.Rect(0, 0, 180, 30),
+            Button(self.game, pg.Rect(0, 0, 180, 35),
                    self.start_levels, 'LEVELS',
                    center=(self.game.width // 2, 135),
                    text_size=Font.BUTTON_TEXT_SIZE),
-            Button(self.game, pg.Rect(0, 0, 180, 30),
+            Button(self.game, pg.Rect(0, 0, 180, 35),
                    self.start_records, 'RECORDS',
                    center=(self.game.width // 2, 175),
                    text_size=Font.BUTTON_TEXT_SIZE),
-            Button(self.game, pg.Rect(0, 0, 180, 30),
+            Button(self.game, pg.Rect(0, 0, 180, 35),
                    self.start_titres, 'CREDITS',
                    center=(self.game.width // 2, 215),
                    text_size=Font.BUTTON_TEXT_SIZE),
-            Button(self.game, pg.Rect(0, 0, 180, 30),
+            Button(self.game, pg.Rect(0, 0, 180, 35),
                    sys.exit, 'EXIT',
                    center=(self.game.width // 2, 255),
                    text_size=Font.BUTTON_TEXT_SIZE)
