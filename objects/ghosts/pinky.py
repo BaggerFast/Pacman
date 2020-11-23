@@ -37,7 +37,7 @@ class Pinky(BaseGhost):
             self.shift_x = 0
             self.shift_y = -1
             self.speed = 1
-            scene = self.game.scenes_dict[self.game.current_scene_name]
+            scene = self.game.scenes[self.game.current_scene_name]
             if (self.rect.y == scene.blinky.start_pos[1]):
                 self.shift_x = 1
                 self.shift_y = 0

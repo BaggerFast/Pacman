@@ -55,7 +55,7 @@ class Character(DrawableObject):
 # Обработка коллизий (не трогайте пажожда, я сам не понимаю как это работает, я пытался понять, но я так и не смог)
 
     def movement_cell(self):
-        scene = self.game.scenes_dict[self.game.current_scene_name]
+        scene = self.game.scenes[self.game.current_scene_name]
         cell = scene.movements_data[(self.rect.y-12) // CELL_SIZE][self.rect.x // CELL_SIZE+1]
         return "{0:04b}".format(cell)[::-1]
 

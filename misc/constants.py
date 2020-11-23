@@ -101,3 +101,9 @@ class Font:
     FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')
     MAIN_SCENE_SIZE = 15
     TITERS_SCENE_SIZE = 20
+
+
+maps = {
+    "level_1": "original.json",
+    "level_2": "new_map.json"
+}

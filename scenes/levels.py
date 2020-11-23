@@ -5,6 +5,7 @@ from objects.button import ButtonController, Button
 from scenes.base import BaseScene
 from objects.text import Text
 from misc.constants import Color
+from scenes.main import GameScene
 
 
 class LevelsScene(BaseScene):
@@ -34,15 +35,20 @@ class LevelsScene(BaseScene):
         self.objects.append(self.button_controller)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
-        if self.game.scenes_dict[self.game.current_scene_name] == self:
+        if self.game.scenes[self.game.current_scene_name] == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 self.game.set_scene('SCENE_MENU')
 
+    def set_level(self, name="level_1"):
+        self.game.level_name = name
+        self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+        self.game.set_scene('SCENE_GAME')
+
     def level1(self) -> None:
-        pass
+        self.set_level("level_1")
 
     def level2(self) -> None:
-        pass
+        self.set_level("level_2")
 
     def level3(self) -> None:
         pass
