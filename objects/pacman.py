@@ -52,7 +52,8 @@ class Pacman(Character):
         return self.movement_cell()[direction] == "1"
 
     def death(self):
-        self.move_to(*self.start_pos)
+        self.move(*self.start_pos)
+        self.dead = True
 
     def in_center(self) -> bool:
         return self.rect.x % CELL_SIZE == 6 and (self.rect.y-20) % CELL_SIZE == 6

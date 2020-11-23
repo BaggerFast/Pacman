@@ -131,6 +131,7 @@ class GameScene(BaseScene):
         is_eaten, type = self.seeds.process_collision(self.pacman)
         for ghost in self.ghosts:
             if ghost.collision_check(self.pacman):
+                 self.pacman.death()
                  print('Заглушка, но коллизия всё равно сработала')
         if is_eaten:
             if type == "seed":
@@ -152,7 +153,6 @@ class GameScene(BaseScene):
         self.process_collision()
         if self.prefered_ghost != None and self.prefered_ghost.can_leave_home():
             self.change_prefered_ghost()
-        print(self.inky.can_leave_home())
         for ghost in self.not_prefered_ghosts:
             if ghost != self.prefered_ghost:
                 ghost.update_timer()
