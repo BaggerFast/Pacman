@@ -167,8 +167,11 @@ class GameScene(BaseScene):
             self.create_objects()
             self.seeds_eaten = 0
             self.work_ghost_counters = False
+            self.max_seeds_eaten_to_prefered_ghost = 7
         if self.seeds_eaten == self.max_seeds_eaten_to_prefered_ghost and self.prefered_ghost != None:
             self.prefered_ghost.is_can_leave_home = True
+            print(1)
+            print(self.max_seeds_eaten_to_prefered_ghost)
             if self.max_seeds_eaten_to_prefered_ghost == 7:
                 self.max_seeds_eaten_to_prefered_ghost = 17
             elif self.max_seeds_eaten_to_prefered_ghost == 17:
