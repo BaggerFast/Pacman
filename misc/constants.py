@@ -107,8 +107,7 @@ class Font:
 
 MAPS = {
     "level_1": "original.json",
-    "level_2": "new_map.json",
-    "level_3": "new_map.json"
+    "level_2": "new_map.json"
 }
 
 MAPS_COUNT = len(MAPS)
