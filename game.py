@@ -7,6 +7,7 @@ from misc.path import create_file_if_not_exist
 from misc.score import Score
 from scenes.levels import LevelsScene
 from scenes.main import GameScene
+from scenes.gameover import GameoverScene
 from scenes.menu import MenuScene
 from scenes.pause import PauseScene
 from scenes.records import RecordsScene
@@ -39,6 +40,7 @@ class Game:
             "SCENE_PAUSE": PauseScene(self),
             "SCENE_MENU": MenuScene(self),
             "SCENE_GAME": GameScene(self),
+            "SCENE_GAMEOVER": GameoverScene(self),
             "SCENE_LEVELS": LevelsScene(self),
             "SCENE_RECORDS": RecordsScene(self),
             "SCENE_CREDITS": CreditsScene(self),

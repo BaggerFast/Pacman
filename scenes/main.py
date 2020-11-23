@@ -130,6 +130,8 @@ class GameScene(BaseScene):
                 if not self.pacman.dead:
                     self.pacman.death()
                     self.prepare_lives_meter()
+                elif self.pacman.animator.run == False:
+                    self.game.set_scene("SCENE_GAMEOVER")
         if is_eaten:
             if type == "seed":
                 self.game.score.eat_seed()
