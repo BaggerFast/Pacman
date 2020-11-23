@@ -7,7 +7,7 @@ from scenes.main import GameScene
 from scenes.menu import MenuScene
 from scenes.pause import PauseScene
 from scenes.records import RecordsScene
-from scenes.titers import TitersScene
+from scenes.credits import CreditsScene
 
 
 class Game:
@@ -22,7 +22,7 @@ class Game:
             SCENE_GAME: GameScene
             SCENE_LEVELS: LevelsScene
             SCENE_RECORDS: RecordsScene
-            SCENE_TITERS: TitersScene
+            SCENE_CREDITS: TitersScene
         """
 
         self.screen = pg.display.set_mode(self.size, pg.SCALED)
@@ -35,7 +35,7 @@ class Game:
             "SCENE_GAME": GameScene(self),
             "SCENE_LEVELS": LevelsScene(self),
             "SCENE_RECORDS": RecordsScene(self),
-            "SCENE_TITERS": TitersScene(self),
+            "SCENE_CREDITS": CreditsScene(self),
         }
 
         self.game_over = False
@@ -92,7 +92,7 @@ class Game:
             SCENE_GAME: GameScene
             SCENE_LEVELS: LevelsScene
             SCENE_RECORDS: RecordsScene
-            SCENE_TITERS: TitersScene
+            SCENE_CREDITS: TitersScene
         """
         if not resume:
             self.scenes_dict[self.current_scene_name].on_deactivate()

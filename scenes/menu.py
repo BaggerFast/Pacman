@@ -33,7 +33,7 @@ class MenuScene(BaseScene):
                    self.start_records, 'RECORDS',
                    center=(self.game.width // 2, 160), text_size=50),
             Button(self.game, pg.Rect(0, 0, 180, 30),
-                   self.start_titres, 'TITERS',
+                   self.start_titres, 'CREDITS',
                    center=(self.game.width // 2, 200), text_size=50),
             Button(self.game, pg.Rect(0, 0, 180, 30),
                    sys.exit, 'EXIT',
@@ -52,7 +52,7 @@ class MenuScene(BaseScene):
         self.game.set_scene('SCENE_RECORDS')
 
     def start_titres(self) -> None:
-        self.game.set_scene("SCENE_TITERS")
+        self.game.set_scene("SCENE_CREDITS")
 
     def start_levels(self) -> None:
         self.game.set_scene("SCENE_LEVELS")
