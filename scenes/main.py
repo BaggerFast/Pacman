@@ -1,5 +1,6 @@
 import pygame as pg
 
+from misc.health import Health
 from misc.loader import LevelLoader
 from objects.ghosts.Blinky import Blinky
 from objects.ghosts.Clyde import Clyde
@@ -28,16 +29,16 @@ class GameScene(BaseScene):
         self.player_position = self.loader.get_player_position()
         self.ghost_positions = self.loader.get_ghost_positions()
         self.fruit_position = self.loader.get_fruit_position()
-        # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
         self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not False
         super().__init__(game)
 
     def prepare_lives_meter(self):
-        for i in range(int(self.game.lives)):
-            hp_image = ImageObject(self.game, get_image_path('1.png', 'Pacman', 'Walk'), 5 + i * 20, 271)
+        self.last_hp = []
+        for i in range(int(self.pacman.hp)):
+            hp_image = ImageObject(self.game, get_image_path('1.png', 'pacman', 'walk'), 5 + i * 20, 271)
             hp_image.scale(12, 12)
             hp_image.rotate(180)
-            self.objects.append(hp_image)
+            self.last_hp.append(hp_image)
 
     def create_objects(self) -> None:
         self.objects = []
@@ -45,8 +46,6 @@ class GameScene(BaseScene):
         self.objects.append(self.map)
         self.seeds = SeedContainer(self.game, self.seed_data, self.energizer_data)
         self.objects.append(self.seeds)
-
-        self.prepare_lives_meter()
 
         self.scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 2, 20, 20), color=Color.WHITE)
         self.objects.append(self.scores_label_text)
@@ -64,7 +63,8 @@ class GameScene(BaseScene):
 
 
         self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
-        self.pacman = Pacman(self.game, (-7+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14+self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
+        self.objects.append(self.pacman)
+        self.prepare_lives_meter()
 
         self.blinky = Blinky(self.game, (-7+self.ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2))
         self.pinky = Pinky(self.game, (-7+self.ghost_positions[1][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[2][1] * CELL_SIZE + CELL_SIZE // 2))
@@ -84,11 +84,9 @@ class GameScene(BaseScene):
             self.clyde
         ]
 
-        #
         self.prefered_ghost = self.pinky
         self.count_prefered_ghost = 1
 
-        self.objects.append(self.pacman)
         self.objects.append(self.blinky)
         self.objects.append(self.pinky)
         self.objects.append(self.inky)
@@ -132,7 +130,7 @@ class GameScene(BaseScene):
         for ghost in self.ghosts:
             if ghost.collision_check(self.pacman):
                  self.pacman.death()
-                 print('Заглушка, но коллизия всё равно сработала')
+                 self.prepare_lives_meter()
         if is_eaten:
             if type == "seed":
                 self.game.score.eat_seed()
@@ -141,8 +139,6 @@ class GameScene(BaseScene):
             if self.prefered_ghost != None:
                 self.prefered_ghost.counter()
                 self.prefered_ghost.update_timer()
-
-
 
     def process_logic(self) -> None:
         super(GameScene, self).process_logic()
@@ -156,6 +152,11 @@ class GameScene(BaseScene):
         for ghost in self.not_prefered_ghosts:
             if ghost != self.prefered_ghost:
                 ghost.update_timer()
+
+    def process_draw(self) -> None:
+        super().process_draw()
+        for i in range(len(self.last_hp)):
+            self.last_hp[i].process_draw()
 
         # todo: make text update only when new value appeares
         self.scores_value_text.update_text(str(self.game.score))

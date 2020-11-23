@@ -17,7 +17,6 @@ class Game:
 
     def __init__(self) -> None:
         self.screen = pg.display.set_mode(self.size, pg.SCALED)
-        self.lives = Health(lives=3, max_lives=3)
         self.score = Score()
         self.records = HighScore()
         self.delay = 15

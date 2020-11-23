@@ -1,5 +1,6 @@
 import pygame as pg
 
+from misc.health import Health
 from misc.path import get_image_path_for_animator
 from misc.constants import CELL_SIZE
 from objects.character_base import Character
@@ -15,11 +16,12 @@ class Pacman(Character):
     }
 
     def __init__(self, game, start_pos: tuple):
+        self.hp = Health(3, 3)
         self.walk_anim = Animator(
-            get_image_path_for_animator('Pacman', 'walk')
+            get_image_path_for_animator('pacman', 'walk')
         )
         self.dead_anim = Animator(
-            get_image_path_for_animator('Pacman', 'dead'), False
+            get_image_path_for_animator('pacman', 'dead'), False
         )
         super().__init__(game, self.walk_anim, start_pos)
         self.dead = False
@@ -52,8 +54,16 @@ class Pacman(Character):
         return self.movement_cell()[direction] == "1"
 
     def death(self):
-        self.move(*self.start_pos)
-        self.dead = True
+        self.hp.change_count_lives(-1)
+        if not int(self.hp):
+            self.animator = self.dead_anim
+            self.animator.run = True
+            self.dead = True
+        else:
+            self.move(*self.start_pos)
+            self.speed = 0
+            self.animator.stop()
+
 
     def in_center(self) -> bool:
         return self.rect.x % CELL_SIZE == 6 and (self.rect.y-20) % CELL_SIZE == 6
