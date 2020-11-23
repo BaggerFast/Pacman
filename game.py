@@ -15,6 +15,16 @@ class Game:
     current_scene_name = 'SCENE_MENU'
 
     def __init__(self) -> None:
+        """
+        Dict names:
+            SCENE_PAUSE: PauseScene
+            SCENE_MENU: MenuScene
+            SCENE_GAME: GameScene
+            SCENE_LEVELS: LevelsScene
+            SCENE_RECORDS: RecordsScene
+            SCENE_TITERS: TitersScene
+        """
+
         self.screen = pg.display.set_mode(self.size, pg.SCALED)
         self.score = Score()
         self.records = HighScore()
@@ -75,6 +85,15 @@ class Game:
             pg.time.wait(self.delay)
 
     def set_scene(self, name: str, resume: bool = False) -> None:
+        """
+        Dict names:
+            SCENE_PAUSE: PauseScene
+            SCENE_MENU: MenuScene
+            SCENE_GAME: GameScene
+            SCENE_LEVELS: LevelsScene
+            SCENE_RECORDS: RecordsScene
+            SCENE_TITERS: TitersScene
+        """
         if not resume:
             self.scenes_dict[self.current_scene_name].on_deactivate()
         self.current_scene_name = name
