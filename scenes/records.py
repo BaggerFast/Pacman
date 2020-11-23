@@ -18,6 +18,7 @@ class RecordsScene(BaseScene):
         self.create_buttons()
 
     def create_text_labels(self) -> None:
+        self.game.records.update_records()
         self.one_text = Text(self.game, str(self.game.records.data[4]), 30, (60, 55), Color.GOLD)
         self.two_text = Text(self.game, str(self.game.records.data[3]), 30, (60, 85), Color.SILVER)
         self.three_text = Text(self.game, str(self.game.records.data[2]), 30, (60, 120), Color.BRONZE)

@@ -39,6 +39,7 @@ class Pacman(Character):
                     self.go()
                 else:
                     self.stop()
+                    self.animator.change_cur_image(0)
                 c = self.direction[self.feature_rotate][2]
                 if self.move_to(c):
                     self.set_direction(self.feature_rotate)
