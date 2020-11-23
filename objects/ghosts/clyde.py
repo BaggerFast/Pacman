@@ -31,7 +31,7 @@ class Clyde(BaseGhost):
     def process_logic(self):
         super().process_logic()
         if self.is_in_home and self.can_leave_home():
-            self.animator = self.right_walk_anim
+            self.animator = self.left_walk_anim
             self.shift_x = -1
             self.shift_y = 0
             self.speed = 1
