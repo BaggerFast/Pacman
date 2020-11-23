@@ -45,7 +45,6 @@ class BaseGhost(Character):
             c = self.direction[self.feature_direction][2]
             if self.move_to(c):
                 self.set_direction(self.feature_direction)
-                self.set_direction(self.feature_rotate)
         if self.rotate is None:
             self.rotate = 0
         self.animator = self.animations[self.rotate]
