@@ -8,7 +8,7 @@ from objects.ghosts.inky import Inky
 from objects.ghosts.pinky import Pinky
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color, maps
+from misc.constants import Color, MAPS
 from misc.constants import CELL_SIZE
 from misc.path import get_image_path
 from objects.image import ImageObject
@@ -21,7 +21,7 @@ from misc.constants import Font
 class GameScene(BaseScene):
 
     def __init__(self, game):
-        self.loader = LevelLoader(maps[game.level_name])
+        self.loader = LevelLoader(MAPS[game.level_name])
         self.map_data = self.loader.get_map_data()
         self.seed_data = self.loader.get_seed_data()
         self.energizer_data = self.loader.get_energizer_data()

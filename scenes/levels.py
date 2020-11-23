@@ -42,10 +42,14 @@ class LevelsScene(BaseScene):
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 self.game.set_scene('SCENE_MENU')
 
-    def set_level(self, name="level_1"):
+    def set_level(self, name="level_1") -> None:
+        """
+        :param name: level_+id (e.g. level_1)
+        """
         self.game.level_name = name
         self.game.scenes["SCENE_GAME"] = GameScene(self.game)
-        self.game.set_scene('SCENE_GAME')
+        self.game.records.update_records()
+        self.game.set_scene('SCENE_MENU')
 
     def level1(self) -> None:
         self.set_level("level_1")

@@ -105,7 +105,10 @@ class Font:
     TITERS_SCENE_SIZE = 14
 
 
-maps = {
+MAPS = {
     "level_1": "original.json",
-    "level_2": "new_map.json"
+    "level_2": "new_map.json",
+    "level_3": "new_map.json"
 }
+
+MAPS_COUNT = len(MAPS)

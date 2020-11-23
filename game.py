@@ -1,7 +1,7 @@
 import os
 import json
 import pygame as pg
-from misc.constants import Color, ROOT_DIR
+from misc.constants import Color, ROOT_DIR, MAPS_COUNT
 from misc.highscore import HighScore
 from misc.path import create_file_if_not_exist
 from misc.score import Score
@@ -30,9 +30,10 @@ class Game:
         """
 
         self.level_name = self.read_last_level()
+        self.levels_count = MAPS_COUNT
         self.screen = pg.display.set_mode(self.size, pg.SCALED)
         self.score = Score()
-        self.records = HighScore()
+        self.records = HighScore(self)
         self.delay = 15
         self.scenes = {
             "SCENE_PAUSE": PauseScene(self),

@@ -11,7 +11,6 @@ from scenes.base import BaseScene
 
 class RecordsScene(BaseScene):
     def create_objects(self) -> None:
-        self.records = self.game.records.data
         self.create_title()
         self.create_error_label()
         self.create_text_labels()
@@ -19,11 +18,11 @@ class RecordsScene(BaseScene):
         self.create_buttons()
 
     def create_text_labels(self) -> None:
-        self.one_text = Text(self.game, str(self.records[4]), 30, (60, 45), Color.GOLD)
-        self.two_text = Text(self.game, str(self.records[3]), 30, (60, 80), Color.SILVER)
-        self.three_text = Text(self.game, str(self.records[2]), 30, (60, 115), Color.BRONZE)
-        self.four_text = Text(self.game, str(self.records[1]), 30, (25, 150), Color.WHITE)
-        self.five_text = Text(self.game, str(self.records[0]), 30, (25, 185), Color.WHITE)
+        self.one_text = Text(self.game, str(self.game.records.data[4]), 30, (60, 45), Color.GOLD)
+        self.two_text = Text(self.game, str(self.game.records.data[3]), 30, (60, 80), Color.SILVER)
+        self.three_text = Text(self.game, str(self.game.records.data[2]), 30, (60, 115), Color.BRONZE)
+        self.four_text = Text(self.game, str(self.game.records.data[1]), 30, (60, 150), Color.WHITE)
+        self.five_text = Text(self.game, str(self.game.records.data[0]), 30, (60, 185), Color.WHITE)
 
     def create_medals(self) -> None:
         self.gold_medal = ImageObject(self.game, get_image_path('1_golden', 'medal'), 16, 45)
@@ -62,26 +61,26 @@ class RecordsScene(BaseScene):
     def process_draw(self) -> None:
         super().process_draw()
 
-        if self.records[4] == 0:
+        if self.game.records.data[4] == 0:
             self.error_text.process_draw()
 
-        if self.records[4] != 0:
+        if self.game.records.data[4] != 0:
             self.one_text.process_draw()
             self.gold_medal.process_draw()
 
-        if self.records[3] != 0:
+        if self.game.records.data[3] != 0:
             self.two_text.process_draw()
             self.silver_medal.process_draw()
 
-        if self.records[2] != 0:
+        if self.game.records.data[2] != 0:
             self.three_text.process_draw()
             self.bronze_medal.process_draw()
 
-        if self.records[1] != 0:
+        if self.game.records.data[1] != 0:
             self.four_text.process_draw()
             self.stone_medal.process_draw()
 
-        if self.records[0] != 0:
+        if self.game.records.data[0] != 0:
             self.five_text.process_draw()
             self.wooden_medal.process_draw()
 

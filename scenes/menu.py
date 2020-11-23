@@ -54,6 +54,7 @@ class MenuScene(BaseScene):
         self.game.set_scene('SCENE_GAME')
 
     def start_records(self) -> None:
+        self.game.scenes['SCENE_RECORDS'].create_text_labels()
         self.game.set_scene('SCENE_RECORDS')
 
     def start_titres(self) -> None:
