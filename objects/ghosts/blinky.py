@@ -31,8 +31,3 @@ class Blinky(BaseGhost):
     def process_logic(self):
         if not self.is_invisible:
             super().process_logic()
-
-    def reset(self):
-        self.is_invisible = False
-        self.enable_collision = True
-        self.rect.x, self.rect.y = self.start_pos

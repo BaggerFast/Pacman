@@ -16,6 +16,7 @@ class BaseGhost(Character):
 
     def __init__(self, game, animator: Animator, start_pos: tuple, animations, enable_collision=True, max_count_eat_seeds_in_home=0):
         super().__init__(game, animator, start_pos)
+        self.is_can_leave_home = False
         self.animations = animations
         self.enable_collision = enable_collision
         self.count_eat_seeds_in_home = 0
@@ -57,7 +58,9 @@ class BaseGhost(Character):
 
     def can_leave_home(self):
         #print(self.max_count_eat_seeds_in_home, ': ', pg.time.get_ticks()-self.timer)
-        return self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home or pg.time.get_ticks()-self.timer >= 4000
+        return self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home \
+               or pg.time.get_ticks()-self.timer >= 4000 or self.is_can_leave_home
+        # флаг выше передаётся нужен после смерти пакмана
 
     def update_timer(self):
         self.timer = pg.time.get_ticks()
@@ -66,12 +69,3 @@ class BaseGhost(Character):
         self.animator = self.invisible_anim
         self.is_invisible = True
         self.enable_collision = False
-
-    def reset(self):
-        self.is_invisible = False
-        self.is_in_home = True
-        self.rect.x, self.rect.y = self.start_pos
-        self.count_eat_seeds_in_home = 0
-        self.work_counter = False
-        self.update_timer()
-        self.stop()

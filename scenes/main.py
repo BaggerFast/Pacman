@@ -1,6 +1,5 @@
 import pygame as pg
 
-from misc.health import Health
 from misc.loader import LevelLoader
 from objects.ghosts.blinky import Blinky
 from objects.ghosts.clyde import Clyde
@@ -33,6 +32,7 @@ class GameScene(BaseScene):
         self.timer_reset_pacman = 0
         self.seeds_eaten = 0
         self.work_ghost_counters = True
+        self.max_seeds_eaten_to_prefered_ghost = 7
         super().__init__(game)
 
     def prepare_lives_meter(self):
@@ -70,9 +70,9 @@ class GameScene(BaseScene):
         self.prepare_lives_meter()
 
         self.blinky = Blinky(self.game, (-7+self.ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2))
-        self.pinky = Pinky(self.game, (-7+self.ghost_positions[1][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[2][1] * CELL_SIZE + CELL_SIZE // 2))
-        self.inky = Inky(self.game, (-7+self.ghost_positions[0][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[1][1] * CELL_SIZE + CELL_SIZE // 2), 30)
-        self.clyde = Clyde(self.game, (-7+self.ghost_positions[2][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[0][1] * CELL_SIZE + CELL_SIZE // 2), 60)
+        self.pinky = Pinky(self.game, (-7+self.ghost_positions[1][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[2][1] * CELL_SIZE + CELL_SIZE // 2), 1)
+        self.inky = Inky(self.game, (-7+self.ghost_positions[0][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[1][1] * CELL_SIZE + CELL_SIZE // 2), 29)
+        self.clyde = Clyde(self.game, (-7+self.ghost_positions[2][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[0][1] * CELL_SIZE + CELL_SIZE // 2), 59)
 
         self.ghosts = [
             self.blinky,
@@ -144,12 +144,15 @@ class GameScene(BaseScene):
                 self.game.score.eat_seed()
             elif type == "energizer":
                 self.game.score.eat_energizer()
-            if self.prefered_ghost != None:
+            if self.prefered_ghost != None and self.work_ghost_counters:
                 self.prefered_ghost.counter()
+                self.prefered_ghost.update_timer()
+            elif not self.work_ghost_counters and self.prefered_ghost != None:
+                self.global_counter()
                 self.prefered_ghost.update_timer()
 
     def global_counter(self):
-        self.seads_eaten += 1
+        self.seeds_eaten += 1
 
     def check_first_run(self):
         if self.first_run:
@@ -157,19 +160,21 @@ class GameScene(BaseScene):
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
 
-
-
     def process_logic(self) -> None:
         super(GameScene, self).process_logic()
         self.check_first_run()
         self.process_collision()
-        if pg.time.get_ticks()-self.timer_reset_pacman >= 2000 and self.pacman.animator.anim_finished:
-            self.pacman.reset()
-            for ghost in self.ghosts:
-                ghost.reset()
-            self.prefered_ghost = self.pinky
-            self.not_prefered_ghosts = [self.pinky, self.inky, self.clyde]
+        if pg.time.get_ticks()-self.timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
+            self.create_objects()
+            self.seeds_eaten = 0
             self.work_ghost_counters = False
+        if self.seeds_eaten == self.max_seeds_eaten_to_prefered_ghost and self.prefered_ghost != None:
+            self.prefered_ghost.is_can_leave_home = True
+            if self.max_seeds_eaten_to_prefered_ghost == 7:
+                self.max_seeds_eaten_to_prefered_ghost = 17
+            elif self.max_seeds_eaten_to_prefered_ghost == 17:
+                self.max_seeds_eaten_to_prefered_ghost = 32
+
         self.change_prefered_ghost()
         for ghost in self.not_prefered_ghosts:
             if ghost != self.prefered_ghost:
