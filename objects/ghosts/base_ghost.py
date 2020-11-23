@@ -53,3 +53,6 @@ class BaseGhost(Character):
 
     def update_timer(self):
         self.timer = pg.time.get_ticks()
+
+    def invisible(self):
+        pass
