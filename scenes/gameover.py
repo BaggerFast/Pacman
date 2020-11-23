@@ -39,17 +39,21 @@ class GameoverScene(BaseScene):
         self.objects.append(self.button_controller)
 
     def create_score_text(self) -> None:
-        text_score = Text(self.game, f'Score: {self.game.score}', 20, color=Color.WHITE, font=Font.FILENAME)
-        text_score.move_center(self.game.width // 2, 20 + 60 + 30 + 20)
-        self.objects.append(text_score)
+        self.text_score = Text(self.game, f'Score: {self.game.score}', 20, color=Color.WHITE)
+        self.text_score.move_center(self.game.width // 2, 135)
+        self.objects.append(self.text_score)
 
     def create_highscore_text(self) -> None:
         # :todo: high score берет не верные данные
-        text_highscore = Text(self.game, f'High score: {self.game.score}', 20, color=Color.WHITE, font=Font.FILENAME)
-        text_highscore.move_center(self.game.width // 2, 20 + 60 + 30 + 20 + 30)
-        self.objects.append(text_highscore)
+        self.text_highscore = Text(self.game, f'High score: {self.game.records.data[-1]}', 20, color=Color.WHITE)
+        self.text_highscore.move_center(self.game.width // 2, 165)
+        self.objects.append(self.text_highscore)
 
     def on_activate(self) -> None:
+        self.text_score.update_text(f'Score: {self.game.score}')
+        self.text_score.move_center(self.game.width // 2, 135)
+        self.text_highscore.update_text(f'High score: {self.game.records.data[-1]}')
+        self.text_highscore.move_center(self.game.width // 2, 165)
         self.button_controller.reset_state()
 
     def start_menu(self) -> None:

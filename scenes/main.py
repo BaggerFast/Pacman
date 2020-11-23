@@ -161,3 +161,7 @@ class GameScene(BaseScene):
 
         # todo: make text update only when new value appeares
         self.scores_value_text.update_text(str(self.game.score))
+
+    def on_deactivate(self) -> None:
+        self.game.records.set_new_record(int(self.game.score))
+        self.game.scenes["SCENE_GAME"] = GameScene(self.game)
