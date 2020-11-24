@@ -5,7 +5,6 @@ from typing import NamedTuple
 import pygame as pg
 
 
-# https://www.pygame.org/docs/ref/color.html
 # https://github.com/pygame/pygame/blob/master/src_py/colordict.py
 class Color:
     RED = pg.color.Color('red')
@@ -18,9 +17,9 @@ class Color:
     GOLD = pg.color.Color('gold')
     GRAY = pg.color.Color('gray50')
     DARK_GRAY = pg.color.Color('gray26')
-    SILVER = pg.color.Color(192, 192, 192)
-    BRONZE = pg.color.Color(205, 127, 50)
-    WOODEN = pg.color.Color(101, 67, 33)
+    SILVER = (192, 192, 192)
+    BRONZE = (205, 127, 50)
+    WOODEN = (101, 67, 33)
     JET = (10, 10, 10)
 
 
@@ -40,27 +39,6 @@ class ButtonColor(NamedTuple):
     click: ButtonStateColor = ButtonStateColor(background=Color.GREEN)
 
     def init_section(self, name: str, data: dict) -> None:
-        """
-                                     ▄              ▄
-                                    ▌▒█           ▄▀▒▌
-                                    ▌▒▒█        ▄▀▒▒▒▐
-                                   ▐▄█▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐
-                                 ▄▄▀▒▒▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐
-        METAPROGRAMMING IS     ▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌
-        A SUCH WOW THING =)   ▐▒▒▒▄▄▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▀▄▒▌
-                              ▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐
-                             ▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌
-                             ▌░▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌
-                            ▌▒▒▒▄██▄▒▒▒▒▒▒▒▒░░░░░░░░▒▒▒▐
-                            ▐▒▒▐▄█▄█▌▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▒▒▌
-                            ▐▒▒▐▀▐▀▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▐
-                             ▌▒▒▀▄▄▄▄▄▄▀▒▒▒▒▒▒▒░▒░▒░▒▒▒▌
-                             ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒▒▄▒▒▐
-                              ▀▄▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒▄▒▒▒▒▌
-                                ▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀
-                                  ▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀
-                                     ▀▀▀▀▀▀▀▀▀▀▀▀
-        """
         section = self.__getattribute__(name)
         default_section = BUTTON_DEFAULT_COLORS.__getattribute__(name)
 

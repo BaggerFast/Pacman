@@ -3,7 +3,7 @@ from misc.constants import Points
 
 class Score:
     def __init__(self):
-        self.__score = 0
+        self.score = 0
         self.fear_mode = False
         self.fear_count = 0
 
