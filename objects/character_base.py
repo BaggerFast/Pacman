@@ -52,7 +52,7 @@ class Character(DrawableObject):
             self.game.screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
 
     def get_cell(self):
-        return (self.rect.centerx // CELL_SIZE, self.rect.centery // CELL_SIZE)
+        return (self.rect.centerx // CELL_SIZE, (self.rect.centery-25) // CELL_SIZE)
 
     @staticmethod
     def two_cells_dis(cell1: tuple, cell2: tuple):
@@ -62,6 +62,7 @@ class Character(DrawableObject):
 
     def movement_cell(self, cell: tuple):
         scene = self.game.scenes[self.game.current_scene_name]
+        print(cell)
         cell = scene.movements_data[cell[1]][cell[0]]
         return [i == '1' for i in "{0:04b}".format(cell)[::-1]]
 

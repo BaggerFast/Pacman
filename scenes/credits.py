@@ -43,7 +43,7 @@ class CreditsScene(BaseScene):
         self.game = game
         self.on_screen = 0
         self.start_pos = -30
-        self.speed = 0.3
+        self.speed = -0.3
         self.alpha_delta = -15
         self.students = []
 
@@ -61,7 +61,7 @@ class CreditsScene(BaseScene):
         students = list(set(self.data) - set((obj.text for obj in self.students)))
         label = str(students[randint(0, len(students) - 1)])
         student = Text(self.game, label, Font.TITERS_SCENE_SIZE, font=Font.ALTFONT)
-        student.move_center(self.start_pos, randint(25, self.game.height - 75))
+        student.move_center(self.start_pos, randint(305, self.game.height - 75))
         student.speed = self.speed + randint(-5, 15) / 100
         student.ttl = 0
         self.students.append(student)

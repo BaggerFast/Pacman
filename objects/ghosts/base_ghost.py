@@ -68,7 +68,7 @@ class BaseGhost(Character):
                         tmp_cell = (self.get_cell()[0]+direction[i][0], self.get_cell()[1]+direction[i][1])
                         if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
                             min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
-                            self.shift_x, self.shift.y, self.rotate = direction[i]
+                            self.shift_x, self.shift_y, self.rotate = direction[i]
         if self.rotate is None:
             self.rotate = 0
         self.animator = self.animations[self.rotate]
@@ -82,6 +82,9 @@ class BaseGhost(Character):
     def counter(self):
         if self.work_counter:
             self.count_eat_seeds_in_home += 1
+
+    def get_cell(self):
+        return ((self.rect.centerx) // CELL_SIZE, (self.rect.centery-25) // CELL_SIZE)
 
     def can_leave_home(self):
         #print(self.max_count_eat_seeds_in_home, ': ', pg.time.get_ticks()-self.timer)
