@@ -21,6 +21,7 @@ class Color:
     SILVER = pg.color.Color(192, 192, 192)
     BRONZE = pg.color.Color(205, 127, 50)
     WOODEN = pg.color.Color(101, 67, 33)
+    JET = (10,10,10)
 
 
 class ButtonStateColor(NamedTuple):
@@ -83,7 +84,7 @@ class ButtonColor(NamedTuple):
 
 BUTTON_DEFAULT_COLORS = ButtonColor(
     static=ButtonStateColor(text=Color.GRAY, background=Color.BLACK),
-    hover=ButtonStateColor(text=Color.WHITE, background=(10, 10, 10)),
+    hover=ButtonStateColor(text=Color.WHITE, background=Color.JET),
     click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK)
 )
 

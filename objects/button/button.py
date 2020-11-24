@@ -4,7 +4,6 @@ import pygame as pg
 
 from misc.constants import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor
 from objects.base import DrawableObject
-from objects.text import Text
 
 
 class BaseButton(DrawableObject):

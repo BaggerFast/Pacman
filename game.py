@@ -3,7 +3,7 @@ import json
 import pygame as pg
 from misc.constants import Color, ROOT_DIR, MAPS_COUNT
 from misc.highscore import HighScore
-from misc.path import create_file_if_not_exist
+from misc.path import create_file_if_not_exist, get_image_path
 from misc.score import Score
 from scenes.levels import LevelsScene
 from scenes.main import GameScene
@@ -18,6 +18,8 @@ class Game:
     size = width, height = 224, 285
     current_scene_name = 'SCENE_MENU'
     last_level_filepath = os.path.join(ROOT_DIR, "saves", "cur_level.json")
+    pg.display.set_caption('PACMAN')
+    pg.display.set_icon(pg.image.load(get_image_path('1', 'pacman', 'walk')))
 
     def __init__(self) -> None:
         """
@@ -108,6 +110,8 @@ class Game:
             SCENE_MENU: MenuScene
 
             SCENE_GAME: GameScene
+
+            SCENE_GAMEOVER: GameOver
 
             SCENE_LEVELS: LevelsScene
 
