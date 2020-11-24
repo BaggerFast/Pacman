@@ -19,7 +19,8 @@ class Game:
     current_scene_name = 'SCENE_MENU'
     last_level_filepath = os.path.join(ROOT_DIR, "saves", "cur_level.json")
     pg.display.set_caption('PACMAN')
-    pg.display.set_icon(pg.image.load(get_image_path('1', 'pacman', 'walk')))
+    icon = pg.image.load(get_image_path('1', 'pacman', 'walk'))
+    pg.display.set_icon(icon)
 
     def __init__(self) -> None:
         """

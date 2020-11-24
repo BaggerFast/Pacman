@@ -63,7 +63,6 @@ class GameScene(BaseScene):
         self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
         self.objects.append(self.pacman)
         self.prepare_lives_meter()
-
         self.blinky = Blinky(self.game, (-7+self.ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2))
         self.pinky = Pinky(self.game, (-7+self.ghost_positions[1][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[2][1] * CELL_SIZE + CELL_SIZE // 2))
         self.inky = Inky(self.game, (-7+self.ghost_positions[0][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[1][1] * CELL_SIZE + CELL_SIZE // 2), 30)
@@ -173,4 +172,5 @@ class GameScene(BaseScene):
         # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
 
     def on_reset(self) -> None:
+        self.game.score.score = 0
         self.game.scenes["SCENE_GAME"] = GameScene(self.game)

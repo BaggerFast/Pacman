@@ -21,7 +21,7 @@ class Color:
     SILVER = pg.color.Color(192, 192, 192)
     BRONZE = pg.color.Color(205, 127, 50)
     WOODEN = pg.color.Color(101, 67, 33)
-    JET = (10,10,10)
+    JET = (10, 10, 10)
 
 
 class ButtonStateColor(NamedTuple):
