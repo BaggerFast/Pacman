@@ -1,7 +1,5 @@
-from misc.constants import CELL_SIZE
-from misc.health import Health
+from misc import CELL_SIZE, Health, Animator
 from objects.base import DrawableObject
-from misc.animator import Animator
 
 
 class Character(DrawableObject):

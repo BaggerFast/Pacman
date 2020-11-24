@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc.constants import Font
+from misc import Font
 from objects.base import DrawableObject
 
 

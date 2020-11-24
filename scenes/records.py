@@ -1,7 +1,6 @@
 import pygame as pg
 
-from misc.constants import Color, Font
-from misc.path import get_image_path
+from misc import Color, Font, get_image_path
 from objects.button import Button
 from objects.button import ButtonController
 from objects.image import ImageObject

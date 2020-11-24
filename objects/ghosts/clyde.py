@@ -1,5 +1,4 @@
-from misc.animator import Animator
-from misc.path import get_image_path_for_animator
+from misc import Animator, get_image_path_for_animator
 from objects.ghosts.base_ghost import BaseGhost
 
 

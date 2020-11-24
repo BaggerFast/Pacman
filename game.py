@@ -1,10 +1,8 @@
 import os
 import json
 import pygame as pg
-from misc.constants import Color, ROOT_DIR, MAPS_COUNT
-from misc.highscore import HighScore
-from misc.path import create_file_if_not_exist, get_image_path
-from misc.score import Score
+from misc import Color, ROOT_DIR, MAPS_COUNT, HighScore, \
+                 create_file_if_not_exist, get_image_path, Score
 from scenes.levels import LevelsScene
 from scenes.main import GameScene
 from scenes.gameover import GameoverScene

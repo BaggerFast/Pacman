@@ -1,8 +1,8 @@
 import pygame as pg
 
-from misc.constants import CELL_SIZE, Color
+from misc import CELL_SIZE, Color
 from objects.base import DrawableObject
-from misc.constants import CELL_SIZE
+
 
 class SeedContainer(DrawableObject):
     def __init__(self, game, seed_data, energizer_data, x=0, y=20):

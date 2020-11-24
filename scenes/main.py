@@ -1,16 +1,13 @@
 import pygame as pg
 
-from misc import LevelLoader
+from misc import LevelLoader, Color, MAPS, CELL_SIZE, Font, get_image_path
 from objects.ghosts import Blinky, Pinky, Inky, Clyde
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color, MAPS, CELL_SIZE
-from misc.path import get_image_path
 from objects.image import ImageObject
 from objects.text import Text
 from objects.pacman import Pacman
 from scenes.base import BaseScene
-from misc.constants import Font
 
 
 class GameScene(BaseScene):

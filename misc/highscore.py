@@ -1,8 +1,8 @@
 import json
 import os.path
 
-from misc.constants import MAPS_COUNT, MAPS
-from misc.path import create_file_if_not_exist
+from misc import MAPS_COUNT, MAPS
+from misc.path import create_file_if_not_exist # НЕ УДАЛЯТЬ .path (Без него ошибка из-за зацикленного импорта)
 
 
 class HighScore:

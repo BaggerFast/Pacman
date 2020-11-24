@@ -1,7 +1,6 @@
 import pygame as pg
 
-from misc.constants import CELL_SIZE
-from misc.path import get_image_path
+from misc import CELL_SIZE, get_image_path
 from objects.base import DrawableObject
 
 

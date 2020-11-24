@@ -1,7 +1,7 @@
 import os
 from typing import List
 
-from misc.constants import ROOT_DIR
+from misc import ROOT_DIR
 
 
 def get_image_path(filename, *folder):

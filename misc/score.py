@@ -1,4 +1,4 @@
-from misc.constants import Points
+from misc import Points
 
 
 class Score:

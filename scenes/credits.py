@@ -2,7 +2,7 @@ import pygame as pg
 from random import randint
 from objects.text import Text
 from scenes.base import BaseScene
-from misc.constants import Font
+from misc import Font
 from objects.button import ButtonController, Button
 
 

@@ -2,7 +2,7 @@ from typing import List, Union, Callable, Tuple
 
 import pygame as pg
 
-from misc.constants import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor
+from misc import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor
 from objects.base import DrawableObject
 
 

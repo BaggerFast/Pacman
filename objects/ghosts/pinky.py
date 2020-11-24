@@ -1,6 +1,4 @@
-from misc.animator import Animator
-from misc.constants import CELL_SIZE
-from misc.path import get_image_path_for_animator
+from misc import Animator, CELL_SIZE, get_image_path_for_animator
 from objects.ghosts.base_ghost import BaseGhost
 
 
