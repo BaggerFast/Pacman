@@ -2,7 +2,7 @@ import pygame as pg
 
 from misc import Color, Font, get_image_path
 from objects import Button, ButtonController, ImageObject, Text
-from scenes.base import BaseScene
+from scenes import BaseScene
 
 
 class RecordsScene(BaseScene):

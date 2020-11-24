@@ -3,7 +3,7 @@ import pygame as pg
 from misc import LevelLoader, Color, MAPS, CELL_SIZE, Font, get_image_path
 from objects import Blinky, Pinky, Inky, Clyde, Map, SeedContainer, ImageObject, \
                     Text, Pacman
-from scenes.base import BaseScene
+from scenes import BaseScene
 
 
 class GameScene(BaseScene):

@@ -3,13 +3,13 @@ import json
 import pygame as pg
 from misc import Color, ROOT_DIR, MAPS_COUNT, HighScore, \
                  create_file_if_not_exist, get_image_path, Score
-from scenes.levels import LevelsScene
-from scenes.main import GameScene
-from scenes.gameover import GameoverScene
-from scenes.menu import MenuScene
-from scenes.pause import PauseScene
-from scenes.records import RecordsScene
-from scenes.credits import CreditsScene
+from scenes import LevelsScene
+from scenes import GameScene
+from scenes import GameoverScene
+from scenes import MenuScene
+from scenes import PauseScene
+from scenes import RecordsScene
+from scenes import CreditsScene
 
 
 class Game:
