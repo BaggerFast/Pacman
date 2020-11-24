@@ -1,14 +1,10 @@
 import pygame as pg
 
-from misc.loader import LevelLoader
-from objects.ghosts.blinky import Blinky
-from objects.ghosts.clyde import Clyde
-from objects.ghosts.inky import Inky
-from objects.ghosts.pinky import Pinky
+from misc import LevelLoader
+from objects.ghosts import Blinky, Pinky, Inky, Clyde
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color, MAPS
-from misc.constants import CELL_SIZE
+from misc.constants import Color, MAPS, CELL_SIZE
 from misc.path import get_image_path
 from objects.image import ImageObject
 from objects.text import Text

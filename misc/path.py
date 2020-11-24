@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 from misc.constants import ROOT_DIR
 
@@ -23,7 +24,7 @@ def get_files_count(path):
     return count
 
 
-def get_image_path_for_animator(*folder):
+def get_image_path_for_animator(*folder: List[str]) -> List[str]:
     """
     :param folder: указать папки через пробел слева на право без имени файла без image
     :return: возращает все файлы для анимации автоматически
@@ -37,7 +38,7 @@ def get_image_path_for_animator(*folder):
     return images
 
 
-def create_file_if_not_exist(filepath: str, data="") -> bool:
+def create_file_if_not_exist(filepath: str, data=""):
     """
     :param filepath: path to file
     :param data: string which will written in file if it doesn't exist

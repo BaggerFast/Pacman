@@ -17,6 +17,8 @@ class Color:
     GOLD = pg.color.Color('gold')
     GRAY = pg.color.Color('gray50')
     DARK_GRAY = pg.color.Color('gray26')
+
+    # TODO: migrate to pygame.Color
     SILVER = (192, 192, 192)
     BRONZE = (205, 127, 50)
     WOODEN = (101, 67, 33)
@@ -45,7 +47,7 @@ class ButtonColor(NamedTuple):
         if name in data.keys():
             for item in [ButtonStateColor.get_members_list()]:
                 if item in data[name].keys():
-                    section.__setattr__(item,data[name][item])
+                    section.__setattr__(item, data[name][item])
         else:
             self.__setattr__(name, default_section)
 
@@ -66,16 +68,17 @@ BUTTON_DEFAULT_COLORS = ButtonColor(
     click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK)
 )
 
-
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 CELL_SIZE = 8
 
 
+# TODO: migrate to NamedTuple
 class Points:
     POINT_PER_SEED = 10
     POINT_PER_ENERGIZER = 50
 
 
+# TODO: migrate to NamedTuple
 class Font:
     FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')
     ALTFONT = os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')
