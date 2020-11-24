@@ -41,7 +41,7 @@ class LevelsScene(BaseScene):
         for index in range(len(buttons)):
             if self.game.level_name == buttons[index].text.lower().replace(' ', '_'):
                 buttons[index] = Button(self.game, pg.Rect(0, 0, 180, 40),
-                   buttons[index].function, '< ' + buttons[index].text + ' >',
+                   buttons[index].function, '» ' + buttons[index].text + ' «',
                    center=(buttons[index].rect.centerx, buttons[index].rect.centery),
                    text_size=Font.BUTTON_TEXT_SIZE)
         self.button_controller = ButtonController(self.game, buttons)
