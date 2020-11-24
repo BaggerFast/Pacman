@@ -1,9 +1,8 @@
 import pygame as pg
 from random import randint
-from objects.text import Text
+from objects import Text, ButtonController, Button
 from scenes.base import BaseScene
 from misc import Font
-from objects.button import ButtonController, Button
 
 
 class CreditsScene(BaseScene):

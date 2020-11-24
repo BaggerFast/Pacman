@@ -2,8 +2,7 @@ import sys
 
 import pygame as pg
 
-from objects.button import ButtonController, Button
-from objects.text import Text
+from objects import ButtonController, Button, Text
 from scenes.base import BaseScene
 from misc import Color, Font
 

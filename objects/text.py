@@ -1,7 +1,7 @@
 import pygame as pg
 
 from misc import Font
-from objects.base import DrawableObject
+from objects import DrawableObject
 
 
 class Text(DrawableObject):

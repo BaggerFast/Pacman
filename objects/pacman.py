@@ -1,6 +1,6 @@
 import pygame as pg
 from misc import CELL_SIZE, get_image_path_for_animator, Health, Animator
-from objects.character_base import Character
+from objects import Character
 
 
 class Pacman(Character):

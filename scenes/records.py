@@ -1,10 +1,7 @@
 import pygame as pg
 
 from misc import Color, Font, get_image_path
-from objects.button import Button
-from objects.button import ButtonController
-from objects.image import ImageObject
-from objects.text import Text
+from objects import Button, ButtonController, ImageObject, Text
 from scenes.base import BaseScene
 
 

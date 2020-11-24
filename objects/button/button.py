@@ -3,7 +3,7 @@ from typing import List, Union, Callable, Tuple
 import pygame as pg
 
 from misc import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor
-from objects.base import DrawableObject
+from objects import DrawableObject
 
 
 class BaseButton(DrawableObject):

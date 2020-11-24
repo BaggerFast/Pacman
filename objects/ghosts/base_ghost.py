@@ -1,6 +1,6 @@
 import pygame as pg
 from misc import CELL_SIZE, Animator
-from objects.character_base import Character
+from objects import Character
 
 
 class BaseGhost(Character):

@@ -1,6 +1,6 @@
 import pygame as pg
 
-from objects.base import DrawableObject
+from objects import DrawableObject
 
 
 class ImageObject(DrawableObject):
