@@ -1,5 +1,4 @@
 from misc.constants import CELL_SIZE
-from misc.health import Health
 from objects.base import DrawableObject
 from misc.animator import Animator
 
@@ -50,17 +49,26 @@ class Character(DrawableObject):
 
     def process_draw(self):
         for i in range(-1, 2):
-            self.game.screen.blit(self.animator.current_image, (self.rect.x+self.game.width*i, self.rect.y))
+            self.game.screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
 
-# Обработка коллизий (не трогайте пажожда, я сам не понимаю как это работает, я пытался понять, но я так и не смог)
+    def get_cell(self):
+        return (self.rect.centerx // CELL_SIZE, self.rect.centery // CELL_SIZE)
 
-    def movement_cell(self):
+    @staticmethod
+    def two_cells_dis(cell1: tuple, cell2: tuple):
+        return ((cell1[0] - cell2[0]) ** 2 + (cell1[1] - cell2[1]) ** 2) ** 0.5
+
+    # Обработка коллизий (не трогайте пажожда, я сам не понимаю как это работает, я пытался понять, но я так и не смог)
+
+    def movement_cell(self, cell: tuple):
         scene = self.game.scenes[self.game.current_scene_name]
-        cell = scene.movements_data[(self.rect.y-12) // CELL_SIZE][self.rect.x // CELL_SIZE+1]
-        return "{0:04b}".format(cell)[::-1]
+        cell = scene.movements_data[cell[1]][cell[0]]
+        return [i == '1' for i in "{0:04b}".format(cell)[::-1]]
 
     def move_to(self, direction):
-        return self.movement_cell()[direction] == "1"
+        return self.movement_cell(self.get_cell())[direction]
+
+
 
     def in_center(self) -> bool:
-        return self.rect.x % CELL_SIZE == 6 and (self.rect.y-20) % CELL_SIZE == 6
+        return self.rect.x % CELL_SIZE == 6 and (self.rect.y - 20) % CELL_SIZE == 6

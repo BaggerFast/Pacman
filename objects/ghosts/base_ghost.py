@@ -28,12 +28,12 @@ class BaseGhost(Character):
         self.is_invisible = False
         self.is_in_home = True
         self.work_counter = True
+        self.love_cell = (10, 10)
 
     def process_event(self, event):
         if event.type == pg.KEYDOWN and event.key in self.action.keys():
             self.go()
             self.feature_direction = self.action[event.key]
-
 
     def process_logic(self):
         self.animator.timer_check()
@@ -45,6 +45,30 @@ class BaseGhost(Character):
             c = self.direction[self.feature_direction][2]
             if self.move_to(c):
                 self.set_direction(self.feature_direction)
+            direction = {
+                0: (1, 0, 0),
+                1: (0, 1, 1),
+                2: (-1, 0, 2),
+                3: (0, -1, 3)
+            }
+            '''
+            direction2 = {
+                (1, 0, 0): '',
+                (0, 1, 1): '',
+                (-1, 0, 2): '',
+                (0, -1, 3): ''
+            }
+            '''
+            if self.is_cross(self.get_cell()):
+                min_dis = 10000000000000
+                cross = self.movement_cell(self.get_cell())
+                cross[(self.rotate+2)%4] = 0
+                for i in range(4):
+                    if cross[i]:
+                        tmp_cell = (self.get_cell()[0]+direction[i][0], self.get_cell()[1]+direction[i][1])
+                        if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
+                            min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
+                            self.shift_x, self.shift.y, self.rotate = direction[i]
         if self.rotate is None:
             self.rotate = 0
         self.animator = self.animations[self.rotate]
@@ -52,8 +76,8 @@ class BaseGhost(Character):
             self.animator = self.animations[self.rotate]
         super().process_logic()
 
-    def collision_check(self, object): #pacman only
-        return self.rect.centerx//CELL_SIZE == object.rect.centerx//CELL_SIZE and self.rect.centery//CELL_SIZE == object.rect.centery//CELL_SIZE and self.enable_collision
+    def collision_check(self, object: Character):
+        return self.get_cell() == object.get_cell() and self.enable_collision
 
     def counter(self):
         if self.work_counter:
@@ -61,7 +85,7 @@ class BaseGhost(Character):
 
     def can_leave_home(self):
         #print(self.max_count_eat_seeds_in_home, ': ', pg.time.get_ticks()-self.timer)
-        return self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home \
+        return (self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home and self.work_counter) \
                or pg.time.get_ticks()-self.timer >= 4000 or self.is_can_leave_home
         # флаг выше передаётся нужен после смерти пакмана
 
@@ -72,3 +96,6 @@ class BaseGhost(Character):
         self.animator = self.invisible_anim
         self.is_invisible = True
         self.enable_collision = False
+
+    def is_cross(self, cell: tuple) -> bool:
+        return sum(self.movement_cell(cell)) > 2
