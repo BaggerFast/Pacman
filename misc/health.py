@@ -1,15 +1,16 @@
 class Health:
     def __init__(self, lives=1, max_lives=5):
-        self.lives = lives
+        self.__lives = lives
         self.max_lives = max_lives
 
+    @property
+    def lives(self):
+        return self.__lives
+
     def __int__(self):
-        return self.lives
+        return self.__lives
 
     def change_count_lives(self, number):
-        if self.max_lives >= self.lives + number >= 0:
-            self.lives += number
-        elif self.lives + number >= self.max_lives:
-            self.lives = self.max_lives
-        elif self.lives + number <= 0:
-            self.lives = 0
+        self.__lives += number
+        self.__lives = max(0, self.__lives)
+        self.__lives = min(self.max_lives, self.__lives)
