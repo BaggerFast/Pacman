@@ -1,8 +1,7 @@
 import pygame as pg
 from objects import ButtonController, Button, Text
-from scenes import BaseScene
+from scenes import BaseScene, GameScene
 from misc import Color, Font
-from scenes import GameScene
 
 
 class PauseScene(BaseScene):
