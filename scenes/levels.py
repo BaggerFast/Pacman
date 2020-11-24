@@ -1,10 +1,9 @@
 import pygame as pg
 
-
+from misc.constants import Color, Font
 from objects.button import ButtonController, Button
-from scenes.base import BaseScene
 from objects.text import Text
-from misc.constants import Color, Font, ButtonColor, ButtonStateColor
+from scenes.base import BaseScene
 from scenes.main import GameScene
 
 

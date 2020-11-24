@@ -75,8 +75,8 @@ class Game:
     def process_resize_event(self, event: pg.event.Event) -> None:
         if event.type != pg.VIDEORESIZE:
             return
-        self.SIZE = self.WIDTH, self.HEIGHT = event.w, event.h
-        self.screen = pg.display.set_mode(self.SIZE, pg.RESIZABLE)
+        self.size = self.width, self.height = event.w, event.h
+        self.screen = pg.display.set_mode(self.size, pg.RESIZABLE)
         self.resize_scenes()
 
     def process_all_events(self) -> None:
