@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc.constants import CELL_SIZE
+from misc.constants import CELL_SIZE, Color
 from objects.base import DrawableObject
 from misc.constants import CELL_SIZE
 
@@ -11,18 +11,26 @@ class SeedContainer(DrawableObject):
         self.y = y
         self.seeds = seed_data
         self.energizers = energizer_data
+        self.anim = 0
 
     def draw_seeds(self):
         for row in range(len(self.seeds)):
             for col in range(len(self.seeds[row])):
                 if self.seeds[row][col]:
-                    pg.draw.circle(self.game.screen, (255, 255, 255), (self.x + col * CELL_SIZE + CELL_SIZE//2,
+                    pg.draw.circle(self.game.screen, Color.WHITE, (self.x + col * CELL_SIZE + CELL_SIZE//2,
                                                                            self.y + row * CELL_SIZE + CELL_SIZE//2), 1)
 
     def draw_energizers(self):
+        if self.anim < 8:
+            color = Color.WHITE
+        else:
+            color = Color.BLACK
+            if self.anim > 16:
+                self.anim = 0
         for energizer in self.energizers:
-            pg.draw.circle(self.game.screen, (255, 255, 255), (self.x + energizer[0] * CELL_SIZE + CELL_SIZE//2,
+            pg.draw.circle(self.game.screen, color, (self.x + energizer[0] * CELL_SIZE + CELL_SIZE//2,
                                                                    self.y + energizer[1] * CELL_SIZE + CELL_SIZE//2), 4)
+        self.anim += 1
 
     def process_draw(self):
         self.draw_seeds()
