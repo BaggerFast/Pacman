@@ -50,6 +50,7 @@ class GameoverScene(BaseScene):
         self.objects.append(self.text_highscore)
 
     def on_activate(self) -> None:
+        self.save_record()
         self.text_score.update_text(f'Score: {self.game.score}')
         self.text_score.move_center(self.game.width // 2, 135)
         self.text_highscore.update_text(f'High score: {self.game.records.data[-1]}')
@@ -62,9 +63,12 @@ class GameoverScene(BaseScene):
 
     def restart_game(self) -> None:
         self.game.score.score = 0
-        self.game.set_scene('SCENE_GAME')
+        self.game.set_scene('SCENE_GAME', reset=True)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.scenes[self.game.current_scene_name] == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 self.game.set_scene('SCENE_MENU')
+
+    def save_record(self) -> None:
+        self.game.records.add_new_record(int(self.game.score))

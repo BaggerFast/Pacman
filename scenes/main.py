@@ -95,7 +95,7 @@ class GameScene(BaseScene):
             self.start_pause()
 
     def start_pause(self):
-        self.game.set_scene('SCENE_PAUSE')
+        self.game.set_scene('SCENE_PAUSE', reset=True)
 
     def draw_ghost(self, index, color, x, y):
         pg.draw.circle(
@@ -130,14 +130,15 @@ class GameScene(BaseScene):
                 if not self.pacman.dead:
                     self.pacman.death()
                     self.prepare_lives_meter()
-                elif self.pacman.animator.run == False:
+                elif not self.pacman.animator.run:
                     self.game.set_scene("SCENE_GAMEOVER")
+                    break  # IT MAY CAUSE BUGS <===<===<===<===<===<====<===<===<===<===<===<===< IMPORTANT
         if is_eaten:
             if type == "seed":
                 self.game.score.eat_seed()
             elif type == "energizer":
                 self.game.score.eat_energizer()
-            if self.prefered_ghost != None:
+            if self.prefered_ghost is not None:
                 self.prefered_ghost.counter()
                 self.prefered_ghost.update_timer()
 
@@ -148,7 +149,7 @@ class GameScene(BaseScene):
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
         self.process_collision()
-        if self.prefered_ghost != None and self.prefered_ghost.can_leave_home():
+        if self.prefered_ghost is not None and self.prefered_ghost.can_leave_home():
             self.change_prefered_ghost()
         for ghost in self.not_prefered_ghosts:
             if ghost != self.prefered_ghost:
@@ -163,5 +164,13 @@ class GameScene(BaseScene):
         self.scores_value_text.update_text(str(self.game.score))
 
     def on_deactivate(self) -> None:
-        self.game.records.set_new_record(int(self.game.score))
+        pass
+        # self.game.records.set_new_record(int(self.game.score))
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+
+    def on_activate(self) -> None:
+        pass
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+
+    def on_reset(self) -> None:
         self.game.scenes["SCENE_GAME"] = GameScene(self.game)

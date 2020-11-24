@@ -62,7 +62,7 @@ class MenuScene(BaseScene):
         self.button_controller.reset_state()
 
     def start_game(self) -> None:
-        self.game.set_scene('SCENE_GAME')
+        self.game.set_scene('SCENE_GAME', reset=True)
 
     def start_records(self) -> None:
         self.game.scenes['SCENE_RECORDS'].create_text_labels()

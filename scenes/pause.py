@@ -41,7 +41,7 @@ class PauseScene(BaseScene):
         self.game.set_scene('SCENE_GAME')
 
     def continue_game(self) -> None:
-        self.game.set_scene('SCENE_GAME', resume=True)
+        self.game.set_scene('SCENE_GAME')
 
     def start_menu(self) -> None:
         self.game.set_scene('SCENE_MENU')
@@ -56,5 +56,6 @@ class PauseScene(BaseScene):
         self.button_controller.reset_state()
 
     def on_deactivate(self) -> None:
-        self.game.scenes["SCENE_GAME"] = GameScene(self.game)
-        self.game.score.score = 0
+        pass
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+        # self.game.score.score = 0

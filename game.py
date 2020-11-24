@@ -23,11 +23,16 @@ class Game:
         """
         Dict names:
             SCENE_PAUSE: PauseScene
+
             SCENE_MENU: MenuScene
+
             SCENE_GAME: GameScene
+
             SCENE_LEVELS: LevelsScene
+
             SCENE_RECORDS: RecordsScene
-            SCENE_CREDITS: TitersScene
+
+            SCENE_CREDITS: CreditsScene
         """
 
         self.level_name = self.read_last_level()
@@ -92,21 +97,31 @@ class Game:
             self.process_all_draw()
             pg.time.wait(self.delay)
 
-    def set_scene(self, name: str, resume: bool = False) -> None:
+    def set_scene(self, name: str, reset: bool = False) -> None:
         """
+        :param name: name of NEXT scene
+        :param reset: if reset == True will call on_reset() of NEXT scene (see BaseScene)
+
         Dict names:
             SCENE_PAUSE: PauseScene
+
             SCENE_MENU: MenuScene
+
             SCENE_GAME: GameScene
+
             SCENE_LEVELS: LevelsScene
+
             SCENE_RECORDS: RecordsScene
-            SCENE_CREDITS: TitersScene
+
+            SCENE_CREDITS: CreditsScene
+
+        IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
         """
-        if not resume:
-            self.scenes[self.current_scene_name].on_deactivate()
+        self.scenes[self.current_scene_name].on_deactivate()
         self.current_scene_name = name
-        if not resume:
-            self.scenes[self.current_scene_name].on_activate()
+        if reset:
+            self.scenes[self.current_scene_name].on_reset()
+        self.scenes[self.current_scene_name].on_activate()
 
     def save_last_level(self):
         string = json.dumps({f"level_name": f"{self.level_name}"})

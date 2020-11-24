@@ -36,7 +36,7 @@ class HighScore:
         with open(self.json_filename, 'w') as file:
             file.write(json.dumps(self.json_data))
 
-    def set_new_record(self, score):
+    def add_new_record(self, score):
         self.json_data[self.level_name].append(score)
         self.json_data[self.level_name] = sorted(self.json_data[self.level_name])
         self.json_data[self.level_name] = self.json_data[self.level_name][-self.RECORDS_COUNT:]
