@@ -31,3 +31,4 @@ class Blinky(BaseGhost):
     def process_logic(self):
         if not self.is_invisible:
             super().process_logic()
+            self.go()

@@ -43,6 +43,5 @@ class Clyde(BaseGhost):
                 if (self.rect.y == scene.blinky.start_pos[1]):
                     self.shift_x = 1
                     self.shift_y = 0
-                    self.speed = 0
                     self.is_in_home = False
                     self.enable_collision = True

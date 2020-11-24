@@ -28,7 +28,7 @@ class BaseGhost(Character):
         self.is_invisible = False
         self.is_in_home = True
         self.work_counter = True
-        self.love_cell = (10, 10)
+        self.love_cell = (8, 16)
 
     def process_event(self, event):
         if event.type == pg.KEYDOWN and event.key in self.action.keys():
@@ -42,9 +42,6 @@ class BaseGhost(Character):
                 self.go()
             else:
                 self.stop()
-            c = self.direction[self.feature_direction][2]
-            if self.move_to(c):
-                self.set_direction(self.feature_direction)
             direction = {
                 0: (1, 0, 0),
                 1: (0, 1, 1),
@@ -59,16 +56,16 @@ class BaseGhost(Character):
                 (0, -1, 3): ''
             }
             '''
-            if self.is_cross(self.get_cell()):
-                min_dis = 10000000000000
-                cross = self.movement_cell(self.get_cell())
-                cross[(self.rotate+2)%4] = 0
-                for i in range(4):
-                    if cross[i]:
-                        tmp_cell = (self.get_cell()[0]+direction[i][0], self.get_cell()[1]+direction[i][1])
-                        if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
-                            min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
-                            self.shift_x, self.shift_y, self.rotate = direction[i]
+            self.go()
+            min_dis = 10000000000000
+            cross = self.movement_cell(self.get_cell())
+            cross[(self.rotate+2)%4] = 0
+            for i in range(4):
+                if cross[i]:
+                    tmp_cell = (self.get_cell()[0]+direction[i][0], self.get_cell()[1]+direction[i][1])
+                    if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
+                        min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
+                        self.shift_x, self.shift_y, self.rotate = direction[i]
         if self.rotate is None:
             self.rotate = 0
         self.animator = self.animations[self.rotate]
