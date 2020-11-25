@@ -105,6 +105,7 @@ class GameScene(BaseScene):
         # Temporary draw
         x_shift = 0
         y_shift = 20
+        self.fruit.check_score(self.game.score.score)
         self.fruit.process_logic()
 
     def change_prefered_ghost(self):
@@ -117,6 +118,7 @@ class GameScene(BaseScene):
             self.count_prefered_ghost = 0
 
     def process_collision(self) -> None:
+        self.fruit.process_collision(self.pacman)
         is_eaten, type = self.seeds.process_collision(self.pacman)
         for ghost in self.ghosts:
             if ghost.collision_check(self.pacman):
