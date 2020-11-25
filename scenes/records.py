@@ -18,38 +18,39 @@ class RecordsScene(BaseScene):
         self.create_buttons()
 
     def create_text_labels(self) -> None:
-        self.one_text = Text(self.game, str(self.game.records.data[4]), 30, (60, 45), Color.GOLD)
-        self.two_text = Text(self.game, str(self.game.records.data[3]), 30, (60, 80), Color.SILVER)
-        self.three_text = Text(self.game, str(self.game.records.data[2]), 30, (60, 115), Color.BRONZE)
-        self.four_text = Text(self.game, str(self.game.records.data[1]), 30, (60, 150), Color.WHITE)
-        self.five_text = Text(self.game, str(self.game.records.data[0]), 30, (60, 185), Color.WHITE)
+        self.game.records.update_records()
+        self.one_text = Text(self.game, str(self.game.records.data[4]), 30, (60, 55), Color.GOLD)
+        self.two_text = Text(self.game, str(self.game.records.data[3]), 30, (60, 85), Color.SILVER)
+        self.three_text = Text(self.game, str(self.game.records.data[2]), 30, (60, 120), Color.BRONZE)
+        self.four_text = Text(self.game, str(self.game.records.data[1]), 30, (60, 155), Color.WHITE)
+        self.five_text = Text(self.game, str(self.game.records.data[0]), 30, (60, 190), Color.WHITE)
 
     def create_medals(self) -> None:
-        self.gold_medal = ImageObject(self.game, get_image_path('1_golden', 'medal'), 16, 45)
+        self.gold_medal = ImageObject(self.game, get_image_path('1_golden', 'medal'), 16, 55)
         self.gold_medal.scale(35, 35)
-        self.silver_medal = ImageObject(self.game, get_image_path('2_silver', 'medal'), 16, 80)
+        self.silver_medal = ImageObject(self.game, get_image_path('2_silver', 'medal'), 16, 85)
         self.silver_medal.scale(35, 35)
-        self.bronze_medal = ImageObject(self.game, get_image_path('3_bronze', 'medal'), 16, 115)
+        self.bronze_medal = ImageObject(self.game, get_image_path('3_bronze', 'medal'), 16, 120)
         self.bronze_medal.scale(35, 35)
-        self.stone_medal = ImageObject(self.game, get_image_path('4_stone', 'medal'), 16, 150)
+        self.stone_medal = ImageObject(self.game, get_image_path('4_stone', 'medal'), 16, 155)
         self.stone_medal.scale(35, 35)
-        self.wooden_medal = ImageObject(self.game, get_image_path('5_wooden', 'medal'), 16, 185)
+        self.wooden_medal = ImageObject(self.game, get_image_path('5_wooden', 'medal'), 16, 190)
         self.wooden_medal.scale(35, 35)
 
     def create_buttons(self) -> None:
-        self.back_button = Button(self.game, pg.Rect(self.game.width // 2, 200, 120, 45),
-                                  self.start_menu, 'BACK', center=(self.game.width // 2, 250),
+        self.back_button = Button(self.game, pg.Rect(0, 0, 180, 40),
+                                  self.start_menu, 'MENU', center=(self.game.width // 2, 250),
                                   text_size=Font.BUTTON_TEXT_SIZE)
         self.button_controller = ButtonController(self.game, [self.back_button])
         self.objects.append(self.button_controller)
 
     def create_title(self) -> None:
-        title = Text(self.game, 'RECORDS', 30, color=Color.WHITE, font=Font.FILENAME)
-        title.move_center(self.game.width // 2, 25)
+        title = Text(self.game, 'RECORDS', 32, color=Color.WHITE, font=Font.FILENAME)
+        title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
 
     def create_error_label(self) -> None:
-        self.error_text = Text(self.game, 'NO RECORDS', 30, color=Color.RED)
+        self.error_text = Text(self.game, 'NO RECORDS', 24, color=Color.RED)
         self.error_text.move_center(self.game.width // 2, 100)
 
     def start_menu(self) -> None:

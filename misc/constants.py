@@ -5,7 +5,6 @@ from typing import NamedTuple
 import pygame as pg
 
 
-# https://www.pygame.org/docs/ref/color.html
 # https://github.com/pygame/pygame/blob/master/src_py/colordict.py
 class Color:
     RED = pg.color.Color('red')
@@ -18,9 +17,12 @@ class Color:
     GOLD = pg.color.Color('gold')
     GRAY = pg.color.Color('gray50')
     DARK_GRAY = pg.color.Color('gray26')
-    SILVER = pg.color.Color(192, 192, 192)
-    BRONZE = pg.color.Color(205, 127, 50)
-    WOODEN = pg.color.Color(101, 67, 33)
+
+    # TODO: migrate to pygame.Color
+    SILVER = (192, 192, 192)
+    BRONZE = (205, 127, 50)
+    WOODEN = (101, 67, 33)
+    JET = (10, 10, 10)
 
 
 class ButtonStateColor(NamedTuple):
@@ -39,34 +41,13 @@ class ButtonColor(NamedTuple):
     click: ButtonStateColor = ButtonStateColor(background=Color.GREEN)
 
     def init_section(self, name: str, data: dict) -> None:
-        """
-                                     ▄              ▄
-                                    ▌▒█           ▄▀▒▌
-                                    ▌▒▒█        ▄▀▒▒▒▐
-                                   ▐▄█▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐
-                                 ▄▄▀▒▒▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐
-        METAPROGRAMMING IS     ▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌
-        A SUCH WOW THING =)   ▐▒▒▒▄▄▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▀▄▒▌
-                              ▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐
-                             ▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌
-                             ▌░▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌
-                            ▌▒▒▒▄██▄▒▒▒▒▒▒▒▒░░░░░░░░▒▒▒▐
-                            ▐▒▒▐▄█▄█▌▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▒▒▌
-                            ▐▒▒▐▀▐▀▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▐
-                             ▌▒▒▀▄▄▄▄▄▄▀▒▒▒▒▒▒▒░▒░▒░▒▒▒▌
-                             ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒▒▄▒▒▐
-                              ▀▄▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒▄▒▒▒▒▌
-                                ▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀
-                                  ▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀
-                                     ▀▀▀▀▀▀▀▀▀▀▀▀
-        """
         section = self.__getattribute__(name)
         default_section = BUTTON_DEFAULT_COLORS.__getattribute__(name)
 
         if name in data.keys():
             for item in [ButtonStateColor.get_members_list()]:
                 if item in data[name].keys():
-                    section.__setattr__(item,data[name][item])
+                    section.__setattr__(item, data[name][item])
         else:
             self.__setattr__(name, default_section)
 
@@ -83,25 +64,26 @@ class ButtonColor(NamedTuple):
 
 BUTTON_DEFAULT_COLORS = ButtonColor(
     static=ButtonStateColor(text=Color.GRAY, background=Color.BLACK),
-    hover=ButtonStateColor(text=Color.WHITE, background=(10, 10, 10)),
+    hover=ButtonStateColor(text=Color.WHITE, background=Color.JET),
     click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK)
 )
-
 
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 CELL_SIZE = 8
 
 
+# TODO: migrate to NamedTuple
 class Points:
     POINT_PER_SEED = 10
     POINT_PER_ENERGIZER = 50
 
 
+# TODO: migrate to NamedTuple
 class Font:
     FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')
     ALTFONT = os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')
     MAIN_SCENE_SIZE = 10
-    BUTTON_TEXT_SIZE = 30
+    BUTTON_TEXT_SIZE = 24
     TITERS_SCENE_SIZE = 14
 
 

@@ -1,14 +1,10 @@
 import pygame as pg
 
-from misc.loader import LevelLoader
-from objects.ghosts.blinky import Blinky
-from objects.ghosts.clyde import Clyde
-from objects.ghosts.inky import Inky
-from objects.ghosts.pinky import Pinky
+from misc import LevelLoader
+from objects.ghosts import Blinky, Pinky, Inky, Clyde
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color, MAPS
-from misc.constants import CELL_SIZE
+from misc.constants import Color, MAPS, CELL_SIZE
 from misc.path import get_image_path
 from objects.image import ImageObject
 from objects.text import Text
@@ -63,7 +59,6 @@ class GameScene(BaseScene):
         self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
         self.objects.append(self.pacman)
         self.prepare_lives_meter()
-
         self.blinky = Blinky(self.game, (-7+self.ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2))
         self.pinky = Pinky(self.game, (-7+self.ghost_positions[1][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[2][1] * CELL_SIZE + CELL_SIZE // 2))
         self.inky = Inky(self.game, (-7+self.ghost_positions[0][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[1][1] * CELL_SIZE + CELL_SIZE // 2), 30)
@@ -95,7 +90,7 @@ class GameScene(BaseScene):
             self.start_pause()
 
     def start_pause(self):
-        self.game.set_scene('SCENE_PAUSE')
+        self.game.set_scene('SCENE_PAUSE', reset=True)
 
     def draw_ghost(self, index, color, x, y):
         pg.draw.circle(
@@ -130,12 +125,15 @@ class GameScene(BaseScene):
                 if not self.pacman.dead:
                     self.pacman.death()
                     self.prepare_lives_meter()
+                elif not self.pacman.animator.run:
+                    self.game.set_scene("SCENE_GAMEOVER")
+                    break  # IT MAY CAUSE BUGS <===<===<===<===<===<====<===<===<===<===<===<===< IMPORTANT
         if is_eaten:
             if type == "seed":
                 self.game.score.eat_seed()
             elif type == "energizer":
                 self.game.score.eat_energizer()
-            if self.prefered_ghost != None:
+            if self.prefered_ghost is not None:
                 self.prefered_ghost.counter()
                 self.prefered_ghost.update_timer()
 
@@ -146,7 +144,7 @@ class GameScene(BaseScene):
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
         self.process_collision()
-        if self.prefered_ghost != None and self.prefered_ghost.can_leave_home():
+        if self.prefered_ghost is not None and self.prefered_ghost.can_leave_home():
             self.change_prefered_ghost()
         for ghost in self.not_prefered_ghosts:
             if ghost != self.prefered_ghost:
@@ -159,3 +157,16 @@ class GameScene(BaseScene):
 
         # todo: make text update only when new value appeares
         self.scores_value_text.update_text(str(self.game.score))
+
+    def on_deactivate(self) -> None:
+        pass
+        # self.game.records.set_new_record(int(self.game.score))
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+
+    def on_activate(self) -> None:
+        pass
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+
+    def on_reset(self) -> None:
+        self.game.score.score = 0
+        self.game.scenes["SCENE_GAME"] = GameScene(self.game)

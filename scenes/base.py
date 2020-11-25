@@ -43,3 +43,6 @@ class BaseScene:
 
     def on_deactivate(self) -> None:
         pass
+
+    def on_reset(self) -> None:
+        pass
