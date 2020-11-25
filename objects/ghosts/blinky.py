@@ -1,6 +1,6 @@
 from misc import Animator, get_image_path_for_animator
 from objects.ghosts.base_ghost import BaseGhost
-
+from objects.character_base import Character
 
 class Blinky(BaseGhost):
 
@@ -27,4 +27,10 @@ class Blinky(BaseGhost):
         super().__init__(game, self.top_walk_anim, start_pos, self.animations)
         self.feature_rotate = "none"
 
+    def process_logic(self):
+        if not self.is_invisible:
+            super().process_logic()
+            self.go()
 
+    def get_love_cell(self, pacman, blinky = None):
+        self.love_cell = pacman.get_cell()

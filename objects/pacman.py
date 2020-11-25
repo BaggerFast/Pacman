@@ -41,27 +41,23 @@ class Pacman(Character):
                 if self.move_to(c):
                     self.set_direction(self.feature_rotate)
             super().process_logic()
-
-    def movement_cell(self):
-        scene = self.game.scenes[self.game.current_scene_name]
-        cell = scene.movements_data[(self.rect.y-12) // CELL_SIZE][self.rect.x // CELL_SIZE+1]
-        return "{0:04b}".format(cell)[::-1]
-
-    def move_to(self, direction):
-        return self.movement_cell()[direction] == "1"
-
+    def get_cell(self):
+        return (self.rect.centerx // CELL_SIZE, (self.rect.centery-17) // CELL_SIZE)
     def death(self):
         self.hp.change_count_lives(-1)
-        if not int(self.hp):
-            self.animator = self.dead_anim
-            self.animator.run = True
-            self.dead = True
-        else:
-            self.move(*self.start_pos)
-            self.speed = 0
-            self.shift_x, self.shift_y = self.direction["right"][:2]
-            self.animator.stop()
-            self.animator.change_cur_image(0)
+        self.animator = self.dead_anim
+        self.animator.run = True
+        self.dead = True
+
+    def reset(self):
+        self.animator = self.walk_anim
+        self.dead_anim.reset()
+        self.move(*self.start_pos)
+        self.speed = 0
+        self.shift_x, self.shift_y = self.direction["right"][:2]
+        self.animator.stop()
+        self.animator.change_cur_image(0)
+        self.dead = False
 
     def in_center(self) -> bool:
         return self.rect.x % CELL_SIZE == 6 and (self.rect.y-20) % CELL_SIZE == 6

@@ -18,6 +18,10 @@ class GameScene(BaseScene):
         self.ghost_positions = self.loader.get_ghost_positions()
         self.fruit_position = self.loader.get_fruit_position()
         self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not False
+        self.timer_reset_pacman = 0
+        self.seeds_eaten = 0
+        self.work_ghost_counters = True
+        self.max_seeds_eaten_to_prefered_ghost = 7
         super().__init__(game)
 
     def prepare_lives_meter(self):
@@ -52,10 +56,11 @@ class GameScene(BaseScene):
         self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
         self.objects.append(self.pacman)
         self.prepare_lives_meter()
+
         self.blinky = Blinky(self.game, (-7+self.ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2))
         self.pinky = Pinky(self.game, (-7+self.ghost_positions[1][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[2][1] * CELL_SIZE + CELL_SIZE // 2))
         self.inky = Inky(self.game, (-7+self.ghost_positions[0][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[1][1] * CELL_SIZE + CELL_SIZE // 2), 30)
-        self.clyde = Clyde(self.game, (-7+self.ghost_positions[2][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[0][1] * CELL_SIZE + CELL_SIZE // 2), 60)
+        self.clyde = Clyde(self.game, (-7+self.ghost_positions[2][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[0][1] * CELL_SIZE + CELL_SIZE // 2), 59)
 
         self.ghosts = [
             self.blinky,
@@ -103,21 +108,25 @@ class GameScene(BaseScene):
                         y_shift + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2), 4)
 
     def change_prefered_ghost(self):
-        self.count_prefered_ghost += 1
-        self.not_prefered_ghosts.pop(0)
-        if self.count_prefered_ghost < 4:
-            self.prefered_ghost = self.ghosts[self.count_prefered_ghost]
-        else:
-            self.prefered_ghost = None
-            self.count_prefered_ghost = 0
+        if self.prefered_ghost != None and self.prefered_ghost.can_leave_home():
+            self.count_prefered_ghost += 1
+            self.not_prefered_ghosts.pop(0)
+            if self.count_prefered_ghost < 4:
+                self.prefered_ghost = self.ghosts[self.count_prefered_ghost]
+            else:
+                self.prefered_ghost = None
+                self.count_prefered_ghost = 0
 
     def process_collision(self) -> None:
         is_eaten, type = self.seeds.process_collision(self.pacman)
         for ghost in self.ghosts:
             if ghost.collision_check(self.pacman):
+                self.timer_reset_pacman = pg.time.get_ticks()
                 if not self.pacman.dead:
                     self.pacman.death()
                     self.prepare_lives_meter()
+                for ghost2 in self.ghosts:
+                    ghost2.invisible()
                 elif not self.pacman.animator.run:
                     self.game.set_scene("SCENE_GAMEOVER")
                     break  # IT MAY CAUSE BUGS <===<===<===<===<===<====<===<===<===<===<===<===< IMPORTANT
@@ -126,17 +135,43 @@ class GameScene(BaseScene):
                 self.game.score.eat_seed()
             elif type == "energizer":
                 self.game.score.eat_energizer()
-            if self.prefered_ghost is not None:
+            if self.prefered_ghost != None and self.work_ghost_counters:
                 self.prefered_ghost.counter()
                 self.prefered_ghost.update_timer()
+            elif not self.work_ghost_counters and self.prefered_ghost != None:
+                self.global_counter()
+                self.prefered_ghost.update_timer()
 
-    def process_logic(self) -> None:
-        super(GameScene, self).process_logic()
+    def global_counter(self):
+        self.seeds_eaten += 1
+
+    def check_first_run(self):
         if self.first_run:
             self.create_objects()
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
+
+    def process_logic(self) -> None:
+        super(GameScene, self).process_logic()
+        self.check_first_run()
         self.process_collision()
+        if pg.time.get_ticks()-self.timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
+            self.create_objects()
+            self.seeds_eaten = 0
+            self.work_ghost_counters = False
+            self.max_seeds_eaten_to_prefered_ghost = 7
+        if self.seeds_eaten == self.max_seeds_eaten_to_prefered_ghost and self.prefered_ghost != None:
+            self.prefered_ghost.is_can_leave_home = True
+            print(1)
+            print(self.max_seeds_eaten_to_prefered_ghost)
+            if self.max_seeds_eaten_to_prefered_ghost == 7:
+                self.max_seeds_eaten_to_prefered_ghost = 17
+            elif self.max_seeds_eaten_to_prefered_ghost == 17:
+                self.max_seeds_eaten_to_prefered_ghost = 32
+
+        self.change_prefered_ghost()
+        for ghost in self.ghosts:
+            ghost.get_love_cell(self.pacman, self.blinky)
         if self.prefered_ghost is not None and self.prefered_ghost.can_leave_home():
             self.change_prefered_ghost()
         for ghost in self.not_prefered_ghosts:
@@ -150,16 +185,3 @@ class GameScene(BaseScene):
 
         # todo: make text update only when new value appeares
         self.scores_value_text.update_text(str(self.game.score))
-
-    def on_deactivate(self) -> None:
-        pass
-        # self.game.records.set_new_record(int(self.game.score))
-        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
-
-    def on_activate(self) -> None:
-        pass
-        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
-
-    def on_reset(self) -> None:
-        self.game.score.score = 0
-        self.game.scenes["SCENE_GAME"] = GameScene(self.game)
