@@ -57,11 +57,31 @@ class CreditsScene(BaseScene):
         self.button_controller = ButtonController(self.game, [self.back_button])
         self.objects.append(self.button_controller)
 
+    def get_random_student_y(self):
+        return randint(25, self.game.height - 75)
+
     def create_student(self):
         students = list(set(self.data) - set((obj.text for obj in self.students)))
         label = str(students[randint(0, len(students) - 1)])
         student = Text(self.game, label, Font.TITERS_SCENE_SIZE, font=Font.ALTFONT)
-        student.move_center(self.start_pos, randint(25, self.game.height - 75))
+
+        is_student_y_correct = False
+        tries = 0
+        while not is_student_y_correct:
+            student.move_center(self.start_pos, randint(25, self.game.height - 75))
+
+            is_student_y_correct = True
+            for student2 in self.students:
+                if abs(student.rect.centery - student2.rect.centery) <=\
+                   (student.rect.height + student2.rect.height) / 2:
+                    is_student_y_correct = False
+                    break
+
+            tries += 1
+
+            if tries > 100:
+                break
+
         student.speed = self.speed + randint(-5, 15) / 100
         student.ttl = 0
         self.students.append(student)
@@ -73,8 +93,11 @@ class CreditsScene(BaseScene):
         self.button_controller.reset_state()
 
     def process_students(self) -> None:
-        for student in self.students:
+        students_to_delete = []
+
+        for index, student in enumerate(self.students):
             if student.rect.x >= self.game.width:
+                students_to_delete.append(index)
                 self.on_screen -= 1
                 student.move(-105, student.rect.y)
             elif student.rect.x != -105:
@@ -82,6 +105,10 @@ class CreditsScene(BaseScene):
                 student.move(student.ttl * student.speed + self.start_pos, student.rect.y)
                 student.surface.set_alpha(min(255, self.game.width - ((student.rect.midbottom[0] - self.game.width // 2) ** 2
                                                 * 0.06 - self.alpha_delta)))
+
+        for index in sorted(students_to_delete, reverse=True):
+            self.objects.remove(self.students[index])
+            del self.students[index]
 
     def additional_logic(self) -> None:
         if len(self.students) == len(self.data) and not self.on_screen:
