@@ -99,7 +99,6 @@ class CreditsScene(BaseScene):
             if student.rect.x >= self.game.width:
                 students_to_delete.append(index)
                 self.on_screen -= 1
-                student.move(-105, student.rect.y)
             elif student.rect.x != -105:
                 student.ttl += 1
                 student.move(student.ttl * student.speed + self.start_pos, student.rect.y)
