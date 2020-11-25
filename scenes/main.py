@@ -178,6 +178,8 @@ class GameScene(BaseScene):
                 self.max_seeds_eaten_to_prefered_ghost = 32
 
         self.change_prefered_ghost()
+        for ghost in self.ghosts:
+            ghost.get_love_cell(self.pacman, self.blinky)
         for ghost in self.not_prefered_ghosts:
             if ghost != self.prefered_ghost:
                 ghost.update_timer()

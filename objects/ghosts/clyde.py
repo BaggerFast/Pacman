@@ -45,3 +45,6 @@ class Clyde(BaseGhost):
                     self.shift_y = 0
                     self.is_in_home = False
                     self.enable_collision = True
+
+    def get_love_cell(self, pacman, blinky = None):
+        pass

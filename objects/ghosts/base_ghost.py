@@ -4,6 +4,7 @@ from misc.constants import CELL_SIZE
 from misc.path import get_image_path_for_animator
 from objects.character_base import Character
 from misc.animator import Animator
+from objects.pacman import Pacman
 
 
 class BaseGhost(Character):
@@ -12,6 +13,13 @@ class BaseGhost(Character):
         pg.K_LEFT: 'left',
         pg.K_DOWN: 'down',
         pg.K_RIGHT: 'right'
+    }
+
+    direction2 = {
+        0: (1, 0, 0),
+        1: (0, 1, 1),
+        2: (-1, 0, 2),
+        3: (0, -1, 3)
     }
 
     def __init__(self, game, animator: Animator, start_pos: tuple, animations, enable_collision=True, max_count_eat_seeds_in_home=0):
@@ -42,30 +50,15 @@ class BaseGhost(Character):
                 self.go()
             else:
                 self.stop()
-            direction = {
-                0: (1, 0, 0),
-                1: (0, 1, 1),
-                2: (-1, 0, 2),
-                3: (0, -1, 3)
-            }
-            '''
-            direction2 = {
-                (1, 0, 0): '',
-                (0, 1, 1): '',
-                (-1, 0, 2): '',
-                (0, -1, 3): ''
-            }
-            '''
-            self.go()
             min_dis = 10000000000000
-            cross = self.movement_cell(self.get_cell())
-            cross[(self.rotate+2)%4] = 0
+            cell = self.movement_cell(self.get_cell())
+            cell[(self.rotate + 2) % 4] = 0
             for i in range(4):
-                if cross[i]:
-                    tmp_cell = (self.get_cell()[0]+direction[i][0], self.get_cell()[1]+direction[i][1])
+                if cell[i]:
+                    tmp_cell = (self.get_cell()[0]+self.direction2[i][0], self.get_cell()[1]+self.direction2[i][1])
                     if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
                         min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
-                        self.shift_x, self.shift_y, self.rotate = direction[i]
+                        self.shift_x, self.shift_y, self.rotate = self.direction2[i]
         if self.rotate is None:
             self.rotate = 0
         self.animator = self.animations[self.rotate]
@@ -97,5 +90,5 @@ class BaseGhost(Character):
         self.is_invisible = True
         self.enable_collision = False
 
-    def is_cross(self, cell: tuple) -> bool:
-        return sum(self.movement_cell(cell)) > 2
+    def get_love_cell(self, pacman: Pacman, blinky = None):
+        pass

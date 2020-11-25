@@ -44,3 +44,16 @@ class Pinky(BaseGhost):
                     self.is_in_home = False
                     self.enable_collision = True
 
+    def get_love_cell(self, pacman, blinky = None):
+        rotate = pacman.rotate
+        self.love_cell = (pacman.get_cell()[0]+self.direction2[rotate][0]*2, pacman.get_cell()[1]+self.direction2[rotate][1]*2)
+
+'''
+direction = {
+        "right": (1, 0, 0),
+        "down": (0, 1, 1),
+        "left": (-1, 0, 2),
+        "up": (0, -1, 3),
+        "none": (0, 0, None)
+    }
+'''

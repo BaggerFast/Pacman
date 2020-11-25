@@ -1,5 +1,6 @@
 from misc.animator import Animator
 from misc.path import get_image_path_for_animator
+from objects.character_base import Character
 from objects.ghosts.base_ghost import BaseGhost
 
 
@@ -32,3 +33,6 @@ class Blinky(BaseGhost):
         if not self.is_invisible:
             super().process_logic()
             self.go()
+
+    def get_love_cell(self, pacman, blinky = None):
+        self.love_cell = pacman.get_cell()
