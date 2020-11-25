@@ -5,24 +5,25 @@ from typing import NamedTuple
 import pygame as pg
 
 
-# https://github.com/pygame/pygame/blob/master/src_py/colordict.py
-class Color:
-    RED = pg.color.Color('red')
-    BLUE = pg.color.Color('blue')
-    GREEN = pg.color.Color('green')
-    BLACK = pg.color.Color('black')
-    WHITE = pg.color.Color('white')
-    ORANGE = pg.color.Color('orange')
-    YELLOW = pg.color.Color('yellow')
-    GOLD = pg.color.Color('gold')
-    GRAY = pg.color.Color('gray50')
-    DARK_GRAY = pg.color.Color('gray26')
+class Palitra(NamedTuple):
+    color: pg.color.Color
 
-    # TODO: migrate to pygame.Color
-    SILVER = (192, 192, 192)
-    BRONZE = (205, 127, 50)
-    WOODEN = (101, 67, 33)
-    JET = (10, 10, 10)
+
+class Color:
+    RED = Palitra(pg.color.Color('red')).color
+    BLUE = Palitra(pg.color.Color('blue')).color
+    GREEN = Palitra(pg.color.Color('green')).color
+    BLACK = Palitra(pg.color.Color('black')).color
+    WHITE = Palitra(pg.color.Color('white')).color
+    ORANGE = Palitra(pg.color.Color('orange')).color
+    YELLOW = Palitra(pg.color.Color('yellow')).color
+    GOLD = Palitra(pg.color.Color('gold')).color
+    GRAY = Palitra(pg.color.Color('gray50')).color
+    DARK_GRAY = Palitra(pg.color.Color('gray26')).color
+    SILVER = Palitra(pg.color.Color(192, 192, 192)).color
+    BRONZE = Palitra(pg.color.Color(205, 127, 50)).color
+    WOODEN = Palitra(pg.color.Color(101, 67, 33)).color
+    JET = Palitra(pg.color.Color(10, 10, 10)).color
 
 
 class ButtonStateColor(NamedTuple):
@@ -71,14 +72,11 @@ BUTTON_DEFAULT_COLORS = ButtonColor(
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 CELL_SIZE = 8
 
-
-# TODO: migrate to NamedTuple
 class Points:
     POINT_PER_SEED = 10
     POINT_PER_ENERGIZER = 50
 
 
-# TODO: migrate to NamedTuple
 class Font:
     FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')
     ALTFONT = os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')
