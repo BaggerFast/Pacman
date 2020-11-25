@@ -8,6 +8,7 @@ from misc.constants import Color, MAPS, CELL_SIZE
 from misc.path import get_image_path
 from objects.image import ImageObject
 from objects.text import Text
+from objects.fruits import Fruit
 from objects.pacman import Pacman
 from scenes.base import BaseScene
 from misc.constants import Font
@@ -55,6 +56,7 @@ class GameScene(BaseScene):
                                           color=Color.WHITE)
         self.objects.append(self.highscores_value_text)
 
+        self.fruit = Fruit(self.game, self.game.screen, 0 + self.fruit_position[0] * CELL_SIZE + CELL_SIZE//2, 20 + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2)
 
         self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
         self.objects.append(self.pacman)
@@ -103,11 +105,7 @@ class GameScene(BaseScene):
         # Temporary draw
         x_shift = 0
         y_shift = 20
-
-        # fruit
-        pg.draw.circle(self.screen, (255, 0, 0),
-                       (x_shift + self.fruit_position[0] * CELL_SIZE + CELL_SIZE//2,
-                        y_shift + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2), 4)
+        self.fruit.process_logic()
 
     def change_prefered_ghost(self):
         self.count_prefered_ghost += 1
