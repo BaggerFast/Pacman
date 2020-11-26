@@ -121,6 +121,7 @@ class GameScene(BaseScene):
         # Temporary draw
         x_shift = 0
         y_shift = 20
+
         # fruit
         pg.draw.circle(self.screen, (255, 0, 0),
                        (x_shift + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
