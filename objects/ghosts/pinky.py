@@ -1,8 +1,8 @@
 from misc import Animator, CELL_SIZE, get_image_path_for_animator
-from objects.ghosts.base_ghost import BaseGhost
+from .base import Base
 
 
-class Pinky(BaseGhost):
+class Pinky(Base):
 
     def __init__(self, game, start_pos: tuple, max_count_eat_seeds_in_home=0):
         self.ghost_positions = None

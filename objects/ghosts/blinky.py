@@ -1,8 +1,8 @@
 from misc import Animator, get_image_path_for_animator
-from objects.ghosts.base_ghost import BaseGhost
-from objects.character_base import Character
+from .base import Base
 
-class Blinky(BaseGhost):
+
+class Blinky(Base):
 
     def __init__(self, game, start_pos: tuple):
         self.top_walk_anim = Animator(

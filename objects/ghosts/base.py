@@ -1,17 +1,10 @@
 import pygame as pg
-from misc import CELL_SIZE, Animator, get_image_path_for_animator
+from misc import Animator, get_image_path_for_animator
 from objects import Character
 from objects.pacman import Pacman
 
 
-class BaseGhost(Character):
-    action = {
-        pg.K_UP: 'up',
-        pg.K_LEFT: 'left',
-        pg.K_DOWN: 'down',
-        pg.K_RIGHT: 'right'
-    }
-
+class Base(Character):
     direction2 = {
         0: (1, 0, 0),
         1: (0, 1, 1),
@@ -19,7 +12,9 @@ class BaseGhost(Character):
         3: (0, -1, 3)
     }
 
-    def __init__(self, game, animator: Animator, start_pos: tuple, animations, enable_collision=True, max_count_eat_seeds_in_home=0):
+    def __init__(self, game, animator: Animator, start_pos: tuple,
+                 animations, enable_collision=True, max_count_eat_seeds_in_home=0):
+        
         super().__init__(game, animator, start_pos)
         self.is_can_leave_home = False
         self.animations = animations
@@ -34,11 +29,6 @@ class BaseGhost(Character):
         self.is_in_home = True
         self.work_counter = True
         self.love_cell = (8, 16)
-
-    def process_event(self, event):
-        if event.type == pg.KEYDOWN and event.key in self.action.keys():
-            self.go()
-            self.feature_direction = self.action[event.key]
 
     def process_logic(self):
         self.animator.timer_check()
@@ -71,7 +61,6 @@ class BaseGhost(Character):
             self.count_eat_seeds_in_home += 1
 
     def can_leave_home(self):
-        #print(self.max_count_eat_seeds_in_home, ': ', pg.time.get_ticks()-self.timer)
         return (self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home and self.work_counter) \
                or pg.time.get_ticks()-self.timer >= 4000 or self.is_can_leave_home
         # флаг выше передаётся нужен после смерти пакмана

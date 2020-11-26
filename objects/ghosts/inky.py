@@ -1,8 +1,8 @@
 from misc import Animator, get_image_path_for_animator
-from objects.ghosts.base_ghost import BaseGhost
+from .base import Base
 
 
-class Inky(BaseGhost):
+class Inky(Base):
 
     def __init__(self, game, start_pos: tuple, max_count_eat_seeds_in_home=0):
         self.top_walk_anim = Animator(
