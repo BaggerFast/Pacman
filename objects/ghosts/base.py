@@ -16,16 +16,16 @@ class Base(Character):
     def __init__(self, game, start_pos: tuple):
 
         self.left_walk_anim = Animator(
-            get_image_path_for_animator('ghost', type(self).__name__, 'left'), is_rotation=False
+            get_image_path_for_animator('ghost', type(self).__name__.lower(), 'left'), is_rotation=False
         )
         self.right_walk_anim = Animator(
-            get_image_path_for_animator('ghost', type(self).__name__, 'right'), is_rotation=False
+            get_image_path_for_animator('ghost', type(self).__name__.lower(), 'right'), is_rotation=False
         )
         self.top_walk_anim = Animator(
-            get_image_path_for_animator('ghost', type(self).__name__, 'top'), is_rotation=False
+            get_image_path_for_animator('ghost', type(self).__name__.lower(), 'top'), is_rotation=False
         )
         self.bottom_walk_anim = Animator(
-            get_image_path_for_animator('ghost', type(self).__name__, 'bottom'), is_rotation=False
+            get_image_path_for_animator('ghost', type(self).__name__.lower(), 'bottom'), is_rotation=False
         )
 
         self.animations = [
