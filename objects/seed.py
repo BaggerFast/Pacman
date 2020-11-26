@@ -1,10 +1,13 @@
 import pygame as pg
 
-from misc.constants import CELL_SIZE, Color
+from misc.constants import CELL_SIZE, Color, SOUNDS
 from objects.base import DrawableObject
-from misc.constants import CELL_SIZE
+from misc.path import get_sound_path
+
 
 class SeedContainer(DrawableObject):
+    eaten_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Seed"]))
+    eaten_sound.set_volume(0.5)
     def __init__(self, game, seed_data, energizer_data, x=0, y=20):
         super().__init__(game)
         self.x = x
@@ -42,6 +45,7 @@ class SeedContainer(DrawableObject):
                 if self.seeds[row][col] and row * CELL_SIZE + 18 == object.rect.y:
                     if col * CELL_SIZE - 2 == object.rect.x:
                         self.seeds[row][col] = None
+                        self.eaten_sound.play()
                         return True, "seed"
         for energizer in self.energizers:
             if energizer[1] * CELL_SIZE + 18 == object.rect.y:
