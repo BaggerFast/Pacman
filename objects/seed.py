@@ -34,22 +34,22 @@ class SeedContainer(DrawableObject):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col]:
                     pg.draw.circle(self.game.screen, Color.WHITE, (self.__x + col * CELL_SIZE + CELL_SIZE//2,
+                                                                        self.__y + row * CELL_SIZE + CELL_SIZE//2), 1)
 
-
-                                                                           self.__y + row * CELL_SIZE + CELL_SIZE//2), 1)
     def __draw_energizers(self):
         if pg.time.get_ticks() - self.__animate_timer > self.__time_out:
             self.__animate_timer = pg.time.get_ticks()
             self.__index_color *= -1
         for energizer in self.__energizers:
-            pg.draw.circle(self.game.screen, self.__color[self.__index_color], (self.x + energizer[0] * CELL_SIZE + CELL_SIZE // 2,
-                                                                                self.__y + energizer[1] * CELL_SIZE + CELL_SIZE // 2), 4)
+            pg.draw.circle(self.game.screen, self.__color[self.__index_color],
+                           (self.x + energizer[0] * CELL_SIZE + CELL_SIZE // 2,
+                            self.__y + energizer[1] * CELL_SIZE + CELL_SIZE // 2), 4)
 
     def process_draw(self):
         self.__draw_seeds()
         self.__draw_energizers()
 
-    def process_collision(self, object): #for pacman only
+    def process_collision(self, object):
         for row in range(len(self.__seeds)):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col] and row * CELL_SIZE + 18 == object.rect.y:
@@ -62,10 +62,4 @@ class SeedContainer(DrawableObject):
                     self.__energizers.remove(energizer)
                     return True, "energizer"
         return False, ""
-
-    def process_event(self, event):
-        pass
-
-    def process_logic(self):
-        pass
 

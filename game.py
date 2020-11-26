@@ -3,7 +3,7 @@ import json
 import pygame as pg
 from misc import Color, ROOT_DIR, HighScore, \
                  create_file_if_not_exist, get_image_path, Score
-from scenes import LevelsScene, GameScene, GameoverScene, MenuScene, PauseScene, RecordsScene, CreditsScene
+from scenes import LevelsScene, GameScene, GameoverScene, MenuScene, PauseScene, RecordsScene, CreditsScene, BaseScene
 
 
 class Game:
@@ -13,13 +13,14 @@ class Game:
     pg.display.set_caption('PACMAN')
     __icon = pg.image.load(get_image_path('1', 'pacman', 'walk'))
     pg.display.set_icon(__icon)
+    __FPS = 60
 
     def __init__(self) -> None:
         self.level_name = self.__read_last_level()
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.score = Score()
         self.records = HighScore(self)
-        self.__delay = 15
+        self.__clock = pg.time.Clock()
         self.scenes = {
             "SCENE_PAUSE": PauseScene(self),
             "SCENE_MENU": MenuScene(self),
@@ -29,7 +30,6 @@ class Game:
             "SCENE_RECORDS": RecordsScene(self),
             "SCENE_CREDITS": CreditsScene(self),
         }
-
         self.__game_over = False
 
     @staticmethod
@@ -62,7 +62,7 @@ class Game:
             self.__process_all_events()
             self.__process_all_logic()
             self.__process_all_draw()
-            pg.time.wait(self.__delay)
+            self.__clock.tick(self.__FPS)
 
     def set_scene(self, name: str, reset: bool = False) -> None:
         """
@@ -88,7 +88,5 @@ class Game:
 
     def __exit_game(self) -> None:
         print('Bye bye')
-        self.__game_over = True
-
-    def __del__(self):
         self.__save_last_level()
+        self.__game_over = True

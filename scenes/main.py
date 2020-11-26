@@ -160,13 +160,10 @@ class GameScene(BaseScene):
                 self.__prefered_ghost.counter()
                 self.__prefered_ghost.update_timer()
             elif not self.__work_ghost_counters and self.__prefered_ghost != None:
-                self.global_counter()
+                self.__seeds_eaten += 1
                 self.__prefered_ghost.update_timer()
 
-    def global_counter(self):
-        self.__seeds_eaten += 1
-
-    def check_first_run(self):
+    def __check_first_run(self):
         if self.first_run:
             self.create_objects()
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
@@ -174,7 +171,7 @@ class GameScene(BaseScene):
 
     def process_logic(self) -> None:
         super(GameScene, self).process_logic()
-        self.check_first_run()
+        self.__check_first_run()
         self.__process_collision()
         if pg.time.get_ticks()-self.__timer_reset_pacman >= 3000 and self.__pacman.animator.anim_finished:
             self.create_objects()
@@ -205,15 +202,12 @@ class GameScene(BaseScene):
         # todo: make text update only when new value appeares
         self.__scores_value_text.update_text(str(self.game.score))
 
-    def on_deactivate(self) -> None:
-        pass
-        # self.game.records.set_new_record(int(self.game.score))
-        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
-
-    def on_activate(self) -> None:
-        pass
-        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
-
     def on_reset(self) -> None:
         self.game.score.reset()
         self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+
+    def on_deactivate(self) -> None:
+        pass
+
+    def on_activate(self) -> None:
+        pass

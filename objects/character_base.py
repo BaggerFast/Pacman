@@ -57,8 +57,6 @@ class Character(DrawableObject):
     def two_cells_dis(cell1: tuple, cell2: tuple):
         return ((cell1[0] - cell2[0]) ** 2 + (cell1[1] - cell2[1]) ** 2) ** 0.5
 
-    # Обработка коллизий (не трогайте пажожда, я сам не понимаю как это работает, я пытался понять, но я так и не смог)
-
     def movement_cell(self, cell: tuple):
         scene = self.game.scenes[self.game.current_scene_name]
         cell = scene.movements_data[cell[1]][cell[0]]
@@ -66,8 +64,6 @@ class Character(DrawableObject):
 
     def move_to(self, direction):
         return self.movement_cell(self.get_cell())[direction]
-
-
 
     def in_center(self) -> bool:
         return self.rect.x % CELL_SIZE == 6 and (self.rect.y - 20) % CELL_SIZE == 6

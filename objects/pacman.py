@@ -50,7 +50,7 @@ class Pacman(Character):
         return (self.rect.centerx // CELL_SIZE, (self.rect.centery-17) // CELL_SIZE)
 
     def death(self):
-        self.__hp.change_count_lives(-1)
+        self.__hp -= 1
         self.animator = self.__dead_anim
         self.animator.run = True
         self.dead = True

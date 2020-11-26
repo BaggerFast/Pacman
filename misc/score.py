@@ -20,14 +20,18 @@ class Score:
     def reset(self):
         self.__score = 0
 
-    def __add_to_score(self, amount):
-        self.__score += amount
+    def __add__(self, value):
+        self.__score = self.__score + value
+        return self
+
+    def __iadd__(self, value):
+        return self + value
 
     def eat_seed(self):
-        self.__add_to_score(Points.POINT_PER_SEED)
+        self + Points.POINT_PER_SEED
 
     def eat_energizer(self):
-        self.__add_to_score(Points.POINT_PER_ENERGIZER)
+        self + Points.POINT_PER_ENERGIZER
 
     def activate_fear_mode(self):
         self.fear_mode = True
