@@ -27,3 +27,9 @@ class Text(DrawableObject):
 
     def process_draw(self):
         self.game.screen.blit(self.surface, self.rect)
+
+    def process_event(self, event):
+        pass
+
+    def process_logic(self):
+        pass

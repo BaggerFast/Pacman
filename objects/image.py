@@ -27,3 +27,9 @@ class ImageObject(DrawableObject):
 
     def process_draw(self):
         self.game.screen.blit(self.image, self.rect)
+
+    def process_event(self, event):
+        pass
+
+    def process_logic(self):
+        pass

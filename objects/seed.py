@@ -62,3 +62,10 @@ class SeedContainer(DrawableObject):
                     self.__energizers.remove(energizer)
                     return True, "energizer"
         return False, ""
+
+    def process_event(self, event):
+        pass
+
+    def process_logic(self):
+        pass
+

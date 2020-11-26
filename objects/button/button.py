@@ -30,6 +30,10 @@ class BaseButton(DrawableObject):
     def process_draw(self) -> None:
         pg.draw.rect(self.game.screen, Color.WHITE, self.rect, 0)
 
+    def process_logic(self):
+        pass
+
+
     def click(self) -> None:
         self.function()
 
