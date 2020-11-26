@@ -1,4 +1,4 @@
-from misc import CELL_SIZE, Health, Animator
+from misc import CELL_SIZE, Animator
 from objects import DrawableObject
 
 
@@ -16,8 +16,8 @@ class Character(DrawableObject):
         self.animator = animator
         self.rect = self.animator.current_image.get_rect()
         self.shift_x, self.shift_y = self.direction["right"][:2]
-        self.start_pos = start_pos
-        self.move(*self.start_pos)
+        self.start_pos = self.pos_from_cell(start_pos)
+        self.move_center(*self.start_pos)
         self.speed = 0
         self.rotate = 0
 
@@ -43,24 +43,32 @@ class Character(DrawableObject):
                 if self.animator.is_rotation:
                     self.animator.change_rotation()
 
-    def process_logic(self): self.step()
+    def process_logic(self):
+        self.step()
 
     def process_draw(self):
         for i in range(-1, 2):
             self.game.screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
-
-
-    @staticmethod
-    def two_cells_dis(cell1: tuple, cell2: tuple) -> float:
-        return ((cell1[0] - cell2[0]) ** 2 + (cell1[1] - cell2[1]) ** 2) ** 0.5
 
     def movement_cell(self, cell: tuple) -> list:
         scene = self.game.scenes[self.game.current_scene_name]
         cell = scene.movements_data[cell[1]][cell[0]]
         return [i == '1' for i in "{0:04b}".format(cell)[::-1]]
 
-    def move_to(self, direction) -> bool: return self.movement_cell(self.get_cell())[direction]
+    def move_to(self, direction) -> bool:
+        return self.movement_cell(self.get_cell())[direction]
 
-    def in_center(self) -> bool: return self.rect.x % CELL_SIZE == 6 and (self.rect.y - 20) % CELL_SIZE == 6
+    def in_center(self) -> bool:
+        return self.rect.centerx % CELL_SIZE == CELL_SIZE // 2 \
+               and (self.rect.centery - 20) % CELL_SIZE == CELL_SIZE // 2
 
-    def get_cell(self) -> tuple:  return self.rect.centerx // CELL_SIZE, (self.rect.centery - 20) // CELL_SIZE
+    def get_cell(self) -> tuple:
+        return self.rect.centerx // CELL_SIZE, (self.rect.centery - 20) // CELL_SIZE
+
+    @staticmethod
+    def two_cells_dis(cell1: tuple, cell2: tuple) -> float:
+        return ((cell1[0] - cell2[0]) ** 2 + (cell1[1] - cell2[1]) ** 2) ** 0.5
+
+    @staticmethod
+    def pos_from_cell(cell: tuple) -> tuple:
+        return cell[0] * CELL_SIZE + CELL_SIZE // 2, cell[1] * CELL_SIZE + 20 + CELL_SIZE // 2

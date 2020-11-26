@@ -1,8 +1,8 @@
 import pygame as pg
 
 from misc import LevelLoader, Color, MAPS, CELL_SIZE, Font, get_image_path
-from objects import Blinky, Pinky, Inky, Clyde, Map, SeedContainer, ImageObject, \
-                    Text, Pacman
+from objects import SeedContainer, Map, ImageObject, Text, Pacman
+from objects.ghosts import *
 from scenes import BaseScene
 
 
@@ -38,29 +38,29 @@ class GameScene(BaseScene):
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
         self.objects.append(self.__seeds)
 
-        self.__scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20), color=Color.WHITE)
+        self.__scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE,
+                                        rect=pg.Rect(10, 0, 20, 20), color=Color.WHITE)
         self.objects.append(self.__scores_label_text)
-        self.__scores_value_text = Text(self.game, str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20),
-                                        color=Color.WHITE)
+        self.__scores_value_text = Text(self.game, str(self.game.score), Font.MAIN_SCENE_SIZE,
+                                        rect=pg.Rect(10, 8, 20, 20), color=Color.WHITE)
         self.objects.append(self.__scores_value_text)
 
-        self.__highscores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20),
-                                            color=Color.WHITE)
+        self.__highscores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE,
+                                            rect=pg.Rect(130, 0, 20, 20), color=Color.WHITE)
         self.objects.append(self.__highscores_label_text)
         self.__highscores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
-                                            rect=pg.Rect(130, 8, 20, 20),
-                                            color=Color.WHITE)
+                                            rect=pg.Rect(130, 8, 20, 20), color=Color.WHITE)
         self.objects.append(self.__highscores_value_text)
 
+        self.__pacman = Pacman(self.game, self.__player_position)
 
-        self.__pacman = Pacman(self.game, (-6 + self.__player_position[0] * CELL_SIZE + CELL_SIZE // 2, 14 + self.__player_position[1] * CELL_SIZE + CELL_SIZE // 2))
         self.objects.append(self.__pacman)
         self.__prepare_lives_meter()
 
-        self.__blinky = Blinky(self.game, (-7 + self.__ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14 + self.__ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2))
-        self.__pinky = Pinky(self.game, (-7 + self.__ghost_positions[1][0] * CELL_SIZE + CELL_SIZE // 2, 14 + self.__ghost_positions[2][1] * CELL_SIZE + CELL_SIZE // 2),collision=False)
-        self.__inky = Inky(self.game, (-7 + self.__ghost_positions[0][0] * CELL_SIZE + CELL_SIZE // 2, 14 + self.__ghost_positions[1][1] * CELL_SIZE + CELL_SIZE // 2), 30,collision=False)
-        self.__clyde = Clyde(self.game, (-7 + self.__ghost_positions[2][0] * CELL_SIZE + CELL_SIZE // 2, 14 + self.__ghost_positions[0][1] * CELL_SIZE + CELL_SIZE // 2), 59,collision=False)
+        self.__blinky = Blinky(self.game, self.__ghost_positions[3])
+        self.__pinky = Pinky(self.game, self.__ghost_positions[1])
+        self.__inky = Inky(self.game, self.__ghost_positions[0])
+        self.__clyde = Clyde(self.game, self.__ghost_positions[2])
 
         self.__ghosts = [
             self.blinky,
@@ -69,14 +69,10 @@ class GameScene(BaseScene):
             self.clyde
         ]
 
-        self.__not_prefered_ghosts = [
-            self.pinky,
-            self.inky,
-            self.clyde
-        ]
+        self.__not_prefered_ghosts = self.__ghosts.copy()
 
         self.__prefered_ghost = self.pinky
-        self.__count_prefered_ghost = 1
+        self.__count_prefered_ghost = 0
 
         self.objects.append(self.blinky)
         self.objects.append(self.pinky)
@@ -110,13 +106,6 @@ class GameScene(BaseScene):
     def __start_pause(self):
         self.game.set_scene('SCENE_PAUSE', reset=True)
 
-    def __draw_ghost(self, index, color, x, y):
-        pg.draw.circle(
-            self.screen, color,
-            (x + self.__ghost_positions[index][0] * CELL_SIZE + CELL_SIZE // 2, y + self.__ghost_positions[index][1] * CELL_SIZE + CELL_SIZE // 2),
-            8
-        )
-
     def additional_draw(self) -> None:
         # Temporary draw
         x_shift = 0
@@ -146,7 +135,7 @@ class GameScene(BaseScene):
                     self.__pacman.death()
                     self.__prepare_lives_meter()
                 # todo
-                elif not self.pacman.animator.run:
+                elif not self.__pacman.animator.run:
                     self.game.set_scene("SCENE_GAMEOVER")
                     break
                 for ghost2 in self.__ghosts:

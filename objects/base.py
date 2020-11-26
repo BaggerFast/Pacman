@@ -10,7 +10,7 @@ class DrawableObject:
         self.rect.x = x
         self.rect.y = y
 
-    def move_center(self, x, y):
+    def move_center(self, x: int, y: int):
         self.rect.centerx = x
         self.rect.centery = y
 

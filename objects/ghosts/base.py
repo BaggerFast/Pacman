@@ -5,6 +5,7 @@ from objects.pacman import Pacman
 
 
 class Base(Character):
+    max_count_eat_seeds_in_home = 0
     direction2 = {
         0: (1, 0, 0),
         1: (0, 1, 1),
@@ -12,7 +13,7 @@ class Base(Character):
         3: (0, -1, 3)
     }
 
-    def __init__(self, game, start_pos: tuple, max_count_eat_seeds_in_home=0, collision=True,):
+    def __init__(self, game, start_pos: tuple):
 
         self.left_walk_anim = Animator(
             get_image_path_for_animator('ghost', type(self).__name__, 'left'), is_rotation=False
@@ -37,9 +38,8 @@ class Base(Character):
         super().__init__(game, self.right_walk_anim, start_pos)
 
         self.is_can_leave_home = False
-        self.collision = collision
+        self.collision = False
         self.count_eat_seeds_in_home = 0
-        self.max_count_eat_seeds_in_home = max_count_eat_seeds_in_home
         self.timer = pg.time.get_ticks()
         self.invisible_anim = Animator(
             get_image_path_for_animator('ghost', 'invisible'), is_rotation=False
@@ -48,6 +48,7 @@ class Base(Character):
         self.is_in_home = True
         self.work_counter = True
         self.love_cell = (8, 16)
+        self.set_direction("left")
 
     def process_logic(self):
         self.animator.timer_check()
