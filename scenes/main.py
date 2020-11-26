@@ -4,8 +4,8 @@ from misc import LevelLoader
 from objects.ghosts import Blinky, Pinky, Inky, Clyde
 from objects.map import Map
 from objects.seed import SeedContainer
-from misc.constants import Color, MAPS, CELL_SIZE
-from misc.path import get_image_path
+from misc.constants import Color, MAPS, CELL_SIZE, SOUNDS
+from misc.path import get_image_path, get_sound_path
 from objects.image import ImageObject
 from objects.text import Text
 from objects.pacman import Pacman
@@ -138,17 +138,18 @@ class GameScene(BaseScene):
                 self.prefered_ghost.update_timer()
 
     def process_logic(self) -> None:
-        super(GameScene, self).process_logic()
-        if self.first_run:
-            self.create_objects()
-            # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
-            self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
-        self.process_collision()
-        if self.prefered_ghost is not None and self.prefered_ghost.can_leave_home():
-            self.change_prefered_ghost()
-        for ghost in self.not_prefered_ghosts:
-            if ghost != self.prefered_ghost:
-                ghost.update_timer()
+        if not pg.mixer.Channel(1).get_busy():
+            super(GameScene, self).process_logic()
+            if self.first_run:
+                self.create_objects()
+                # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
+                self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
+            self.process_collision()
+            if self.prefered_ghost is not None and self.prefered_ghost.can_leave_home():
+                self.change_prefered_ghost()
+            for ghost in self.not_prefered_ghosts:
+                if ghost != self.prefered_ghost:
+                    ghost.update_timer()
 
     def process_draw(self) -> None:
         super().process_draw()
@@ -159,14 +160,20 @@ class GameScene(BaseScene):
         self.scores_value_text.update_text(str(self.game.score))
 
     def on_deactivate(self) -> None:
-        pass
+        if pg.mixer.Channel(1).get_busy():
+            self.a.stop()
         # self.game.records.set_new_record(int(self.game.score))
         # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
 
     def on_activate(self) -> None:
-        pass
+        if self.first_run:
+            eaten_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Intro"]))
+            eaten_sound.set_volume(0.5)
+            self.a = pg.mixer.Channel(1)
+            self.a.play(eaten_sound)
         # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
 
     def on_reset(self) -> None:
         self.game.score.score = 0
         self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+

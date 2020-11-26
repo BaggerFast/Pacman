@@ -2,6 +2,8 @@ from typing import List, Tuple, Union
 
 import pygame as pg
 
+from misc.constants import SOUNDS
+from misc.path import get_sound_path
 from objects.base import DrawableObject
 from objects.button.button import Button
 
@@ -41,7 +43,11 @@ class ButtonController(DrawableObject):
         self.buttons[self.active_button_index].activate()
 
     def click_current_button(self) -> None:
+        Click_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Click"]))
+        Click_sound.set_volume(0.5)
+        Click_sound.play()
         self.buttons[self.active_button_index].click()
+
 
     def process_keydown(self, event: pg.event.Event) -> None:
         if event.type != pg.KEYDOWN:

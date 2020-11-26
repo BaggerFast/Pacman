@@ -91,6 +91,7 @@ MAPS = {
     "level_1": "original.json",
     "level_2": "new_map.json"
 }
+
 SOUNDS = {
     "Click": "NAV",
     "Dead": "pacman_death",
@@ -98,7 +99,8 @@ SOUNDS = {
     "Boost": "pacman_intermission",
     "Seed": "leader2",
     "Intro": "pacman_beginning",
-    "Move": "pacman_chomp"
-
+    "Move": "pacman_chomp",
+    "GameStart": "Star"
 }
+
 MAPS_COUNT = len(MAPS)
