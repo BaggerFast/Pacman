@@ -1,9 +1,10 @@
 import pygame as pg
-from misc.constants import CELL_SIZE
+from misc.constants import CELL_SIZE, SOUNDS
 from misc.path import get_image_path_for_animator
 from objects.character_base import Character
 from misc.health import Health
 from misc.animator import Animator
+from misc.path import get_sound_path
 
 
 class Pacman(Character):
@@ -13,6 +14,8 @@ class Pacman(Character):
         pg.K_s: 'down',
         pg.K_d: 'right'
     }
+    death_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Dead"]))
+    death_sound.set_volume(0.5)
 
     def __init__(self, game, start_pos: tuple):
         self.hp = Health(3, 3)
@@ -55,6 +58,7 @@ class Pacman(Character):
 
     def death(self):
         self.hp.change_count_lives(-1)
+        self.death_sound.play()
         if not int(self.hp):
             self.animator = self.dead_anim
             self.animator.run = True
