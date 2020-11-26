@@ -96,7 +96,7 @@ SOUNDS = {
     "Dead": "pacman_death",
     "Gameover": "GameOver",
     "Boost": "pacman_intermission",
-    "Seed": "leader",
+    "Seed": "leader2",
     "Intro": "pacman_beginning",
     "Move": "pacman_chomp"
 
