@@ -43,31 +43,24 @@ class Character(DrawableObject):
                 if self.animator.is_rotation:
                     self.animator.change_rotation()
 
-    def process_logic(self):
-        self.step()
+    def process_logic(self): self.step()
 
     def process_draw(self):
         for i in range(-1, 2):
             self.game.screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
 
-    def get_cell(self):
-        return (self.rect.centerx // CELL_SIZE, (self.rect.centery-20) // CELL_SIZE)
 
     @staticmethod
-    def two_cells_dis(cell1: tuple, cell2: tuple):
+    def two_cells_dis(cell1: tuple, cell2: tuple) -> float:
         return ((cell1[0] - cell2[0]) ** 2 + (cell1[1] - cell2[1]) ** 2) ** 0.5
 
-    # Обработка коллизий (не трогайте пажожда, я сам не понимаю как это работает, я пытался понять, но я так и не смог)
-
-    def movement_cell(self, cell: tuple):
+    def movement_cell(self, cell: tuple) -> list:
         scene = self.game.scenes[self.game.current_scene_name]
         cell = scene.movements_data[cell[1]][cell[0]]
         return [i == '1' for i in "{0:04b}".format(cell)[::-1]]
 
-    def move_to(self, direction):
-        return self.movement_cell(self.get_cell())[direction]
+    def move_to(self, direction) -> bool: return self.movement_cell(self.get_cell())[direction]
 
+    def in_center(self) -> bool: return self.rect.x % CELL_SIZE == 6 and (self.rect.y - 20) % CELL_SIZE == 6
 
-
-    def in_center(self) -> bool:
-        return self.rect.x % CELL_SIZE == 6 and (self.rect.y - 20) % CELL_SIZE == 6
+    def get_cell(self) -> tuple:  return self.rect.centerx // CELL_SIZE, (self.rect.centery - 20) // CELL_SIZE
