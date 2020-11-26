@@ -12,21 +12,25 @@ class Pacman(Character):
     }
 
     def __init__(self, game, start_pos: tuple):
-        self.hp = Health(3, 3)
-        self.walk_anim = Animator(
+        self.__hp = Health(3, 3)
+        self.__walk_anim = Animator(
             get_image_path_for_animator('pacman', 'walk')
         )
-        self.dead_anim = Animator(
+        self.__dead_anim = Animator(
             get_image_path_for_animator('pacman', 'dead'), 100, False, True
         )
-        super().__init__(game, self.walk_anim, start_pos)
+        super().__init__(game, self.__walk_anim, start_pos)
         self.dead = False
-        self.feature_rotate = "none"
+        self.__feature_rotate = "none"
+
+    @property
+    def hp(self):
+        return self.__hp.lives
 
     def process_event(self, event):
         if event.type == pg.KEYDOWN and event.key in self.action.keys() and not self.dead:
             self.go()
-            self.feature_rotate = self.action[event.key]
+            self.__feature_rotate = self.action[event.key]
 
     def process_logic(self):
         self.animator.timer_check()
@@ -37,21 +41,23 @@ class Pacman(Character):
                 else:
                     self.stop()
                     self.animator.change_cur_image(0)
-                c = self.direction[self.feature_rotate][2]
+                c = self.direction[self.__feature_rotate][2]
                 if self.move_to(c):
-                    self.set_direction(self.feature_rotate)
+                    self.set_direction(self.__feature_rotate)
             super().process_logic()
+
     def get_cell(self):
         return (self.rect.centerx // CELL_SIZE, (self.rect.centery-17) // CELL_SIZE)
+
     def death(self):
-        self.hp.change_count_lives(-1)
-        self.animator = self.dead_anim
+        self.__hp.change_count_lives(-1)
+        self.animator = self.__dead_anim
         self.animator.run = True
         self.dead = True
 
     def reset(self):
-        self.animator = self.walk_anim
-        self.dead_anim.reset()
+        self.animator = self.__walk_anim
+        self.__dead_anim.reset()
         self.move(*self.start_pos)
         self.speed = 0
         self.shift_x, self.shift_y = self.direction["right"][:2]

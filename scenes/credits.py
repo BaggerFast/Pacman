@@ -6,7 +6,7 @@ from misc import Font
 
 
 class CreditsScene(BaseScene):
-    data = [
+    __data = [
         "Архипов Евгений",
         "Смирнов Андрей",
         "Грачев Егор",
@@ -29,8 +29,6 @@ class CreditsScene(BaseScene):
         "Терпунов Артём",
         "Тимченко Савелий",
         "Щеников Иван",
-        "Вадимир Путин",
-        "Дмитрий Медведев",
         "Хаяо Миядзаки",
         "Джонатан Джостар",
         "Тору Иватани",
@@ -40,29 +38,29 @@ class CreditsScene(BaseScene):
     def __init__(self, game):
         super().__init__(game)
         self.game = game
-        self.on_screen = 0
+        self.__on_screen = 0
         self.start_pos = -30
-        self.speed = 0.3
-        self.alpha_delta = -15
-        self.students = []
+        self.__speed = 0.3
+        self.__alpha_delta = -15
+        self.__students = []
 
     def create_objects(self) -> None:
-        self.create_buttons()
+        self.__create_buttons()
 
-    def create_buttons(self) -> None:
-        self.back_button = Button(self.game, pg.Rect(0, 0, 180, 40),
-                                  self.start_menu, 'MENU', center=(self.game.width // 2, 250),
-                                  text_size=Font.BUTTON_TEXT_SIZE)
-        self.button_controller = ButtonController(self.game, [self.back_button])
-        self.objects.append(self.button_controller)
+    def __create_buttons(self) -> None:
+        self.__back_button = Button(self.game, pg.Rect(0, 0, 180, 40),
+                                    self.__start_menu, 'MENU', center=(self.game.width // 2, 250),
+                                    text_size=Font.BUTTON_TEXT_SIZE)
+        self.__button_controller = ButtonController(self.game, [self.__back_button])
+        self.objects.append(self.__button_controller)
 
-    def get_random_student_y(self):
+    def __get_random_student_y(self):
         return randint(25, self.game.height - 75)
 
-    def create_student(self):
-        students = list(set(self.data) - set((obj.text for obj in self.students)))
+    def __create_student(self):
+        students = list(set(self.__data) - set((obj.text for obj in self.__students)))
         label = str(students[randint(0, len(students) - 1)])
-        student = Text(self.game, label, Font.TITERS_SCENE_SIZE, font=Font.ALTFONT)
+        student = Text(self.game, label, Font.CREDITS_SCENE_SIZE, font=Font.ALTFONT)
 
         is_student_y_correct = False
         tries = 0
@@ -70,7 +68,7 @@ class CreditsScene(BaseScene):
             student.move_center(self.start_pos, randint(25, self.game.height - 75))
 
             is_student_y_correct = True
-            for student2 in self.students:
+            for student2 in self.__students:
                 if abs(student.rect.centery - student2.rect.centery) <=\
                    (student.rect.height + student2.rect.height) / 2:
                     is_student_y_correct = False
@@ -81,47 +79,47 @@ class CreditsScene(BaseScene):
             if tries > 100:
                 break
 
-        student.speed = self.speed + randint(-5, 15) / 100
+        student.speed = self.__speed + randint(-5, 15) / 100
         student.ttl = 0
-        self.students.append(student)
+        self.__students.append(student)
         self.objects.append(student)
-        self.on_screen += 1
+        self.__on_screen += 1
 
     def on_activate(self) -> None:
         self.create_objects()
-        self.button_controller.reset_state()
+        self.__button_controller.reset_state()
 
-    def process_students(self) -> None:
+    def __process_students(self) -> None:
         students_to_delete = []
 
-        for index, student in enumerate(self.students):
+        for index, student in enumerate(self.__students):
             if student.rect.x >= self.game.width:
                 students_to_delete.append(index)
-                self.on_screen -= 1
+                self.__on_screen -= 1
             elif student.rect.x != -105:
                 student.ttl += 1
                 student.move(student.ttl * student.speed + self.start_pos, student.rect.y)
                 student.surface.set_alpha(min(255, self.game.width - ((student.rect.midbottom[0] - self.game.width // 2) ** 2
-                                                * 0.06 - self.alpha_delta)))
+                                                                      * 0.06 - self.__alpha_delta)))
 
         for index in sorted(students_to_delete, reverse=True):
-            self.objects.remove(self.students[index])
-            del self.students[index]
+            self.objects.remove(self.__students[index])
+            del self.__students[index]
 
     def additional_logic(self) -> None:
-        if len(self.students) == len(self.data) and not self.on_screen:
-            self.students.clear()
-        elif pg.time.get_ticks() % 190 == 0 and not len(self.students) == len(self.data):
-            self.create_student()
-        self.process_students()
+        if len(self.__students) == len(self.__data) and not self.__on_screen:
+            self.__students.clear()
+        elif pg.time.get_ticks() % 190 == 0 and not len(self.__students) == len(self.__data):
+            self.__create_student()
+        self.__process_students()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.scenes[self.game.current_scene_name] == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.start_menu()
+                self.__start_menu()
 
-    def start_menu(self) -> None:
+    def __start_menu(self) -> None:
         self.game.set_scene('SCENE_MENU')
-        self.on_screen = 0
-        self.students = []
+        self.__on_screen = 0
+        self.__students = []
         self.objects = []

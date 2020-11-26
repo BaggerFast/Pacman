@@ -7,19 +7,18 @@ class Score:
         self.fear_mode = False
         self.fear_count = 0
 
-    def __int__(self):
-        return self.__score
-
     def __str__(self):
         return str(self.__score)
+
+    def __int__(self):
+        return self.__score
 
     @property
     def score(self):
         return self.__score
 
-    @score.setter
-    def score(self, val):
-        self.__score = val
+    def reset(self):
+        self.__score = 0
 
     def __add_to_score(self, amount):
         self.__score += amount

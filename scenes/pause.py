@@ -7,10 +7,10 @@ from misc import Color, Font
 class PauseScene(BaseScene):
 
     def create_objects(self) -> None:
-        self.create_title()
-        self.create_buttons()
+        self.__create_title()
+        self.__create_buttons()
 
-    def create_buttons(self) -> None:
+    def __create_buttons(self) -> None:
         buttons = [
             Button(self.game, pg.Rect(0, 0, 180, 45),
                    self.continue_game, 'CONTINUE',
@@ -28,15 +28,13 @@ class PauseScene(BaseScene):
         self.button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.button_controller)
 
-    def create_title(self) -> None:
-        self.main_text = Text(self.game, 'PAUSE', 40, color=Color.WHITE, font=Font.FILENAME)
-        self.main_text.move_center(self.game.width // 2, 35)
-        self.objects.append(self.main_text)
+    def __create_title(self) -> None:
+        self.__main_text = Text(self.game, 'PAUSE', 40, color=Color.WHITE, font=Font.FILENAME)
+        self.__main_text.move_center(self.game.width // 2, 35)
+        self.objects.append(self.__main_text)
 
     def restart_game(self) -> None:
-        self.game.scenes["SCENE_GAME"] = GameScene(self.game)
-        self.game.score.score = 0
-        self.game.set_scene('SCENE_GAME')
+        self.game.set_scene('SCENE_GAME', reset=True)
 
     def continue_game(self) -> None:
         self.game.set_scene('SCENE_GAME')
