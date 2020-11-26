@@ -32,5 +32,5 @@ class Blinky(BaseGhost):
             super().process_logic()
             self.go()
 
-    def get_love_cell(self, pacman, blinky = None):
+    def get_love_cell(self, pacman, blinky=None):
         self.love_cell = pacman.get_cell()

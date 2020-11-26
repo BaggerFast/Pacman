@@ -1,3 +1,5 @@
+from copy import copy
+
 import pygame as pg
 
 from misc import LevelLoader, Color, MAPS, CELL_SIZE, Font, get_image_path
@@ -85,23 +87,23 @@ class GameScene(BaseScene):
 
     @property
     def blinky(self):
-        return self.__blinky
+        return copy(self.__blinky)
 
     @property
     def pinky(self):
-        return self.__pinky
+        return copy(self.__pinky)
 
     @property
     def inky(self):
-        return self.__inky
+        return copy(self.__inky)
 
     @property
     def clyde(self):
-        return self.__clyde
+        return copy(self.__clyde)
 
     @property
     def movements_data(self):
-        return self.__movements_data
+        return copy(self.__movements_data)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
