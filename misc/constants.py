@@ -44,7 +44,27 @@ class ButtonColor(NamedTuple):
     def init_section(self, name: str, data: dict) -> None:
         section = self.__getattribute__(name)
         default_section = BUTTON_DEFAULT_COLORS.__getattribute__(name)
-
+        """
+                                     ▄              ▄
+                                    ▌▒█           ▄▀▒▌
+                                    ▌▒▒█        ▄▀▒▒▒▐
+                                   ▐▄█▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐
+                                 ▄▄▀▒▒▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐
+        METAPROGRAMMING IS     ▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌
+        A SUCH WOW THING =)   ▐▒▒▒▄▄▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▀▄▒▌
+                              ▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐
+                             ▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌
+                             ▌░▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌
+                            ▌▒▒▒▄██▄▒▒▒▒▒▒▒▒░░░░░░░░▒▒▒▐
+                            ▐▒▒▐▄█▄█▌▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▒▒▌
+                            ▐▒▒▐▀▐▀▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▐
+                             ▌▒▒▀▄▄▄▄▄▄▀▒▒▒▒▒▒▒░▒░▒░▒▒▒▌
+                             ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒▒▄▒▒▐
+                              ▀▄▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒▄▒▒▒▒▌
+                                ▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀
+                                  ▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀
+                                     ▀▀▀▀▀▀▀▀▀▀▀▀
+        """
         if name in data.keys():
             for item in [ButtonStateColor.get_members_list()]:
                 if item in data[name].keys():
@@ -72,6 +92,7 @@ BUTTON_DEFAULT_COLORS = ButtonColor(
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 CELL_SIZE = 8
 
+
 class Points:
     POINT_PER_SEED = 10
     POINT_PER_ENERGIZER = 50
@@ -82,12 +103,14 @@ class Font:
     ALTFONT = os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')
     MAIN_SCENE_SIZE = 10
     BUTTON_TEXT_SIZE = 24
-    TITERS_SCENE_SIZE = 14
+    CREDITS_SCENE_SIZE = 14
 
 
 MAPS = {
     "level_1": "original.json",
     "level_2": "new_map.json"
 }
+
+DEBUG_MODE = True
 
 MAPS_COUNT = len(MAPS)

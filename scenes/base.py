@@ -14,9 +14,6 @@ class BaseScene:
     def on_activate(self) -> None:
         pass
 
-    def on_window_resize(self) -> None:
-        pass
-
     def process_event(self, event: pg.event.Event) -> None:
         for item in self.objects:
             item.process_event(event)

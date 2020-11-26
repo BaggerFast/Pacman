@@ -7,9 +7,6 @@ class Health:
     def lives(self):
         return self.__lives
 
-    def __int__(self):
-        return self.__lives
-
     def change_count_lives(self, number):
         self.__lives += number
         self.__lives = max(0, self.__lives)
