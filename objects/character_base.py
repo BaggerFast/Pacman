@@ -51,7 +51,7 @@ class Character(DrawableObject):
             self.game.screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
 
     def get_cell(self):
-        return (self.rect.centerx // CELL_SIZE, (self.rect.centery-25) // CELL_SIZE)
+        return (self.rect.centerx // CELL_SIZE, (self.rect.centery-20) // CELL_SIZE)
 
     @staticmethod
     def two_cells_dis(cell1: tuple, cell2: tuple):

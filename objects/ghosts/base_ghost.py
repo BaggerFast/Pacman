@@ -70,9 +70,6 @@ class BaseGhost(Character):
         if self.work_counter:
             self.count_eat_seeds_in_home += 1
 
-    def get_cell(self):
-        return ((self.rect.centerx) // CELL_SIZE, (self.rect.centery-25) // CELL_SIZE)
-
     def can_leave_home(self):
         #print(self.max_count_eat_seeds_in_home, ': ', pg.time.get_ticks()-self.timer)
         return (self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home and self.work_counter) \

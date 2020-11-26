@@ -42,7 +42,8 @@ class Pacman(Character):
                     self.set_direction(self.feature_rotate)
             super().process_logic()
     def get_cell(self):
-        return (self.rect.centerx // CELL_SIZE, (self.rect.centery-17) // CELL_SIZE)
+        return (self.rect.centerx // CELL_SIZE, (self.rect.centery-20) // CELL_SIZE)
+
     def death(self):
         self.hp.change_count_lives(-1)
         self.animator = self.dead_anim
