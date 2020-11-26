@@ -127,9 +127,9 @@ class GameScene(BaseScene):
                     self.prepare_lives_meter()
                 for ghost2 in self.ghosts:
                     ghost2.invisible()
-                elif not self.pacman.animator.run:
+                '''elif not self.pacman.animator.run:
                     self.game.set_scene("SCENE_GAMEOVER")
-                    break  # IT MAY CAUSE BUGS <===<===<===<===<===<====<===<===<===<===<===<===< IMPORTANT
+                    break  # IT MAY CAUSE BUGS <===<===<===<===<===<====<===<===<===<===<===<===< IMPORTANT'''
         if is_eaten:
             if type == "seed":
                 self.game.score.eat_seed()
@@ -185,3 +185,16 @@ class GameScene(BaseScene):
 
         # todo: make text update only when new value appeares
         self.scores_value_text.update_text(str(self.game.score))
+
+    def on_deactivate(self) -> None:
+        pass
+        # self.game.records.set_new_record(int(self.game.score))
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+
+    def on_activate(self) -> None:
+        pass
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+
+    def on_reset(self) -> None:
+        self.game.score.score = 0
+        self.game.scenes["SCENE_GAME"] = GameScene(self.game)

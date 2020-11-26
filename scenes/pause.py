@@ -34,9 +34,7 @@ class PauseScene(BaseScene):
         self.objects.append(self.main_text)
 
     def restart_game(self) -> None:
-        self.game.scenes["SCENE_GAME"] = GameScene(self.game)
-        self.game.score.score = 0
-        self.game.set_scene('SCENE_GAME')
+        self.game.set_scene('SCENE_GAME', reset=True)
 
     def continue_game(self) -> None:
         self.game.set_scene('SCENE_GAME')
