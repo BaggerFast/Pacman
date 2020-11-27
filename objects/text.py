@@ -22,6 +22,14 @@ class Text(DrawableObject):
             self.rect = self.surface.get_rect()
             self.rect.topleft = topleft
 
+    def update_color(self, new_color):
+        self.color = new_color
+        self.surface = self.font.render(self.text, False, self.color)
+        if type(self.rect) != tuple:
+            topleft = self.rect.topleft
+            self.rect = self.surface.get_rect()
+            self.rect.topleft = topleft
+
     def update_position(self, a=()):
         self.pos = a
 

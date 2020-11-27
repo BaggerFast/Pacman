@@ -9,6 +9,7 @@ from objects.button.button import Button
 
 
 class ButtonController(DrawableObject):
+    click_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Click"]))
     keys_previous = [pg.K_UP, pg.K_LEFT, pg.K_w, pg.K_a]
     keys_next = [pg.K_DOWN, pg.K_RIGHT, pg.K_s, pg.K_d, pg.K_TAB]
     keys_activate = [pg.K_SPACE, pg.K_RETURN]
@@ -17,6 +18,7 @@ class ButtonController(DrawableObject):
         super().__init__(game)
         self.buttons = buttons
         self.active_button_index = -1
+        self.click_sound.set_volume(0.5)
 
     def reset_state(self):
         self.deselect_current_button()
@@ -40,14 +42,11 @@ class ButtonController(DrawableObject):
         self.buttons[self.active_button_index].select()
 
     def activate_current_button(self) -> None:
+        self.click_sound.play()
         self.buttons[self.active_button_index].activate()
 
     def click_current_button(self) -> None:
-        Click_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Click"]))
-        Click_sound.set_volume(0.5)
-        Click_sound.play()
         self.buttons[self.active_button_index].click()
-
 
     def process_keydown(self, event: pg.event.Event) -> None:
         if event.type != pg.KEYDOWN:

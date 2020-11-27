@@ -11,7 +11,6 @@ class BaseButton(DrawableObject):
     Click_sound = None
     Hover_sound = None
     Initial_sound = None
-
     def __init__(self, game, geometry: Union[tuple, pg.Rect], function: Callable[[], None]) -> None:
         super().__init__(game)
         if type(geometry) == tuple:
@@ -44,7 +43,6 @@ class Button(BaseButton):
     STATE_HOVER = 1
     STATE_CLICK = 2
     Click_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Click"]))
-    Click_sound.set_volume(0.5)
     def __init__(self, game, geometry: Union[tuple, pg.Rect],
                  function: Callable[[], None], text: str = 'Define me',
                  colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
@@ -58,6 +56,7 @@ class Button(BaseButton):
         self.state = self.STATE_INITIAL
         self.surfaces = self.prepare_surfaces()
         self.left_button_pressed = False
+        self.Click_sound.set_volume(0.5)
         if center:
             self.move_center(*center)
 
