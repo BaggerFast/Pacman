@@ -1,7 +1,7 @@
 import pygame as pg
 
-from misc.constants import Font
-from objects.base import DrawableObject
+from misc import Font
+from objects import DrawableObject
 
 
 class Text(DrawableObject):
@@ -35,3 +35,9 @@ class Text(DrawableObject):
 
     def process_draw(self):
         self.game.screen.blit(self.surface, self.rect)
+
+    def process_event(self, event):
+        pass
+
+    def process_logic(self):
+        pass

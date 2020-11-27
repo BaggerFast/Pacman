@@ -5,24 +5,25 @@ from typing import NamedTuple
 import pygame as pg
 
 
-# https://github.com/pygame/pygame/blob/master/src_py/colordict.py
-class Color:
-    RED = pg.color.Color('red')
-    BLUE = pg.color.Color('blue')
-    GREEN = pg.color.Color('green')
-    BLACK = pg.color.Color('black')
-    WHITE = pg.color.Color('white')
-    ORANGE = pg.color.Color('orange')
-    YELLOW = pg.color.Color('yellow')
-    GOLD = pg.color.Color('gold')
-    GRAY = pg.color.Color('gray50')
-    DARK_GRAY = pg.color.Color('gray26')
+class Palitra(NamedTuple):
+    color: pg.color.Color
 
-    # TODO: migrate to pygame.Color
-    SILVER = (192, 192, 192)
-    BRONZE = (205, 127, 50)
-    WOODEN = (101, 67, 33)
-    JET = (10, 10, 10)
+
+class Color:
+    RED = Palitra(pg.color.Color('red')).color
+    BLUE = Palitra(pg.color.Color('blue')).color
+    GREEN = Palitra(pg.color.Color('green')).color
+    BLACK = Palitra(pg.color.Color('black')).color
+    WHITE = Palitra(pg.color.Color('white')).color
+    ORANGE = Palitra(pg.color.Color('orange')).color
+    YELLOW = Palitra(pg.color.Color('yellow')).color
+    GOLD = Palitra(pg.color.Color('gold')).color
+    GRAY = Palitra(pg.color.Color('gray50')).color
+    DARK_GRAY = Palitra(pg.color.Color('gray26')).color
+    SILVER = Palitra(pg.color.Color(192, 192, 192)).color
+    BRONZE = Palitra(pg.color.Color(205, 127, 50)).color
+    WOODEN = Palitra(pg.color.Color(101, 67, 33)).color
+    JET = Palitra(pg.color.Color(10, 10, 10)).color
 
 
 class ButtonStateColor(NamedTuple):
@@ -43,7 +44,27 @@ class ButtonColor(NamedTuple):
     def init_section(self, name: str, data: dict) -> None:
         section = self.__getattribute__(name)
         default_section = BUTTON_DEFAULT_COLORS.__getattribute__(name)
-
+        """
+                                     ▄              ▄
+                                    ▌▒█           ▄▀▒▌
+                                    ▌▒▒█        ▄▀▒▒▒▐
+                                   ▐▄█▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐
+                                 ▄▄▀▒▒▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐
+        METAPROGRAMMING IS     ▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌
+        A SUCH WOW THING =)   ▐▒▒▒▄▄▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▀▄▒▌
+                              ▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐
+                             ▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌
+                             ▌░▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌
+                            ▌▒▒▒▄██▄▒▒▒▒▒▒▒▒░░░░░░░░▒▒▒▐
+                            ▐▒▒▐▄█▄█▌▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▒▒▌
+                            ▐▒▒▐▀▐▀▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▐
+                             ▌▒▒▀▄▄▄▄▄▄▀▒▒▒▒▒▒▒░▒░▒░▒▒▒▌
+                             ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒▒▄▒▒▐
+                              ▀▄▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒▄▒▒▒▒▌
+                                ▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀
+                                  ▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀
+                                     ▀▀▀▀▀▀▀▀▀▀▀▀
+        """
         if name in data.keys():
             for item in [ButtonStateColor.get_members_list()]:
                 if item in data[name].keys():
@@ -84,7 +105,7 @@ class Font:
     ALTFONT = os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')
     MAIN_SCENE_SIZE = 10
     BUTTON_TEXT_SIZE = 24
-    TITERS_SCENE_SIZE = 14
+    CREDITS_SCENE_SIZE = 14
 
 
 MAPS = {

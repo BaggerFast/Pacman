@@ -1,7 +1,7 @@
 import pygame as pg
 
 
-class DrawableObject:
+class DrawableObject():
     def __init__(self, game):
         self.game = game
         self.rect = pg.rect.Rect(0, 0, 0, 0)
@@ -10,7 +10,7 @@ class DrawableObject:
         self.rect.x = x
         self.rect.y = y
 
-    def move_center(self, x, y):
+    def move_center(self, x: int, y: int):
         self.rect.centerx = x
         self.rect.centery = y
 

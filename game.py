@@ -1,146 +1,104 @@
 import os
 import json
 import pygame as pg
-from misc.constants import Color, ROOT_DIR, MAPS_COUNT
-from misc.highscore import HighScore
-from misc.path import create_file_if_not_exist, get_image_path
-from misc.score import Score
-from scenes.levels import LevelsScene
-from scenes.main import GameScene
-from scenes.gameover import GameoverScene
-from scenes.menu import MenuScene
-from scenes.pause import PauseScene
-from scenes.records import RecordsScene
-from scenes.credits import CreditsScene
+from misc import Color, ROOT_DIR, HighScore, \
+                 create_file_if_not_exist, get_image_path, Score
+from scenes import LevelsScene, GameScene, GameoverScene, MenuScene, PauseScene, RecordsScene, CreditsScene, BaseScene
+
+
+class Scenes:
+    def __init__(self, game):
+        self.SCENE_PAUSE = PauseScene(game)
+        self.SCENE_MENU = MenuScene(game)
+        self.SCENE_GAME = GameScene(game)
+        self.SCENE_GAMEOVER = GameoverScene(game)
+        self.SCENE_LEVELS = LevelsScene(game)
+        self.SCENE_RECORDS = RecordsScene(game)
+        self.SCENE_CREDITS = CreditsScene(game)
 
 
 class Game:
-    size = width, height = 224, 285
-    current_scene_name = 'SCENE_MENU'
-    last_level_filepath = os.path.join(ROOT_DIR, "saves", "cur_level.json")
+    __size = width, height = 224, 285
+    __last_level_filepath = os.path.join(ROOT_DIR, "saves", "cur_level.json")
     pg.display.set_caption('PACMAN')
-    icon = pg.image.load(get_image_path('1', 'pacman', 'walk'))
-    pg.display.set_icon(icon)
+    __icon = pg.image.load(get_image_path('1', 'pacman', 'walk'))
+    pg.display.set_icon(__icon)
+    __FPS = 60
 
     def __init__(self) -> None:
-        """
-        Dict names:
-            SCENE_PAUSE: PauseScene
-
-            SCENE_MENU: MenuScene
-
-            SCENE_GAME: GameScene
-
-            SCENE_LEVELS: LevelsScene
-
-            SCENE_RECORDS: RecordsScene
-
-            SCENE_CREDITS: CreditsScene
-        """
-
-        self.level_name = self.read_last_level()
-        self.levels_count = MAPS_COUNT
-        self.screen = pg.display.set_mode(self.size, pg.SCALED)
+        self.level_name = self.__read_last_level()
+        self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.score = Score()
         self.records = HighScore(self)
-        self.delay = 15
-        self.scenes = {
-            "SCENE_PAUSE": PauseScene(self),
-            "SCENE_MENU": MenuScene(self),
-            "SCENE_GAME": GameScene(self),
-            "SCENE_GAMEOVER": GameoverScene(self),
-            "SCENE_LEVELS": LevelsScene(self),
-            "SCENE_RECORDS": RecordsScene(self),
-            "SCENE_CREDITS": CreditsScene(self),
-        }
+        self.__scenes = Scenes(self)
+        self.__current_scene = self.__scenes.SCENE_MENU
+        self.__clock = pg.time.Clock()
+        self.__game_over = False
 
-        self.game_over = False
+    @property
+    def scenes(self):
+        return self.__scenes
+
+    @property
+    def current_scene(self):
+        return self.__current_scene
 
     @staticmethod
-    def exit_button_pressed(event: pg.event.Event) -> bool:
+    def __exit_button_pressed(event: pg.event.Event) -> bool:
         return event.type == pg.QUIT
 
     @staticmethod
-    def exit_hotkey_pressed(event: pg.event.Event) -> bool:
+    def __exit_hotkey_pressed(event: pg.event.Event) -> bool:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
 
-    def process_exit_events(self, event: pg.event.Event) -> None:
-        if Game.exit_button_pressed(event) or Game.exit_hotkey_pressed(event):
+    def __process_exit_events(self, event: pg.event.Event) -> None:
+        if Game.__exit_button_pressed(event) or Game.__exit_hotkey_pressed(event):
             self.exit_game()
 
-    def resize_scenes(self) -> None:
-        for scene in self.scenes.values():
-            scene.on_window_resize()
-
-    def process_resize_event(self, event: pg.event.Event) -> None:
-        if event.type != pg.VIDEORESIZE:
-            return
-        self.size = self.width, self.height = event.w, event.h
-        self.screen = pg.display.set_mode(self.size, pg.RESIZABLE)
-        self.resize_scenes()
-
-    def process_all_events(self) -> None:
+    def __process_all_events(self) -> None:
         for event in pg.event.get():
-            self.process_exit_events(event)
-            self.process_resize_event(event)
-            self.scenes[self.current_scene_name].process_event(event)
+            self.__process_exit_events(event)
+            self.__current_scene.process_event(event)
 
-    def process_all_logic(self) -> None:
-        self.scenes[self.current_scene_name].process_logic()
+    def __process_all_logic(self) -> None:
+        self.__current_scene.process_logic()
 
-    def process_all_draw(self) -> None:
+    def __process_all_draw(self) -> None:
         self.screen.fill(Color.BLACK)
-        self.scenes[self.current_scene_name].process_draw()
+        self.__current_scene.process_draw()
         pg.display.flip()
 
     def main_loop(self) -> None:
-        while not self.game_over:
-            self.process_all_events()
-            self.process_all_logic()
-            self.process_all_draw()
-            pg.time.wait(self.delay)
+        while not self.__game_over:
+            self.__process_all_events()
+            self.__process_all_logic()
+            self.__process_all_draw()
+            self.__clock.tick(self.__FPS)
 
-    def set_scene(self, name: str, reset: bool = False) -> None:
+    def set_scene(self, scene: BaseScene, reset: bool = False) -> None:
         """
-        :param name: name of NEXT scene
+        :param scene: NEXT scene (contains in game.scenes.*)
         :param reset: if reset == True will call on_reset() of NEXT scene (see BaseScene)
-
-        Dict names:
-            SCENE_PAUSE: PauseScene
-
-            SCENE_MENU: MenuScene
-
-            SCENE_GAME: GameScene
-
-            SCENE_GAMEOVER: GameOver
-
-            SCENE_LEVELS: LevelsScene
-
-            SCENE_RECORDS: RecordsScene
-
-            SCENE_CREDITS: CreditsScene
 
         IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
         """
-        self.scenes[self.current_scene_name].on_deactivate()
-        self.current_scene_name = name
+        self.__current_scene.on_deactivate()
+        self.__current_scene = scene
         if reset:
-            self.scenes[self.current_scene_name].on_reset()
-        self.scenes[self.current_scene_name].on_activate()
+            self.__current_scene.on_reset()
+        self.__current_scene.on_activate()
 
-    def save_last_level(self):
+    def __save_last_level(self):
         string = json.dumps({f"level_name": f"{self.level_name}"})
-        with open(self.last_level_filepath, "w") as file:
+        with open(self.__last_level_filepath, "w") as file:
             file.write(string)
 
-    def read_last_level(self) -> str:
-        create_file_if_not_exist(self.last_level_filepath, json.dumps({"level_name": "level_1"}))
-        with open(self.last_level_filepath, "r") as file:
+    def __read_last_level(self) -> str:
+        create_file_if_not_exist(self.__last_level_filepath, json.dumps({"level_name": "level_1"}))
+        with open(self.__last_level_filepath, "r") as file:
             return json.load(file)["level_name"]
 
     def exit_game(self) -> None:
         print('Bye bye')
-        self.game_over = True
-
-    def __del__(self):
-        self.save_last_level()
+        self.__save_last_level()
+        self.__game_over = True

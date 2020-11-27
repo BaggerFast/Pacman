@@ -1,8 +1,9 @@
 import pygame as pg
+from misc import CELL_SIZE, Color
+from objects import DrawableObject
 
-from misc.constants import CELL_SIZE, Color, SOUNDS
-from objects.base import DrawableObject
-from misc.path import get_sound_path
+from misc import CELL_SIZE, Color
+from objects import DrawableObject
 
 
 class SeedContainer(DrawableObject):
@@ -11,49 +12,59 @@ class SeedContainer(DrawableObject):
 
     def __init__(self, game, seed_data, energizer_data, x=0, y=20):
         super().__init__(game)
-        self.x = x
-        self.y = y
-        self.seeds = seed_data
-        self.energizers = energizer_data
-        self.anim = 0
+        self.__x = x
+        self.__y = y
+        self.__seeds = seed_data
+        self.__energizers = energizer_data
+        self.__time_out = 125
+        self.__animate_timer = 0
+        self.__color = {
+            -1: Color.WHITE,
+            1: Color.BLACK
+        }
+        self.__index_color = 1
 
-    def draw_seeds(self):
-        for row in range(len(self.seeds)):
-            for col in range(len(self.seeds[row])):
-                if self.seeds[row][col]:
-                    pg.draw.circle(self.game.screen, Color.WHITE, (self.x + col * CELL_SIZE + CELL_SIZE//2,
-                                                                           self.y + row * CELL_SIZE + CELL_SIZE//2), 1)
+    @property
+    def x(self):
+        return self.__x
 
-    def draw_energizers(self):
-        if self.anim < 8:
-            color = Color.WHITE
-        else:
-            color = Color.BLACK
-            if self.anim > 16:
-                self.anim = 0
-        for energizer in self.energizers:
-            pg.draw.circle(self.game.screen, color, (self.x + energizer[0] * CELL_SIZE + CELL_SIZE//2,
-                                                                   self.y + energizer[1] * CELL_SIZE + CELL_SIZE//2), 4)
-        self.anim += 1
+    @property
+    def y(self):
+        return self.__y
+
+    def __draw_seeds(self):
+        for row in range(len(self.__seeds)):
+            for col in range(len(self.__seeds[row])):
+                if self.__seeds[row][col]:
+                    pg.draw.circle(self.game.screen, Color.WHITE, (self.__x + col * CELL_SIZE + CELL_SIZE//2,
+                                                                        self.__y + row * CELL_SIZE + CELL_SIZE//2), 1)
+
+    def __draw_energizers(self):
+        if pg.time.get_ticks() - self.__animate_timer > self.__time_out:
+            self.__animate_timer = pg.time.get_ticks()
+            self.__index_color *= -1
+        for energizer in self.__energizers:
+            pg.draw.circle(self.game.screen, self.__color[self.__index_color],
+                           (self.x + energizer[0] * CELL_SIZE + CELL_SIZE // 2,
+                            self.__y + energizer[1] * CELL_SIZE + CELL_SIZE // 2), 4)
 
     def process_draw(self):
-        self.draw_seeds()
-        self.draw_energizers()
+        self.__draw_seeds()
+        self.__draw_energizers()
 
-    def process_collision(self, object): #for pacman only
-        for row in range(len(self.seeds)):
-            for col in range(len(self.seeds[row])):
-                if self.seeds[row][col] and row * CELL_SIZE + 18 == object.rect.y:
+    def process_collision(self, object):
+        for row in range(len(self.__seeds)):
+            for col in range(len(self.__seeds[row])):
+                if self.__seeds[row][col] and row * CELL_SIZE + 18 == object.rect.y:
                     if col * CELL_SIZE - 2 == object.rect.x:
-                        self.seeds[row][col] = None
+                        self.__seeds[row][col] = None
                         if not pg.mixer.Channel(0).get_busy():
                             self.eaten_sound.play()
                         return True, "seed"
-        for energizer in self.energizers:
+        for energizer in self.__energizers:
             if energizer[1] * CELL_SIZE + 18 == object.rect.y:
                 if energizer[0] * CELL_SIZE - 2 == object.rect.x:
-                    self.energizers.remove(energizer)
-                    if not pg.mixer.Channel(0).get_busy():
-                        self.eaten_sound.play()
+                    self.__energizers.remove(energizer)
                     return True, "energizer"
         return False, ""
+
