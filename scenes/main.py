@@ -1,11 +1,11 @@
 import pygame as pg
 
-from misc import LevelLoader, Color, MAPS, CELL_SIZE, Font, get_image_path
+from misc import LevelLoader, Color, CELL_SIZE, Font, get_image_path
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import BaseScene
 from objects.fruits import Fruit
-from misc.constants import Sounds
+from misc.constants import Sounds, Maps
 
 
 class GameScene(BaseScene):
@@ -13,7 +13,7 @@ class GameScene(BaseScene):
     intro_sound = Sounds.INTRO
 
     def __init__(self, game):
-        self.__loader = LevelLoader(MAPS[game.level_name])
+        self.__loader = LevelLoader(getattr(Maps, game.level_name))
         self.__map_data = self.__loader.get_map_data()
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()
@@ -88,10 +88,10 @@ class GameScene(BaseScene):
         self.objects.append(self.__inky)
         self.objects.append(self.__clyde)
 
-        self.ready_text = Text(self.game, 'Ready', 30, font=Font.FILENAME,
+        self.ready_text = Text(self.game, 'Ready', 30, font=Font.TITLE,
                                rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
         self.ready_text.move_center(self.game.width // 2, self.game.height // 2)
-        self.go_text = Text(self.game, 'GO!', 30, font=Font.FILENAME,
+        self.go_text = Text(self.game, 'GO!', 30, font=Font.TITLE,
                             rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
         self.go_text.move_center(self.game.width // 2, self.game.height // 2)
         self.ready_text.surface.set_alpha(0)
@@ -204,7 +204,6 @@ class GameScene(BaseScene):
                 self.__max_seeds_eaten_to_prefered_ghost = 7
             if self.__seeds_eaten == self.__max_seeds_eaten_to_prefered_ghost and self.__prefered_ghost != None:
                 self.__prefered_ghost.is_can_leave_home = True
-                print(self.__max_seeds_eaten_to_prefered_ghost)
                 if self.__max_seeds_eaten_to_prefered_ghost == 7:
                     self.__max_seeds_eaten_to_prefered_ghost = 17
                 elif self.__max_seeds_eaten_to_prefered_ghost == 17:

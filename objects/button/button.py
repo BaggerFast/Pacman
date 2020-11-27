@@ -46,7 +46,7 @@ class Button(BaseButton):
                  function: Callable[[], None], text: str = 'Define me',
                  colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
                  center: Tuple[float, float] = None, text_size=60,
-                 font=Font.ALTFONT) -> None:
+                 font=Font.DEFAULT) -> None:
         super().__init__(game, geometry, function)
         self.text = text
         self.font = pg.font.Font(font, text_size)

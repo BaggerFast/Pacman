@@ -41,7 +41,7 @@ class RecordsScene(BaseScene):
         self.objects.append(self.__button_controller)
 
     def __create_title(self) -> None:
-        title = Text(self.game, 'RECORDS', 32, color=Color.WHITE, font=Font.FILENAME)
+        title = Text(self.game, 'RECORDS', 32, color=Color.WHITE, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
 

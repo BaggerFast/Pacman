@@ -12,7 +12,7 @@ class LevelsScene(BaseScene):
         self.__create_buttons()
 
     def __create_title(self) -> None:
-        title = Text(self.game, 'SELECT LEVEL', 25, color=Color.WHITE, font=Font.FILENAME)
+        title = Text(self.game, 'SELECT LEVEL', 25, color=Color.WHITE, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
 

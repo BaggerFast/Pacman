@@ -1,7 +1,7 @@
 import pygame as pg
 
 
-class Animator():
+class Animator:
     __time_out = 50
 
     def __init__(self, path_to_images: str, time_out=50, is_rotation=True, repeat=False):

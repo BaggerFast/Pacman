@@ -15,8 +15,8 @@ class GameoverScene(BaseScene):
         self.__create_highscore_text()
 
     def __create_title(self) -> None:
-        title_game = Text(self.game, 'GAME', 40, color=Color.WHITE, font=Font.FILENAME)
-        title_over = Text(self.game, 'OVER', 40, color=Color.WHITE, font=Font.FILENAME)
+        title_game = Text(self.game, 'GAME', 40, color=Color.WHITE, font=Font.TITLE)
+        title_over = Text(self.game, 'OVER', 40, color=Color.WHITE, font=Font.TITLE)
         title_game.move_center(self.game.width // 2, 30)
         title_over.move_center(self.game.width // 2, 60 + 20)
         self.objects.append(title_game)
