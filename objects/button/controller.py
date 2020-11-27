@@ -2,6 +2,8 @@ from typing import List, Tuple, Union
 
 import pygame as pg
 
+from misc import SOUNDS
+from misc.path import get_sound_path
 from objects import DrawableObject
 from objects.button.button import Button
 

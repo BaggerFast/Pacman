@@ -1,6 +1,6 @@
 import pygame as pg
-from misc.constants import CELL_SIZE
-from misc.path import get_image_path_for_animator
+from misc import SOUNDS
+from misc.path import get_image_path_for_animator, get_sound_path
 from objects.character_base import Character
 from misc.health import Health
 from misc.animator import Animator
@@ -13,6 +13,8 @@ class Pacman(Character):
         pg.K_s: 'down',
         pg.K_d: 'right'
     }
+
+    pg.mixer.init()
     death_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Dead"]))
     death_sound.set_volume(0.5)
 

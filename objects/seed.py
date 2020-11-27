@@ -1,5 +1,6 @@
 import pygame as pg
-from misc import CELL_SIZE, Color
+from misc import CELL_SIZE, Color, SOUNDS
+from misc.path import get_sound_path
 from objects import DrawableObject
 
 from misc import CELL_SIZE, Color

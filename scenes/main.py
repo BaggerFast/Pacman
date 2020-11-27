@@ -1,6 +1,7 @@
 import pygame as pg
 
-from misc import LevelLoader, Color, MAPS, CELL_SIZE, Font, get_image_path, get_sound_path
+from misc import LevelLoader, Color, MAPS, CELL_SIZE, Font, get_image_path
+from misc.path import get_sound_path
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import BaseScene
@@ -174,6 +175,23 @@ class GameScene(BaseScene):
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
 
+    def start_label(self):
+        if self.anim < 8:
+            if self.total_anim < 200:
+                self.ready_text.surface.set_alpha(255)
+            else:
+                self.ready_text.surface.set_alpha(0)
+                self.go_text.surface.set_alpha(255)
+        else:
+            if self.total_anim < 200:
+                self.ready_text.surface.set_alpha(0)
+            else:
+                self.ready_text.surface.set_alpha(0)
+            if self.anim > 16:
+                self.anim = 0
+        self.anim += 1
+        self.total_anim += 1
+
     def process_logic(self) -> None:
         if not pg.mixer.Channel(1).get_busy():
             super(GameScene, self).process_logic()
@@ -214,10 +232,10 @@ class GameScene(BaseScene):
         self.__scores_value_text.update_text(str(self.game.score))
 
         # todo: make text update only when new value appeares
-        self.scores_value_text.update_text(str(self.game.score))
+        self.__scores_value_text.update_text(str(self.game.score))
 
     def on_deactivate(self) -> None:
-        pass
+        pg.mixer.stop()
         # self.game.records.set_new_record(int(self.game.score))
         # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
 
@@ -226,5 +244,6 @@ class GameScene(BaseScene):
         # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
 
     def on_reset(self) -> None:
+        pg.mixer.stop()
         self.game.score.reset()
         self.game.scenes.SCENE_GAME.recreate()
