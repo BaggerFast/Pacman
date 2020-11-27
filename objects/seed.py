@@ -1,9 +1,12 @@
 import pygame as pg
+from misc import CELL_SIZE, Color, Sounds
 from objects import DrawableObject
-from misc.constants import CELL_SIZE, Color
 
 
 class SeedContainer(DrawableObject):
+    eaten_sound = Sounds.SEED
+    eaten_sound.set_volume(0.5)
+
     def __init__(self, game, seed_data, energizer_data, x=0, y=20):
         super().__init__(game)
         self.__x = x
@@ -52,6 +55,8 @@ class SeedContainer(DrawableObject):
                 if self.__seeds[row][col] and row * CELL_SIZE + 18 == object.rect.y:
                     if col * CELL_SIZE - 2 == object.rect.x:
                         self.__seeds[row][col] = None
+                        if not pg.mixer.Channel(0).get_busy():
+                            self.eaten_sound.play()
                         return True, "seed"
         for energizer in self.__energizers:
             if energizer[1] * CELL_SIZE + 18 == object.rect.y:
@@ -59,3 +64,4 @@ class SeedContainer(DrawableObject):
                     self.__energizers.remove(energizer)
                     return True, "energizer"
         return False, ""
+

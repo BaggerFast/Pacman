@@ -52,3 +52,5 @@ class PauseScene(BaseScene):
 
     def on_deactivate(self) -> None:
         pass
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+        # self.game.score.score = 0

@@ -4,8 +4,9 @@ from game import Game
 
 
 def main():
-    pg.init()
+    pg.display.init()
     pg.font.init()
+    pg.mixer.init()
     game = Game()
     game.main_loop()
     sys.exit(0)

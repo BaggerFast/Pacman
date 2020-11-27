@@ -5,9 +5,12 @@ from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import BaseScene
 from objects.fruits import Fruit
+from misc.constants import Sounds
 
 
 class GameScene(BaseScene):
+    pg.mixer.init()
+    intro_sound = Sounds.INTRO
 
     def __init__(self, game):
         self.__loader = LevelLoader(MAPS[game.level_name])
@@ -18,11 +21,14 @@ class GameScene(BaseScene):
         self.__player_position = self.__loader.get_player_position()
         self.__ghost_positions = self.__loader.get_ghost_positions()
         self.__fruit_position = self.__loader.get_fruit_position()
+        self.intro_sound.set_volume(0.5)
         self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not False
         self.__timer_reset_pacman = 0
         self.__seeds_eaten = 0
         self.__work_ghost_counters = True
         self.__max_seeds_eaten_to_prefered_ghost = 7
+        self.total_anim = 0
+        self.anim = 0
         super().__init__(game)
 
     def __prepare_lives_meter(self):
@@ -73,6 +79,7 @@ class GameScene(BaseScene):
         ]
 
         self.__not_prefered_ghosts = self.__ghosts.copy()
+
         self.__prefered_ghost = self.pinky
         self.__count_prefered_ghost = 0
 
@@ -80,6 +87,17 @@ class GameScene(BaseScene):
         self.objects.append(self.__pinky)
         self.objects.append(self.__inky)
         self.objects.append(self.__clyde)
+
+        self.ready_text = Text(self.game, 'Ready', 30, font=Font.FILENAME,
+                               rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
+        self.ready_text.move_center(self.game.width // 2, self.game.height // 2)
+        self.go_text = Text(self.game, 'GO!', 30, font=Font.FILENAME,
+                            rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
+        self.go_text.move_center(self.game.width // 2, self.game.height // 2)
+        self.ready_text.surface.set_alpha(0)
+        self.go_text.surface.set_alpha(0)
+        self.objects.append(self.ready_text)
+        self.objects.append(self.go_text)
 
     @property
     def blinky(self):
@@ -106,7 +124,8 @@ class GameScene(BaseScene):
             self.__start_pause()
 
     def __start_pause(self):
-        self.game.set_scene(self.game.scenes.SCENE_PAUSE, reset=True)
+        pg.mixer.pause()
+        self.game.set_scene(self.game.scenes.SCENE_PAUSE)
 
     def __change_prefered_ghost(self):
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
@@ -150,26 +169,48 @@ class GameScene(BaseScene):
 
     def __check_first_run(self):
         if self.first_run:
+            pg.mixer.Channel(1).play(self.intro_sound)
             self.create_objects()
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
 
+    def start_label(self):
+        if self.anim < 8:
+            if self.total_anim < 200:
+                self.ready_text.surface.set_alpha(255)
+            else:
+                self.ready_text.surface.set_alpha(0)
+                self.go_text.surface.set_alpha(255)
+        else:
+            if self.total_anim < 200:
+                self.ready_text.surface.set_alpha(0)
+            else:
+                self.ready_text.surface.set_alpha(0)
+            if self.anim > 16:
+                self.anim = 0
+        self.anim += 1
+        self.total_anim += 1
+
     def process_logic(self) -> None:
-        super(GameScene, self).process_logic()
-        self.__check_first_run()
-        self.__process_collision()
-        if pg.time.get_ticks()-self.__timer_reset_pacman >= 3000 and self.__pacman.animator.anim_finished:
-            self.create_objects()
-            self.__seeds_eaten = 0
-            self.__work_ghost_counters = False
-            self.__max_seeds_eaten_to_prefered_ghost = 7
-        if self.__seeds_eaten == self.__max_seeds_eaten_to_prefered_ghost and self.__prefered_ghost != None:
-            self.__prefered_ghost.is_can_leave_home = True
-            print(self.__max_seeds_eaten_to_prefered_ghost)
-            if self.__max_seeds_eaten_to_prefered_ghost == 7:
-                self.__max_seeds_eaten_to_prefered_ghost = 17
-            elif self.__max_seeds_eaten_to_prefered_ghost == 17:
-                self.__max_seeds_eaten_to_prefered_ghost = 32
+        if not pg.mixer.Channel(1).get_busy():
+            super(GameScene, self).process_logic()
+            self.__check_first_run()
+            self.__process_collision()
+            self.go_text.surface.set_alpha(0)
+            if pg.time.get_ticks()-self.__timer_reset_pacman >= 3000 and self.__pacman.animator.anim_finished:
+                self.create_objects()
+                self.__seeds_eaten = 0
+                self.__work_ghost_counters = False
+                self.__max_seeds_eaten_to_prefered_ghost = 7
+            if self.__seeds_eaten == self.__max_seeds_eaten_to_prefered_ghost and self.__prefered_ghost != None:
+                self.__prefered_ghost.is_can_leave_home = True
+                print(self.__max_seeds_eaten_to_prefered_ghost)
+                if self.__max_seeds_eaten_to_prefered_ghost == 7:
+                    self.__max_seeds_eaten_to_prefered_ghost = 17
+                elif self.__max_seeds_eaten_to_prefered_ghost == 17:
+                    self.__max_seeds_eaten_to_prefered_ghost = 32
+        else:
+            self.start_label()
 
         self.__change_prefered_ghost()
         for ghost in self.__ghosts:
@@ -184,9 +225,21 @@ class GameScene(BaseScene):
         super().process_draw()
         for i in range(len(self.__last_hp)):
             self.__last_hp[i].process_draw()
+        self.__scores_value_text.update_text(str(self.game.score))
+
         # todo: make text update only when new value appeares
         self.__scores_value_text.update_text(str(self.game.score))
 
+    def on_deactivate(self) -> None:
+        pass
+        # self.game.records.set_new_record(int(self.game.score))
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+
+    def on_activate(self) -> None:
+        pg.mixer.unpause()
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+
     def on_reset(self) -> None:
+        pg.mixer.stop()
         self.game.score.reset()
         self.game.scenes.SCENE_GAME.recreate()

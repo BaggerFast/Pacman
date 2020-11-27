@@ -1,12 +1,30 @@
 import inspect
 import os.path
 from typing import NamedTuple
-
 import pygame as pg
+from misc.path import get_sound_path
 
 
 class Palitra(NamedTuple):
     color: pg.color.Color
+
+class Mixer(NamedTuple):
+    value: str
+
+SOUNDS = []
+
+
+class Sounds:
+    # CLICK = Mixer("NAV").value
+    pg.mixer.init()
+    CLICK = pg.mixer.Sound(get_sound_path(Mixer("NAV").value))
+    DEAD = pg.mixer.Sound(get_sound_path(Mixer("pacman_death").value))
+    GAMEOVER = pg.mixer.Sound(get_sound_path(Mixer("GameOver").value))
+    BOOST = pg.mixer.Sound(get_sound_path(Mixer("pacman_intermission").value))
+    SEED = pg.mixer.Sound(get_sound_path(Mixer("leader2").value))
+    INTRO = pg.mixer.Sound(get_sound_path(Mixer("pacman_beginning").value))
+    MOVE = pg.mixer.Sound(get_sound_path(Mixer("pacman_chomp").value))
+    # GAMESTART = pg.mixer.Sound(get_sound_path(Mixer("Star").value))
 
 
 class Color:
@@ -93,6 +111,7 @@ ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 CELL_SIZE = 8
 
 
+# TODO: migrate to NamedTuple
 class Points:
     POINT_PER_SEED = 10
     POINT_PER_ENERGIZER = 50
@@ -100,6 +119,7 @@ class Points:
 
 
 
+# TODO: migrate to NamedTuple
 class Font:
     FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')
     ALTFONT = os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')
@@ -113,7 +133,5 @@ MAPS = {
     "level_2": "new_map.json",
     "level_3": "new_new_map.json"
 }
-
-DEBUG_MODE = True
 
 MAPS_COUNT = len(MAPS)
