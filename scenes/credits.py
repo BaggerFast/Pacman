@@ -1,8 +1,10 @@
-import pygame as pg
 from random import randint
+
+import pygame as pg
+
+from misc import Font
 from objects import Text, ButtonController, Button
 from scenes import BaseScene
-from misc import Font
 
 
 class CreditsScene(BaseScene):
@@ -46,6 +48,7 @@ class CreditsScene(BaseScene):
         self.__speed = 0.3
         self.__alpha_delta = -15
         self.__students = []
+        self.__students2 = self.__data.copy()
 
     def create_objects(self) -> None:
         self.__create_buttons()
@@ -61,8 +64,9 @@ class CreditsScene(BaseScene):
         return randint(25, self.game.height - 75)
 
     def __create_student(self):
-        students = list(set(self.__data) - set((obj.text for obj in self.__students)))
+        students = list(set(self.__students2) - set((obj.text for obj in self.__students)))
         label = str(students[randint(0, len(students) - 1)])
+        self.__students2.pop(self.__students2.index(label))
         student = Text(self.game, label, Font.CREDITS_SCENE_SIZE, font=Font.ALTFONT)
 
         is_student_y_correct = False
@@ -72,8 +76,8 @@ class CreditsScene(BaseScene):
 
             is_student_y_correct = True
             for student2 in self.__students:
-                if abs(student.rect.centery - student2.rect.centery) <=\
-                   (student.rect.height + student2.rect.height) / 2:
+                if abs(student.rect.centery - student2.rect.centery) <= \
+                    (student.rect.height + student2.rect.height) / 2:
                     is_student_y_correct = False
                     break
 
@@ -102,17 +106,28 @@ class CreditsScene(BaseScene):
             elif student.rect.x != -105:
                 student.ttl += 1
                 student.move(student.ttl * student.speed + self.start_pos, student.rect.y)
-                student.surface.set_alpha(min(255, self.game.width - ((student.rect.midbottom[0] - self.game.width // 2) ** 2
-                                                                      * 0.06 - self.__alpha_delta)))
+                student.surface.set_alpha(
+                    min(
+                        255,
+                        self.game.width - (
+                            (
+                                student.rect.midbottom[0] - self.game.width // 2
+                            )
+                            ** 2 * 0.06 - self.__alpha_delta
+                        )
+                    )
+                )
 
         for index in sorted(students_to_delete, reverse=True):
             self.objects.remove(self.__students[index])
             del self.__students[index]
 
     def additional_logic(self) -> None:
-        if len(self.__students) == len(self.__data) and not self.__on_screen:
+        if len(self.__students2) == 0:
+            self.__students2 = self.__data.copy()
+        elif len(self.__students) == len(self.__students2) and not self.__on_screen:
             self.__students.clear()
-        elif pg.time.get_ticks() % 190 == 0 and not len(self.__students) == len(self.__data):
+        elif pg.time.get_ticks() % 190 == 0 and not len(self.__students) == len(self.__students2):
             self.__create_student()
         self.__process_students()
 
