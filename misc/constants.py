@@ -1,12 +1,30 @@
 import inspect
 import os.path
 from typing import NamedTuple
-
 import pygame as pg
+from misc.path import get_sound_path
 
 
 class Palitra(NamedTuple):
     color: pg.color.Color
+
+class Mixer(NamedTuple):
+    value: str
+
+SOUNDS = []
+
+
+class Sounds:
+    # CLICK = Mixer("NAV").value
+    pg.mixer.init()
+    CLICK = pg.mixer.Sound(get_sound_path(Mixer("NAV").value))
+    DEAD = pg.mixer.Sound(get_sound_path(Mixer("pacman_death").value))
+    GAMEOVER = pg.mixer.Sound(get_sound_path(Mixer("GameOver").value))
+    BOOST = pg.mixer.Sound(get_sound_path(Mixer("pacman_intermission").value))
+    SEED = pg.mixer.Sound(get_sound_path(Mixer("leader2").value))
+    INTRO = pg.mixer.Sound(get_sound_path(Mixer("pacman_beginning").value))
+    MOVE = pg.mixer.Sound(get_sound_path(Mixer("pacman_chomp").value))
+    GAMESTART = pg.mixer.Sound(get_sound_path(Mixer("Star").value))
 
 
 class Color:
@@ -111,17 +129,6 @@ class Font:
 MAPS = {
     "level_1": "original.json",
     "level_2": "new_map.json"
-}
-
-SOUNDS = {
-    "Click": "NAV",
-    "Dead": "pacman_death",
-    "Gameover": "GameOver",
-    "Boost": "pacman_intermission",
-    "Seed": "leader2",
-    "Intro": "pacman_beginning",
-    "Move": "pacman_chomp",
-    "GameStart": "Star"
 }
 
 MAPS_COUNT = len(MAPS)

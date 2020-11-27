@@ -5,11 +5,11 @@ from misc.path import get_sound_path
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import BaseScene
-from misc.constants import SOUNDS
+from misc.constants import Sounds
 
 
 class GameScene(BaseScene):
-    intro_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Intro"]))
+    intro_sound = pg.mixer.Sound(get_sound_path(Sounds.INTRO))
 
     def __init__(self, game):
         self.__loader = LevelLoader(MAPS[game.level_name])

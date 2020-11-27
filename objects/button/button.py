@@ -1,6 +1,6 @@
 from typing import List, Union, Callable, Tuple
 import pygame as pg
-from misc.constants import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor, SOUNDS
+from misc.constants import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor, Sounds
 from misc.path import get_sound_path
 from objects.base import DrawableObject
 
@@ -41,7 +41,7 @@ class Button(BaseButton):
     STATE_INITIAL = 0
     STATE_HOVER = 1
     STATE_CLICK = 2
-    Click_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Click"]))
+    Click_sound = Sounds.CLICK
     def __init__(self, game, geometry: Union[tuple, pg.Rect],
                  function: Callable[[], None], text: str = 'Define me',
                  colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,

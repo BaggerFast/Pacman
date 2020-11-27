@@ -2,14 +2,14 @@ from typing import List, Tuple, Union
 
 import pygame as pg
 
-from misc import SOUNDS
+from misc import Sounds
 from misc.path import get_sound_path
 from objects import DrawableObject
 from objects.button.button import Button
 
 
 class ButtonController(DrawableObject):
-    click_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Click"]))
+    click_sound = Sounds.CLICK
     keys_previous = [pg.K_UP, pg.K_LEFT, pg.K_w, pg.K_a]
     keys_next = [pg.K_DOWN, pg.K_RIGHT, pg.K_s, pg.K_d, pg.K_TAB]
     keys_activate = [pg.K_SPACE, pg.K_RETURN]

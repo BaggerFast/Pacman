@@ -1,14 +1,11 @@
 import pygame as pg
-from misc import CELL_SIZE, Color, SOUNDS
 from misc.path import get_sound_path
-from objects import DrawableObject
-
-from misc import CELL_SIZE, Color
+from misc import CELL_SIZE, Color, Sounds
 from objects import DrawableObject
 
 
 class SeedContainer(DrawableObject):
-    eaten_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Seed"]))
+    eaten_sound = pg.mixer.Sound(get_sound_path(Sounds.SEED))
     eaten_sound.set_volume(0.5)
 
     def __init__(self, game, seed_data, energizer_data, x=0, y=20):

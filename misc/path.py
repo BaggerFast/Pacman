@@ -1,8 +1,6 @@
 import os
 from typing import List
 
-from misc import ROOT_DIR
-
 
 def get_image_path(filename, *folder):
     """
@@ -14,6 +12,8 @@ def get_image_path(filename, *folder):
     if extension not in filename:
         filename += extension
     return os.path.join(*[ROOT_DIR, 'images'] + list(folder) + [filename])
+
+ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 
 def get_sound_path(filename, *folder):
     """

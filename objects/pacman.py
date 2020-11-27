@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import SOUNDS
+from misc import Sounds
 from misc.path import get_image_path_for_animator, get_sound_path
 from objects.character_base import Character
 from misc.health import Health
@@ -15,7 +15,7 @@ class Pacman(Character):
     }
 
     pg.mixer.init()
-    death_sound = pg.mixer.Sound(get_sound_path(SOUNDS["Dead"]))
+    death_sound = pg.mixer.Sound(get_sound_path(Sounds.DEAD))
     death_sound.set_volume(0.5)
 
     def __init__(self, game, start_pos: tuple):
