@@ -33,13 +33,13 @@ class PauseScene(BaseScene):
         self.objects.append(self.__main_text)
 
     def restart_game(self) -> None:
-        self.game.set_scene('SCENE_GAME', reset=True)
+        self.game.set_scene(self.game.scenes.SCENE_GAME, reset=True)
 
     def continue_game(self) -> None:
-        self.game.set_scene('SCENE_GAME')
+        self.game.set_scene(self.game.scenes.SCENE_GAME)
 
     def start_menu(self) -> None:
-        self.game.set_scene('SCENE_MENU')
+        self.game.set_scene(self.game.scenes.SCENE_MENU)
 
     def process_event(self, event: pg.event.Event) -> None:
         super().process_event(event)

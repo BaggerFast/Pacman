@@ -58,7 +58,7 @@ class Character(DrawableObject):
         return ((cell1[0] - cell2[0]) ** 2 + (cell1[1] - cell2[1]) ** 2) ** 0.5
 
     def movement_cell(self, cell: tuple):
-        scene = self.game.scenes[self.game.current_scene_name]
+        scene = self.game.current_scene
         cell = scene.movements_data[cell[1]][cell[0]]
         return [i == '1' for i in "{0:04b}".format(cell)[::-1]]
 

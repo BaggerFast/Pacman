@@ -46,7 +46,7 @@ class MenuScene(BaseScene):
                    center=(self.game.width // 2, 215),
                    text_size=Font.BUTTON_TEXT_SIZE),
             Button(self.game, pg.Rect(0, 0, 180, 35),
-                   sys.exit, 'EXIT',
+                   self.game.exit_game, 'EXIT',
                    center=(self.game.width // 2, 255),
                    text_size=Font.BUTTON_TEXT_SIZE)
         ]
@@ -61,14 +61,14 @@ class MenuScene(BaseScene):
         self.__button_controller.reset_state()
 
     def __start_game(self) -> None:
-        self.game.set_scene('SCENE_GAME', reset=True)
+        self.game.set_scene(self.game.scenes.SCENE_GAME, reset=True)
 
     def __start_records(self) -> None:
-        self.game.scenes['SCENE_RECORDS'].create_text_labels()
-        self.game.set_scene('SCENE_RECORDS')
+        self.game.scenes.SCENE_RECORDS.create_text_labels()
+        self.game.set_scene(self.game.scenes.SCENE_RECORDS)
 
     def __start_titres(self) -> None:
-        self.game.set_scene("SCENE_CREDITS")
+        self.game.set_scene(self.game.scenes.SCENE_CREDITS)
 
     def __start_levels(self) -> None:
-        self.game.set_scene("SCENE_LEVELS")
+        self.game.set_scene(self.game.scenes.SCENE_LEVELS)

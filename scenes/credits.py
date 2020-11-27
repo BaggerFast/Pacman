@@ -114,12 +114,12 @@ class CreditsScene(BaseScene):
         self.__process_students()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
-        if self.game.scenes[self.game.current_scene_name] == self:
+        if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 self.__start_menu()
 
     def __start_menu(self) -> None:
-        self.game.set_scene('SCENE_MENU')
+        self.game.set_scene(self.game.scenes.SCENE_MENU)
         self.__on_screen = 0
         self.__students = []
         self.objects = []

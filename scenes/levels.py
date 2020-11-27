@@ -49,21 +49,21 @@ class LevelsScene(BaseScene):
         self.__button_controller.reset_state()
 
     def __start_menu(self) -> None:
-        self.game.set_scene('SCENE_MENU')
+        self.game.set_scene(self.game.scenes.SCENE_MENU)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
-        if self.game.scenes[self.game.current_scene_name] == self:
+        if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene('SCENE_MENU')
+                self.game.set_scene(self.game.scenes.SCENE_MENU)
 
     def __set_level(self, name="level_1") -> None:
         """
         :param name: level_+id (e.g. level_1)
         """
         self.game.level_name = name
-        self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+        self.game.scenes.SCENE_GAME = GameScene(self.game)
         self.game.records.update_records()
-        self.game.set_scene('SCENE_MENU')
+        self.game.set_scene(self.game.scenes.SCENE_MENU)
 
     def __level1(self) -> None:
         self.__set_level("level_1")

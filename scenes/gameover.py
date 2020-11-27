@@ -55,15 +55,15 @@ class GameoverScene(BaseScene):
         self.__button_controller.reset_state()
 
     def __start_menu(self) -> None:
-        self.game.set_scene('SCENE_MENU')
+        self.game.set_scene(self.game.scenes.SCENE_MENU)
 
     def __restart_game(self) -> None:
-        self.game.set_scene('SCENE_GAME', reset=True)
+        self.game.set_scene(self.game.scenes.SCENE_GAME, reset=True)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
-        if self.game.scenes[self.game.current_scene_name] == self:
+        if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene('SCENE_MENU')
+                self.game.set_scene(self.game.scenes.SCENE_MENU)
 
     def __save_record(self) -> None:
         self.game.records.add_new_record(int(self.game.score))

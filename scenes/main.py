@@ -110,7 +110,7 @@ class GameScene(BaseScene):
             self.__start_pause()
 
     def __start_pause(self):
-        self.game.set_scene('SCENE_PAUSE', reset=True)
+        self.game.set_scene(self.game.scenes.SCENE_PAUSE, reset=True)
 
     def __draw_ghost(self, index, color, x, y):
         pg.draw.circle(
@@ -149,7 +149,7 @@ class GameScene(BaseScene):
                     self.__prepare_lives_meter()
                 # todo
                 elif not self.pacman.animator.run:
-                    self.game.set_scene("SCENE_GAMEOVER")
+                    self.game.set_scene(self.game.scenes.SCENE_GAMEOVER)
                     break
                 for ghost2 in self.__ghosts:
                     ghost2.invisible()
@@ -206,7 +206,7 @@ class GameScene(BaseScene):
 
     def on_reset(self) -> None:
         self.game.score.reset()
-        self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+        self.game.scenes.SCENE_GAME.recreate(self.game)
 
     def on_deactivate(self) -> None:
         pass
