@@ -18,12 +18,11 @@ class Inky(Base):
                     self.is_in_home = False
                     self.collision = True
 
-    def get_love_cell(self, pacman, blinky=None):
+    def get_love_cell(self, pacman):
         pacman_cell = pacman.get_cell()
-        blinky_cell = blinky.get_cell()
         rotate = pacman.rotate
         pinky_love_cell = (
-        pacman_cell[0] + self.direction2[rotate][0] * 2, pacman_cell[1] + self.direction2[rotate][1] * 2)
-        vector_blinky_cell_pinky_love_cell = (blinky_cell[0] - pinky_love_cell[0], blinky_cell[1] - pinky_love_cell[1])
+            pacman_cell[0] + self.direction2[rotate][0] * 2, pacman_cell[1] + self.direction2[rotate][1] * 2)
+        vector_blinky_cell_pinky_love_cell = (pacman_cell[0] - pinky_love_cell[0], pacman_cell[1] - pinky_love_cell[1])
         self.love_cell = (pinky_love_cell[0] + vector_blinky_cell_pinky_love_cell[0],
                           pinky_love_cell[1] + vector_blinky_cell_pinky_love_cell[1])

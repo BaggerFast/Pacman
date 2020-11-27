@@ -93,5 +93,5 @@ class Base(Character):
         self.is_invisible = True
         self.collision = False
 
-    def get_love_cell(self, pacman: Pacman, blinky = None):
+    def get_love_cell(self, pacman: Pacman):
         pass
