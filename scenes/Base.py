@@ -1,7 +1,7 @@
 import pygame as pg
 
 
-class BaseScene:
+class Scene:
     def __init__(self, game) -> None:
         self.game = game
         self.screen = self.game.screen

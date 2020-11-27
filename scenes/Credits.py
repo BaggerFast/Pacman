@@ -4,10 +4,10 @@ import pygame as pg
 
 from misc import Font
 from objects import Text, ButtonController, Button
-from scenes import BaseScene
+from scenes import Base
 
 
-class CreditsScene(BaseScene):
+class Scene(Base.Scene):
     __data = [
         "Архипов Евгений",
         "Смирнов Андрей",
@@ -137,7 +137,7 @@ class CreditsScene(BaseScene):
                 self.__start_menu()
 
     def __start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.SCENE_MENU)
+        self.game.set_scene(self.game.scenes.MENU)
         self.__on_screen = 0
         self.__students = []
         self.objects = []

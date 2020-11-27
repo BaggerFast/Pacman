@@ -4,7 +4,11 @@ import pygame as pg
 class Animator():
     __time_out = 50
 
-    def __init__(self, path_to_images: str, time_out=50, is_rotation=True, repeat=False):
+    def __init__(self, path_to_images: list[str], time_out=50, is_rotation=True, repeat=False):
+        """
+
+        :rtype: object
+        """
         self.is_rotation = is_rotation
         self.__animate_timer = 0
         self.__time_out = time_out
@@ -20,7 +24,7 @@ class Animator():
     def current_image(self):
         return self.__current_image
 
-    def __add_image(self, path_to_images: str) -> None:
+    def __add_image(self, path_to_images: list[str]) -> None:
         self.__images = []
         for i in range(len(path_to_images)):
             self.__images.append(pg.image.load(path_to_images[i]))

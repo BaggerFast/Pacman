@@ -3,12 +3,12 @@ import pygame as pg
 from misc import LevelLoader, Color, MAPS, CELL_SIZE, Font, get_image_path
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
-from scenes import BaseScene
+from scenes import Base
 from objects.fruits import Fruit
 from misc.constants import Sounds
 
 
-class GameScene(BaseScene):
+class Scene(Base.Scene):
     pg.mixer.init()
     intro_sound = Sounds.INTRO
 
@@ -125,7 +125,7 @@ class GameScene(BaseScene):
 
     def __start_pause(self):
         pg.mixer.pause()
-        self.game.set_scene(self.game.scenes.SCENE_PAUSE)
+        self.game.set_scene(self.game.scenes.PAUSE)
 
     def __change_prefered_ghost(self):
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
@@ -148,7 +148,7 @@ class GameScene(BaseScene):
                     self.__prepare_lives_meter()
                 # todo
                 elif not self.__pacman.animator.run:
-                    self.game.set_scene(self.game.scenes.SCENE_GAMEOVER)
+                    self.game.set_scene(self.game.scenes.GAMEOVER)
                     break
                 for ghost2 in self.__ghosts:
                     ghost2.invisible()
@@ -193,7 +193,7 @@ class GameScene(BaseScene):
 
     def process_logic(self) -> None:
         if not pg.mixer.Channel(1).get_busy():
-            super(GameScene, self).process_logic()
+            super(Scene, self).process_logic()
             self.__check_first_run()
             self.__process_collision()
             self.go_text.surface.set_alpha(0)
@@ -233,13 +233,13 @@ class GameScene(BaseScene):
     def on_deactivate(self) -> None:
         pass
         # self.game.records.set_new_record(int(self.game.score))
-        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+        # self.game.scenes["GAME"] = Scene(self.game)
 
     def on_activate(self) -> None:
         pg.mixer.unpause()
-        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+        # self.game.scenes["GAME"] = Scene(self.game)
 
     def on_reset(self) -> None:
         pg.mixer.stop()
         self.game.score.reset()
-        self.game.scenes.SCENE_GAME.recreate()
+        self.game.scenes.GAME.recreate()

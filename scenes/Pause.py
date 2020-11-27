@@ -1,10 +1,10 @@
 import pygame as pg
 from objects import ButtonController, Button, Text
-from scenes import BaseScene
+from scenes import Base
 from misc import Color, Font
 
 
-class PauseScene(BaseScene):
+class Scene(Base.Scene):
     def create_objects(self) -> None:
         self.__create_title()
         self.__create_buttons()
@@ -33,13 +33,13 @@ class PauseScene(BaseScene):
         self.objects.append(self.__main_text)
 
     def restart_game(self) -> None:
-        self.game.set_scene(self.game.scenes.SCENE_GAME, reset=True)
+        self.game.set_scene(self.game.scenes.GAME, reset=True)
 
     def continue_game(self) -> None:
-        self.game.set_scene(self.game.scenes.SCENE_GAME)
+        self.game.set_scene(self.game.scenes.GAME)
 
     def start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.SCENE_MENU)
+        self.game.set_scene(self.game.scenes.MENU)
 
     def process_event(self, event: pg.event.Event) -> None:
         super().process_event(event)
@@ -52,5 +52,5 @@ class PauseScene(BaseScene):
 
     def on_deactivate(self) -> None:
         pass
-        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+        # self.game.scenes["GAME"] = Scene(self.game)
         # self.game.score.score = 0

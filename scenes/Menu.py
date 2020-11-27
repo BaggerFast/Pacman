@@ -3,11 +3,11 @@ import sys
 import pygame as pg
 
 from objects import ButtonController, Button, Text
-from scenes import BaseScene
+from scenes import Base
 from misc import Color, Font
 
 
-class MenuScene(BaseScene):
+class Scene(Base.Scene):
     def __init__(self, game):
         super().__init__(game)
 
@@ -61,14 +61,14 @@ class MenuScene(BaseScene):
         self.__button_controller.reset_state()
 
     def __start_game(self) -> None:
-        self.game.set_scene(self.game.scenes.SCENE_GAME, reset=True)
+        self.game.set_scene(self.game.scenes.GAME, reset=True)
 
     def __start_records(self) -> None:
-        self.game.scenes.SCENE_RECORDS.create_text_labels()
-        self.game.set_scene(self.game.scenes.SCENE_RECORDS)
+        self.game.scenes.RECORDS.create_text_labels()
+        self.game.set_scene(self.game.scenes.RECORDS)
 
     def __start_titres(self) -> None:
         self.game.set_scene(self.game.scenes.SCENE_CREDITS)
 
     def __start_levels(self) -> None:
-        self.game.set_scene(self.game.scenes.SCENE_LEVELS)
+        self.game.set_scene(self.game.scenes.LEVELS)

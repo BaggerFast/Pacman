@@ -3,21 +3,21 @@ import json
 import pygame as pg
 from misc import Color, ROOT_DIR, HighScore, \
                  create_file_if_not_exist, get_image_path, Score
-from scenes import LevelsScene, GameScene, GameoverScene, MenuScene, PauseScene, RecordsScene, CreditsScene, BaseScene
+from scenes import *
 
 
 class Scenes:
     def __init__(self, game):
-        self.SCENE_PAUSE = PauseScene(game)
-        self.SCENE_MENU = MenuScene(game)
-        self.SCENE_GAME = GameScene(game)
-        self.SCENE_GAMEOVER = GameoverScene(game)
-        self.SCENE_LEVELS = LevelsScene(game)
-        self.SCENE_RECORDS = RecordsScene(game)
-        self.SCENE_CREDITS = CreditsScene(game)
+        self.PAUSE = Pause.Scene(game)
+        self.MENU = Menu.Scene(game)
+        self.GAME = Game.Scene(game)
+        self.GAMEOVER = Gameover.Scene(game)
+        self.LEVELS = Levels.Scene(game)
+        self.RECORDS = Records.Scene(game)
+        self.SCENE_CREDITS = Credits.Scene(game)
 
 
-class Game:
+class Pacman:
     __size = width, height = 224, 285
     __last_level_filepath = os.path.join(ROOT_DIR, "saves", "cur_level.json")
     __icon = pg.image.load(get_image_path('1', 'pacman', 'walk'))
@@ -30,14 +30,10 @@ class Game:
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.score = Score()
         self.records = HighScore(self)
-        self.__scenes = Scenes(self)
-        self.__current_scene = self.__scenes.SCENE_MENU
+        self.scenes = Scenes(self)
+        self.__current_scene = self.scenes.MENU
         self.__clock = pg.time.Clock()
         self.__game_over = False
-
-    @property
-    def scenes(self):
-        return self.__scenes
 
     @property
     def current_scene(self):
@@ -52,7 +48,7 @@ class Game:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
 
     def __process_exit_events(self, event: pg.event.Event) -> None:
-        if Game.__exit_button_pressed(event) or Game.__exit_hotkey_pressed(event):
+        if Pacman.__exit_button_pressed(event) or Pacman.__exit_hotkey_pressed(event):
             self.exit_game()
 
     def __process_all_events(self) -> None:
@@ -75,10 +71,10 @@ class Game:
             self.__process_all_draw()
             self.__clock.tick(self.__FPS)
 
-    def set_scene(self, scene: BaseScene, reset: bool = False) -> None:
+    def set_scene(self, scene: Base.Scene, reset: bool = False) -> None:
         """
         :param scene: NEXT scene (contains in game.scenes.*)
-        :param reset: if reset == True will call on_reset() of NEXT scene (see BaseScene)
+        :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
 
         IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
         """
