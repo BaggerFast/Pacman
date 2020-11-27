@@ -57,10 +57,12 @@ class GameScene(BaseScene):
         self.objects.append(self.highscores_value_text)
 
         self.fruit = Fruit(self.game, self.game.screen, 0 + self.fruit_position[0] * CELL_SIZE + CELL_SIZE//2, 20 + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2)
+        self.objects.append(self.fruit)
 
         self.pacman = Pacman(self.game, (-6+self.player_position[0] * CELL_SIZE + CELL_SIZE//2, 14 + self.player_position[1] * CELL_SIZE + CELL_SIZE//2))
         self.objects.append(self.pacman)
         self.prepare_lives_meter()
+
         self.blinky = Blinky(self.game, (-7+self.ghost_positions[3][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[3][1] * CELL_SIZE + CELL_SIZE // 2))
         self.pinky = Pinky(self.game, (-7+self.ghost_positions[1][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[2][1] * CELL_SIZE + CELL_SIZE // 2))
         self.inky = Inky(self.game, (-7+self.ghost_positions[0][0] * CELL_SIZE + CELL_SIZE // 2, 14+self.ghost_positions[1][1] * CELL_SIZE + CELL_SIZE // 2), 30)
@@ -94,19 +96,8 @@ class GameScene(BaseScene):
     def start_pause(self):
         self.game.set_scene('SCENE_PAUSE', reset=True)
 
-    def draw_ghost(self, index, color, x, y):
-        pg.draw.circle(
-            self.screen, color,
-            (x + self.ghost_positions[index][0] * CELL_SIZE + CELL_SIZE//2, y + self.ghost_positions[index][1] * CELL_SIZE + CELL_SIZE//2),
-            8
-        )
-
     def additional_draw(self) -> None:
-        # Temporary draw
-        x_shift = 0
-        y_shift = 20
-        self.fruit.check_score(self.game.score.score)
-        self.fruit.process_logic()
+        pass
 
     def change_prefered_ghost(self):
         self.count_prefered_ghost += 1
@@ -118,7 +109,7 @@ class GameScene(BaseScene):
             self.count_prefered_ghost = 0
 
     def process_collision(self) -> None:
-        self.fruit.process_collision(self.pacman)
+        is_eaten1, type1 = self.fruit.process_collision(self.pacman)
         is_eaten, type = self.seeds.process_collision(self.pacman)
         for ghost in self.ghosts:
             if ghost.collision_check(self.pacman):
@@ -128,6 +119,9 @@ class GameScene(BaseScene):
                 elif not self.pacman.animator.run:
                     self.game.set_scene("SCENE_GAMEOVER")
                     break  # IT MAY CAUSE BUGS <===<===<===<===<===<====<===<===<===<===<===<===< IMPORTANT
+        if is_eaten1:
+            if type1 == 'fruit':
+                self.game.score.eat_fruit()
         if is_eaten:
             if type == "seed":
                 self.game.score.eat_seed()

@@ -30,6 +30,9 @@ class Score:
     def eat_energizer(self):
         self.__add_to_score(Points.POINT_PER_ENERGIZER)
 
+    def eat_fruit(self):
+        self.__add_to_score(Points.POINT_PER_FRUIT)
+
     def activate_fear_mode(self):
         self.fear_mode = True
 

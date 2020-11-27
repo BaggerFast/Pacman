@@ -76,6 +76,8 @@ CELL_SIZE = 8
 class Points:
     POINT_PER_SEED = 10
     POINT_PER_ENERGIZER = 50
+    POINT_PER_FRUIT = 40
+
 
 
 # TODO: migrate to NamedTuple

@@ -1,3 +1,4 @@
+from misc.constants import Points
 from misc.path import get_image_path_for_animator
 from misc.animator import Animator
 from objects.base import DrawableObject
@@ -14,20 +15,25 @@ class Fruit(DrawableObject):
         self.rect.x = x - self.rect.width / 2
         self.rect.y = y - self.rect.height / 2
         self.drawing = False
+        self.eat_timer = 90
+        self.score_to_eat = self.eat_timer
 
     def draw_fruit(self):
         if self.drawing:
             self.screen.blit(self.image, self.rect)
 
-    # Фрукт появляется каждые 90 очков (в оригинале 70)
-    def check_score(self, score):
-        if (score > 0) and (score % 90 == 0):
+    def check_score(self):
+        if self.check_last_score():
             self.drawing = True
+
+    def check_last_score(self):
+        if self.game.score.score >= self.score_to_eat:
+            self.drawing = True
+            return 1
+        return 0
 
     def check_time(self):
         pass
-    # Тут будет таймер, пока время не вышло
-    # - фрукт рисуется и пакман может его съесть
 
     def change_image(self):
         if self.anim.current_image_index + 1 < len(self.anim.images):
@@ -37,12 +43,18 @@ class Fruit(DrawableObject):
         self.image = self.anim.current_image
 
     def process_collision(self, object):
-        if ((self.rect.x == object.rect.x + object.rect.width - 3) \
-                or (self.rect.x == object.rect.x - object.rect.width + 3)) \
-                and (self.rect.y == object.rect.y):
-            self.drawing = False
-            self.change_image()
-            return True, "energizer"
+        if self.drawing:
+            if ((self.rect.x == object.rect.x + object.rect.width - 3)\
+                    or (self.rect.x == object.rect.x - object.rect.width + 3)) \
+                    and (self.rect.y == object.rect.y):
+                self.drawing = False
+                self.score_to_eat = self.game.score.score + self.eat_timer + Points.POINT_PER_FRUIT
+                self.change_image()
+                return True, "fruit"
+        return False, ""
 
     def process_logic(self):
+        self.check_score()
+
+    def process_draw(self):
         self.draw_fruit()

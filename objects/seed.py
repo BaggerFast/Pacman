@@ -1,8 +1,9 @@
 import pygame as pg
 
-from misc.constants import CELL_SIZE, Color
+from misc.constants import Color
 from objects.base import DrawableObject
 from misc.constants import CELL_SIZE
+
 
 class SeedContainer(DrawableObject):
     def __init__(self, game, seed_data, energizer_data, x=0, y=20):
@@ -36,7 +37,7 @@ class SeedContainer(DrawableObject):
         self.draw_seeds()
         self.draw_energizers()
 
-    def process_collision(self, object): #for pacman only
+    def process_collision(self, object):
         for row in range(len(self.seeds)):
             for col in range(len(self.seeds[row])):
                 if self.seeds[row][col] and row * CELL_SIZE + 18 == object.rect.y:
