@@ -72,4 +72,4 @@ class LevelsScene(BaseScene):
         self.__set_level("level_2")
 
     def __level3(self) -> None:
-        pass
+        self.__set_level("level_3")
