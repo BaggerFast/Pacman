@@ -24,7 +24,7 @@ class Sounds:
     SEED = pg.mixer.Sound(get_sound_path(Mixer("leader2").value))
     INTRO = pg.mixer.Sound(get_sound_path(Mixer("pacman_beginning").value))
     MOVE = pg.mixer.Sound(get_sound_path(Mixer("pacman_chomp").value))
-    GAMESTART = pg.mixer.Sound(get_sound_path(Mixer("Star").value))
+    # GAMESTART = pg.mixer.Sound(get_sound_path(Mixer("Star").value))
 
 
 class Color:

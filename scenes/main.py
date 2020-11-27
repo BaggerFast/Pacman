@@ -9,7 +9,7 @@ from misc.constants import Sounds
 
 
 class GameScene(BaseScene):
-    intro_sound = pg.mixer.Sound(get_sound_path(Sounds.INTRO))
+    intro_sound = Sounds.INTRO
 
     def __init__(self, game):
         self.__loader = LevelLoader(MAPS[game.level_name])
@@ -88,10 +88,10 @@ class GameScene(BaseScene):
 
         self.ready_text = Text(self.game, 'Ready', 30, font=Font.FILENAME,
                                rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
-        self.ready_text.move_center(self.game.width // 2 + 1, self.game.height // 2 - 5)
+        self.ready_text.move_center(self.game.width // 2, self.game.height // 2)
         self.go_text = Text(self.game, 'GO!', 30, font=Font.FILENAME,
                             rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
-        self.go_text.move_center(self.game.width // 2 + 2, self.game.height // 2 - 5)
+        self.go_text.move_center(self.game.width // 2, self.game.height // 2)
         self.ready_text.surface.set_alpha(0)
         self.go_text.surface.set_alpha(0)
         self.objects.append(self.ready_text)
@@ -122,6 +122,7 @@ class GameScene(BaseScene):
             self.__start_pause()
 
     def __start_pause(self):
+        pg.mixer.pause()
         self.game.set_scene(self.game.scenes.SCENE_PAUSE, reset=True)
 
     def additional_draw(self) -> None:
@@ -171,7 +172,7 @@ class GameScene(BaseScene):
 
     def __check_first_run(self):
         if self.first_run:
-            self.create_objects()
+            pg.mixer.Channel(1).play(self.intro_sound)
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
 
@@ -193,13 +194,10 @@ class GameScene(BaseScene):
         self.total_anim += 1
 
     def process_logic(self) -> None:
+        self.go_text.surface.set_alpha(0)
         if not pg.mixer.Channel(1).get_busy():
             super(GameScene, self).process_logic()
-            if self.first_run:
-                pg.mixer.Channel(1).play(self.intro_sound)
-                self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
             self.__check_first_run()
-            self.go_text.surface.set_alpha(0)
             self.__process_collision()
             if pg.time.get_ticks()-self.__timer_reset_pacman >= 3000 and self.__pacman.animator.anim_finished:
                 self.create_objects()
@@ -235,7 +233,7 @@ class GameScene(BaseScene):
         self.__scores_value_text.update_text(str(self.game.score))
 
     def on_deactivate(self) -> None:
-        pg.mixer.stop()
+        pass
         # self.game.records.set_new_record(int(self.game.score))
         # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
 
