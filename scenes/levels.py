@@ -61,7 +61,7 @@ class LevelsScene(BaseScene):
         :param name: level_+id (e.g. level_1)
         """
         self.game.level_name = name
-        self.game.scenes.SCENE_GAME = GameScene(self.game)
+        self.game.scenes.SCENE_GAME.recreate(self.game)
         self.game.records.update_records()
         self.game.set_scene(self.game.scenes.SCENE_MENU)
 

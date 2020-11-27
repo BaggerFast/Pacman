@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import CELL_SIZE, get_image_path_for_animator, Health, Animator
+from misc import get_image_path_for_animator, Health, Animator
 from objects import Character
 
 
@@ -46,24 +46,8 @@ class Pacman(Character):
                     self.set_direction(self.__feature_rotate)
             super().process_logic()
 
-    def get_cell(self):
-        return (self.rect.centerx // CELL_SIZE, (self.rect.centery-17) // CELL_SIZE)
-
     def death(self):
         self.__hp -= 1
         self.animator = self.__dead_anim
         self.animator.run = True
         self.dead = True
-
-    def reset(self):
-        self.animator = self.__walk_anim
-        self.__dead_anim.reset()
-        self.move(*self.start_pos)
-        self.speed = 0
-        self.shift_x, self.shift_y = self.direction["right"][:2]
-        self.animator.stop()
-        self.animator.change_cur_image(0)
-        self.dead = False
-
-    def in_center(self) -> bool:
-        return self.rect.x % CELL_SIZE == 6 and (self.rect.y-20) % CELL_SIZE == 6
