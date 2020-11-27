@@ -1,8 +1,7 @@
 import pygame as pg
 
-from misc.constants import CELL_SIZE
-from misc.path import get_image_path
-from objects.base import DrawableObject
+from misc import CELL_SIZE, get_image_path
+from objects import DrawableObject
 
 
 class Map(DrawableObject):
@@ -53,3 +52,10 @@ class Map(DrawableObject):
 
     def process_draw(self):
         self.game.screen.blit(self.surface, (self.x, self.y))
+
+    def process_event(self, event):
+        pass
+
+    def process_logic(self):
+        pass
+

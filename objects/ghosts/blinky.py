@@ -1,31 +1,13 @@
-from misc.animator import Animator
-from misc.path import get_image_path_for_animator
-from objects.ghosts.base_ghost import BaseGhost
+from .base import Base
 
 
-class Blinky(BaseGhost):
+class Blinky(Base):
 
-    def __init__(self, game, start_pos: tuple):
-        self.top_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'blinky', 'top'), is_rotation=False
-        )
-        self.bottom_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'blinky', 'bottom'),  is_rotation=False
-        )
-        self.left_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'blinky', 'left'), is_rotation=False
-        )
-        self.right_walk_anim = Animator(
-            get_image_path_for_animator('ghost', 'blinky', 'right'), is_rotation=False
-        )
-        self.animations = {
-            3: self.top_walk_anim,
-            2: self.left_walk_anim,
-            1: self.bottom_walk_anim,
-            0: self.right_walk_anim
-        }
+    def process_logic(self):
+        if not self.is_invisible:
+            super().process_logic()
+            self.collision = True
+            self.go()
 
-        super().__init__(game, self.top_walk_anim, start_pos, self.animations)
-        self.feature_rotate = "none"
-
-
+    def get_love_cell(self, pacman):
+        self.love_cell = pacman.get_cell()

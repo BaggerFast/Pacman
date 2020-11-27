@@ -1,7 +1,7 @@
 import os
 from typing import List
 
-from misc.constants import ROOT_DIR
+from misc import ROOT_DIR
 
 
 def get_image_path(filename, *folder):
@@ -24,7 +24,7 @@ def get_files_count(path):
     return count
 
 
-def get_image_path_for_animator(*folder: List[str]) -> List[str]:
+def get_image_path_for_animator(*folder: str) -> List[str]:
     """
     :param folder: указать папки через пробел слева на право без имени файла без image
     :return: возращает все файлы для анимации автоматически

@@ -8,35 +8,32 @@ class BaseScene:
         self.objects = []
         self.create_objects()
 
-    def create_objects(self) -> None:
-        pass
-
-    def on_activate(self) -> None:
-        pass
-
-    def on_window_resize(self) -> None:
-        pass
-
     def process_event(self, event: pg.event.Event) -> None:
         for item in self.objects:
             item.process_event(event)
         self.additional_event_check(event)
-
-    def additional_event_check(self, event: pg.event.Event) -> None:
-        pass
 
     def process_logic(self) -> None:
         for item in self.objects:
             item.process_logic()
         self.additional_logic()
 
-    def additional_logic(self) -> None:
-        pass
-
     def process_draw(self) -> None:
         for item in self.objects:
             item.process_draw()
         self.additional_draw()
+
+    def create_objects(self) -> None:
+        pass
+
+    def on_activate(self) -> None:
+        pass
+
+    def additional_event_check(self, event: pg.event.Event) -> None:
+        pass
+
+    def additional_logic(self) -> None:
+        pass
 
     def additional_draw(self) -> None:
         pass
@@ -46,3 +43,6 @@ class BaseScene:
 
     def on_reset(self) -> None:
         pass
+
+    def recreate(self) -> None:
+        self.__init__(self.game)

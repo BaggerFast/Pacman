@@ -1,14 +1,14 @@
 import pygame as pg
 
-from objects.base import DrawableObject
+from objects import DrawableObject
 
 
 class ImageObject(DrawableObject):
     def __init__(self, game, filename=None, x=None, y=None):
         super().__init__(game)
         if filename:
-            self.filename = filename
-        self.image = pg.image.load(self.filename).convert_alpha()
+            self.__filename = filename
+        self.image = pg.image.load(self.__filename).convert_alpha()
         self.rect = self.image.get_rect()
         self.rect.x = x if x else 0
         self.rect.y = y if y else 0
@@ -27,3 +27,9 @@ class ImageObject(DrawableObject):
 
     def process_draw(self):
         self.game.screen.blit(self.image, self.rect)
+
+    def process_event(self, event):
+        pass
+
+    def process_logic(self):
+        pass

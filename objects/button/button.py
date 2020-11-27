@@ -2,8 +2,8 @@ from typing import List, Union, Callable, Tuple
 
 import pygame as pg
 
-from misc.constants import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor
-from objects.base import DrawableObject
+from misc import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor
+from objects import DrawableObject
 
 
 class BaseButton(DrawableObject):
@@ -29,6 +29,10 @@ class BaseButton(DrawableObject):
 
     def process_draw(self) -> None:
         pg.draw.rect(self.game.screen, Color.WHITE, self.rect, 0)
+
+    def process_logic(self):
+        pass
+
 
     def click(self) -> None:
         self.function()

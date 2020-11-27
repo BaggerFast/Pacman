@@ -2,7 +2,7 @@ from typing import List, Tuple, Union
 
 import pygame as pg
 
-from objects.base import DrawableObject
+from objects import DrawableObject
 from objects.button.button import Button
 
 
@@ -85,3 +85,9 @@ class ButtonController(DrawableObject):
     def process_draw(self) -> None:
         for button in self.buttons:
             button.process_draw()
+
+
+
+    def process_logic(self):
+        pass
+
