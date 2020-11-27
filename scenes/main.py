@@ -57,7 +57,7 @@ class GameScene(BaseScene):
 
         self.objects.append(self.__pacman)
         self.__prepare_lives_meter()
-        self.fruit = Fruit(self.game, self.game.screen, 0 + self.fruit_position[0] * CELL_SIZE + CELL_SIZE//2, 20 + self.fruit_position[1] * CELL_SIZE + CELL_SIZE//2)
+        self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE//2, 20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE//2)
         self.objects.append(self.fruit)
 
         self.__blinky = Blinky(self.game, self.__ghost_positions[3])
@@ -110,17 +110,10 @@ class GameScene(BaseScene):
         self.game.set_scene(self.game.scenes.SCENE_PAUSE, reset=True)
 
     def additional_draw(self) -> None:
-        # Temporary draw
-        x_shift = 0
-        y_shift = 20
-
-        # fruit
-        pg.draw.circle(self.screen, (255, 0, 0),
-                       (x_shift + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
-                        y_shift + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2), 4)
+        pass
 
     def __change_prefered_ghost(self):
-        if self.__prefered_ghost != None and self.__prefered_ghost.can_leave_home():
+        if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__count_prefered_ghost += 1
             self.__not_prefered_ghosts.pop(0)
             if self.__count_prefered_ghost < 4:
@@ -130,7 +123,7 @@ class GameScene(BaseScene):
                 self.__count_prefered_ghost = 0
 
     def __process_collision(self) -> None:
-        is_eaten1, type1 = self.fruit.process_collision(self.pacman)
+        is_eaten1, type1 = self.fruit.process_collision(self.__pacman)
         is_eaten, type = self.__seeds.process_collision(self.__pacman)
         for ghost in self.__ghosts:
             if ghost.collision_check(self.__pacman):
@@ -152,10 +145,10 @@ class GameScene(BaseScene):
                 self.game.score.eat_seed()
             elif type == "energizer":
                 self.game.score.eat_energizer()
-            if self.__prefered_ghost != None and self.__work_ghost_counters:
+            if self.__prefered_ghost is not None and self.__work_ghost_counters:
                 self.__prefered_ghost.counter()
                 self.__prefered_ghost.update_timer()
-            elif not self.__work_ghost_counters and self.__prefered_ghost != None:
+            elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
                 self.__seeds_eaten += 1
                 self.__prefered_ghost.update_timer()
 

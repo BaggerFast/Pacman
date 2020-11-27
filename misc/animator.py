@@ -4,11 +4,11 @@ import pygame as pg
 class Animator:
     __time_out = 50
 
-    def __init__(self, path_to_images, time_out=50, is_rotation=True, repeat=False):
+    def __init__(self, path_to_images: str, time_out=50, is_rotation=True, repeat=False):
         self.is_rotation = is_rotation
         self.__animate_timer = 0
         self.__time_out = time_out
-        self.__images = self.__add_image(path_to_images)
+        self.__add_image(path_to_images)
         self.__current_image_index = 0
         self.current_image = self.__images[self.__current_image_index]
         self.rotate = 0
@@ -16,29 +16,28 @@ class Animator:
         self.anim_finished = False
         self.run = False
 
-    def __add_image(self, path_to_images):
-        images = []
+    def __add_image(self, path_to_images: str) -> None:
+        self.__images = []
         for i in range(len(path_to_images)):
-            images.append(pg.image.load(path_to_images[i]))
-        return images
+            self.__images.append(pg.image.load(path_to_images[i]))
 
-    def stop(self):
+    def stop(self) -> None:
         self.run = False
 
-    def start(self):
+    def start(self) -> None:
         self.run = True
 
-    def timer_check(self):
+    def timer_check(self) -> None:
         if pg.time.get_ticks() - self.__animate_timer > self.__time_out and self.run:
             self.__animate_timer = pg.time.get_ticks()
             self.__current_image_index += 1
             self.__image_swap()
 
-    def change_cur_image(self, index):
+    def change_cur_image(self, index: int) -> None:
         self.__current_image_index = index
         self.current_image = self.__images[self.__current_image_index]
 
-    def __image_swap(self):
+    def __image_swap(self) -> None:
         if self.__current_image_index == len(self.__images):
             self.__current_image_index = 0
             if self.__repeat:
@@ -49,5 +48,5 @@ class Animator:
         if self.is_rotation:
             self.change_rotation()
 
-    def change_rotation(self):
+    def change_rotation(self) -> None:
         self.current_image = pg.transform.rotate(self.__images[self.__current_image_index], -90 * self.rotate)
