@@ -20,10 +20,10 @@ class Scenes:
 class Game:
     __size = width, height = 224, 285
     __last_level_filepath = os.path.join(ROOT_DIR, "saves", "cur_level.json")
-    pg.display.set_caption('PACMAN')
     __icon = pg.image.load(get_image_path('1', 'pacman', 'walk'))
-    pg.display.set_icon(__icon)
     __FPS = 60
+    pg.display.set_caption('PACMAN')
+    pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
         self.level_name = self.__read_last_level()

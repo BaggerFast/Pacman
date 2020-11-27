@@ -1,3 +1,5 @@
+from random import randint
+
 from misc.constants import Points
 from misc.path import get_image_path_for_animator
 from misc.animator import Animator
@@ -8,19 +10,18 @@ class Fruit(DrawableObject):
     def __init__(self, game, screen, x, y):
         super().__init__(game)
         self.screen = screen
-        self.anim = Animator(get_image_path_for_animator('fruit'), 70, False, False)
+        self.anim = Animator(get_image_path_for_animator('fruit'), False, False)
         self.image = self.anim.current_image
-        self.image_name = 0
         self.rect = self.anim.current_image.get_rect()
-        self.rect.x = x - self.rect.width / 2
-        self.rect.y = y - self.rect.height / 2
+        self.rect.x = x - self.rect.width // 2
+        self.rect.y = y - self.rect.height // 2
         self.drawing = False
         self.eat_timer = 90
-        self.score_to_eat = self.eat_timer
+        self.score_to_eat = 0
 
     def draw_fruit(self):
         if self.drawing:
-            self.screen.blit(self.image, self.rect)
+            self.screen.blit(self.anim.current_image, self.rect)
 
     def check_score(self):
         if self.check_last_score():
@@ -36,11 +37,7 @@ class Fruit(DrawableObject):
         pass
 
     def change_image(self):
-        if self.anim.current_image_index + 1 < len(self.anim.images):
-            self.anim.change_cur_image(self.anim.current_image_index + 1)
-        else:
-            self.anim.current_image_index = 0
-        self.image = self.anim.current_image
+        self.anim.change_cur_image(randint(0, self.anim.get_len_anim()))
 
     def process_collision(self, object):
         if self.drawing:

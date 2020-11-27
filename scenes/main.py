@@ -73,7 +73,6 @@ class GameScene(BaseScene):
         ]
 
         self.__not_prefered_ghosts = self.__ghosts.copy()
-
         self.__prefered_ghost = self.pinky
         self.__count_prefered_ghost = 0
 
@@ -108,9 +107,6 @@ class GameScene(BaseScene):
 
     def __start_pause(self):
         self.game.set_scene(self.game.scenes.SCENE_PAUSE, reset=True)
-
-    def additional_draw(self) -> None:
-        pass
 
     def __change_prefered_ghost(self):
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():

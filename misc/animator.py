@@ -1,7 +1,7 @@
 import pygame as pg
 
 
-class Animator:
+class Animator():
     __time_out = 50
 
     def __init__(self, path_to_images: str, time_out=50, is_rotation=True, repeat=False):
@@ -10,16 +10,23 @@ class Animator:
         self.__time_out = time_out
         self.__add_image(path_to_images)
         self.__current_image_index = 0
-        self.current_image = self.__images[self.__current_image_index]
+        self.__current_image = self.__images[self.__current_image_index]
         self.rotate = 0
         self.__repeat = repeat
         self.anim_finished = False
         self.run = False
 
+    @property
+    def current_image(self):
+        return self.__current_image
+
     def __add_image(self, path_to_images: str) -> None:
         self.__images = []
         for i in range(len(path_to_images)):
             self.__images.append(pg.image.load(path_to_images[i]))
+
+    def get_len_anim(self):
+        return len(self.__images)
 
     def stop(self) -> None:
         self.run = False
@@ -35,7 +42,8 @@ class Animator:
 
     def change_cur_image(self, index: int) -> None:
         self.__current_image_index = index
-        self.current_image = self.__images[self.__current_image_index]
+        self.__current_image = self.__images[self.__current_image_index]
+        print(self.__current_image_index)
 
     def __image_swap(self) -> None:
         if self.__current_image_index == len(self.__images):
@@ -44,9 +52,9 @@ class Animator:
                 self.stop()
                 self.change_cur_image(len(self.__images) - 1)
                 self.anim_finished = True
-        self.current_image = self.__images[self.__current_image_index]
+        self.__current_image = self.__images[self.__current_image_index]
         if self.is_rotation:
             self.change_rotation()
 
     def change_rotation(self) -> None:
-        self.current_image = pg.transform.rotate(self.__images[self.__current_image_index], -90 * self.rotate)
+        self.__current_image = pg.transform.rotate(self.current_image, -90 * self.rotate)
