@@ -44,5 +44,5 @@ class BaseScene:
     def on_reset(self) -> None:
         pass
 
-    def recreate(self, game) -> None:
-        self.__init__(game)
+    def recreate(self) -> None:
+        self.__init__(self.game)

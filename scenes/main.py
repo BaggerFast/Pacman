@@ -193,4 +193,4 @@ class GameScene(BaseScene):
 
     def on_reset(self) -> None:
         self.game.score.reset()
-        self.game.scenes.SCENE_GAME.recreate(self.game)
+        self.game.scenes.SCENE_GAME.recreate()
