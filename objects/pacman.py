@@ -54,8 +54,8 @@ class Pacman(Character):
             super().process_logic()
 
     def death(self):
+        pg.mixer.Channel(0).play(self.death_sound)
         self.__hp -= 1
         self.animator = self.__dead_anim
         self.animator.run = True
         self.dead = True
-        self.death_sound.play()

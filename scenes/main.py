@@ -9,6 +9,7 @@ from misc.constants import Sounds
 
 
 class GameScene(BaseScene):
+    pg.mixer.init()
     intro_sound = Sounds.INTRO
 
     def __init__(self, game):
@@ -26,7 +27,6 @@ class GameScene(BaseScene):
         self.__seeds_eaten = 0
         self.__work_ghost_counters = True
         self.__max_seeds_eaten_to_prefered_ghost = 7
-        self.pre_anim = False
         self.total_anim = 0
         self.anim = 0
         super().__init__(game)
@@ -123,7 +123,7 @@ class GameScene(BaseScene):
 
     def __start_pause(self):
         pg.mixer.pause()
-        self.game.set_scene(self.game.scenes.SCENE_PAUSE, reset=True)
+        self.game.set_scene(self.game.scenes.SCENE_PAUSE)
 
     def additional_draw(self) -> None:
         # Temporary draw
@@ -194,11 +194,11 @@ class GameScene(BaseScene):
         self.total_anim += 1
 
     def process_logic(self) -> None:
-        self.go_text.surface.set_alpha(0)
         if not pg.mixer.Channel(1).get_busy():
             super(GameScene, self).process_logic()
             self.__check_first_run()
             self.__process_collision()
+            self.go_text.surface.set_alpha(0)
             if pg.time.get_ticks()-self.__timer_reset_pacman >= 3000 and self.__pacman.animator.anim_finished:
                 self.create_objects()
                 self.__seeds_eaten = 0
