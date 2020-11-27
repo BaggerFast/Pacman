@@ -108,7 +108,8 @@ class Font:
 
 MAPS = {
     "level_1": "original.json",
-    "level_2": "new_map.json"
+    "level_2": "new_map.json",
+    "level_3": "new_new_map.json"
 }
 
 DEBUG_MODE = True
