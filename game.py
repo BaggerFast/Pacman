@@ -1,8 +1,7 @@
-import os
-import json
 import pygame as pg
-from misc import Color, ROOT_DIR, HighScore, \
-                 create_file_if_not_exist, get_image_path, Score
+from misc import Color, HighScore, \
+    get_image_path, Score
+from misc.storage import Storage
 from scenes import LevelsScene, GameScene, GameoverScene, MenuScene, PauseScene, RecordsScene, CreditsScene, BaseScene
 
 
@@ -19,14 +18,14 @@ class Scenes:
 
 class Game:
     __size = width, height = 224, 285
-    __last_level_filepath = os.path.join(ROOT_DIR, "saves", "storage.json")
     __icon = pg.image.load(get_image_path('1', 'pacman', 'walk'))
     __FPS = 60
     pg.display.set_caption('PACMAN')
     pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
-        self.level_name = self.__read_last_level()
+        self.__storage = Storage()
+        self.level_name = self.__storage.last_level
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.score = Score()
         self.records = HighScore(self)
@@ -88,17 +87,8 @@ class Game:
             self.__current_scene.on_reset()
         self.__current_scene.on_activate()
 
-    def __save_last_level(self) -> None:
-        string = json.dumps({f"level_name": f"{self.level_name}"})
-        with open(self.__last_level_filepath, "w") as file:
-            file.write(string)
-
-    def __read_last_level(self) -> str:
-        create_file_if_not_exist(self.__last_level_filepath, json.dumps({"level_name": "level_1"}))
-        with open(self.__last_level_filepath, "r") as file:
-            return json.load(file)["level_name"]
-
     def exit_game(self) -> None:
         print('Bye bye')
-        self.__save_last_level()
+        self.__storage.last_level = self.level_name
+        self.__storage.save_last_level()
         self.__game_over = True
