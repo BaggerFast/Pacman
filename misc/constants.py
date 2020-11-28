@@ -133,3 +133,6 @@ class Maps(NamedTuple):
 
 
 MAPS_COUNT = len(vars(Maps))
+
+
+DUBUG = True

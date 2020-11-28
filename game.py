@@ -19,7 +19,7 @@ class Scenes:
 
 class Game:
     __size = width, height = 224, 285
-    __last_level_filepath = os.path.join(ROOT_DIR, "saves", "cur_level.json")
+    __last_level_filepath = os.path.join(ROOT_DIR, "saves", "storage.json")
     __icon = pg.image.load(get_image_path('1', 'pacman', 'walk'))
     __FPS = 60
     pg.display.set_caption('PACMAN')
