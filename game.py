@@ -88,7 +88,7 @@ class Game:
             self.__current_scene.on_reset()
         self.__current_scene.on_activate()
 
-    def __save_last_level(self):
+    def __save_last_level(self) -> None:
         string = json.dumps({f"level_name": f"{self.level_name}"})
         with open(self.__last_level_filepath, "w") as file:
             file.write(string)

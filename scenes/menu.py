@@ -1,5 +1,3 @@
-import sys
-
 import pygame as pg
 
 from objects import ButtonController, Button, Text
