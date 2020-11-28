@@ -12,7 +12,7 @@ class Character(DrawableObject):
         "none": (0, 0, None)
     }
 
-    def __init__(self, game, animator: Animator, start_pos: Tuple[int, int]):
+    def __init__(self, game, animator: Animator, start_pos: Tuple[int, int]) -> None:
         super().__init__(game)
         self.animator = animator
         self.rect = self.animator.current_image.get_rect()
@@ -22,20 +22,20 @@ class Character(DrawableObject):
         self.speed = 0
         self.rotate = 0
 
-    def step(self):
+    def step(self) -> None:
         self.rect.centerx = (self.rect.centerx + self.shift_x * self.speed + self.game.width) % self.game.width
         self.rect.centery = (self.rect.centery + self.shift_y * self.speed + self.game.height) % self.game.height
 
-    def go(self):
+    def go(self) -> None:
         if self.speed != 0:
             self.animator.start()
         self.speed = 1
 
-    def stop(self):
+    def stop(self) -> None:
         self.animator.stop()
         self.speed = 0
 
-    def set_direction(self, new_direction='none'):
+    def set_direction(self, new_direction='none') -> None:
         if new_direction:
             self.shift_x, self.shift_y, rotate = self.direction[new_direction]
             if self.rotate != rotate:
@@ -44,10 +44,10 @@ class Character(DrawableObject):
                 if self.animator.is_rotation:
                     self.animator.change_rotation()
 
-    def process_logic(self):
+    def process_logic(self) -> None:
         self.step()
 
-    def process_draw(self):
+    def process_draw(self) -> None:
         for i in range(-1, 2):
             self.game.screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
 

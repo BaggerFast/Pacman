@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import pygame as pg
 from misc import CELL_SIZE, Color, Sounds
 from objects import DrawableObject
@@ -7,7 +9,7 @@ class SeedContainer(DrawableObject):
     eaten_sound = Sounds.SEED
     eaten_sound.set_volume(0.5)
 
-    def __init__(self, game, seed_data, energizer_data, x=0, y=20):
+    def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
         super().__init__(game)
         self.__x = x
         self.__y = y
@@ -49,7 +51,11 @@ class SeedContainer(DrawableObject):
         self.__draw_seeds()
         self.__draw_energizers()
 
-    def process_collision(self, object) -> (bool, str):
+    def process_collision(self, object) -> Tuple[bool, str]:
+        """
+        :param object: any class with pygame.rect
+        :return: is objects in collision (bool) and self type (str)
+        """
         for row in range(len(self.__seeds)):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col] and row * CELL_SIZE + 18 == object.rect.y:

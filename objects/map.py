@@ -15,7 +15,7 @@ class Map(DrawableObject):
     ]
     tiles = []
 
-    def __init__(self, game, map_data, x=0, y=20):
+    def __init__(self, game, map_data, x=0, y=20) -> None:
         super().__init__(game)
         self.x = x
         self.y = y
@@ -24,14 +24,14 @@ class Map(DrawableObject):
         self.__load_tiles()
         self.__render_map_surface()
 
-    def __load_tiles(self):
+    def __load_tiles(self) -> None:
         self.tiles = []
         for i in self.tile_names:
             tile_path = get_image_path(i, "map")
             tile = pg.image.load(tile_path)
             self.tiles.append(tile)
 
-    def __corner_preprocess(self, x, y, temp_surface):
+    def __corner_preprocess(self, x, y, temp_surface: pg.surface.Surface) -> pg.surface.Surface:
         flip_x = self.map[y][x][1] // (CELL_SIZE//2)
         flip_y = False
         temp_surface = pg.transform.flip(temp_surface, flip_x, flip_y)
@@ -39,23 +39,23 @@ class Map(DrawableObject):
         temp_surface = pg.transform.rotate(temp_surface, rotate_angle)
         return temp_surface
 
-    def __draw_cell(self, x, y):
+    def __draw_cell(self, x, y) -> None:
         temp_surface = self.tiles[self.map[y][x][0]]
         if len(self.map[y][x]) == 2:
             temp_surface = self.__corner_preprocess(x, y, temp_surface)
         self.surface.blit(temp_surface, (x * CELL_SIZE, y * CELL_SIZE))
 
-    def __render_map_surface(self):
+    def __render_map_surface(self) -> None:
         for y in range(len(self.map)):
             for x in range(len(self.map[y])):
                 self.__draw_cell(x, y)
 
-    def process_draw(self):
+    def process_draw(self) -> None:
         self.game.screen.blit(self.surface, (self.x, self.y))
 
-    def process_event(self, event):
+    def process_event(self, event: pg.event.Event) -> None:
         pass
 
-    def process_logic(self):
+    def process_logic(self) -> None:
         pass
 

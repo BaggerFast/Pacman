@@ -4,7 +4,7 @@ import pygame as pg
 class Animator:
     __time_out = 50
 
-    def __init__(self, path_to_images: str, time_out=50, is_rotation=True, repeat=False):
+    def __init__(self, path_to_images: str, time_out=50, is_rotation=True, repeat=False) -> None:
         self.is_rotation = is_rotation
         self.__animate_timer = 0
         self.__time_out = time_out
@@ -25,7 +25,7 @@ class Animator:
         for i in range(len(path_to_images)):
             self.__images.append(pg.image.load(path_to_images[i]))
 
-    def get_len_anim(self):
+    def get_len_anim(self) -> int:
         return len(self.__images)
 
     def stop(self) -> None:

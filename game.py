@@ -7,7 +7,7 @@ from scenes import LevelsScene, GameScene, GameoverScene, MenuScene, PauseScene,
 
 
 class Scenes:
-    def __init__(self, game):
+    def __init__(self, game) -> None:
         self.SCENE_PAUSE = PauseScene(game)
         self.SCENE_MENU = MenuScene(game)
         self.SCENE_GAME = GameScene(game)

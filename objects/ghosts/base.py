@@ -2,6 +2,7 @@ import pygame as pg
 from misc import Animator, get_image_path_for_animator
 from objects import Character
 from objects.pacman import Pacman
+from typing import Tuple
 
 
 class Base(Character):
@@ -13,7 +14,7 @@ class Base(Character):
         3: (0, -1, 3)
     }
 
-    def __init__(self, game, start_pos: tuple):
+    def __init__(self, game, start_pos: Tuple[int, int]) -> None:
 
         self.left_walk_anim = Animator(
             get_image_path_for_animator('ghost', type(self).__name__.lower(), 'left'), is_rotation=False

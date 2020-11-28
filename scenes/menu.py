@@ -6,7 +6,7 @@ from misc import Color, Font
 
 
 class MenuScene(BaseScene):
-    def __init__(self, game):
+    def __init__(self, game) -> None:
         super().__init__(game)
 
     def create_objects(self) -> None:

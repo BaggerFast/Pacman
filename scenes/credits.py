@@ -40,7 +40,7 @@ class CreditsScene(BaseScene):
         "Хирохико Араки"
     ]
 
-    def __init__(self, game):
+    def __init__(self, game) -> None:
         super().__init__(game)
         self.game = game
         self.__on_screen = 0
@@ -60,10 +60,10 @@ class CreditsScene(BaseScene):
         self.__button_controller = ButtonController(self.game, [self.__back_button])
         self.objects.append(self.__button_controller)
 
-    def __get_random_student_y(self):
+    def __get_random_student_y(self) -> int:
         return randint(25, self.game.height - 75)
 
-    def __create_student(self):
+    def __create_student(self) -> None:
         students = list(set(self.__students2) - set((obj.text for obj in self.__students)))
         label = str(students[randint(0, len(students) - 1)])
         self.__students2.pop(self.__students2.index(label))

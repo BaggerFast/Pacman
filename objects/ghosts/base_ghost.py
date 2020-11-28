@@ -15,7 +15,7 @@ class BaseGhost(Character):
     }
 
     def __init__(self, game, animator: Animator, start_pos: Tuple[int, int], animations, enable_collision=True,
-                 max_count_eat_seeds_in_home=0):
+                 max_count_eat_seeds_in_home=0) -> None:
         super().__init__(game, animator, start_pos)
         self.animations = animations
         self.enable_collision = enable_collision
@@ -23,7 +23,7 @@ class BaseGhost(Character):
         self.max_count_eat_seeds_in_home = max_count_eat_seeds_in_home
         self.timer = pg.time.get_ticks()
 
-    def process_event(self, event: pg.event) -> None:
+    def process_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key in self.action.keys():
             self.go()
             self.feature_direction = self.action[event.key]

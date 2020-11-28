@@ -1,4 +1,5 @@
 from random import randint
+from typing import Tuple
 
 from misc.constants import Points, CELL_SIZE
 from misc.path import get_image_path_for_animator
@@ -7,7 +8,7 @@ from objects.base import DrawableObject
 
 
 class Fruit(DrawableObject):
-    def __init__(self, game, screen, x, y):
+    def __init__(self, game, screen, x, y) -> None:
         super().__init__(game)
         self.screen = screen
         self.__anim = Animator(get_image_path_for_animator('fruit'), False, False)
@@ -19,24 +20,28 @@ class Fruit(DrawableObject):
         self.__eat_timer = 90
         self.__score_to_eat = 0
 
-    def __draw_fruit(self):
+    def __draw_fruit(self) -> None:
         if self.__drawing:
             self.screen.blit(self.__anim.current_image, self.rect)
 
-    def __check_score(self):
+    def __check_score(self) -> None:
         if self.__check_last_score():
             self.__drawing = True
 
-    def __check_last_score(self):
+    def __check_last_score(self) -> bool:
         if self.game.score.score >= self.__score_to_eat:
             self.__drawing = True
-            return 1
-        return 0
+            return True
+        return False
 
-    def __change_image(self):
+    def __change_image(self) -> None:
         self.__anim.change_cur_image(randint(0, self.__anim.get_len_anim() - 1))
 
-    def process_collision(self, object):
+    def process_collision(self, object) -> Tuple[bool, str]:
+        """
+        :param object: any class with pygame.rect
+        :return: is objects in collision (bool) and self type (str)
+        """
         if self.__drawing:
             if ((self.rect.x == object.rect.x + object.rect.width - CELL_SIZE//2)\
                     or (self.rect.x == object.rect.x - object.rect.width + CELL_SIZE//2)) \
@@ -47,8 +52,8 @@ class Fruit(DrawableObject):
                 return True, "fruit"
         return False, ""
 
-    def process_logic(self):
+    def process_logic(self) -> None:
         self.__check_score()
 
-    def process_draw(self):
+    def process_draw(self) -> None:
         self.__draw_fruit()

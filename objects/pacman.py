@@ -4,6 +4,7 @@ from misc.path import get_image_path_for_animator
 from objects.character_base import Character
 from misc.health import Health
 from misc.animator import Animator
+from typing import Tuple
 
 
 class Pacman(Character):
@@ -17,7 +18,7 @@ class Pacman(Character):
     pg.mixer.init()
     death_sound = Sounds.DEAD
 
-    def __init__(self, game, start_pos: (int, int)):
+    def __init__(self, game, start_pos: Tuple[int, int]) -> None:
         self.__hp = Health(3, 3)
         self.__walk_anim = Animator(
             get_image_path_for_animator('pacman', 'walk')
@@ -34,7 +35,7 @@ class Pacman(Character):
     def hp(self):
         return self.__hp.lives
 
-    def process_event(self, event) -> None:
+    def process_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key in self.action.keys() and not self.dead:
             self.go()
             self.__feature_rotate = self.action[event.key]
