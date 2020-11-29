@@ -2,7 +2,7 @@ from random import randint
 from typing import Tuple
 
 from misc import Points, CELL_SIZE
-from misc.path import get_image_path_for_animator
+from misc.path import get_list_path
 from misc.animator import Animator
 from objects.base import DrawableObject
 
@@ -11,7 +11,7 @@ class Fruit(DrawableObject):
     def __init__(self, game, screen, x, y) -> None:
         super().__init__(game)
         self.screen = screen
-        self.__anim = Animator(get_image_path_for_animator('fruit'), False, False)
+        self.__anim = Animator(get_list_path('images/fruit', 'png'), False, False)
         self.__image = self.__anim.current_image
         self.rect = self.__anim.current_image.get_rect()
         self.rect.x = x - self.rect.width // 2
