@@ -208,6 +208,7 @@ class Scene(base.Scene):
             self.__check_first_run()
             self.__process_collision()
             self.go_text.surface.set_alpha(0)
+            self.ready_text.surface.set_alpha(0)
             if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.__pacman.animator.anim_finished:
                 self.create_objects()
                 self.__seeds_eaten = 0

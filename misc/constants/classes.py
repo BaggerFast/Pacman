@@ -10,13 +10,12 @@ class Sounds:
     class TupleList(NamedTuple):
         list: list
     pg.mixer.init()
-    CLICK = Tuple(pg.mixer.Sound(get_path('sounds', 'NAV', 'wav'))).mixer
-    DEAD = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_death', 'wav'))).mixer
-    GAMEOVER = Tuple(pg.mixer.Sound(get_path('sounds', 'GameOver', 'wav'))).mixer
-    BOOST = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_intermission', 'wav'))).mixer
-    SEED = Tuple(pg.mixer.Sound(get_path('sounds', 'leader2', 'wav'))).mixer
+    CLICK = Tuple(pg.mixer.Sound(get_path('sounds', 'navigation', 'wav'))).mixer
+    DEAD = Tuple(pg.mixer.Sound(get_path('sounds', 'death', 'wav'))).mixer
+    GAMEOVER = Tuple(pg.mixer.Sound(get_path('sounds', 'gameover', 'wav'))).mixer
+    SEED = Tuple(pg.mixer.Sound(get_path('sounds', 'munch', 'wav'))).mixer
     INTRO = TupleList(get_list_path('sounds/intro/', 'wav')).list
-    MOVE = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_chomp', 'wav'))).mixer
+    MOVE = Tuple(pg.mixer.Sound(get_path('sounds', 'munch', 'wav'))).mixer
     SIREN = Tuple(pg.mixer.Sound(get_path('sounds', 'siren', 'wav'))).mixer
     FRUIT = Tuple(pg.mixer.Sound(get_path('sounds', 'eat_fruit', 'wav'))).mixer
 
