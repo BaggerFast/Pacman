@@ -130,7 +130,7 @@ class Maps(NamedTuple):
     level_1 = Tuple("original.json").value
     level_2 = Tuple("new_map.json").value
     level_3 = Tuple("new_new_map.json").value
-    MAPS_COUNT = Tuple(3).value
+    count = Tuple(3).value
 
     @staticmethod
     def get(attr: str) -> str:
@@ -138,7 +138,13 @@ class Maps(NamedTuple):
 
     @staticmethod
     def keys() -> List[str]:
-        return [f"level_{index}" for index in range(Maps.MAPS_COUNT)]
+        return [f"level_{index + 1}" for index in range(Maps.count)]
 
 
-DUBUG = True
+DUBUG = True  # not work
+
+INFINITY_LIVES = True  # not work
+
+DISABLE_GHOST = True  # not work
+
+UNLOCK_LEVELS = True
