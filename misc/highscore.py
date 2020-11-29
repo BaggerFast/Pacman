@@ -1,7 +1,7 @@
 import json
 import os.path
 
-from misc import MAPS_COUNT, Maps
+from misc.constants.variables import MAPS_COUNT, Maps
 from misc.path import create_file_if_not_exist  # НЕ УДАЛЯТЬ .path (Без него ошибка из-за зацикленного импорта)
 
 

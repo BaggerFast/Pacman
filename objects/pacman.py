@@ -1,6 +1,6 @@
 import pygame as pg
 from misc import Sounds
-from misc.path import get_image_path_for_animator
+from misc.path import get_list_path
 from objects.character_base import Character
 from misc.health import Health
 from misc.animator import Animator
@@ -21,10 +21,10 @@ class Pacman(Character):
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
         self.__hp = Health(3, 3)
         self.__walk_anim = Animator(
-            get_image_path_for_animator('pacman', 'walk')
+            get_list_path('images/pacman/walk', 'png')
         )
         self.__dead_anim = Animator(
-            get_image_path_for_animator('pacman', 'dead'), 100, False, True
+            get_list_path('images/pacman/dead', 'png'), 100, False, True
         )
         super().__init__(game, self.__walk_anim, start_pos)
         self.dead = False
