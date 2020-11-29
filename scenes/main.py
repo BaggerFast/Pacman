@@ -22,7 +22,7 @@ class Scene(base.Scene):
         self.__ghost_positions = self.__loader.get_ghost_positions()
         self.__fruit_position = self.__loader.get_fruit_position()
         self.intro_sound.set_volume(0.5)
-        self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not False
+        self.first_run = True
         self.__timer_reset_pacman = 0
         self.__seeds_eaten = 0
         self.__work_ghost_counters = True
@@ -165,14 +165,14 @@ class Scene(base.Scene):
                 self.__prefered_ghost.update_timer()
             elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
                 self.__seeds_eaten += 1
+                print(self.__seeds_eaten)
                 self.__prefered_ghost.update_timer()
 
     def __check_first_run(self) -> None:
         if self.first_run:
-            pg.mixer.Channel(1).play(self.intro_sound)
             self.create_objects()
-            # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
-            self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
+            pg.mixer.Channel(1).play(self.intro_sound)
+            self.first_run = False
 
     def start_label(self) -> None:
         if self.anim < 8:
@@ -202,6 +202,8 @@ class Scene(base.Scene):
                 self.__seeds_eaten = 0
                 self.__work_ghost_counters = False
                 self.__max_seeds_eaten_to_prefered_ghost = 7
+                for ghost in self.__ghosts:
+                    ghost.work_counter = False
             if self.__seeds_eaten == self.__max_seeds_eaten_to_prefered_ghost and self.__prefered_ghost is not None:
                 self.__prefered_ghost.is_can_leave_home = True
                 if self.__max_seeds_eaten_to_prefered_ghost == 7:
@@ -209,6 +211,7 @@ class Scene(base.Scene):
                 elif self.__max_seeds_eaten_to_prefered_ghost == 17:
                     self.__max_seeds_eaten_to_prefered_ghost = 32
         else:
+            self.create_objects()
             self.start_label()
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
