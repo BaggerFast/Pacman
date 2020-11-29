@@ -1,5 +1,4 @@
 import pygame as pg
-import random
 from typing import NamedTuple
 
 from misc.path import get_path, get_list_path

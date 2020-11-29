@@ -243,9 +243,6 @@ class Scene(base.Scene):
             self.__last_hp[i].process_draw()
         self.__scores_value_text.text = str(self.game.score)
 
-        # todo: make text update only when new value appeares
-        self.__scores_value_text.text = str(self.game.score)
-
     def on_deactivate(self) -> None:
         pass
         # self.game.records.set_new_record(int(self.game.score))
