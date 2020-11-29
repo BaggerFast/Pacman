@@ -1,5 +1,3 @@
-import sys
-
 import pygame as pg
 
 from objects import ButtonController, Button, Text
@@ -17,13 +15,13 @@ class Scene(Base.Scene):
         self.__create_indicator()
 
     def __create_title(self) -> None:
-        title = Text(self.game, 'PACMAN', 36, color=Color.WHITE, font=Font.FILENAME)
+        title = Text(self.game, 'PACMAN', 36, color=Color.WHITE, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
 
     def __create_indicator(self) -> None:
         self.__indicator = Text(self.game, self.game.level_name.replace('_', ' '),
-                                15, color=Color.WHITE, font=Font.FILENAME)
+                                15, color=Color.WHITE, font=Font.TITLE)
         self.__indicator.move_center(self.game.width // 2, 60)
         self.objects.append(self.__indicator)
 

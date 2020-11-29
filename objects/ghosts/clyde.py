@@ -4,7 +4,7 @@ from .base import Base
 class Clyde(Base):
     max_count_eat_seeds_in_home = 59
 
-    def process_logic(self):
+    def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()
             if self.is_in_home and self.can_leave_home():
@@ -18,5 +18,5 @@ class Clyde(Base):
                     self.is_in_home = False
                     self.collision = True
 
-    def get_love_cell(self, pacman):
+    def get_love_cell(self, pacman) -> None:
         pass

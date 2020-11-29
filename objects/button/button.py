@@ -46,7 +46,7 @@ class Button(BaseButton):
                  function: Callable[[], None], text: str = 'Define me',
                  colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
                  center: Tuple[float, float] = None, text_size=60,
-                 font=Font.ALTFONT) -> None:
+                 font=Font.DEFAULT) -> None:
         super().__init__(game, geometry, function)
         self.text = text
         self.font = pg.font.Font(font, text_size)
@@ -131,11 +131,11 @@ class Button(BaseButton):
     def process_draw(self) -> None:
         self.game.screen.blit(self.surfaces[self.state], self.rect.topleft)
 
-    def select(self):
+    def select(self) -> None:
         self.state = self.STATE_HOVER
 
-    def deselect(self):
+    def deselect(self) -> None:
         self.state = self.STATE_INITIAL
 
-    def activate(self):
+    def activate(self) -> None:
         self.state = self.STATE_CLICK

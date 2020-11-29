@@ -5,43 +5,37 @@ import pygame as pg
 from misc.path import get_sound_path
 
 
-class Palitra(NamedTuple):
-    color: pg.color.Color
-
-class Mixer(NamedTuple):
-    value: str
-
-SOUNDS = []
-
-
 class Sounds:
-    # CLICK = Mixer("NAV").value
+    class Tuple(NamedTuple):
+        value: str
     pg.mixer.init()
-    CLICK = pg.mixer.Sound(get_sound_path(Mixer("NAV").value))
-    DEAD = pg.mixer.Sound(get_sound_path(Mixer("pacman_death").value))
-    GAMEOVER = pg.mixer.Sound(get_sound_path(Mixer("GameOver").value))
-    BOOST = pg.mixer.Sound(get_sound_path(Mixer("pacman_intermission").value))
-    SEED = pg.mixer.Sound(get_sound_path(Mixer("leader2").value))
-    INTRO = pg.mixer.Sound(get_sound_path(Mixer("pacman_beginning").value))
-    MOVE = pg.mixer.Sound(get_sound_path(Mixer("pacman_chomp").value))
+    CLICK = pg.mixer.Sound(get_sound_path(Tuple("NAV").value))
+    DEAD = pg.mixer.Sound(get_sound_path(Tuple("pacman_death").value))
+    GAMEOVER = pg.mixer.Sound(get_sound_path(Tuple("GameOver").value))
+    BOOST = pg.mixer.Sound(get_sound_path(Tuple("pacman_intermission").value))
+    SEED = pg.mixer.Sound(get_sound_path(Tuple("leader2").value))
+    INTRO = pg.mixer.Sound(get_sound_path(Tuple("pacman_beginning").value))
+    MOVE = pg.mixer.Sound(get_sound_path(Tuple("pacman_chomp").value))
     # GAMESTART = pg.mixer.Sound(get_sound_path(Mixer("Star").value))
 
 
-class Color:
-    RED = Palitra(pg.color.Color('red')).color
-    BLUE = Palitra(pg.color.Color('blue')).color
-    GREEN = Palitra(pg.color.Color('green')).color
-    BLACK = Palitra(pg.color.Color('black')).color
-    WHITE = Palitra(pg.color.Color('white')).color
-    ORANGE = Palitra(pg.color.Color('orange')).color
-    YELLOW = Palitra(pg.color.Color('yellow')).color
-    GOLD = Palitra(pg.color.Color('gold')).color
-    GRAY = Palitra(pg.color.Color('gray50')).color
-    DARK_GRAY = Palitra(pg.color.Color('gray26')).color
-    SILVER = Palitra(pg.color.Color(192, 192, 192)).color
-    BRONZE = Palitra(pg.color.Color(205, 127, 50)).color
-    WOODEN = Palitra(pg.color.Color(101, 67, 33)).color
-    JET = Palitra(pg.color.Color(10, 10, 10)).color
+class Color(NamedTuple):
+    class Tuple(NamedTuple):
+        color: pg.Color
+    RED = Tuple(pg.Color('red')).color
+    BLUE = Tuple(pg.Color('blue')).color
+    GREEN = Tuple(pg.Color('green')).color
+    BLACK = Tuple(pg.Color('black')).color
+    WHITE = Tuple(pg.Color('white')).color
+    ORANGE = Tuple(pg.Color('orange')).color
+    YELLOW = Tuple(pg.Color('yellow')).color
+    GOLD = Tuple(pg.Color('gold')).color
+    GRAY = Tuple(pg.Color('gray50')).color
+    DARK_GRAY = Tuple(pg.Color('gray26')).color
+    SILVER = Tuple(pg.Color(192, 192, 192)).color
+    BRONZE = Tuple(pg.Color(205, 127, 50)).color
+    WOODEN = Tuple(pg.Color(101, 67, 33)).color
+    JET = Tuple(pg.Color(10, 10, 10)).color
 
 
 class ButtonStateColor(NamedTuple):
@@ -49,7 +43,7 @@ class ButtonStateColor(NamedTuple):
     background: pg.Color = Color.BLACK
 
     @staticmethod
-    def get_members_list():
+    def get_members_list() -> list:
         members = inspect.getmembers(BUTTON_DEFAULT_COLORS, lambda member: type(member) == pg.Color)
         return [item[0] for item in members]
 
@@ -91,7 +85,7 @@ class ButtonColor(NamedTuple):
             self.__setattr__(name, default_section)
 
     @staticmethod
-    def get_members_list():
+    def get_members_list() -> list:
         members = inspect.getmembers(BUTTON_DEFAULT_COLORS, lambda member: type(member) == ButtonStateColor)
         return [item[0] for item in members]
 
@@ -111,27 +105,38 @@ ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 CELL_SIZE = 8
 
 
-# TODO: migrate to NamedTuple
 class Points:
-    POINT_PER_SEED = 10
-    POINT_PER_ENERGIZER = 50
-    POINT_PER_FRUIT = 40
+    class Tuple(NamedTuple):
+        value: int
+    POINT_PER_SEED = Tuple(10).value
+    POINT_PER_ENERGIZER = Tuple(50).value
+    POINT_PER_FRUIT = Tuple(40).value
 
 
-
-# TODO: migrate to NamedTuple
 class Font:
-    FILENAME = os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')
-    ALTFONT = os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')
-    MAIN_SCENE_SIZE = 10
-    BUTTON_TEXT_SIZE = 24
-    CREDITS_SCENE_SIZE = 14
+    class Tuple(NamedTuple):
+        size: int = 0
+        font: str = ''
+    TITLE = Tuple(font=os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')).font
+    DEFAULT = Tuple(font=os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')).font
+    MAIN_SCENE_SIZE = Tuple(size=10).size
+    BUTTON_TEXT_SIZE = Tuple(size=24).size
+    CREDITS_SCENE_SIZE = Tuple(size=14).size
 
 
-MAPS = {
-    "level_1": "original.json",
-    "level_2": "new_map.json",
-    "level_3": "new_new_map.json"
-}
+class Maps(NamedTuple):
+    class Tuple(NamedTuple):
+        value: str
+    level_1 = Tuple("original.json").value
+    level_2 = Tuple("new_map.json").value
+    level_3 = Tuple("new_new_map.json").value
 
-MAPS_COUNT = len(MAPS)
+    @staticmethod
+    def get(attr: str) -> str:
+        return getattr(Maps, attr)
+
+
+MAPS_COUNT = len(vars(Maps))
+
+
+DUBUG = True

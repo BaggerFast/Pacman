@@ -28,7 +28,7 @@ class Scene(Base.Scene):
         self.objects.append(self.button_controller)
 
     def __create_title(self) -> None:
-        self.__main_text = Text(self.game, 'PAUSE', 40, color=Color.WHITE, font=Font.FILENAME)
+        self.__main_text = Text(self.game, 'PAUSE', 40, color=Color.WHITE, font=Font.TITLE)
         self.__main_text.move_center(self.game.width // 2, 35)
         self.objects.append(self.__main_text)
 

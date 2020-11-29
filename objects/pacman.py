@@ -1,9 +1,10 @@
 import pygame as pg
 from misc import Sounds
-from misc.path import get_image_path_for_animator, get_sound_path
+from misc.path import get_image_path_for_animator
 from objects.character_base import Character
 from misc.health import Health
 from misc.animator import Animator
+from typing import Tuple
 
 
 class Pacman(Character):
@@ -17,7 +18,7 @@ class Pacman(Character):
     pg.mixer.init()
     death_sound = Sounds.DEAD
 
-    def __init__(self, game, start_pos: tuple):
+    def __init__(self, game, start_pos: Tuple[int, int]) -> None:
         self.__hp = Health(3, 3)
         self.__walk_anim = Animator(
             get_image_path_for_animator('pacman', 'walk')
@@ -34,12 +35,12 @@ class Pacman(Character):
     def hp(self):
         return self.__hp.lives
 
-    def process_event(self, event):
+    def process_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key in self.action.keys() and not self.dead:
             self.go()
             self.__feature_rotate = self.action[event.key]
 
-    def process_logic(self):
+    def process_logic(self) -> None:
         self.animator.timer_check()
         if not self.dead:
             if self.in_center():
@@ -53,7 +54,7 @@ class Pacman(Character):
                     self.set_direction(self.__feature_rotate)
             super().process_logic()
 
-    def death(self):
+    def death(self) -> None:
         pg.mixer.Channel(0).play(self.death_sound)
         self.__hp -= 1
         self.animator = self.__dead_anim

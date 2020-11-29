@@ -1,19 +1,19 @@
 import pygame as pg
 
-from misc import LevelLoader, Color, MAPS, CELL_SIZE, Font, get_image_path
+from misc import LevelLoader, Color, CELL_SIZE, Font, get_image_path
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import Base
 from objects.fruits import Fruit
-from misc.constants import Sounds
+from misc.constants import Sounds, Maps
 
 
 class Scene(Base.Scene):
     pg.mixer.init()
     intro_sound = Sounds.INTRO
 
-    def __init__(self, game):
-        self.__loader = LevelLoader(MAPS[game.level_name])
+    def __init__(self, game) -> None:
+        self.__loader = LevelLoader(Maps.get(game.level_name))
         self.__map_data = self.__loader.get_map_data()
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()
@@ -31,10 +31,10 @@ class Scene(Base.Scene):
         self.anim = 0
         super().__init__(game)
 
-    def __prepare_lives_meter(self):
+    def __prepare_lives_meter(self) -> None:
         self.__last_hp = []
         for i in range(self.__pacman.hp):
-            hp_image = ImageObject(self.game, get_image_path('1.png', 'pacman', 'walk'), 5 + i * 20, 270)
+            hp_image = ImageObject(self.game, get_image_path('1.png', 'pacman', 'walk'), (5 + i * 20, 270))
             hp_image.rotate(180)
             self.__last_hp.append(hp_image)
 
@@ -63,7 +63,8 @@ class Scene(Base.Scene):
 
         self.objects.append(self.__pacman)
         self.__prepare_lives_meter()
-        self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE//2, 20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE//2)
+        self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
+                           20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
         self.objects.append(self.fruit)
 
         self.__blinky = Blinky(self.game, self.__ghost_positions[3])
@@ -88,10 +89,10 @@ class Scene(Base.Scene):
         self.objects.append(self.__inky)
         self.objects.append(self.__clyde)
 
-        self.ready_text = Text(self.game, 'Ready', 30, font=Font.FILENAME,
+        self.ready_text = Text(self.game, 'Ready', 30, font=Font.TITLE,
                                rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
         self.ready_text.move_center(self.game.width // 2, self.game.height // 2)
-        self.go_text = Text(self.game, 'GO!', 30, font=Font.FILENAME,
+        self.go_text = Text(self.game, 'GO!', 30, font=Font.TITLE,
                             rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
         self.go_text.move_center(self.game.width // 2, self.game.height // 2)
         self.ready_text.surface.set_alpha(0)
@@ -123,11 +124,11 @@ class Scene(Base.Scene):
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.__start_pause()
 
-    def __start_pause(self):
+    def __start_pause(self) -> None:
         pg.mixer.pause()
         self.game.set_scene(self.game.scenes.PAUSE)
 
-    def __change_prefered_ghost(self):
+    def __change_prefered_ghost(self) -> None:
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__count_prefered_ghost += 1
             self.__not_prefered_ghosts.pop(0)
@@ -167,14 +168,14 @@ class Scene(Base.Scene):
                 self.__seeds_eaten += 1
                 self.__prefered_ghost.update_timer()
 
-    def __check_first_run(self):
+    def __check_first_run(self) -> None:
         if self.first_run:
             pg.mixer.Channel(1).play(self.intro_sound)
             self.create_objects()
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
 
-    def start_label(self):
+    def start_label(self) -> None:
         if self.anim < 8:
             if self.total_anim < 200:
                 self.ready_text.surface.set_alpha(255)
@@ -197,14 +198,13 @@ class Scene(Base.Scene):
             self.__check_first_run()
             self.__process_collision()
             self.go_text.surface.set_alpha(0)
-            if pg.time.get_ticks()-self.__timer_reset_pacman >= 3000 and self.__pacman.animator.anim_finished:
+            if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.__pacman.animator.anim_finished:
                 self.create_objects()
                 self.__seeds_eaten = 0
                 self.__work_ghost_counters = False
                 self.__max_seeds_eaten_to_prefered_ghost = 7
-            if self.__seeds_eaten == self.__max_seeds_eaten_to_prefered_ghost and self.__prefered_ghost != None:
+            if self.__seeds_eaten == self.__max_seeds_eaten_to_prefered_ghost and self.__prefered_ghost is not None:
                 self.__prefered_ghost.is_can_leave_home = True
-                print(self.__max_seeds_eaten_to_prefered_ghost)
                 if self.__max_seeds_eaten_to_prefered_ghost == 7:
                     self.__max_seeds_eaten_to_prefered_ghost = 17
                 elif self.__max_seeds_eaten_to_prefered_ghost == 17:
