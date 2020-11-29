@@ -7,6 +7,9 @@ class Health:
     def lives(self):
         return self.__lives
 
+    def __int__(self):
+        return self.__lives
+
     def __add__(self, value: int):
         self.__lives = self.__lives + value
         self.__check_min_and_max()

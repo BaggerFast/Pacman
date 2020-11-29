@@ -32,7 +32,7 @@ class Fruit(DrawableObject):
             self.__start_time = pg.time.get_ticks()
 
     def __check_last_score(self):
-        if self.game.score.score >= self.__score_to_eat:
+        if int(self.game.score) >= self.__score_to_eat:
             self.__drawing = True
             return True
         return False
@@ -40,7 +40,7 @@ class Fruit(DrawableObject):
     def __check_time(self):
         if pg.time.get_ticks() - self.__start_time >= 9000:  # 9000
             self.__start_time = None
-            self.__score_to_eat = self.game.score.score + self.__eat_timer
+            self.__score_to_eat = self.self.game.score + self.__eat_timer
             self.__drawing = False
             self.__change_image()
 
@@ -56,7 +56,7 @@ class Fruit(DrawableObject):
             if (self.rect.x == min(object.rect.left, object.rect.right))\
                     and (self.rect.y == object.rect.y):
                 self.__drawing = False
-                self.__score_to_eat = self.game.score.score + self.__eat_timer + Points.POINT_PER_FRUIT
+                self.__score_to_eat = int(self.game.score) + self.__eat_timer + Points.POINT_PER_FRUIT
                 self.__change_image()
                 return True, "fruit"
         return False, ""

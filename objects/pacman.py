@@ -19,7 +19,6 @@ class Pacman(Character):
     death_sound = Sounds.DEAD
 
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
-        self.__hp = Health(3, 3)
         self.__walk_anim = Animator(
             get_image_path_for_animator('pacman', 'walk')
         )
@@ -56,7 +55,7 @@ class Pacman(Character):
 
     def death(self) -> None:
         pg.mixer.Channel(0).play(self.death_sound)
-        self.__hp -= 1
+        self.game.current_scene.hp -= 1
         self.animator = self.__dead_anim
         self.animator.run = True
         self.dead = True

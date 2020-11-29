@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc import LevelLoader, Color, CELL_SIZE, Font, get_image_path
+from misc import LevelLoader, Color, CELL_SIZE, Font, get_image_path, Health
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import base
@@ -22,18 +22,19 @@ class Scene(base.Scene):
         self.__ghost_positions = self.__loader.get_ghost_positions()
         self.__fruit_position = self.__loader.get_fruit_position()
         self.intro_sound.set_volume(0.5)
-        self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not False
+        self.first_run = True
         self.__timer_reset_pacman = 0
         self.__seeds_eaten = 0
         self.__work_ghost_counters = True
         self.__max_seeds_eaten_to_prefered_ghost = 7
         self.total_anim = 0
         self.anim = 0
+        self.hp = Health(1, 3)
         super().__init__(game)
 
     def __prepare_lives_meter(self) -> None:
         self.__last_hp = []
-        for i in range(self.__pacman.hp):
+        for i in range(int(self.hp)):
             hp_image = ImageObject(self.game, get_image_path('1.png', 'pacman', 'walk'), (5 + i * 20, 270))
             hp_image.rotate(180)
             self.__last_hp.append(hp_image)
@@ -150,7 +151,7 @@ class Scene(base.Scene):
                     self.__pacman.death()
                     self.__prepare_lives_meter()
                 # todo
-                elif not self.__pacman.animator.run:
+                if not self.__pacman.animator.run != self.__pacman.death() and int(self.hp) < 1:
                     self.game.set_scene(self.game.scenes.GAMEOVER)
                     break
                 for ghost2 in self.__ghosts:
@@ -169,6 +170,7 @@ class Scene(base.Scene):
             elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
                 self.__seeds_eaten += 1
                 self.__prefered_ghost.update_timer()
+
 
     def __check_first_run(self) -> None:
         if self.first_run:
