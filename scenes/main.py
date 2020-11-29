@@ -1,4 +1,5 @@
 import pygame as pg
+import random
 
 from misc import LevelLoader, Color, CELL_SIZE, Font, get_image_path, Sounds, Maps
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
@@ -10,7 +11,6 @@ from misc import Sounds, Maps
 
 class GameScene(BaseScene):
     pg.mixer.init()
-    intro_sound = Sounds.INTRO
     siren_sound = Sounds.SIREN
 
     def __init__(self, game) -> None:
@@ -29,6 +29,7 @@ class GameScene(BaseScene):
         self.__max_seeds_eaten_to_prefered_ghost = 7
         self.total_anim = 0
         self.anim = 0
+        self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
         self.intro_sound.set_volume(0.5)
         super().__init__(game)
 

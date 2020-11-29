@@ -1,20 +1,26 @@
 import pygame as pg
+import random
 from typing import NamedTuple
 
-from misc.path import get_path
+from misc.path import get_path, get_list_path
 
 
 class Sounds:
     class Tuple(NamedTuple):
         mixer: pg.mixer.Sound
+    class TupleList(NamedTuple):
+        list: list
+
     pg.mixer.init()
     CLICK = Tuple(pg.mixer.Sound(get_path('sounds', 'NAV', 'wav'))).mixer
     DEAD = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_death', 'wav'))).mixer
     GAMEOVER = Tuple(pg.mixer.Sound(get_path('sounds', 'GameOver', 'wav'))).mixer
     BOOST = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_intermission', 'wav'))).mixer
     SEED = Tuple(pg.mixer.Sound(get_path('sounds', 'leader2', 'wav'))).mixer
-    INTRO = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_beginning', 'wav'))).mixer
+    INTRO = TupleList(get_list_path('sounds/intro/', 'wav')).list
     MOVE = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_chomp', 'wav'))).mixer
+    SIREN = Tuple(pg.mixer.Sound(get_path('sounds', 'siren', 'wav'))).mixer
+    FRUIT = Tuple(pg.mixer.Sound(get_path('sounds', 'eat_fruit', 'wav'))).mixer
 
 
 class Color(NamedTuple):
