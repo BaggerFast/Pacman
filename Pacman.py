@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Color, ROOT_DIR, HighScore, get_image_path, Score,
+from misc import Color, ROOT_DIR, HighScore, get_image_path, Score
 from misc.storage import Storage
 from scenes import *
 
