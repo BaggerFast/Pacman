@@ -1,15 +1,17 @@
 import pygame as pg
+import random
 
-from misc import LevelLoader, Color, CELL_SIZE, Font, get_image_path
+from misc import LevelLoader, Color, CELL_SIZE, Font, get_image_path, Health
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import base
 from objects.fruits import Fruit
-from misc.constants import Sounds, Maps
+from misc import Sounds, Maps
 
 
 class Scene(base.Scene):
     pg.mixer.init()
+    siren_sound = Sounds.SIREN
     intro_sound = Sounds.INTRO
 
     def __init__(self, game) -> None:
@@ -21,7 +23,6 @@ class Scene(base.Scene):
         self.__player_position = self.__loader.get_player_position()
         self.__ghost_positions = self.__loader.get_ghost_positions()
         self.__fruit_position = self.__loader.get_fruit_position()
-        self.intro_sound.set_volume(0.5)
         self.first_run = True
         self.__timer_reset_pacman = 0
         self.__seeds_eaten = 0
@@ -30,11 +31,14 @@ class Scene(base.Scene):
         self.__first_run_ghost = True
         self.total_anim = 0
         self.anim = 0
+        self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
+        self.intro_sound.set_volume(0.5)
+        self.hp = Health(3, 3)
         super().__init__(game)
 
     def __prepare_lives_meter(self) -> None:
         self.__last_hp = []
-        for i in range(self.__pacman.hp):
+        for i in range(int(self.hp)):
             hp_image = ImageObject(self.game, get_image_path('1.png', 'pacman', 'walk'), (5 + i * 20, 270))
             hp_image.rotate(180)
             self.__last_hp.append(hp_image)
@@ -149,10 +153,6 @@ class Scene(base.Scene):
                 if not self.__pacman.dead:
                     self.__pacman.death()
                     self.__prepare_lives_meter()
-                # todo
-                elif not self.__pacman.animator.run:
-                    self.game.set_scene(self.game.scenes.GAMEOVER)
-                    break
                 for ghost2 in self.__ghosts:
                     ghost2.invisible()
         if is_eaten1:
@@ -168,19 +168,15 @@ class Scene(base.Scene):
                 self.__prefered_ghost.update_timer()
             elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
                 self.__seeds_eaten += 1
-                print(self.__seeds_eaten)
                 self.__prefered_ghost.update_timer()
+
 
     def __check_first_run(self) -> None:
         if self.first_run:
-            self.create_objects()
             pg.mixer.Channel(1).play(self.intro_sound)
+            self.create_objects()
+            # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = False
-
-    def __check_first_run_ghosts(self) -> None:
-        if self.__first_run_ghost:
-            self.create_ghosts()
-            self.__first_run_ghost = False
 
     def start_label(self) -> None:
         if self.anim < 8:
@@ -194,11 +190,21 @@ class Scene(base.Scene):
                 self.ready_text.surface.set_alpha(0)
             else:
                 self.ready_text.surface.set_alpha(0)
+            if self.anim > 16:
+                self.anim = 0
+        self.anim += 1
         self.total_anim += 1
+
+    def __play_music(self):
+        if not pg.mixer.Channel(3).get_busy() and not self.first_run:
+            pg.mixer.Channel(3).play(self.siren_sound)
 
     def process_logic(self) -> None:
         if not pg.mixer.Channel(1).get_busy():
+            if self.__pacman.dead_anim.anim_finished and int(self.hp) < 1:
+                self.game.set_scene(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
+            self.__play_music()
             self.__check_first_run()
             self.__process_collision()
             self.go_text.surface.set_alpha(0)
@@ -246,8 +252,11 @@ class Scene(base.Scene):
         # self.game.scenes["GAME"] = Scene(self.game)
 
     def on_activate(self) -> None:
-        pg.mixer.unpause()
-        # self.game.scenes["GAME"] = Scene(self.game)
+        pg.mixer.Channel(0).unpause()
+        pg.mixer.Channel(1).unpause()
+        if self.__pacman.animator != self.__pacman.dead_anim:
+            pg.mixer.Channel(3).unpause()
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
 
     def on_reset(self) -> None:
         pg.mixer.stop()
