@@ -9,5 +9,5 @@ class Blinky(Base):
             self.collision = True
             self.go()
 
-    def get_love_cell(self, pacman) -> None:
+    def get_love_cell(self, pacman, blinky) -> None:
         self.love_cell = pacman.get_cell()

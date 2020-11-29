@@ -18,5 +18,5 @@ class Clyde(Base):
                     self.is_in_home = False
                     self.collision = True
 
-    def get_love_cell(self, pacman) -> None:
+    def get_love_cell(self, pacman, blinky) -> None:
         pass

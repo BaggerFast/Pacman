@@ -129,14 +129,13 @@ class Scene(base.Scene):
         self.game.set_scene(self.game.scenes.PAUSE)
 
     def __change_prefered_ghost(self) -> None:
-        if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
-            self.__count_prefered_ghost += 1
-            self.__not_prefered_ghosts.pop(0)
-            if self.__count_prefered_ghost < 4:
-                self.__prefered_ghost = self.__ghosts[self.__count_prefered_ghost]
-            else:
-                self.__prefered_ghost = None
-                self.__count_prefered_ghost = 0
+        self.__count_prefered_ghost += 1
+        self.__not_prefered_ghosts.pop(0)
+        if self.__count_prefered_ghost < 4:
+            self.__prefered_ghost = self.__ghosts[self.__count_prefered_ghost]
+        else:
+            self.__prefered_ghost = None
+            self.__count_prefered_ghost = 0
 
     def __process_collision(self) -> None:
         is_eaten1, type1 = self.fruit.process_collision(self.__pacman)
@@ -211,10 +210,10 @@ class Scene(base.Scene):
                     self.__max_seeds_eaten_to_prefered_ghost = 32
         else:
             self.start_label()
-
-        self.__change_prefered_ghost()
+        if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
+            self.__change_prefered_ghost()
         for ghost in self.__ghosts:
-            ghost.get_love_cell(self.__pacman)
+            ghost.get_love_cell(self.__pacman, self.__blinky)
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
         for ghost in self.__not_prefered_ghosts:

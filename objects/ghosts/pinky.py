@@ -15,6 +15,6 @@ class Pinky(Base):
                     self.is_in_home = False
                     self.collision = True
 
-    def get_love_cell(self, pacman) -> None:
+    def get_love_cell(self, pacman, blinky) -> None:
         rotate = pacman.rotate
         self.love_cell = (pacman.get_cell()[0]+self.direction2[rotate][0]*2, pacman.get_cell()[1]+self.direction2[rotate][1]*2)

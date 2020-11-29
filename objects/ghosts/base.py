@@ -82,9 +82,9 @@ class Base(Character):
             self.count_eat_seeds_in_home += 1
 
     def can_leave_home(self) -> bool:
+        # print(type(self).__name__, ' ', self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home, pg.time.get_ticks()-self.timer)
         return (self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home and self.work_counter) \
                or pg.time.get_ticks()-self.timer >= 4000 or self.is_can_leave_home
-        # флаг выше передаётся нужен после смерти пакмана
 
     def update_timer(self) -> None:
         self.timer = pg.time.get_ticks()
