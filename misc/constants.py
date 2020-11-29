@@ -1,6 +1,6 @@
 import inspect
 import os.path
-from typing import NamedTuple
+from typing import NamedTuple, List, Union
 import pygame as pg
 from misc.path import get_sound_path
 
@@ -126,17 +126,19 @@ class Font:
 
 class Maps(NamedTuple):
     class Tuple(NamedTuple):
-        value: str
+        value: Union[str, int]
     level_1 = Tuple("original.json").value
     level_2 = Tuple("new_map.json").value
     level_3 = Tuple("new_new_map.json").value
+    MAPS_COUNT = Tuple(3).value
 
     @staticmethod
     def get(attr: str) -> str:
         return getattr(Maps, attr)
 
-
-MAPS_COUNT = len(vars(Maps))
+    @staticmethod
+    def keys() -> List[str]:
+        return [f"level_{index}" for index in range(Maps.MAPS_COUNT)]
 
 
 DUBUG = True

@@ -1,13 +1,14 @@
 import json
 import os.path
 
-from misc import MAPS_COUNT, Maps
+from misc import Maps
 from misc.path import create_file_if_not_exist  # НЕ УДАЛЯТЬ .path (Без него ошибка из-за зацикленного импорта)
 
 
 class HighScore:
     __json_filename = os.path.join('saves', 'records.json')
     __RECORDS_COUNT = 5
+    __json_default = {f"level_{index + 1}": [0 for _ in range(__RECORDS_COUNT)] for index in range(Maps.MAPS_COUNT)}
 
     def __init__(self, game) -> None:
         self.__game = game
@@ -24,12 +25,11 @@ class HighScore:
         return self.__level_name
 
     def load_json_record(self) -> dict:
-        create_file_if_not_exist(self.__json_filename, json.dumps({f"level_{index + 1}": [0 for _ in range(
-            self.__RECORDS_COUNT)] for index in range(MAPS_COUNT)}))
+        create_file_if_not_exist(self.__json_filename, json.dumps(self.__json_default))
         with open(self.__json_filename, 'r') as file:
             record_table_json = json.load(file)
-        if len(record_table_json) < MAPS_COUNT:
-            for level_name in vars(Maps).keys():
+        if len(record_table_json) < Maps.MAPS_COUNT:
+            for level_name in Maps.keys():
                 if level_name not in record_table_json:
                     record_table_json[level_name] = [0 for _ in range(self.__RECORDS_COUNT)]
             with open(self.__json_filename, 'w') as file:
