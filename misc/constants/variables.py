@@ -2,4 +2,4 @@ CELL_SIZE = 8
 MAPS_COUNT = 3
 
 UNLOCK_LEVELS = True
-DUBUG = True
+DEBUG = True
