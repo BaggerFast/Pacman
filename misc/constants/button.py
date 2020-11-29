@@ -2,7 +2,7 @@ import pygame as pg
 import inspect
 from typing import NamedTuple
 
-from misc.constants.variables import Color
+from misc.constants.classes import Color
 
 
 class ButtonStateColor(NamedTuple):

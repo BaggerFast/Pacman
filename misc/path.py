@@ -1,5 +1,7 @@
 import os
-from typing import List
+
+
+ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 
 
 def get_image_path(filename: str, *folder: str) -> str:
@@ -12,9 +14,6 @@ def get_image_path(filename: str, *folder: str) -> str:
     if extension not in filename:
         filename += extension
     return os.path.join(*[ROOT_DIR, 'images'] + list(folder) + [filename])
-
-
-ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 
 
 def get_path(folder: str, filename: str, extension: str) -> str:
