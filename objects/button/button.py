@@ -10,6 +10,7 @@ class BaseButton(DrawableObject):
     Click_sound = None
     Hover_sound = None
     Initial_sound = None
+
     def __init__(self, game, geometry: Union[tuple, pg.Rect], function: Callable[[], None]) -> None:
         super().__init__(game)
         if type(geometry) == tuple:
@@ -42,15 +43,25 @@ class Button(BaseButton):
     STATE_HOVER = 1
     STATE_CLICK = 2
     Click_sound = Sounds.CLICK
-    def __init__(self, game, geometry: Union[tuple, pg.Rect],
-                 function: Callable[[], None], text: str = 'Define me',
-                 colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
-                 center: Tuple[float, float] = None, text_size=60,
-                 font=Font.DEFAULT) -> None:
+
+    def __init__(
+        self,
+        game,
+        geometry: Union[tuple, pg.Rect],
+        function: Callable[[], None],
+        text: str = 'Define me',
+        colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
+        center: Tuple[float, float] = None,
+        text_size=60,
+        font=Font.DEFAULT,
+        active: bool = True
+    ) -> None:
+
         super().__init__(game, geometry, function)
         self.text = text
         self.font = pg.font.Font(font, text_size)
         # self.text = Text(self.game, text)
+        self.active = active
         self.colors: ButtonColor = self.parse_colors(colors)
         self.state = self.STATE_INITIAL
         self.surfaces = self.prepare_surfaces()
@@ -71,7 +82,7 @@ class Button(BaseButton):
             raise TypeError('Invalid button colors type (can only be dict or ButtonColor)')
 
     def mouse_hover(self, pos: Tuple[Union[int, float], Union[int, float]]) -> bool:
-        return bool(self.rect.collidepoint(pos))
+        return bool(self.rect.collidepoint(pos)) and self.active
 
     def process_mouse_motion(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEMOTION:
@@ -100,10 +111,11 @@ class Button(BaseButton):
             self.state = self.STATE_INITIAL
 
     def process_event(self, event: pg.event.Event) -> None:
-        self.process_mouse_motion(event)
-        self.process_mouse_button_down(event)
-        self.process_mouse_button_up(event)
-        super().process_event(event)
+        if self.active:
+            self.process_mouse_motion(event)
+            self.process_mouse_button_down(event)
+            self.process_mouse_button_up(event)
+            super().process_event(event)
 
     def update_text(self, text: str) -> None:
         self.text = text

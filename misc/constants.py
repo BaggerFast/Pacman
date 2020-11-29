@@ -117,8 +117,8 @@ class Font:
     class Tuple(NamedTuple):
         size: int = 0
         font: str = ''
-    TITLE = Tuple(font=os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')).font
-    DEFAULT = Tuple(font=os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')).font
+    TITLE = Tuple(font=os.path.join(ROOT_DIR, 'fonts', 'title.ttf')).font
+    DEFAULT = Tuple(font=os.path.join(ROOT_DIR, 'fonts', 'default.ttf')).font
     MAIN_SCENE_SIZE = Tuple(size=10).size
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size
@@ -130,7 +130,7 @@ class Maps(NamedTuple):
     level_1 = Tuple("original.json").value
     level_2 = Tuple("new_map.json").value
     level_3 = Tuple("new_new_map.json").value
-    MAPS_COUNT = Tuple(3).value
+    count = Tuple(3).value
 
     @staticmethod
     def get(attr: str) -> str:
@@ -138,7 +138,13 @@ class Maps(NamedTuple):
 
     @staticmethod
     def keys() -> List[str]:
-        return [f"level_{index}" for index in range(Maps.MAPS_COUNT)]
+        return [f"level_{index + 1}" for index in range(Maps.count)]
 
 
-DUBUG = True
+DUBUG = True  # not work
+
+INFINITY_LIVES = True  # not work
+
+DISABLE_GHOST = True  # not work
+
+UNLOCK_LEVELS = True

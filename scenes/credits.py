@@ -54,9 +54,13 @@ class Scene(base.Scene):
         self.__create_buttons()
 
     def __create_buttons(self) -> None:
-        self.__back_button = Button(self.game, pg.Rect(0, 0, 180, 40),
-                                    self.__start_menu, 'MENU', center=(self.game.width // 2, 250),
+        self.__back_button = Button(self.game,
+                                    pg.Rect(0, 0, 180, 40),
+                                    self.__start_menu,
+                                    'MENU',
+                                    center=(self.game.width // 2, 250),
                                     text_size=Font.BUTTON_TEXT_SIZE)
+
         self.__button_controller = ButtonController(self.game, [self.__back_button])
         self.objects.append(self.__button_controller)
 
@@ -67,7 +71,7 @@ class Scene(base.Scene):
         students = list(set(self.__students2) - set((obj.text for obj in self.__students)))
         label = str(students[randint(0, len(students) - 1)])
         self.__students2.pop(self.__students2.index(label))
-        student = Text(self.game, label, Font.CREDITS_SCENE_SIZE, font=Font.DEFAULT)
+        student = Text(self.game, label, Font.CREDITS_SCENE_SIZE)
 
         is_student_y_correct = False
         tries = 0
