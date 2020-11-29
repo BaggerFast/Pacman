@@ -15,22 +15,22 @@ class Scene(base.Scene):
 
     def create_text_labels(self) -> None:
         self.game.records.update_records()
-        self.__one_text = Text(self.game, str(self.game.records.data[4]), 30, pg.Rect(0, 0, 60, 55), Color.GOLD)
-        self.__two_text = Text(self.game, str(self.game.records.data[3]), 30, pg.Rect(0, 0, 60, 85), Color.SILVER)
-        self.__three_text = Text(self.game, str(self.game.records.data[2]), 30, pg.Rect(0, 0, 60, 120), Color.BRONZE)
-        self.__four_text = Text(self.game, str(self.game.records.data[1]), 30, pg.Rect(0, 0, 60, 155), Color.WHITE)
-        self.__five_text = Text(self.game, str(self.game.records.data[0]), 30, pg.Rect(0, 0, 60, 190), Color.WHITE)
+        self.__one_text = Text(self.game, str(self.game.records.data[4]), 30, pg.Rect(60, 55, 0, 0), Color.GOLD)
+        self.__two_text = Text(self.game, str(self.game.records.data[3]), 30, pg.Rect(60, 90, 0, 0), Color.SILVER)
+        self.__three_text = Text(self.game, str(self.game.records.data[2]), 30, pg.Rect(60, 125, 0, 0), Color.BRONZE)
+        self.__four_text = Text(self.game, str(self.game.records.data[1]), 30, pg.Rect(60, 160, 0, 0), Color.WHITE)
+        self.__five_text = Text(self.game, str(self.game.records.data[0]), 30, pg.Rect(60, 195, 0, 0), Color.WHITE)
 
     def __create_medals(self) -> None:
         self.__gold_medal = ImageObject(self.game, get_image_path('1_golden', 'medal'), (16, 55))
         self.__gold_medal.scale(35, 35)
-        self.__silver_medal = ImageObject(self.game, get_image_path('2_silver', 'medal'), (16, 85))
+        self.__silver_medal = ImageObject(self.game, get_image_path('2_silver', 'medal'), (16, 90))
         self.__silver_medal.scale(35, 35)
-        self.__bronze_medal = ImageObject(self.game, get_image_path('3_bronze', 'medal'), (16, 120))
+        self.__bronze_medal = ImageObject(self.game, get_image_path('3_bronze', 'medal'), (16, 125))
         self.__bronze_medal.scale(35, 35)
-        self.__stone_medal = ImageObject(self.game, get_image_path('4_stone', 'medal'), (16, 155))
+        self.__stone_medal = ImageObject(self.game, get_image_path('4_stone', 'medal'), (16, 160))
         self.__stone_medal.scale(35, 35)
-        self.__wooden_medal = ImageObject(self.game, get_image_path('5_wooden', 'medal'), (16, 190))
+        self.__wooden_medal = ImageObject(self.game, get_image_path('5_wooden', 'medal'), (16, 195))
         self.__wooden_medal.scale(35, 35)
 
     def __create_buttons(self) -> None:
