@@ -90,5 +90,5 @@ class Game:
     def exit_game(self) -> None:
         print('Bye bye')
         self.__storage.last_level = self.level_name
-        self.__storage.save_last_level()
+        self.__storage.save()
         self.__game_over = True
