@@ -43,7 +43,6 @@ class Animator:
     def change_cur_image(self, index: int) -> None:
         self.__current_image_index = index
         self.__current_image = self.__images[self.__current_image_index]
-        print(self.__current_image_index)
 
     def __image_swap(self) -> None:
         if self.__current_image_index == len(self.__images):
