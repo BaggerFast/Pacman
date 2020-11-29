@@ -1,13 +1,16 @@
+import pygame as pg
 from random import randint
 from typing import Tuple
 
-from misc.constants import Points, CELL_SIZE
+from misc.constants import Points, CELL_SIZE, Sounds
 from misc.path import get_image_path_for_animator
 from misc.animator import Animator
 from objects.base import DrawableObject
 
 
 class Fruit(DrawableObject):
+    eaten_sound = Sounds.FRUIT
+
     def __init__(self, game, screen, x, y) -> None:
         super().__init__(game)
         self.screen = screen
@@ -19,6 +22,7 @@ class Fruit(DrawableObject):
         self.__drawing = False
         self.__eat_timer = 90
         self.__score_to_eat = 0
+        self.eaten_sound.set_volume(1)
 
     def __draw_fruit(self) -> None:
         if self.__drawing:
@@ -48,6 +52,8 @@ class Fruit(DrawableObject):
                     and (self.rect.y == object.rect.y):
                 self.__drawing = False
                 self.__score_to_eat = self.game.score.score + self.__eat_timer + Points.POINT_PER_FRUIT
+                if not pg.mixer.Channel(0).get_busy():
+                    self.eaten_sound.play()
                 self.__change_image()
                 return True, "fruit"
         return False, ""

@@ -17,6 +17,7 @@ class Sounds:
     SEED = pg.mixer.Sound(get_sound_path(Tuple("leader2").value))
     INTRO = pg.mixer.Sound(get_sound_path(Tuple("pacman_beginning").value))
     MOVE = pg.mixer.Sound(get_sound_path(Tuple("pacman_chomp").value))
+    FRUIT = pg.mixer.Sound(get_sound_path(Tuple("eat_fruit").value))
     # GAMESTART = pg.mixer.Sound(get_sound_path(Mixer("Star").value))
 
 
