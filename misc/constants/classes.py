@@ -1,5 +1,5 @@
 import pygame as pg
-from typing import NamedTuple
+from typing import NamedTuple, Union
 
 from misc.path import get_path, get_list_path
 
@@ -61,11 +61,16 @@ class Font:
 
 class Maps(NamedTuple):
     class Tuple(NamedTuple):
-        value: str
+        value: Union[str, int]
     level_1 = Tuple("original.json").value
     level_2 = Tuple("new_map.json").value
     level_3 = Tuple("new_new_map.json").value
+    count = Tuple(3).value
 
     @staticmethod
     def get(attr: str) -> str:
         return getattr(Maps, attr)
+
+    @staticmethod
+    def keys():
+        return [f"level_{index+1}" for index in range(Maps.count)]
