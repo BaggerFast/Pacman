@@ -10,7 +10,6 @@ class Sounds:
         mixer: pg.mixer.Sound
     class TupleList(NamedTuple):
         list: list
-
     pg.mixer.init()
     CLICK = Tuple(pg.mixer.Sound(get_path('sounds', 'NAV', 'wav'))).mixer
     DEAD = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_death', 'wav'))).mixer
@@ -54,8 +53,8 @@ class Font:
     class Tuple(NamedTuple):
         size: int = 0
         font: str = ''
-    TITLE = Tuple(font=get_path('fonts', 'font0', 'ttf')).font
-    DEFAULT = Tuple(font=get_path('fonts', 'font1', 'ttf')).font
+    TITLE = Tuple(font=get_path('fonts', 'title', 'ttf')).font
+    DEFAULT = Tuple(font=get_path('fonts', 'default', 'ttf')).font
     MAIN_SCENE_SIZE = Tuple(size=10).size
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size
