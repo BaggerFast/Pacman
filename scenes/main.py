@@ -12,6 +12,7 @@ from misc import Sounds, Maps
 class Scene(base.Scene):
     pg.mixer.init()
     siren_sound = Sounds.SIREN
+    intro_sound = Sounds.INTRO
 
     def __init__(self, game) -> None:
         self.__loader = LevelLoader(Maps.get(game.level_name))
@@ -22,7 +23,6 @@ class Scene(base.Scene):
         self.__player_position = self.__loader.get_player_position()
         self.__ghost_positions = self.__loader.get_ghost_positions()
         self.__fruit_position = self.__loader.get_fruit_position()
-        self.intro_sound.set_volume(0.5)
         self.first_run = True
         self.__timer_reset_pacman = 0
         self.__seeds_eaten = 0

@@ -1,9 +1,7 @@
-import pygame as pg
 import inspect
-import os.path
 from typing import NamedTuple
 import pygame as pg
-from misc.path import get_sound_path
+
 
 
 from misc.constants.classes import Color
