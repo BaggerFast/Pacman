@@ -1,0 +1,4 @@
+CELL_SIZE = 8
+MAPS_COUNT = 3
+
+DUBUG = True

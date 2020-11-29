@@ -1,16 +1,17 @@
 import pygame as pg
+import random
 
 from misc import LevelLoader, Color, CELL_SIZE, Font, get_image_path, Health
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import base
 from objects.fruits import Fruit
-from misc.constants import Sounds, Maps
+from misc import Sounds, Maps
 
 
 class Scene(base.Scene):
     pg.mixer.init()
-    intro_sound = Sounds.INTRO
+    siren_sound = Sounds.SIREN
 
     def __init__(self, game) -> None:
         self.__loader = LevelLoader(Maps.get(game.level_name))
@@ -29,6 +30,8 @@ class Scene(base.Scene):
         self.__max_seeds_eaten_to_prefered_ghost = 7
         self.total_anim = 0
         self.anim = 0
+        self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
+        self.intro_sound.set_volume(0.5)
         self.hp = Health(1, 3)
         super().__init__(game)
 
@@ -196,9 +199,14 @@ class Scene(base.Scene):
         self.anim += 1
         self.total_anim += 1
 
+    def __play_music(self):
+        if not pg.mixer.Channel(3).get_busy() and not self.first_run:
+            pg.mixer.Channel(3).play(self.siren_sound)
+
     def process_logic(self) -> None:
         if not pg.mixer.Channel(1).get_busy():
             super(Scene, self).process_logic()
+            self.__play_music()
             self.__check_first_run()
             self.__process_collision()
             self.go_text.surface.set_alpha(0)
@@ -240,8 +248,11 @@ class Scene(base.Scene):
         # self.game.scenes["GAME"] = Scene(self.game)
 
     def on_activate(self) -> None:
-        pg.mixer.unpause()
-        # self.game.scenes["GAME"] = Scene(self.game)
+        pg.mixer.Channel(0).unpause()
+        pg.mixer.Channel(1).unpause()
+        if self.__pacman.animator != self.__pacman.dead_anim:
+            pg.mixer.Channel(3).unpause()
+        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
 
     def on_reset(self) -> None:
         pg.mixer.stop()
