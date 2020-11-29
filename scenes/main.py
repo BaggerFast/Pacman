@@ -27,6 +27,7 @@ class Scene(base.Scene):
         self.__seeds_eaten = 0
         self.__work_ghost_counters = True
         self.__max_seeds_eaten_to_prefered_ghost = 7
+        self.__first_run_ghost = True
         self.total_anim = 0
         self.anim = 0
         super().__init__(game)
@@ -176,6 +177,11 @@ class Scene(base.Scene):
             pg.mixer.Channel(1).play(self.intro_sound)
             self.first_run = False
 
+    def __check_first_run_ghosts(self) -> None:
+        if self.__first_run_ghost:
+            self.create_ghosts()
+            self.__first_run_ghost = False
+
     def start_label(self) -> None:
         if self.anim < 8:
             if self.total_anim < 200:
@@ -188,9 +194,6 @@ class Scene(base.Scene):
                 self.ready_text.surface.set_alpha(0)
             else:
                 self.ready_text.surface.set_alpha(0)
-            if self.anim > 16:
-                self.anim = 0
-        self.anim += 1
         self.total_anim += 1
 
     def process_logic(self) -> None:
@@ -213,8 +216,11 @@ class Scene(base.Scene):
                 elif self.__max_seeds_eaten_to_prefered_ghost == 17:
                     self.__max_seeds_eaten_to_prefered_ghost = 32
         else:
-            self.create_objects()
             self.start_label()
+            self.__inky.update_timer()
+            if self.anim > 16:
+                self.anim = 0
+        self.anim += 1
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
         for ghost in self.__ghosts:
