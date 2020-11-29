@@ -5,7 +5,7 @@ from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import BaseScene
 from objects.fruits import Fruit
-from misc.constants import Sounds, Maps
+from misc import Sounds, Maps
 
 
 class GameScene(BaseScene):

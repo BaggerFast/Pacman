@@ -1,7 +1,7 @@
 from typing import Tuple
 
 import pygame as pg
-from misc.constants import CELL_SIZE
+from misc.constants.variables import CELL_SIZE
 from objects.character_base import Character
 from misc.animator import Animator
 

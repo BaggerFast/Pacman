@@ -17,16 +17,15 @@ def get_image_path(filename: str, *folder: str) -> str:
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 
 
-def get_sound_path(filename: str, *folder: str) -> str:
+def get_path(folder: str, filename: str, extension: str) -> str:
     """
     :param filename: имя файла с расширением или без
     :param folder: указать папки через пробел слева на право без image
+    :param extension: указать расширение файла
     :return: возращает полный путь файла строкой
     """
-    extension = '.wav'
-    if extension not in filename:
-        filename += extension
-    return os.path.join(*[ROOT_DIR, 'sounds'] + list(folder) + [filename])
+    extension = '.' + extension
+    return os.path.join(*[ROOT_DIR, folder] + [filename + extension])
 
 
 def get_files_count(path: str) -> int:

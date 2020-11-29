@@ -1,7 +1,7 @@
 from random import randint
 from typing import Tuple
 
-from misc.constants import Points, CELL_SIZE
+from misc import Points, CELL_SIZE
 from misc.path import get_image_path_for_animator
 from misc.animator import Animator
 from objects.base import DrawableObject
