@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Sounds
+from misc import Sounds, INFINITY_LIVES
 from misc.path import get_list_path
 from objects.character_base import Character
 from misc.health import Health
@@ -61,7 +61,8 @@ class Pacman(Character):
     def death(self) -> None:
         pg.mixer.Channel(3).pause()
         pg.mixer.Channel(0).play(self.death_sound)
-        self.game.current_scene.hp -= 1
+        if not INFINITY_LIVES:
+            self.game.current_scene.hp -= 1
         self.animator = self.__dead_anim
         self.animator.start()
         self.dead = True
