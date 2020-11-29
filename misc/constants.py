@@ -12,6 +12,7 @@ class Sounds:
     CLICK = pg.mixer.Sound(get_sound_path(Tuple("NAV").value))
     DEAD = pg.mixer.Sound(get_sound_path(Tuple("pacman_death").value))
     GAMEOVER = pg.mixer.Sound(get_sound_path(Tuple("GameOver").value))
+    SIREN = pg.mixer.Sound(get_sound_path(Tuple("SIREN").value))
     BOOST = pg.mixer.Sound(get_sound_path(Tuple("pacman_intermission").value))
     SEED = pg.mixer.Sound(get_sound_path(Tuple("leader2").value))
     INTRO = pg.mixer.Sound(get_sound_path(Tuple("pacman_beginning").value))

@@ -30,10 +30,15 @@ class Pacman(Character):
         self.dead = False
         self.death_sound.set_volume(0.5)
         self.__feature_rotate = "none"
+        pg.mixer.Channel(3).unpause()
 
     @property
     def hp(self):
         return self.__hp.lives
+
+    @property
+    def dead_anim(self):
+        return self.__dead_anim
 
     def process_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key in self.action.keys() and not self.dead:
@@ -55,8 +60,9 @@ class Pacman(Character):
             super().process_logic()
 
     def death(self) -> None:
+        pg.mixer.Channel(3).pause()
         pg.mixer.Channel(0).play(self.death_sound)
         self.__hp -= 1
         self.animator = self.__dead_anim
-        self.animator.run = True
+        self.animator.start()
         self.dead = True
