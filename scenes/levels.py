@@ -2,17 +2,16 @@ import pygame as pg
 
 from misc import Color, Font
 from objects import ButtonController, Button, Text
-from scenes import BaseScene
-from scenes.main import GameScene
+from scenes import base
 
 
-class LevelsScene(BaseScene):
+class Scene(base.Scene):
     def create_objects(self) -> None:
         self.__create_title()
         self.__create_buttons()
 
     def __create_title(self) -> None:
-        title = Text(self.game, 'SELECT LEVEL', 25, color=Color.WHITE, font=Font.TITLE)
+        title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
 
@@ -49,21 +48,21 @@ class LevelsScene(BaseScene):
         self.__button_controller.reset_state()
 
     def __start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.SCENE_MENU)
+        self.game.set_scene(self.game.scenes.MENU)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene(self.game.scenes.SCENE_MENU)
+                self.game.set_scene(self.game.scenes.MENU)
 
     def __set_level(self, name="level_1") -> None:
         """
         :param name: level_+id (e.g. level_1)
         """
         self.game.level_name = name
-        self.game.scenes.SCENE_GAME.recreate()
+        self.game.scenes.MAIN.recreate()
         self.game.records.update_records()
-        self.game.set_scene(self.game.scenes.SCENE_MENU)
+        self.game.set_scene(self.game.scenes.MENU)
 
     def __level1(self) -> None:
         self.__set_level("level_1")

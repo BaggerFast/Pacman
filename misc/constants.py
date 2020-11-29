@@ -117,8 +117,8 @@ class Font:
     class Tuple(NamedTuple):
         size: int = 0
         font: str = ''
-    TITLE = Tuple(font=os.path.join(ROOT_DIR, 'fonts', 'font0.ttf')).font
-    DEFAULT = Tuple(font=os.path.join(ROOT_DIR, 'fonts', 'font1.ttf')).font
+    TITLE = Tuple(font=os.path.join(ROOT_DIR, 'fonts', 'title.ttf')).font
+    DEFAULT = Tuple(font=os.path.join(ROOT_DIR, 'fonts', 'default.ttf')).font
     MAIN_SCENE_SIZE = Tuple(size=10).size
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size

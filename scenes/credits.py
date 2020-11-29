@@ -4,10 +4,10 @@ import pygame as pg
 
 from misc import Font
 from objects import Text, ButtonController, Button
-from scenes import BaseScene
+from scenes import base
 
 
-class CreditsScene(BaseScene):
+class Scene(base.Scene):
     __data = [
         "Архипов Евгений",
         "Смирнов Андрей",
@@ -67,7 +67,7 @@ class CreditsScene(BaseScene):
         students = list(set(self.__students2) - set((obj.text for obj in self.__students)))
         label = str(students[randint(0, len(students) - 1)])
         self.__students2.pop(self.__students2.index(label))
-        student = Text(self.game, label, Font.CREDITS_SCENE_SIZE, font=Font.DEFAULT)
+        student = Text(self.game, label, Font.CREDITS_SCENE_SIZE)
 
         is_student_y_correct = False
         tries = 0
@@ -137,7 +137,7 @@ class CreditsScene(BaseScene):
                 self.__start_menu()
 
     def __start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.SCENE_MENU)
+        self.game.set_scene(self.game.scenes.MENU)
         self.__on_screen = 0
         self.__students = []
         self.objects = []

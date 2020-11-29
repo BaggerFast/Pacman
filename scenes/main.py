@@ -3,12 +3,12 @@ import pygame as pg
 from misc import LevelLoader, Color, CELL_SIZE, Font, get_image_path
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
-from scenes import BaseScene
+from scenes import base
 from objects.fruits import Fruit
 from misc.constants import Sounds, Maps
 
 
-class GameScene(BaseScene):
+class Scene(base.Scene):
     pg.mixer.init()
     intro_sound = Sounds.INTRO
 
@@ -45,15 +45,17 @@ class GameScene(BaseScene):
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
         self.objects.append(self.__seeds)
 
-        self.__scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE,
-                                        rect=pg.Rect(10, 0, 20, 20), color=Color.WHITE)
+        self.__scores_label_text = Text(
+            self.game, 'SCORE', Font.MAIN_SCENE_SIZE,rect=pg.Rect(10, 0, 20, 20)
+        )
+        self.__scores_value_text = Text(
+            self.game, str(self.game.score), Font.MAIN_SCENE_SIZE,rect=pg.Rect(10, 8, 20, 20)
+        )
         self.objects.append(self.__scores_label_text)
-        self.__scores_value_text = Text(self.game, str(self.game.score), Font.MAIN_SCENE_SIZE,
-                                        rect=pg.Rect(10, 8, 20, 20), color=Color.WHITE)
         self.objects.append(self.__scores_value_text)
 
         self.__highscores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE,
-                                            rect=pg.Rect(130, 0, 20, 20), color=Color.WHITE)
+                                            rect=pg.Rect(130, 0, 20, 20))
         self.objects.append(self.__highscores_label_text)
         self.__highscores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
                                             rect=pg.Rect(130, 8, 20, 20), color=Color.WHITE)
@@ -90,10 +92,10 @@ class GameScene(BaseScene):
         self.objects.append(self.__clyde)
 
         self.ready_text = Text(self.game, 'Ready', 30, font=Font.TITLE,
-                               rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
+                               rect=pg.Rect(20, 0, 20, 20))
         self.ready_text.move_center(self.game.width // 2, self.game.height // 2)
         self.go_text = Text(self.game, 'GO!', 30, font=Font.TITLE,
-                            rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
+                            rect=pg.Rect(20, 0, 20, 20))
         self.go_text.move_center(self.game.width // 2, self.game.height // 2)
         self.ready_text.surface.set_alpha(0)
         self.go_text.surface.set_alpha(0)
@@ -126,7 +128,7 @@ class GameScene(BaseScene):
 
     def __start_pause(self) -> None:
         pg.mixer.pause()
-        self.game.set_scene(self.game.scenes.SCENE_PAUSE)
+        self.game.set_scene(self.game.scenes.PAUSE)
 
     def __change_prefered_ghost(self) -> None:
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
@@ -149,7 +151,7 @@ class GameScene(BaseScene):
                     self.__prepare_lives_meter()
                 # todo
                 elif not self.__pacman.animator.run:
-                    self.game.set_scene(self.game.scenes.SCENE_GAMEOVER)
+                    self.game.set_scene(self.game.scenes.GAMEOVER)
                     break
                 for ghost2 in self.__ghosts:
                     ghost2.invisible()
@@ -194,7 +196,7 @@ class GameScene(BaseScene):
 
     def process_logic(self) -> None:
         if not pg.mixer.Channel(1).get_busy():
-            super(GameScene, self).process_logic()
+            super(Scene, self).process_logic()
             self.__check_first_run()
             self.__process_collision()
             self.go_text.surface.set_alpha(0)
@@ -225,21 +227,21 @@ class GameScene(BaseScene):
         super().process_draw()
         for i in range(len(self.__last_hp)):
             self.__last_hp[i].process_draw()
-        self.__scores_value_text.update_text(str(self.game.score))
+        self.__scores_value_text.text = str(self.game.score)
 
         # todo: make text update only when new value appeares
-        self.__scores_value_text.update_text(str(self.game.score))
+        self.__scores_value_text.text = str(self.game.score)
 
     def on_deactivate(self) -> None:
         pass
         # self.game.records.set_new_record(int(self.game.score))
-        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+        # self.game.scenes["GAME"] = Scene(self.game)
 
     def on_activate(self) -> None:
         pg.mixer.unpause()
-        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
+        # self.game.scenes["GAME"] = Scene(self.game)
 
     def on_reset(self) -> None:
         pg.mixer.stop()
         self.game.score.reset()
-        self.game.scenes.SCENE_GAME.recreate()
+        self.game.scenes.MAIN.recreate()

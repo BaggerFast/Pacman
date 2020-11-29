@@ -2,10 +2,10 @@ import pygame as pg
 
 from misc import Color, Font, get_image_path
 from objects import Button, ButtonController, ImageObject, Text
-from scenes import BaseScene
+from scenes import base
 
 
-class RecordsScene(BaseScene):
+class Scene(base.Scene):
     def create_objects(self) -> None:
         self.__create_title()
         self.__create_error_label()
@@ -15,11 +15,11 @@ class RecordsScene(BaseScene):
 
     def create_text_labels(self) -> None:
         self.game.records.update_records()
-        self.__one_text = Text(self.game, str(self.game.records.data[4]), 30, (60, 55), Color.GOLD)
-        self.__two_text = Text(self.game, str(self.game.records.data[3]), 30, (60, 85), Color.SILVER)
-        self.__three_text = Text(self.game, str(self.game.records.data[2]), 30, (60, 120), Color.BRONZE)
-        self.__four_text = Text(self.game, str(self.game.records.data[1]), 30, (60, 155), Color.WHITE)
-        self.__five_text = Text(self.game, str(self.game.records.data[0]), 30, (60, 190), Color.WHITE)
+        self.__one_text = Text(self.game, str(self.game.records.data[4]), 30, pg.Rect(0, 0, 60, 55), Color.GOLD)
+        self.__two_text = Text(self.game, str(self.game.records.data[3]), 30, pg.Rect(0, 0, 60, 85), Color.SILVER)
+        self.__three_text = Text(self.game, str(self.game.records.data[2]), 30, pg.Rect(0, 0, 60, 120), Color.BRONZE)
+        self.__four_text = Text(self.game, str(self.game.records.data[1]), 30, pg.Rect(0, 0, 60, 155), Color.WHITE)
+        self.__five_text = Text(self.game, str(self.game.records.data[0]), 30, pg.Rect(0, 0, 60, 190), Color.WHITE)
 
     def __create_medals(self) -> None:
         self.__gold_medal = ImageObject(self.game, get_image_path('1_golden', 'medal'), (16, 55))
@@ -41,7 +41,7 @@ class RecordsScene(BaseScene):
         self.objects.append(self.__button_controller)
 
     def __create_title(self) -> None:
-        title = Text(self.game, 'RECORDS', 32, color=Color.WHITE, font=Font.TITLE)
+        title = Text(self.game, 'RECORDS', 32, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
 
@@ -50,7 +50,7 @@ class RecordsScene(BaseScene):
         self.__error_text.move_center(self.game.width // 2, 100)
 
     def __start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.SCENE_MENU)
+        self.game.set_scene(self.game.scenes.MENU)
 
     def on_activate(self) -> None:
         self.__button_controller.reset_state()
@@ -84,4 +84,4 @@ class RecordsScene(BaseScene):
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene(self.game.scenes.SCENE_MENU)
+                self.game.set_scene(self.game.scenes.MENU)
