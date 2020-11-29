@@ -1,21 +1,20 @@
 import pygame as pg
-from misc import Color, ROOT_DIR, HighScore, get_image_path, Score
+from misc import Color, HighScore, get_image_path, Score
 from misc.storage import Storage
 from scenes import *
 
 
-class Scenes:
-    def __init__(self, game):
-        self.PAUSE = Pause.Scene(game)
-        self.MENU = Menu.Scene(game)
-        self.GAME = Game.Scene(game)
-        self.GAMEOVER = Gameover.Scene(game)
-        self.LEVELS = Levels.Scene(game)
-        self.RECORDS = Records.Scene(game)
-        self.SCENE_CREDITS = Credits.Scene(game)
+class Game:
+    class Scenes:
+        def __init__(self, game):
+            self.PAUSE = pause.Scene(game)
+            self.MENU = menu.Scene(game)
+            self.MAIN = main.Scene(game)
+            self.GAMEOVER = gameover.Scene(game)
+            self.LEVELS = levels.Scene(game)
+            self.RECORDS = records.Scene(game)
+            self.CREDITS = credits.Scene(game)
 
-
-class Pacman:
     __size = width, height = 224, 285
     __icon = pg.image.load(get_image_path('1', 'pacman', 'walk'))
     __FPS = 60
@@ -28,7 +27,7 @@ class Pacman:
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.score = Score()
         self.records = HighScore(self)
-        self.scenes = Scenes(self)
+        self.scenes = self.Scenes(self)
         self.__current_scene = self.scenes.MENU
         self.__clock = pg.time.Clock()
         self.__game_over = False
@@ -46,7 +45,7 @@ class Pacman:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
 
     def __process_exit_events(self, event: pg.event.Event) -> None:
-        if Pacman.__exit_button_pressed(event) or Pacman.__exit_hotkey_pressed(event):
+        if Game.__exit_button_pressed(event) or Game.__exit_hotkey_pressed(event):
             self.exit_game()
 
     def __process_all_events(self) -> None:
@@ -69,7 +68,7 @@ class Pacman:
             self.__process_all_draw()
             self.__clock.tick(self.__FPS)
 
-    def set_scene(self, scene: Base.Scene, reset: bool = False) -> None:
+    def set_scene(self, scene: base.Scene, reset: bool = False) -> None:
         """
         :param scene: NEXT scene (contains in game.scenes.*)
         :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)

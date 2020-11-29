@@ -8,7 +8,7 @@ from misc.path import create_file_if_not_exist  # НЕ УДАЛЯТЬ .path (Б�
 class HighScore:
     __json_filename = os.path.join('saves', 'records.json')
     __RECORDS_COUNT = 5
-    __json_default = {f"level_{index + 1}": [0 for _ in range(__RECORDS_COUNT)] for index in range(Maps.MAPS_COUNT)}
+    __json_default = {f"level_{index + 1}": [0 for _ in range(5)] for index in range(Maps.MAPS_COUNT)}
 
     def __init__(self, game) -> None:
         self.__game = game

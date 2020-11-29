@@ -1,10 +1,10 @@
 import pygame as pg
 from objects import ButtonController, Button, Text
-from scenes import Base
+from scenes import base
 from misc import Color, Font
 
 
-class Scene(Base.Scene):
+class Scene(base.Scene):
     def __init__(self, game):
         super().__init__(game)
 
@@ -58,7 +58,7 @@ class Scene(Base.Scene):
         self.game.set_scene(self.game.scenes.MENU)
 
     def __restart_game(self) -> None:
-        self.game.set_scene(self.game.scenes.GAME, reset=True)
+        self.game.set_scene(self.game.scenes.MAIN, reset=True)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:

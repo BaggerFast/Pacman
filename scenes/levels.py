@@ -2,10 +2,10 @@ import pygame as pg
 
 from misc import Color, Font
 from objects import ButtonController, Button, Text
-from scenes import Base
+from scenes import base
 
 
-class Scene(Base.Scene):
+class Scene(base.Scene):
     def create_objects(self) -> None:
         self.__create_title()
         self.__create_buttons()
@@ -60,7 +60,7 @@ class Scene(Base.Scene):
         :param name: level_+id (e.g. level_1)
         """
         self.game.level_name = name
-        self.game.scenes.GAME.recreate()
+        self.game.scenes.MAIN.recreate()
         self.game.records.update_records()
         self.game.set_scene(self.game.scenes.MENU)
 

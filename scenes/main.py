@@ -3,12 +3,12 @@ import pygame as pg
 from misc import LevelLoader, Color, CELL_SIZE, Font, get_image_path
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
-from scenes import Base
+from scenes import base
 from objects.fruits import Fruit
 from misc.constants import Sounds, Maps
 
 
-class Scene(Base.Scene):
+class Scene(base.Scene):
     pg.mixer.init()
     intro_sound = Sounds.INTRO
 
@@ -242,4 +242,4 @@ class Scene(Base.Scene):
     def on_reset(self) -> None:
         pg.mixer.stop()
         self.game.score.reset()
-        self.game.scenes.GAME.recreate()
+        self.game.scenes.MAIN.recreate()

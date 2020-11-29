@@ -1,10 +1,10 @@
 import pygame as pg
 from objects import ButtonController, Button, Text
-from scenes import Base
+from scenes import base
 from misc import Color, Font
 
 
-class Scene(Base.Scene):
+class Scene(base.Scene):
     def create_objects(self) -> None:
         self.__create_title()
         self.__create_buttons()
@@ -33,10 +33,10 @@ class Scene(Base.Scene):
         self.objects.append(self.__main_text)
 
     def restart_game(self) -> None:
-        self.game.set_scene(self.game.scenes.GAME, reset=True)
+        self.game.set_scene(self.game.scenes.MAIN, reset=True)
 
     def continue_game(self) -> None:
-        self.game.set_scene(self.game.scenes.GAME)
+        self.game.set_scene(self.game.scenes.MAIN)
 
     def start_menu(self) -> None:
         self.game.set_scene(self.game.scenes.MENU)

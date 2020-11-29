@@ -2,10 +2,10 @@ import pygame as pg
 
 from misc import Color, Font, get_image_path
 from objects import Button, ButtonController, ImageObject, Text
-from scenes import Base
+from scenes import base
 
 
-class Scene(Base.Scene):
+class Scene(base.Scene):
     def create_objects(self) -> None:
         self.__create_title()
         self.__create_error_label()
