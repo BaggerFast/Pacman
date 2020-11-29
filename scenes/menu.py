@@ -15,13 +15,13 @@ class MenuScene(BaseScene):
         self.__create_indicator()
 
     def __create_title(self) -> None:
-        title = Text(self.game, 'PACMAN', 36, color=Color.WHITE, font=Font.TITLE)
+        title = Text(self.game, 'PACMAN', 36, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
 
     def __create_indicator(self) -> None:
         self.__indicator = Text(self.game, self.game.level_name.replace('_', ' '),
-                                15, color=Color.WHITE, font=Font.TITLE)
+                                15, font=Font.TITLE)
         self.__indicator.move_center(self.game.width // 2, 60)
         self.objects.append(self.__indicator)
 
@@ -52,7 +52,7 @@ class MenuScene(BaseScene):
         self.objects.append(self.__button_controller)
 
     def __level_indicator(self) -> None:
-        self.__indicator.update_text(self.game.level_name.replace('_', ' '))
+        self.__indicator.text = self.game.level_name.replace('_', ' ')
 
     def on_activate(self) -> None:
         self.__level_indicator()
