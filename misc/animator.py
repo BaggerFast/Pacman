@@ -4,7 +4,7 @@ import pygame as pg
 class Animator:
     __time_out = 50
 
-    def __init__(self, path_to_images: str, time_out=50, is_rotation=True, repeat=False):
+    def __init__(self, path_to_images: list, time_out=50, is_rotation=True, repeat=False):
         self.is_rotation = is_rotation
         self.__animate_timer = 0
         self.__time_out = time_out
@@ -20,12 +20,12 @@ class Animator:
     def current_image(self):
         return self.__current_image
 
-    def __add_image(self, path_to_images: str) -> None:
+    def __add_image(self, path_to_images: list) -> None:
         self.__images = []
         for i in range(len(path_to_images)):
             self.__images.append(pg.image.load(path_to_images[i]))
 
-    def get_len_anim(self):
+    def get_len_anim(self) -> int:
         return len(self.__images)
 
     def stop(self) -> None:
@@ -43,7 +43,6 @@ class Animator:
     def change_cur_image(self, index: int) -> None:
         self.__current_image_index = index
         self.__current_image = self.__images[self.__current_image_index]
-        print(self.__current_image_index)
 
     def __image_swap(self) -> None:
         if self.__current_image_index == len(self.__images):

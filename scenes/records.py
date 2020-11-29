@@ -2,10 +2,10 @@ import pygame as pg
 
 from misc import Color, Font, get_image_path
 from objects import Button, ButtonController, ImageObject, Text
-from scenes import BaseScene
+from scenes import base
 
 
-class RecordsScene(BaseScene):
+class Scene(base.Scene):
     def create_objects(self) -> None:
         self.__create_title()
         self.__create_error_label()
@@ -22,15 +22,15 @@ class RecordsScene(BaseScene):
         self.__five_text = Text(self.game, str(self.game.records.data[0]), 30, (60, 190), Color.WHITE)
 
     def __create_medals(self) -> None:
-        self.__gold_medal = ImageObject(self.game, get_image_path('1_golden', 'medal'), 16, 55)
+        self.__gold_medal = ImageObject(self.game, get_image_path('1_golden', 'medal'), (16, 55))
         self.__gold_medal.scale(35, 35)
-        self.__silver_medal = ImageObject(self.game, get_image_path('2_silver', 'medal'), 16, 85)
+        self.__silver_medal = ImageObject(self.game, get_image_path('2_silver', 'medal'), (16, 85))
         self.__silver_medal.scale(35, 35)
-        self.__bronze_medal = ImageObject(self.game, get_image_path('3_bronze', 'medal'), 16, 120)
+        self.__bronze_medal = ImageObject(self.game, get_image_path('3_bronze', 'medal'), (16, 120))
         self.__bronze_medal.scale(35, 35)
-        self.__stone_medal = ImageObject(self.game, get_image_path('4_stone', 'medal'), 16, 155)
+        self.__stone_medal = ImageObject(self.game, get_image_path('4_stone', 'medal'), (16, 155))
         self.__stone_medal.scale(35, 35)
-        self.__wooden_medal = ImageObject(self.game, get_image_path('5_wooden', 'medal'), 16, 190)
+        self.__wooden_medal = ImageObject(self.game, get_image_path('5_wooden', 'medal'), (16, 190))
         self.__wooden_medal.scale(35, 35)
 
     def __create_buttons(self) -> None:
@@ -50,7 +50,7 @@ class RecordsScene(BaseScene):
         self.__error_text.move_center(self.game.width // 2, 100)
 
     def __start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.SCENE_MENU)
+        self.game.set_scene(self.game.scenes.MENU)
 
     def on_activate(self) -> None:
         self.__button_controller.reset_state()
@@ -84,4 +84,4 @@ class RecordsScene(BaseScene):
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene(self.game.scenes.SCENE_MENU)
+                self.game.set_scene(self.game.scenes.MENU)

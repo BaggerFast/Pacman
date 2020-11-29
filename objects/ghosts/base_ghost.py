@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import pygame as pg
 from misc.constants import CELL_SIZE
 from objects.character_base import Character
@@ -12,7 +14,8 @@ class BaseGhost(Character):
         pg.K_RIGHT: 'right'
     }
 
-    def __init__(self, game, animator: Animator, start_pos: tuple, animations, enable_collision=True, max_count_eat_seeds_in_home=0):
+    def __init__(self, game, animator: Animator, start_pos: Tuple[int, int], animations, enable_collision=True,
+                 max_count_eat_seeds_in_home=0) -> None:
         super().__init__(game, animator, start_pos)
         self.animations = animations
         self.enable_collision = enable_collision
@@ -20,13 +23,12 @@ class BaseGhost(Character):
         self.max_count_eat_seeds_in_home = max_count_eat_seeds_in_home
         self.timer = pg.time.get_ticks()
 
-    def process_event(self, event):
+    def process_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key in self.action.keys():
             self.go()
             self.feature_direction = self.action[event.key]
 
-
-    def process_logic(self):
+    def process_logic(self) -> None:
         self.animator.timer_check()
         if self.in_center() and self.enable_collision:
             if self.move_to(self.rotate):
@@ -42,18 +44,18 @@ class BaseGhost(Character):
         self.animator = self.animations[self.rotate]
         super().process_logic()
 
-    def collision_check(self, object): #pacman only
-        return self.rect.centerx//CELL_SIZE == object.rect.centerx//CELL_SIZE and self.rect.centery//CELL_SIZE == object.rect.centery//CELL_SIZE and self.enable_collision
+    def collision_check(self, object) -> bool:  # pacman only
+        return self.rect.centerx // CELL_SIZE == object.rect.centerx // CELL_SIZE and self.rect.centery // CELL_SIZE == object.rect.centery // CELL_SIZE and self.enable_collision
 
-    def counter(self):
+    def counter(self) -> None:
         self.count_eat_seeds_in_home += 1
 
-    def can_leave_home(self):
-        #print(self.max_count_eat_seeds_in_home, ': ', pg.time.get_ticks()-self.timer)
-        return self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home or pg.time.get_ticks()-self.timer >= 4000
+    def can_leave_home(self) -> bool:
+        # print(self.max_count_eat_seeds_in_home, ': ', pg.time.get_ticks()-self.timer)
+        return self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home or pg.time.get_ticks() - self.timer >= 4000
 
-    def update_timer(self):
+    def update_timer(self) -> None:
         self.timer = pg.time.get_ticks()
 
-    def invisible(self):
+    def invisible(self) -> None:
         pass

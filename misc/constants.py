@@ -1,6 +1,6 @@
 import inspect
 import os.path
-from typing import NamedTuple
+from typing import NamedTuple, List, Union
 import pygame as pg
 from misc.path import get_sound_path
 
@@ -21,21 +21,21 @@ class Sounds:
 
 class Color(NamedTuple):
     class Tuple(NamedTuple):
-        color: pg.color.Color
-    RED = Tuple(pg.color.Color('red')).color
-    BLUE = Tuple(pg.color.Color('blue')).color
-    GREEN = Tuple(pg.color.Color('green')).color
-    BLACK = Tuple(pg.color.Color('black')).color
-    WHITE = Tuple(pg.color.Color('white')).color
-    ORANGE = Tuple(pg.color.Color('orange')).color
-    YELLOW = Tuple(pg.color.Color('yellow')).color
-    GOLD = Tuple(pg.color.Color('gold')).color
-    GRAY = Tuple(pg.color.Color('gray50')).color
-    DARK_GRAY = Tuple(pg.color.Color('gray26')).color
-    SILVER = Tuple(pg.color.Color(192, 192, 192)).color
-    BRONZE = Tuple(pg.color.Color(205, 127, 50)).color
-    WOODEN = Tuple(pg.color.Color(101, 67, 33)).color
-    JET = Tuple(pg.color.Color(10, 10, 10)).color
+        color: pg.Color
+    RED = Tuple(pg.Color('red')).color
+    BLUE = Tuple(pg.Color('blue')).color
+    GREEN = Tuple(pg.Color('green')).color
+    BLACK = Tuple(pg.Color('black')).color
+    WHITE = Tuple(pg.Color('white')).color
+    ORANGE = Tuple(pg.Color('orange')).color
+    YELLOW = Tuple(pg.Color('yellow')).color
+    GOLD = Tuple(pg.Color('gold')).color
+    GRAY = Tuple(pg.Color('gray50')).color
+    DARK_GRAY = Tuple(pg.Color('gray26')).color
+    SILVER = Tuple(pg.Color(192, 192, 192)).color
+    BRONZE = Tuple(pg.Color(205, 127, 50)).color
+    WOODEN = Tuple(pg.Color(101, 67, 33)).color
+    JET = Tuple(pg.Color(10, 10, 10)).color
 
 
 class ButtonStateColor(NamedTuple):
@@ -43,7 +43,7 @@ class ButtonStateColor(NamedTuple):
     background: pg.Color = Color.BLACK
 
     @staticmethod
-    def get_members_list():
+    def get_members_list() -> list:
         members = inspect.getmembers(BUTTON_DEFAULT_COLORS, lambda member: type(member) == pg.Color)
         return [item[0] for item in members]
 
@@ -85,7 +85,7 @@ class ButtonColor(NamedTuple):
             self.__setattr__(name, default_section)
 
     @staticmethod
-    def get_members_list():
+    def get_members_list() -> list:
         members = inspect.getmembers(BUTTON_DEFAULT_COLORS, lambda member: type(member) == ButtonStateColor)
         return [item[0] for item in members]
 
@@ -126,10 +126,19 @@ class Font:
 
 class Maps(NamedTuple):
     class Tuple(NamedTuple):
-        value: str
+        value: Union[str, int]
     level_1 = Tuple("original.json").value
     level_2 = Tuple("new_map.json").value
     level_3 = Tuple("new_new_map.json").value
+    MAPS_COUNT = Tuple(3).value
+
+    @staticmethod
+    def get(attr: str) -> str:
+        return getattr(Maps, attr)
+
+    @staticmethod
+    def keys() -> List[str]:
+        return [f"level_{index}" for index in range(Maps.MAPS_COUNT)]
 
 
-MAPS_COUNT = len(vars(Maps))
+DUBUG = True

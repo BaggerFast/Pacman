@@ -3,7 +3,6 @@ from typing import List, Tuple, Union
 import pygame as pg
 
 from misc import Sounds
-from misc.path import get_sound_path
 from objects import DrawableObject
 from objects.button.button import Button
 
@@ -20,11 +19,11 @@ class ButtonController(DrawableObject):
         self.active_button_index = -1
         self.click_sound.set_volume(0.5)
 
-    def reset_state(self):
+    def reset_state(self) -> None:
         self.deselect_current_button()
         self.active_button_index = -1
 
-    def deselect_current_button(self):
+    def deselect_current_button(self) -> None:
         self.buttons[self.active_button_index].deselect()
 
     def select_previous_button(self) -> None:

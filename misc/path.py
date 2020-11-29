@@ -2,7 +2,7 @@ import os
 from typing import List
 
 
-def get_image_path(filename, *folder):
+def get_image_path(filename: str, *folder: str) -> str:
     """
     :param filename: имя файла с расширением или без
     :param folder: указать папки через пробел слева на право без image
@@ -13,9 +13,11 @@ def get_image_path(filename, *folder):
         filename += extension
     return os.path.join(*[ROOT_DIR, 'images'] + list(folder) + [filename])
 
+
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 
-def get_sound_path(filename, *folder):
+
+def get_sound_path(filename: str, *folder: str) -> str:
     """
     :param filename: имя файла с расширением или без
     :param folder: указать папки через пробел слева на право без image
@@ -27,7 +29,7 @@ def get_sound_path(filename, *folder):
     return os.path.join(*[ROOT_DIR, 'sounds'] + list(folder) + [filename])
 
 
-def get_files_count(path):
+def get_files_count(path: str) -> int:
     count = 0
     for f in os.listdir(path):
         if os.path.isfile(os.path.join(path, f)):
@@ -38,7 +40,7 @@ def get_files_count(path):
 def get_image_path_for_animator(*folder: str) -> List[str]:
     """
     :param folder: указать папки через пробел слева на право без имени файла без image
-    :return: возращает все файлы для анимации автоматически
+    :return: возращает все пути до файлов для анимации автоматически
     """
     extension = '.png'
     images = []
@@ -49,7 +51,7 @@ def get_image_path_for_animator(*folder: str) -> List[str]:
     return images
 
 
-def create_file_if_not_exist(filepath: str, data=""):
+def create_file_if_not_exist(filepath: str, data: str = "") -> None:
     """
     :param filepath: path to file
     :param data: string which will written in file if it doesn't exist

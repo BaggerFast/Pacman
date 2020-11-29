@@ -1,4 +1,5 @@
 from random import randint
+from typing import Tuple
 
 from misc.constants import Points, CELL_SIZE
 from misc.path import get_image_path_for_animator
@@ -33,8 +34,8 @@ class Fruit(DrawableObject):
     def __check_last_score(self):
         if self.game.score.score >= self.__score_to_eat:
             self.__drawing = True
-            return 1
-        return 0
+            return True
+        return False
 
     def __check_time(self):
         if pg.time.get_ticks() - self.__start_time >= 9000:  # 9000
@@ -43,10 +44,14 @@ class Fruit(DrawableObject):
             self.__drawing = False
             self.__change_image()
 
-    def __change_image(self):
+    def __change_image(self) -> None:
         self.__anim.change_cur_image(randint(0, self.__anim.get_len_anim() - 1))
 
-    def process_collision(self, object):
+    def process_collision(self, object) -> Tuple[bool, str]:
+        """
+        :param object: any class with pygame.rect
+        :return: is objects in collision (bool) and self type (str)
+        """
         if self.__drawing:
             if (self.rect.x == min(object.rect.left, object.rect.right))\
                     and (self.rect.y == object.rect.y):
@@ -59,5 +64,5 @@ class Fruit(DrawableObject):
     def process_logic(self):
         self.__check_score() if self.__drawing else self.__check_score()
 
-    def process_draw(self):
+    def process_draw(self) -> None:
         self.__draw_fruit()

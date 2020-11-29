@@ -3,7 +3,7 @@ from .base import Base
 
 class Pinky(Base):
 
-    def process_logic(self):
+    def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()
             if self.is_in_home and self.can_leave_home():
@@ -15,7 +15,6 @@ class Pinky(Base):
                     self.is_in_home = False
                     self.collision = True
 
-    def get_love_cell(self, pacman):
+    def get_love_cell(self, pacman) -> None:
         rotate = pacman.rotate
         self.love_cell = (pacman.get_cell()[0]+self.direction2[rotate][0]*2, pacman.get_cell()[1]+self.direction2[rotate][1]*2)
-
