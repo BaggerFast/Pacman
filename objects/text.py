@@ -1,44 +1,57 @@
+from typing import Tuple
+
 import pygame as pg
+
 from misc import Font
 from objects import DrawableObject
-from typing import Tuple
 
 
 class Text(DrawableObject):
     def __init__(self, game, text: str = "",
-                 size: Tuple[int, int] = (0, 0),
+                 size: int = 0,
                  rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0),
                  color=pg.Color(255, 255, 255),
-                 font=Font.DEFAULT) -> None:
+                 font=Font.DEFAULT):
 
         super().__init__(game)
         self.rect = rect
-        self.pos = rect
+        self.__pos = rect
         self.size = size
-        self.color = color
+        self.__color = color
         self.font = pg.font.Font(font, self.size)
+        self.__text: str
         self.text = text
-        self.surface: pg.Surface = None
-        self.update_text()
+        self.surface: pg.Surface
 
-    def update_text(self, new_text: str = None) -> None:
-        self.text = new_text if new_text else self.text
-        self.surface = self.font.render(self.text, False, self.color)
+    @property
+    def pos(self):
+        return self.__pos
+
+    @property
+    def text(self):
+        return self.__text
+
+    @property
+    def color(self):
+        return self.color
+
+    @text.setter
+    def text(self, text: str):
+        self.__text = text if text else self.__text
+        self.surface = self.font.render(self.__text, False, self.__color)
         if type(self.rect) != tuple:
             topleft = self.rect.topleft
             self.rect = self.surface.get_rect()
             self.rect.topleft = topleft
 
-    def update_color(self, new_color: pg.Color) -> None:
-        self.color = new_color
-        self.surface = self.font.render(self.text, False, self.color)
-        if type(self.rect) != tuple:
-            topleft = self.rect.topleft
-            self.rect = self.surface.get_rect()
-            self.rect.topleft = topleft
+    @color.setter
+    def color(self, color: pg.color):
+        self.color = color
+        self.surface = self.font.render(self.__text, False, self.__color)
 
-    def update_position(self, pos: Tuple[int, int]) -> None:
-        self.pos = pos
+    @pos.setter
+    def pos(self, pos: Tuple[int, int]):
+        self.__pos = pos
 
     def process_draw(self) -> None:
         self.game.screen.blit(self.surface, self.rect)

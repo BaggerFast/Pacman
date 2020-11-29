@@ -45,15 +45,17 @@ class Scene(base.Scene):
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
         self.objects.append(self.__seeds)
 
-        self.__scores_label_text = Text(self.game, 'SCORE', Font.MAIN_SCENE_SIZE,
-                                        rect=pg.Rect(10, 0, 20, 20), color=Color.WHITE)
+        self.__scores_label_text = Text(
+            self.game, 'SCORE', Font.MAIN_SCENE_SIZE,rect=pg.Rect(10, 0, 20, 20)
+        )
+        self.__scores_value_text = Text(
+            self.game, str(self.game.score), Font.MAIN_SCENE_SIZE,rect=pg.Rect(10, 8, 20, 20)
+        )
         self.objects.append(self.__scores_label_text)
-        self.__scores_value_text = Text(self.game, str(self.game.score), Font.MAIN_SCENE_SIZE,
-                                        rect=pg.Rect(10, 8, 20, 20), color=Color.WHITE)
         self.objects.append(self.__scores_value_text)
 
         self.__highscores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE,
-                                            rect=pg.Rect(130, 0, 20, 20), color=Color.WHITE)
+                                            rect=pg.Rect(130, 0, 20, 20))
         self.objects.append(self.__highscores_label_text)
         self.__highscores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
                                             rect=pg.Rect(130, 8, 20, 20), color=Color.WHITE)
@@ -90,10 +92,10 @@ class Scene(base.Scene):
         self.objects.append(self.__clyde)
 
         self.ready_text = Text(self.game, 'Ready', 30, font=Font.TITLE,
-                               rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
+                               rect=pg.Rect(20, 0, 20, 20))
         self.ready_text.move_center(self.game.width // 2, self.game.height // 2)
         self.go_text = Text(self.game, 'GO!', 30, font=Font.TITLE,
-                            rect=pg.Rect(20, 0, 20, 20), color=Color.WHITE)
+                            rect=pg.Rect(20, 0, 20, 20))
         self.go_text.move_center(self.game.width // 2, self.game.height // 2)
         self.ready_text.surface.set_alpha(0)
         self.go_text.surface.set_alpha(0)
@@ -225,10 +227,10 @@ class Scene(base.Scene):
         super().process_draw()
         for i in range(len(self.__last_hp)):
             self.__last_hp[i].process_draw()
-        self.__scores_value_text.update_text(str(self.game.score))
+        self.__scores_value_text.text = str(self.game.score)
 
         # todo: make text update only when new value appeares
-        self.__scores_value_text.update_text(str(self.game.score))
+        self.__scores_value_text.text = str(self.game.score)
 
     def on_deactivate(self) -> None:
         pass
