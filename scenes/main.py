@@ -32,7 +32,7 @@ class Scene(base.Scene):
         self.anim = 0
         self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
         self.intro_sound.set_volume(0.5)
-        self.hp = Health(1, 3)
+        self.hp = Health(3, 3)
         super().__init__(game)
 
     def __prepare_lives_meter(self) -> None:
@@ -153,10 +153,6 @@ class Scene(base.Scene):
                 if not self.__pacman.dead:
                     self.__pacman.death()
                     self.__prepare_lives_meter()
-                # todo
-                if not self.__pacman.animator.run != self.__pacman.death() and int(self.hp) < 1:
-                    self.game.set_scene(self.game.scenes.GAMEOVER)
-                    break
                 for ghost2 in self.__ghosts:
                     ghost2.invisible()
         if is_eaten1:
@@ -180,7 +176,7 @@ class Scene(base.Scene):
             pg.mixer.Channel(1).play(self.intro_sound)
             self.create_objects()
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
-            self.first_run = not not not not not not not not not not not not not not not not not not not not not not not not not not not True
+            self.first_run = False
 
     def start_label(self) -> None:
         if self.anim < 8:
@@ -205,6 +201,8 @@ class Scene(base.Scene):
 
     def process_logic(self) -> None:
         if not pg.mixer.Channel(1).get_busy():
+            if self.__pacman.dead_anim.anim_finished and int(self.hp) < 1:
+                self.game.set_scene(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
             self.__check_first_run()
