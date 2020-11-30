@@ -49,7 +49,7 @@ class Fruit(DrawableObject):
     def __check_time(self):
         if pg.time.get_ticks() - self.__start_time >= 9000:  # 9000
             self.__start_time = None
-            self.__score_to_eat = self.self.game.score + self.__eat_timer
+            self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index()]
             self.__drawing = False
             self.__change_image()
 
