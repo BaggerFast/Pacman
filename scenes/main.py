@@ -68,6 +68,8 @@ class Scene(base.Scene):
                                             rect=pg.Rect(130, 8, 20, 20), color=Color.WHITE)
         self.objects.append(self.__highscores_value_text)
 
+        self.objects.append(self.fruit)
+
         self.__pacman = Pacman(self.game, self.__player_position)
 
         self.objects.append(self.__pacman)
@@ -105,7 +107,6 @@ class Scene(base.Scene):
         self.go_text.surface.set_alpha(0)
         self.objects.append(self.ready_text)
         self.objects.append(self.go_text)
-        self.objects.append(self.fruit)
 
     @property
     def movements_data(self):
