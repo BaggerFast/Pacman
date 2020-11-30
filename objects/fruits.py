@@ -1,18 +1,20 @@
+import pygame as pg
 from random import randint
 from typing import Tuple
 
-from misc.constants import Points, CELL_SIZE
-from misc.path import get_image_path_for_animator
+from misc.constants import Points, CELL_SIZE, Sounds
+from misc.path import get_list_path
 from misc.animator import Animator
 from objects.base import DrawableObject
-import pygame as pg
 
 
 class Fruit(DrawableObject):
-    def __init__(self, game, screen, x, y):
+    eaten_sound = Sounds.FRUIT
+
+    def __init__(self, game, screen, x, y) -> None:
         super().__init__(game)
         self.screen = screen
-        self.__anim = Animator(get_image_path_for_animator('fruit'), False, False)
+        self.__anim = Animator(get_list_path('images/fruit', 'png'), False, False)
         self.__image = self.__anim.current_image
         self.rect = self.__anim.current_image.get_rect()
         self.rect.x = x - self.rect.width // 2
@@ -22,7 +24,8 @@ class Fruit(DrawableObject):
         self.__drawing = False
         self.__start_time = None
         self.__eat_timer = 90
-        self.__score_to_eat = 70
+        self.__score_to_eat = 0
+        self.eaten_sound.set_volume(1)
 
     def __draw_fruit(self):
         if self.__drawing:
@@ -38,7 +41,7 @@ class Fruit(DrawableObject):
             self.__start_time = pg.time.get_ticks()
 
     def __check_last_score(self):
-        if self.game.score.score >= self.__score_to_eat:
+        if int(self.game.score) >= self.__score_to_eat:
             self.__drawing = True
             return True
         return False
@@ -46,11 +49,11 @@ class Fruit(DrawableObject):
     def __check_time(self):
         if pg.time.get_ticks() - self.__start_time >= 9000:  # 9000
             self.__start_time = None
-            self.__score_to_eat = self.game.score.score + self.__eat_timer
+            self.__score_to_eat = self.self.game.score + self.__eat_timer
             self.__drawing = False
-            self.change_image()
+            self.__change_image()
 
-    def change_image(self) -> None:  # __change_image
+    def __change_image(self) -> None:  # __change_image
         # self.__anim.change_cur_image(randint(0, self.__anim.get_len_anim() - 1))
         self.__anim.change_cur_image((self.__anim.get_cur_index() + 1) % self.__anim.get_len_anim())
         print("len", self.__anim.get_len_anim())
@@ -64,9 +67,11 @@ class Fruit(DrawableObject):
             if (self.rect.x == min(object.rect.left, object.rect.right)) \
                     and (self.rect.y == object.rect.y):
                 self.__drawing = False
-                self.__score_to_eat = self.game.score.score + self.__eat_timer + \
+                if not pg.mixer.Channel(0).get_busy():
+                    self.eaten_sound.play()
+                self.__score_to_eat = int(self.game.score) + self.__eat_timer + \
                                       self.__scores[self.__anim.get_cur_index()] + Points.POINT_PER_FRUIT
-                self.change_image()
+                self.__change_image()
                 return True, "fruit"
         return False, ""
 
