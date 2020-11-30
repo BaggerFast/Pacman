@@ -129,9 +129,12 @@ class Scene(base.Scene):
             self.__prefered_ghost = None
             self.__count_prefered_ghost = 0
 
-    def __process_collision(self) -> None:
+    def __collision(self):
         self.fruit.process_collision(self.__pacman)
-        self.__seeds.process_collision(self.__pacman)
+        return self.__seeds.process_collision(self.__pacman)
+
+    def __process_collision(self) -> None:
+        a = self.__collision()
         for ghost in self.__ghosts:
             if ghost.collision_check(self.__pacman):
                 self.__timer_reset_pacman = pg.time.get_ticks()
@@ -140,12 +143,14 @@ class Scene(base.Scene):
                     self.__prepare_lives_meter()
                 for ghost2 in self.__ghosts:
                     ghost2.invisible()
-        if self.__prefered_ghost is not None and self.__work_ghost_counters:
-            self.__prefered_ghost.counter()
-            self.__prefered_ghost.update_timer()
-        elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
-            self.__seeds_eaten += 1
-            self.__prefered_ghost.update_timer()
+        if a:
+            if self.__prefered_ghost is not None and self.__work_ghost_counters:
+                self.__prefered_ghost.counter()
+                self.__prefered_ghost.update_timer()
+            elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
+                #todo Sergey
+                self.__seeds_eaten += 1
+                self.__prefered_ghost.update_timer()
 
 
     def __check_first_run(self) -> None:
@@ -153,7 +158,6 @@ class Scene(base.Scene):
             self.timer = pg.time.get_ticks() / 1000
             pg.mixer.Channel(1).play(self.intro_sound)
             self.create_objects()
-            # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = False
 
     def start_label(self) -> None:
@@ -223,15 +227,12 @@ class Scene(base.Scene):
 
     def on_deactivate(self) -> None:
         pass
-        # self.game.records.set_new_record(int(self.game.score))
-        # self.game.scenes["GAME"] = Scene(self.game)
 
     def on_activate(self) -> None:
         pg.mixer.Channel(0).unpause()
         pg.mixer.Channel(1).unpause()
         if self.__pacman.animator != self.__pacman.dead_anim:
             pg.mixer.Channel(3).unpause()
-        # self.game.scenes["SCENE_GAME"] = GameScene(self.game)
 
     def on_reset(self) -> None:
         pg.mixer.stop()
