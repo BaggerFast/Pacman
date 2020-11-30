@@ -27,7 +27,7 @@ class Scene(base.Scene):
         self.__timer_reset_pacman = 0
         self.__seeds_eaten = 0
         self.__work_ghost_counters = True
-        self.__max_seeds_eaten_to_prefered_ghost = 7 
+        self.__max_seeds_eaten_to_prefered_ghost = 7
         self.__first_run_ghost = True
         self.total_anim = 0
         self.anim = 0
@@ -144,6 +144,7 @@ class Scene(base.Scene):
         elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
             self.__seeds_eaten += 1
             self.__prefered_ghost.update_timer()
+
 
     def __check_first_run(self) -> None:
         if self.first_run:
