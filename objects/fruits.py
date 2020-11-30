@@ -25,7 +25,6 @@ class Fruit(DrawableObject):
         self.__start_time = 0
         self.__eat_timer = 90
         self.__score_to_eat = 0
-        self.__score_tolerance = 150
         self.eaten_sound.set_volume(1)
 
     def __draw_fruit(self):
@@ -42,7 +41,7 @@ class Fruit(DrawableObject):
             self.__start_time = pg.time.get_ticks()
 
     def __check_last_score(self):
-        if int(self.game.score) >= self.__score_to_eat + self.__score_tolerance:
+        if int(self.game.score) >= self.__score_to_eat:
             self.__drawing = True
             return True
         return False
@@ -69,8 +68,8 @@ class Fruit(DrawableObject):
                 if not pg.mixer.Channel(0).get_busy():
                     self.eaten_sound.play()
                 self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index()]
+                self.game.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
                 self.__change_image()
-                self.game.score.eat_fruit()
 
     def process_logic(self):
         self.__check_time() if self.__drawing else self.__check_score()
