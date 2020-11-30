@@ -17,16 +17,16 @@ class Base(Character):
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
 
         self.left_walk_anim = Animator(
-            get_list_path('images/ghost/' + type(self).__name__.lower() + '/left', 'png'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'left'), is_rotation=False
         )
         self.right_walk_anim = Animator(
-            get_list_path('images/ghost/' + type(self).__name__.lower() + '/right', 'png'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'right'), is_rotation=False
         )
         self.top_walk_anim = Animator(
-            get_list_path('images/ghost/' + type(self).__name__.lower() + '/top', 'png'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'top'), is_rotation=False
         )
         self.bottom_walk_anim = Animator(
-            get_list_path('images/ghost/' + type(self).__name__.lower() + '/bottom', 'png'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'bottom'), is_rotation=False
         )
 
         self.animations = [
@@ -43,7 +43,7 @@ class Base(Character):
         self.count_eat_seeds_in_home = 0
         self.timer = pg.time.get_ticks()
         self.invisible_anim = Animator(
-            get_list_path('images/ghost/invisible', 'png'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', 'invisible'), is_rotation=False
         )
         self.is_invisible = False
         self.is_in_home = True

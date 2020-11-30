@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Color, HighScore, get_image_path, Score, Maps, UNLOCK_LEVELS
+from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS
 from misc.storage import Storage
 from scenes import *
 
@@ -16,7 +16,7 @@ class Game:
             self.CREDITS = credits.Scene(game)
 
     __size = width, height = 224, 285
-    __icon = pg.image.load(get_image_path('1', 'pacman', 'walk'))
+    __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'walk'))
     __FPS = 60
     __def_level = "level_1"
     pg.display.set_caption('PACMAN')
@@ -33,6 +33,8 @@ class Game:
         self.__current_scene = self.scenes.MENU
         self.__clock = pg.time.Clock()
         self.__game_over = False
+        self.time_out = 125
+        self.animate_timer = 0
 
     @property
     def current_scene(self):

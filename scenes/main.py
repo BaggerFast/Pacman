@@ -1,7 +1,7 @@
 import pygame as pg
 import random
 
-from misc import LevelLoader, Color, CELL_SIZE, Font, get_image_path, Health
+from misc import LevelLoader, Color, CELL_SIZE, Font, get_path, Health
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import base
@@ -13,6 +13,7 @@ class Scene(base.Scene):
     pg.mixer.init()
     siren_sound = Sounds.SIREN
     intro_sound = Sounds.INTRO
+    gameover_sound = Sounds.GAMEOVER
 
     def __init__(self, game) -> None:
         self.__loader = LevelLoader(Maps.get(game.level_name))
@@ -29,17 +30,15 @@ class Scene(base.Scene):
         self.__work_ghost_counters = True
         self.__max_seeds_eaten_to_prefered_ghost = 7
         self.__first_run_ghost = True
-        self.total_anim = 0
-        self.anim = 0
+        self.timer = 0
         self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
-        self.intro_sound.set_volume(0.5)
-        self.hp = Health(3, 3)
+        self.hp = Health(1, 3)
         super().__init__(game)
 
     def __prepare_lives_meter(self) -> None:
         self.__last_hp = []
         for i in range(int(self.hp)):
-            hp_image = ImageObject(self.game, get_image_path('1.png', 'pacman', 'walk'), (5 + i * 20, 270))
+            hp_image = ImageObject(self.game, get_path('1', 'png', 'images', 'pacman', 'walk'), (5 + i * 20, 270))
             hp_image.rotate(180)
             self.__last_hp.append(hp_image)
 
@@ -102,6 +101,7 @@ class Scene(base.Scene):
         self.go_text = Text(self.game, 'GO!', 30, font=Font.TITLE,
                             rect=pg.Rect(20, 0, 20, 20))
         self.go_text.move_center(self.game.width // 2, self.game.height // 2)
+        self.state_text = 1
         self.ready_text.surface.set_alpha(0)
         self.go_text.surface.set_alpha(0)
         self.objects.append(self.ready_text)
@@ -170,30 +170,29 @@ class Scene(base.Scene):
                 self.__seeds_eaten += 1
                 self.__prefered_ghost.update_timer()
 
-
     def __check_first_run(self) -> None:
         if self.first_run:
+            self.timer = pg.time.get_ticks() / 1000
             pg.mixer.Channel(1).play(self.intro_sound)
             self.create_objects()
             # https://sun9-67.userapi.com/VHk2X8_nRY5KNLbYcX1ATTX9NMhFlWjB7Lylvg/3ZDw249FXVQ.jpg
             self.first_run = False
 
     def start_label(self) -> None:
-        if self.anim < 8:
-            if self.total_anim < 200:
+        current_time = pg.time.get_ticks() / 1000
+        if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
+            self.state_text *= -1
+        if self.state_text == 1:
+            if current_time - self.timer < self.intro_sound.get_length() / 4 * 3:
                 self.ready_text.surface.set_alpha(255)
             else:
                 self.ready_text.surface.set_alpha(0)
                 self.go_text.surface.set_alpha(255)
         else:
-            if self.total_anim < 200:
+            if current_time - self.timer < self.intro_sound.get_length() / 4 * 3:
                 self.ready_text.surface.set_alpha(0)
             else:
                 self.ready_text.surface.set_alpha(0)
-            if self.anim > 16:
-                self.anim = 0
-        self.anim += 1
-        self.total_anim += 1
 
     def __play_music(self):
         if not pg.mixer.Channel(3).get_busy() and not self.first_run:
@@ -202,6 +201,9 @@ class Scene(base.Scene):
     def process_logic(self) -> None:
         if not pg.mixer.Channel(1).get_busy():
             if self.__pacman.dead_anim.anim_finished and int(self.hp) < 1:
+                pg.mixer.Channel(0).stop()
+                pg.mixer.Channel(1).stop()
+                pg.mixer.Channel(2).play(self.gameover_sound)
                 self.game.set_scene(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
@@ -225,9 +227,6 @@ class Scene(base.Scene):
         else:
             self.start_label()
             self.__inky.update_timer()
-            if self.anim > 16:
-                self.anim = 0
-        self.anim += 1
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
         for ghost in self.__ghosts:

@@ -14,14 +14,11 @@ class SeedContainer(DrawableObject):
         self.__y = y
         self.__seeds = seed_data
         self.__energizers = energizer_data
-        self.__time_out = 125
-        self.__animate_timer = 0
         self.__color = {
             -1: Color.WHITE,
             1: Color.BLACK
         }
         self.__index_color = 1
-        self.eaten_sound.set_volume(0.5)
 
     @property
     def x(self):
@@ -39,8 +36,8 @@ class SeedContainer(DrawableObject):
                                                                    self.y + row * CELL_SIZE + CELL_SIZE//2), 1)
 
     def __draw_energizers(self) -> None:
-        if pg.time.get_ticks() - self.__animate_timer > self.__time_out:
-            self.__animate_timer = pg.time.get_ticks()
+        if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
+            self.game.animate_timer = pg.time.get_ticks()
             self.__index_color *= -1
         for energizer in self.__energizers:
             pg.draw.circle(self.game.screen, self.__color[self.__index_color],
