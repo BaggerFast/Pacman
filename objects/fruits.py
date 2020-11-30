@@ -63,8 +63,7 @@ class Fruit(DrawableObject):
                 self.__score_to_eat = self.game.score.score + self.__eat_timer + Points.POINT_PER_FRUIT
                 self.__score_to_eat = int(self.game.score) + self.__eat_timer + Points.POINT_PER_FRUIT
                 self.__change_image()
-                return True, "fruit"
-        return False, ""
+                self.game.score.eat_fruit()
 
     def process_logic(self):
         self.__check_score() if self.__drawing else self.__check_score()

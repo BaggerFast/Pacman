@@ -47,7 +47,7 @@ class ButtonController(DrawableObject):
     def click_current_button(self) -> None:
         self.buttons[self.active_button_index].click()
 
-    def process_keydown(self, event: pg.event.Event) -> None:
+    def process_key_down(self, event: pg.event.Event) -> None:
         if event.type != pg.KEYDOWN:
             return
         if event.key in self.keys_previous:
@@ -57,7 +57,7 @@ class ButtonController(DrawableObject):
         elif event.key in self.keys_activate:
             self.activate_current_button()
 
-    def process_keyup(self, event: pg.event.Event) -> None:
+    def process_key_up(self, event: pg.event.Event) -> None:
         if event.type != pg.KEYUP:
             return
         if event.key in [pg.K_SPACE, pg.K_RETURN]:
@@ -82,8 +82,8 @@ class ButtonController(DrawableObject):
 
     def process_event(self, event: pg.event.Event) -> None:
         self.process_button_events(event)
-        self.process_keydown(event)
-        self.process_keyup(event)
+        self.process_key_down(event)
+        self.process_key_up(event)
         self.process_mouse_motion(event)
 
     def process_draw(self) -> None:

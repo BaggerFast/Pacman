@@ -60,10 +60,9 @@ class SeedContainer(DrawableObject):
                         self.__seeds[row][col] = None
                         if not pg.mixer.Channel(0).get_busy():
                             self.eaten_sound.play()
-                        return True, "seed"
+                        self.game.score.eat_seed()
         for energizer in self.__energizers:
             if energizer[1] * CELL_SIZE + 18 == object.rect.y:
                 if energizer[0] * CELL_SIZE - 2 == object.rect.x:
                     self.__energizers.remove(energizer)
-                    return True, "energizer"
-        return False, ""
+                    self.game.score.eat_energizer()
