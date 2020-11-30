@@ -1,5 +1,7 @@
 import os
-from typing import List
+
+
+ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 
 
 def get_image_path(filename: str, *folder: str) -> str:
@@ -14,19 +16,15 @@ def get_image_path(filename: str, *folder: str) -> str:
     return os.path.join(*[ROOT_DIR, 'images'] + list(folder) + [filename])
 
 
-ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
-
-
-def get_sound_path(filename: str, *folder: str) -> str:
+def get_path(folder: str, filename: str, extension: str) -> str:
     """
     :param filename: имя файла с расширением или без
     :param folder: указать папки через пробел слева на право без image
+    :param extension: указать расширение файла
     :return: возращает полный путь файла строкой
     """
-    extension = '.wav'
-    if extension not in filename:
-        filename += extension
-    return os.path.join(*[ROOT_DIR, 'sounds'] + list(folder) + [filename])
+    extension = '.' + extension
+    return os.path.join(*[ROOT_DIR, folder] + [filename + extension])
 
 
 def get_files_count(path: str) -> int:
@@ -37,18 +35,19 @@ def get_files_count(path: str) -> int:
     return count
 
 
-def get_image_path_for_animator(*folder: str) -> List[str]:
+def get_list_path(folder: str, extension: str):
     """
     :param folder: указать папки через пробел слева на право без имени файла без image
+    :param extension: указать расширение файла
     :return: возращает все пути до файлов для анимации автоматически
     """
-    extension = '.png'
-    images = []
-    folder_path = [ROOT_DIR, 'images'] + list(folder)
-    frames_count = get_files_count(os.path.join(*folder_path))
+    data = []
+    folder_path = ROOT_DIR + '/' + folder
+    frames_count = get_files_count(os.path.join(folder_path))
+    extension = '.' + extension
     for i in range(frames_count):
-        images.append(os.path.join(*folder_path + [str(i) + extension]))
-    return images
+        data.append(os.path.join(folder_path + '/' + str(i) + extension))
+    return data
 
 
 def create_file_if_not_exist(filepath: str, data: str = "") -> None:

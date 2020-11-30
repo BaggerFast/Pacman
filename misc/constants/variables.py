@@ -1,0 +1,9 @@
+CELL_SIZE = 8
+
+UNLOCK_LEVELS = True
+INFINITY_LIVES = False
+DISABLE_GHOSTS = False
+DISABLE_GHOSTS_COLLISION = False
+
+# todo: finish realization
+DEBUG = True

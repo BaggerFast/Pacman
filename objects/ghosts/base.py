@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Animator, get_image_path_for_animator
+from misc import Animator, get_list_path, DISABLE_GHOSTS, DISABLE_GHOSTS_COLLISION
 from objects import Character
 from objects.pacman import Pacman
 from typing import Tuple
@@ -17,16 +17,16 @@ class Base(Character):
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
 
         self.left_walk_anim = Animator(
-            get_image_path_for_animator('ghost', type(self).__name__.lower(), 'left'), is_rotation=False
+            get_list_path('images/ghost/' + type(self).__name__.lower() + '/left', 'png'), is_rotation=False
         )
         self.right_walk_anim = Animator(
-            get_image_path_for_animator('ghost', type(self).__name__.lower(), 'right'), is_rotation=False
+            get_list_path('images/ghost/' + type(self).__name__.lower() + '/right', 'png'), is_rotation=False
         )
         self.top_walk_anim = Animator(
-            get_image_path_for_animator('ghost', type(self).__name__.lower(), 'top'), is_rotation=False
+            get_list_path('images/ghost/' + type(self).__name__.lower() + '/top', 'png'), is_rotation=False
         )
         self.bottom_walk_anim = Animator(
-            get_image_path_for_animator('ghost', type(self).__name__.lower(), 'bottom'), is_rotation=False
+            get_list_path('images/ghost/' + type(self).__name__.lower() + '/bottom', 'png'), is_rotation=False
         )
 
         self.animations = [
@@ -44,7 +44,7 @@ class Base(Character):
         self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
         self.invisible_anim = Animator(
-            get_image_path_for_animator('ghost', 'invisible'), is_rotation=False
+            get_list_path('images/ghost/invisible', 'png'), is_rotation=False
         )
         self.is_invisible = False
         self.is_in_home = True
@@ -82,7 +82,7 @@ class Base(Character):
         super().process_logic()
 
     def collision_check(self, object: Character):
-        return self.get_cell() == object.get_cell() and self.collision
+        return self.get_cell() == object.get_cell() and self.collision and not DISABLE_GHOSTS_COLLISION
 
     def counter(self) -> None:
         if self.work_counter:
@@ -104,3 +104,7 @@ class Base(Character):
     def get_love_cell(self, pacman: Pacman) -> None:
         if self.mode == 'Scater':
             self.love_cell = self.love_point_in_runaway_mode
+
+    def step(self) -> None:
+        if not DISABLE_GHOSTS:
+            super().step()

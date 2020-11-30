@@ -1,7 +1,6 @@
 from typing import List, Union, Callable, Tuple
 import pygame as pg
-from misc.constants import Color, BUTTON_DEFAULT_COLORS, Font, ButtonColor, Sounds
-from misc.path import get_sound_path
+from misc import Color, Font, Sounds, ButtonColor, BUTTON_DEFAULT_COLORS
 from objects.base import DrawableObject
 
 
