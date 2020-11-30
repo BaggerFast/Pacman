@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Animator, get_list_path, DISABLE_GHOSTS
+from misc import Animator, get_list_path, DISABLE_GHOSTS, DISABLE_GHOSTS_COLLISION
 from objects import Character
 from objects.pacman import Pacman
 from typing import Tuple
@@ -75,7 +75,7 @@ class Base(Character):
         super().process_logic()
 
     def collision_check(self, object: Character):
-        return self.get_cell() == object.get_cell() and self.collision
+        return self.get_cell() == object.get_cell() and self.collision and not DISABLE_GHOSTS_COLLISION
 
     def counter(self) -> None:
         if self.work_counter:
