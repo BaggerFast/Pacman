@@ -145,7 +145,7 @@ class Scene(base.Scene):
                 self.__count_prefered_ghost = 0
 
     def __process_collision(self) -> None:
-        is_eaten1, type1 = self.fruit.process_collision(self.__pacman)
+        is_eaten1, type1, bonus = self.fruit.process_collision(self.__pacman)
         is_eaten, type = self.__seeds.process_collision(self.__pacman)
         for ghost in self.__ghosts:
             if ghost.collision_check(self.__pacman):
@@ -157,7 +157,7 @@ class Scene(base.Scene):
                     ghost2.invisible()
         if is_eaten1:
             if type1 == 'fruit':
-                self.game.score.eat_fruit()
+                self.game.score.eat_fruit(bonus)
         if is_eaten:
             if type == "seed":
                 self.game.score.eat_seed()

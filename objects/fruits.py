@@ -22,9 +22,10 @@ class Fruit(DrawableObject):
         self.__scores = []
         self.__creating_scores()
         self.__drawing = False
-        self.__start_time = None
+        self.__start_time = 0
         self.__eat_timer = 90
         self.__score_to_eat = 0
+        self.__score_tolerance = 150
         self.eaten_sound.set_volume(1)
 
     def __draw_fruit(self):
@@ -39,26 +40,27 @@ class Fruit(DrawableObject):
         if self.__check_last_score():
             self.__drawing = True
             self.__start_time = pg.time.get_ticks()
+        print("f2", self.__start_time)
 
     def __check_last_score(self):
-        if int(self.game.score) >= self.__score_to_eat:
+        print("f1", int(self.game.score), self.__score_to_eat + self.__score_tolerance)
+        if int(self.game.score) >= self.__score_to_eat + self.__score_tolerance:
             self.__drawing = True
             return True
         return False
 
     def __check_time(self):
         if pg.time.get_ticks() - self.__start_time >= 9000:  # 9000
-            self.__start_time = None
+            self.__start_time = 0
             self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index()]
             self.__drawing = False
             self.__change_image()
 
     def __change_image(self) -> None:  # __change_image
-        # self.__anim.change_cur_image(randint(0, self.__anim.get_len_anim() - 1))
         self.__anim.change_cur_image((self.__anim.get_cur_index() + 1) % self.__anim.get_len_anim())
         print("len", self.__anim.get_len_anim())
 
-    def process_collision(self, object) -> Tuple[bool, str]:
+    def process_collision(self, object):
         """
         :param object: any class with pygame.rect
         :return: is objects in collision (bool) and self type (str)
@@ -70,10 +72,10 @@ class Fruit(DrawableObject):
                 if not pg.mixer.Channel(0).get_busy():
                     self.eaten_sound.play()
                 self.__score_to_eat = int(self.game.score) + self.__eat_timer + \
-                                      self.__scores[self.__anim.get_cur_index()] + Points.POINT_PER_FRUIT
+                                      self.__scores[self.__anim.get_cur_index()]
                 self.__change_image()
-                return True, "fruit"
-        return False, ""
+                return True, "fruit", self.__scores[self.__anim.get_cur_index()]
+        return False, "", 0
 
     def process_logic(self):
         self.__check_time() if self.__drawing else self.__check_score()
