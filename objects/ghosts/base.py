@@ -42,6 +42,7 @@ class Base(Character):
         self.collision = False
         self.count_eat_seeds_in_home = 0
         self.timer = pg.time.get_ticks()
+        self.ai_timer = pg.time.get_ticks()
         self.invisible_anim = Animator(
             get_image_path_for_animator('ghost', 'invisible'), is_rotation=False
         )
@@ -50,7 +51,13 @@ class Base(Character):
         self.work_counter = True
         self.love_cell = (8, 16)
         self.set_direction("left")
-
+        self.love_point_in_runaway_mode = (0,0)
+        '''
+            'Chase',
+            'Scatter',
+            'Frightened'
+        '''
+        self.mode = 'Scatter'
     def process_logic(self) -> None:
         self.animator.timer_check()
         if self.in_center() and self.collision:
@@ -95,4 +102,5 @@ class Base(Character):
         self.collision = False
 
     def get_love_cell(self, pacman: Pacman) -> None:
-        pass
+        if self.mode == 'Scater':
+            self.love_cell = self.love_point_in_runaway_mode

@@ -3,7 +3,7 @@ from .base import Base
 
 class Inky(Base):
     max_count_eat_seeds_in_home = 30
-
+    love_point_in_runaway_mode = (27, 32)
     def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()
@@ -19,11 +19,13 @@ class Inky(Base):
                     self.collision = True
 
     def get_love_cell(self, pacman, blinky) -> None:
-        pacman_cell = pacman.get_cell()
-        rotate = pacman.rotate
-        blinky_cell = blinky.get_cell()
-        pinky_love_cell = (
-            pacman_cell[0] + self.direction2[rotate][0] * 2, pacman_cell[1] + self.direction2[rotate][1] * 2)
-        vector_blinky_cell_pinky_love_cell = (blinky_cell[0] - pinky_love_cell[0], blinky_cell[1] - pinky_love_cell[1])
-        self.love_cell = (pinky_love_cell[0] + vector_blinky_cell_pinky_love_cell[0],
-                          pinky_love_cell[1] + vector_blinky_cell_pinky_love_cell[1])
+        super().get_love_cell()
+        if self.mode == 'Chase':
+            pacman_cell = pacman.get_cell()
+            rotate = pacman.rotate
+            blinky_cell = blinky.get_cell()
+            pinky_love_cell = (
+                pacman_cell[0] + self.direction2[rotate][0] * 2, pacman_cell[1] + self.direction2[rotate][1] * 2)
+            vector_blinky_cell_pinky_love_cell = (blinky_cell[0] - pinky_love_cell[0], blinky_cell[1] - pinky_love_cell[1])
+            self.love_cell = (pinky_love_cell[0] + vector_blinky_cell_pinky_love_cell[0],
+                              pinky_love_cell[1] + vector_blinky_cell_pinky_love_cell[1])

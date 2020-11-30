@@ -2,8 +2,8 @@ from .base import Base
 
 
 class Clyde(Base):
-    max_count_eat_seeds_in_home = 59
-
+    max_count_eat_seeds_in_home = 60
+    love_point_in_runaway_mode = (0, 32)
     def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()

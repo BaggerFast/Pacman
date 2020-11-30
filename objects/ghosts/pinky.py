@@ -2,7 +2,7 @@ from .base import Base
 
 
 class Pinky(Base):
-
+    love_point_in_runaway_mode = (2, -3)
     def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()
@@ -16,5 +16,7 @@ class Pinky(Base):
                     self.collision = True
 
     def get_love_cell(self, pacman, blinky) -> None:
-        rotate = pacman.rotate
-        self.love_cell = (pacman.get_cell()[0]+self.direction2[rotate][0]*2, pacman.get_cell()[1]+self.direction2[rotate][1]*2)
+        super().get_love_cell()
+        if self.mode == 'Chase':
+            rotate = pacman.rotate
+            self.love_cell = (pacman.get_cell()[0]+self.direction2[rotate][0]*2, pacman.get_cell()[1]+self.direction2[rotate][1]*2)
