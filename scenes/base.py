@@ -2,7 +2,7 @@ import pygame as pg
 
 
 class Scene:
-    def __init__(self, game) -> None:
+    def __init__(self, game):
         self.game = game
         self.screen = self.game.screen
         self.objects = []
@@ -46,3 +46,16 @@ class Scene:
 
     def recreate(self) -> None:
         self.__init__(self.game)
+
+
+class SubScene(Scene):
+    def __init__(self, game, rect: pg.rect):
+        super(SubScene, self).__init__(game)
+        self.rect = rect
+        self.screen = pg.Surface(rect)
+
+    def additional_draw(self) -> None:
+        self.game.screen.blit(self.screen, self.rect)
+
+    def recreate(self) -> None:
+        self.__init__(self.game, self.rect)
