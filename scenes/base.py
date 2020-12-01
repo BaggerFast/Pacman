@@ -4,6 +4,7 @@ import pygame as pg
 class Scene:
     def __init__(self, game) -> None:
         self.game = game
+        self.pre_init()
         self.screen = self.game.screen
         self.objects = []
         self.create_objects()
@@ -45,4 +46,9 @@ class Scene:
         pass
 
     def recreate(self) -> None:
-        self.__init__(self.game)
+        self.pre_init()
+        self.objects = []
+        self.create_objects()
+
+    def pre_init(self):
+        pass

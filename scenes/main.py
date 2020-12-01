@@ -15,8 +15,8 @@ class Scene(base.Scene):
     intro_sound = Sounds.INTRO
     gameover_sound = Sounds.GAMEOVER
 
-    def __init__(self, game) -> None:
-        self.__load_from_map(game)
+    def pre_init(self):
+        self.__load_from_map(self.game)
         self.__create_sounds()
 
         self.__timer_reset_pacman = 0
@@ -28,9 +28,8 @@ class Scene(base.Scene):
         self.first_run = True
 
         self.hp = Health(3, 3)
-        self.fruit = Fruit(game, game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
+        self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
-        super().__init__(game)
 
     def __load_from_map(self, game):
         self.__loader = LevelLoader(Maps.get(game.level_name))
