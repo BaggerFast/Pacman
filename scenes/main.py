@@ -16,7 +16,7 @@ class Scene(base.Scene):
     gameover_sound = Sounds.GAMEOVER
 
     def pre_init(self):
-        self.__load_from_map(self.game)
+        self.__load_from_map()
         self.__create_sounds()
 
         self.__timer_reset_pacman = 0
@@ -31,8 +31,8 @@ class Scene(base.Scene):
         self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
 
-    def __load_from_map(self, game):
-        self.__loader = LevelLoader(Maps.get(game.level_name))
+    def __load_from_map(self):
+        self.__loader = LevelLoader(Maps.get(self.game.level_name))
         self.__map_data = self.__loader.get_map_data()
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()
@@ -40,6 +40,7 @@ class Scene(base.Scene):
         self.__player_position = self.__loader.get_player_position()
         self.__ghost_positions = self.__loader.get_ghost_positions()
         self.__fruit_position = self.__loader.get_fruit_position()
+        self.__map = Map(self.game, self.__map_data)
 
     def __create_sounds(self):
         self.timer = 0
@@ -89,7 +90,6 @@ class Scene(base.Scene):
         self.objects.append(self.clyde)
 
     def __create_map(self):
-        self.__map = Map(self.game, self.__map_data)
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
         self.objects.append(self.__map)
         self.objects.append(self.__seeds)
