@@ -19,6 +19,10 @@ class SeedLoader:
         self.__seeds[self.__json["player_pos"][1]][int(self.__json["player_pos"][0] - 0.5)] = False
         self.__seeds[self.__json["player_pos"][1]][int(self.__json["player_pos"][0] + 0.5)] = False
 
+    def __remove_seeds_under_fruit(self) -> None:
+        self.__seeds[self.__json["fruit_pos"][1]][int(self.__json["fruit_pos"][0] - 0.5)] = False
+        self.__seeds[self.__json["fruit_pos"][1]][int(self.__json["fruit_pos"][0] + 0.5)] = False
+
     def __remove_seeds_under_energizers(self) -> None:
         for i in self.__json["big_dots_pos"]:
             self.__seeds[i[1]][i[0]] = False
@@ -27,6 +31,7 @@ class SeedLoader:
         self.__seeds = [[bool(x) for x in y] for y in self.__json["collision_map"]]
         self.__remove_seeds_under_ghost_area()
         self.__remove_seeds_under_pacman()
+        self.__remove_seeds_under_fruit()
         self.__remove_seeds_under_energizers()
 
     def get_seed_data(self) -> List[bool]:
