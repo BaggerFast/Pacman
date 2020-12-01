@@ -29,9 +29,7 @@ class Scene(base.Scene):
                 self.__next_level, 'NEXT LEVEL',
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE
-            )
-            if int(self.game.level_name[-1:]) != Maps.count else
-            Button(
+            ) if self.__is_last_level() else Button(
                 self.game, pg.Rect(0, 0, 180, 35),
                 self.__start_menu, 'EXIT',
                 center=(self.game.width // 2, 210),
@@ -64,6 +62,7 @@ class Scene(base.Scene):
         self.__text_highscore.text = f'High score: {self.game.records.data[-1]}'
         self.__text_highscore.move_center(self.game.width // 2, 165)
         self.__button_controller.reset_state()
+        self.__unlock_level()
 
     def __start_menu(self) -> None:
         self.game.scenes.set(self.game.scenes.MENU)
@@ -76,10 +75,21 @@ class Scene(base.Scene):
     def __save_record(self) -> None:
         self.game.records.add_new_record(int(self.game.score))
 
+    def __unlock_level(self):
+        if self.__is_last_level():
+            level_number = int(self.game.level_name[-1:])
+            next_level = 'level_' + str(level_number + 1)
+            self.game.unlock_level(next_level)
+
     def __next_level(self):
         level_number = int(self.game.level_name[-1:])
-
         next_level = 'level_' + str(level_number + 1)
-        self.game.unlock_level(next_level)
         self.game.level_name = next_level
+        self.game.records.update_records()
         self.game.scenes.set(self.game.scenes.MAIN, reset=True)
+
+    def on_reset(self) -> None:
+        self.recreate()
+
+    def __is_last_level(self) -> bool:
+        return int(self.game.level_name[-1:]) != Maps.count

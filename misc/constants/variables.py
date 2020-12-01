@@ -1,7 +1,6 @@
 CELL_SIZE: int = 8
-MAPS_COUNT: int = 3
 
-UNLOCK_LEVELS: bool = True
+UNLOCK_LEVELS: bool = False
 DEBUG: bool = False
 INFINITY_LIVES: bool = False
 DISABLE_GHOSTS: bool = False

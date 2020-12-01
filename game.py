@@ -97,3 +97,14 @@ class Game:
             self.__storage.unlocked_levels = self.unlocked_levels
         self.__storage.save()
         self.__game_over = True
+
+    def unlock_level(self, name: str = "level_1") -> None:
+        """
+
+        :param name:
+        """
+        if name in Maps.keys():
+            if not UNLOCK_LEVELS and name not in self.unlocked_levels:
+                self.unlocked_levels.append(name)
+        else:
+            raise Exception(f"Name error. {name} doesn't exist")

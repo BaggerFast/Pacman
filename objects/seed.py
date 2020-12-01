@@ -81,6 +81,3 @@ class SeedContainer(DrawableObject):
         if self.__seeds_on_field == 0:
             return True
         return False
-
-
-
