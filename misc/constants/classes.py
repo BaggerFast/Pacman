@@ -63,7 +63,7 @@ class Maps(NamedTuple):
         value: Union[str, int]
     level_1 = Tuple("original.json").value
     level_2 = Tuple("new_map.json").value
-    level_3 = Tuple("new_new_map.json").value
+    level_3 = Tuple("mshp_map.json").value
     count = Tuple(3).value
 
     @staticmethod
