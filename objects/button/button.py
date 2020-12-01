@@ -7,8 +7,8 @@ from objects.base import DrawableObject
 class BaseButton(DrawableObject):
     pg.mixer.init()
     click_sound = None
-    Hover_sound = None
-    Initial_sound = None
+    hover_sound = None
+    initial_sound = None
 
     def __init__(self, game, geometry: Union[tuple, pg.Rect], function: Callable[[], None]) -> None:
         super().__init__(game)
@@ -51,7 +51,7 @@ class Button(BaseButton):
         text: str = 'Define me',
         colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
         center: Tuple[float, float] = None,
-        text_size=60,
+        text_size: int = 60,
         font=Font.DEFAULT,
         active: bool = True
     ) -> None:
@@ -59,7 +59,6 @@ class Button(BaseButton):
         super().__init__(game, geometry, function)
         self.text = text
         self.font = pg.font.Font(font, text_size)
-        # self.text = Text(self.game, text)
         self.active = active
         self.colors: ButtonColor = self.parse_colors(colors)
         self.state = self.STATE_INITIAL

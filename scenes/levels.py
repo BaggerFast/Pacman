@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc import Color, Font
+from misc import Font
 from objects import ButtonController, Button, Text
 from scenes import base
 
@@ -47,7 +47,6 @@ class Scene(base.Scene):
         self.objects.append(self.__button_controller)
 
     def on_activate(self) -> None:
-        self.create_objects()
         self.__button_controller.reset_state()
 
     def __start_menu(self) -> None:

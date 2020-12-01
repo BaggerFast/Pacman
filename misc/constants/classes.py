@@ -7,8 +7,10 @@ from misc.path import get_path, get_list_path
 class Sounds:
     class Tuple(NamedTuple):
         mixer: pg.mixer.Sound
+
     class TupleList(NamedTuple):
         list: list
+
     pg.mixer.init()
     CLICK = Tuple(pg.mixer.Sound(get_path('navigation', 'wav', 'sounds'))).mixer
     DEAD = Tuple(pg.mixer.Sound(get_path('death', 'wav', 'sounds'))).mixer
@@ -23,6 +25,7 @@ class Sounds:
 class Color(NamedTuple):
     class Tuple(NamedTuple):
         color: pg.Color
+
     RED = Tuple(pg.Color('red')).color
     BLUE = Tuple(pg.Color('blue')).color
     GREEN = Tuple(pg.Color('green')).color
@@ -42,6 +45,7 @@ class Color(NamedTuple):
 class Points:
     class Tuple(NamedTuple):
         value: int
+
     POINT_PER_SEED = Tuple(10).value
     POINT_PER_ENERGIZER = Tuple(50).value
     POINT_PER_FRUIT = Tuple(40).value
@@ -51,6 +55,7 @@ class Font:
     class Tuple(NamedTuple):
         size: int = 0
         font: str = ''
+
     TITLE = Tuple(font=get_path('title', 'ttf', 'fonts')).font
     DEFAULT = Tuple(font=get_path('default', 'ttf', 'fonts')).font
     MAIN_SCENE_SIZE = Tuple(size=10).size
@@ -61,6 +66,7 @@ class Font:
 class Maps(NamedTuple):
     class Tuple(NamedTuple):
         value: Union[str, int]
+
     level_1 = Tuple("original.json").value
     level_2 = Tuple("new_map.json").value
     level_3 = Tuple("new_new_map.json").value
@@ -72,4 +78,4 @@ class Maps(NamedTuple):
 
     @staticmethod
     def keys():
-        return [f"level_{index+1}" for index in range(Maps.count)]
+        return [key for key in Maps.__dict__.keys() if key.startswith('level')]
