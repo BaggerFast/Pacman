@@ -68,10 +68,10 @@ class Scene(base.Scene):
         self.game.set_scene(self.game.scenes.MENU)
 
     def __level1(self) -> None:
-        self.__set_level("level_1")
+        self.set_level("level_1")
 
     def __level2(self) -> None:
-        self.__set_level("level_2")
+        self.set_level("level_2")
 
     def __level3(self) -> None:
-        self.__set_level("level_3")
+        self.set_level("level_3")

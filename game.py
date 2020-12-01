@@ -26,7 +26,7 @@ class Game:
 
     def __init__(self) -> None:
         self.__storage = Storage()
-        self.unlocked_levels = vars(Maps).keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
+        self.unlocked_levels = Maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
         self.level_name = self.__storage.last_level if self.__storage.last_level in self.unlocked_levels else self.__def_level
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.score = Score()

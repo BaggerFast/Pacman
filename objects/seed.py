@@ -79,7 +79,7 @@ class SeedContainer(DrawableObject):
 
     def is_field_empty(self) -> bool:
         print(self.__seeds_on_field)
-        if self.__seeds_on_field == 0:
+        if self.__seeds_on_field == 200:
             return True
         return False
 
