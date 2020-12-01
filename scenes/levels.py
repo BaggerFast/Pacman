@@ -63,9 +63,8 @@ class Scene(base.Scene):
         :param name: level_+id (e.g. level_1)
         """
         self.game.level_name = name
-        self.game.scenes.MAIN.recreate()
         self.game.records.update_records()
-        self.game.scenes.set(self.game.scenes.MENU)
+        self.game.scenes.set(self.game.scenes.MENU, reset=True)
 
     def __level1(self) -> None:
         self.set_level("level_1")

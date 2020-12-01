@@ -29,7 +29,9 @@ class Scene(base.Scene):
                 self.__next_level, 'NEXT LEVEL',
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE
-            )if int(self.game.level_name[-1:]) != Maps.count else Button(
+            )
+            if int(self.game.level_name[-1:]) != Maps.count else
+            Button(
                 self.game, pg.Rect(0, 0, 180, 35),
                 self.__start_menu, 'EXIT',
                 center=(self.game.width // 2, 210),
@@ -64,13 +66,12 @@ class Scene(base.Scene):
         self.__button_controller.reset_state()
 
     def __start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.MENU)
-
+        self.game.scenes.set(self.game.scenes.MENU)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene(self.game.scenes.MENU)
+                self.game.scenes.set(self.game.scenes.MENU)
 
     def __save_record(self) -> None:
         self.game.records.add_new_record(int(self.game.score))
@@ -78,9 +79,7 @@ class Scene(base.Scene):
     def __next_level(self):
         level_number = int(self.game.level_name[-1:])
 
-        next_level = 'level_' + str(level_number+1)
-        print(next_level)
+        next_level = 'level_' + str(level_number + 1)
         self.game.unlock_level(next_level)
         self.game.level_name = next_level
-        self.game.set_scene(self.game.scenes.MAIN,reset=True)
-
+        self.game.scenes.set(self.game.scenes.MAIN, reset=True)

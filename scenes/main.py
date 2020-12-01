@@ -227,7 +227,7 @@ class Scene(base.Scene):
                 pg.mixer.Channel(0).stop()
                 pg.mixer.Channel(1).stop()
                 pg.mixer.Channel(2).play(self.gameover_sound)
-                self.game.set_scene(self.game.scenes.ENDGAME)
+                self.game.scenes.set(self.game.scenes.ENDGAME)
         else:
             self.start_label()
             self.inky.update_timer()
