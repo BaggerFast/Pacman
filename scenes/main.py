@@ -167,6 +167,7 @@ class Scene(base.Scene):
                 self.__prefered_ghost.update_timer()
             elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
                 self.__seeds_eaten += 1
+                print(self.__seeds_eaten)
                 self.__prefered_ghost.update_timer()
 
     def __check_first_run(self) -> None:
@@ -202,7 +203,7 @@ class Scene(base.Scene):
                 pg.mixer.Channel(0).stop()
                 pg.mixer.Channel(1).stop()
                 pg.mixer.Channel(2).play(self.gameover_sound)
-                self.game.set_scene(self.game.scenes.GAMEOVER)
+                self.game.set_scene(self.game.scenes.gameover)
             super(Scene, self).process_logic()
             self.__play_music()
             self.__check_first_run()
@@ -222,6 +223,12 @@ class Scene(base.Scene):
                     self.__max_seeds_eaten_to_prefered_ghost = 17
                 elif self.__max_seeds_eaten_to_prefered_ghost == 17:
                     self.__max_seeds_eaten_to_prefered_ghost = 32
+
+            if self.__seeds.is_field_empty():
+                pg.mixer.Channel(0).stop()
+                pg.mixer.Channel(1).stop()
+                pg.mixer.Channel(2).play(self.gameover_sound)
+                self.game.set_scene(self.game.scenes.ENDGAME)
         else:
             self.start_label()
             self.inky.update_timer()

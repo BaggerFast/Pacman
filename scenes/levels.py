@@ -58,7 +58,7 @@ class Scene(base.Scene):
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 self.game.set_scene(self.game.scenes.MENU)
 
-    def __set_level(self, name="level_1") -> None:
+    def set_level(self, name="level_1") -> None:
         """
         :param name: level_+id (e.g. level_1)
         """

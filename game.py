@@ -2,6 +2,7 @@ import pygame as pg
 from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS
 from misc.storage import Storage
 from scenes import *
+from scenes import endgame
 
 
 class Game:
@@ -14,6 +15,7 @@ class Game:
             self.LEVELS = levels.Scene(game)
             self.RECORDS = records.Scene(game)
             self.CREDITS = credits.Scene(game)
+            self.ENDGAME = endgame.Scene(game)
 
     __size = width, height = 224, 285
     __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'walk'))
