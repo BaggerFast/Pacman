@@ -2,7 +2,6 @@ import pygame as pg
 from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS
 from misc.storage import Storage
 from scenes import *
-from scenes import endgame
 
 
 class Game:

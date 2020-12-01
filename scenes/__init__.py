@@ -6,3 +6,4 @@ from . import main
 from . import menu
 from . import pause
 from . import records
+from . import endgame
