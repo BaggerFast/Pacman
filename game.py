@@ -15,6 +15,24 @@ class Game:
             self.RECORDS = records.Scene(game)
             self.CREDITS = credits.Scene(game)
             self.ENDGAME = endgame.Scene(game)
+            self.__current = self.MENU
+
+        @property
+        def current(self):
+            return self.__current
+
+        def set(self, scene: base.Scene, reset: bool = False) -> None:
+            """
+            :param scene: NEXT scene (contains in game.scenes.*)
+            :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
+
+            IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
+            """
+            self.__current.on_deactivate()
+            self.__current = scene
+            if reset:
+                self.__current.on_reset()
+            self.__current.on_activate()
 
     __size = width, height = 224, 285
     __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'walk'))
@@ -31,7 +49,6 @@ class Game:
         self.score = Score()
         self.records = HighScore(self)
         self.scenes = self.Scenes(self)
-        self.__current_scene = self.scenes.MENU
         self.__clock = pg.time.Clock()
         self.__game_over = False
         self.time_out = 125
@@ -39,7 +56,7 @@ class Game:
 
     @property
     def current_scene(self):
-        return self.__current_scene
+        return self.scenes.current
 
     @staticmethod
     def __exit_button_pressed(event: pg.event.Event) -> bool:
@@ -56,14 +73,14 @@ class Game:
     def __process_all_events(self) -> None:
         for event in pg.event.get():
             self.__process_exit_events(event)
-            self.__current_scene.process_event(event)
+            self.scenes.current.process_event(event)
 
     def __process_all_logic(self) -> None:
-        self.__current_scene.process_logic()
+        self.scenes.current.process_logic()
 
     def __process_all_draw(self) -> None:
         self.screen.fill(Color.BLACK)
-        self.__current_scene.process_draw()
+        self.scenes.current.process_draw()
         pg.display.flip()
 
     def main_loop(self) -> None:
@@ -72,25 +89,6 @@ class Game:
             self.__process_all_logic()
             self.__process_all_draw()
             self.__clock.tick(self.__FPS)
-
-    def set_scene(self, scene: base.Scene, reset: bool = False) -> None:
-        """
-        :param scene: NEXT scene (contains in game.scenes.*)
-        :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
-
-        IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
-        """
-        self.__current_scene.on_deactivate()
-        self.__current_scene = scene
-        if reset:
-            self.__current_scene.on_reset()
-        self.__current_scene.on_activate()
-
-    def unlock_level(self, name: str = "level_1") -> None:
-        """
-        :param name: level_+id (e.g. level_1)
-        """
-        self.unlocked_levels.append(name)
 
     def exit_game(self) -> None:
         print('Bye bye')

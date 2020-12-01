@@ -141,7 +141,7 @@ class Scene(base.Scene):
                 self.__start_menu()
 
     def __start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.MENU)
+        self.game.scenes.set(self.game.scenes.MENU)
         self.__on_screen = 0
         self.__students = []
         self.objects = []
