@@ -54,7 +54,8 @@ class SubScene(Scene):
         self.rect = rect
         self.screen = pg.Surface(rect)
 
-    def additional_draw(self) -> None:
+    def process_draw(self) -> None:
+        super(SubScene, self).process_draw()
         self.game.screen.blit(self.screen, self.rect)
 
     def recreate(self) -> None:
