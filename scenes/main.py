@@ -136,7 +136,7 @@ class Scene(base.Scene):
 
     def __start_pause(self) -> None:
         pg.mixer.pause()
-        self.game.set_scene(self.game.scenes.PAUSE)
+        self.game.scenes.set(self.game.scenes.PAUSE)
 
     def __change_prefered_ghost(self) -> None:
         self.__count_prefered_ghost += 1
@@ -202,7 +202,7 @@ class Scene(base.Scene):
                 pg.mixer.Channel(0).stop()
                 pg.mixer.Channel(1).stop()
                 pg.mixer.Channel(2).play(self.gameover_sound)
-                self.game.set_scene(self.game.scenes.GAMEOVER)
+                self.game.scenes.set(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
             self.__check_first_run()

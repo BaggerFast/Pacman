@@ -50,7 +50,7 @@ class Scene(base.Scene):
         self.__error_text.move_center(self.game.width // 2, 100)
 
     def __start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.MENU)
+        self.game.scenes.set(self.game.scenes.MENU)
 
     def on_activate(self) -> None:
         self.__button_controller.reset_state()
@@ -84,4 +84,4 @@ class Scene(base.Scene):
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene(self.game.scenes.MENU)
+                self.game.scenes.set(self.game.scenes.MENU)

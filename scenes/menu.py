@@ -59,14 +59,14 @@ class Scene(base.Scene):
         self.__button_controller.reset_state()
 
     def __start_game(self) -> None:
-        self.game.set_scene(self.game.scenes.MAIN, reset=True)
+        self.game.scenes.set(self.game.scenes.MAIN, reset=True)
 
     def __start_records(self) -> None:
         self.game.scenes.RECORDS.create_text_labels()
-        self.game.set_scene(self.game.scenes.RECORDS)
+        self.game.scenes.set(self.game.scenes.RECORDS)
 
     def __start_titres(self) -> None:
-        self.game.set_scene(self.game.scenes.CREDITS)
+        self.game.scenes.set(self.game.scenes.CREDITS)
 
     def __start_levels(self) -> None:
-        self.game.set_scene(self.game.scenes.LEVELS)
+        self.game.scenes.set(self.game.scenes.LEVELS)
