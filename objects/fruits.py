@@ -6,12 +6,14 @@ from misc.constants import Points, CELL_SIZE, Sounds
 from misc.path import get_list_path
 from misc.animator import Animator
 from objects.base import DrawableObject
+from objects import Text
 
 
 class Fruit(DrawableObject):
     eaten_sound = Sounds.FRUIT
 
     def __init__(self, game, screen, x, y) -> None:
+        self.game = game
         super().__init__(game)
         self.screen = screen
         self.__anim = Animator(get_list_path('png', 'images', 'fruit'), False, False)
@@ -19,9 +21,11 @@ class Fruit(DrawableObject):
         self.rect = self.__anim.current_image.get_rect()
         self.rect.x = x - self.rect.width // 2
         self.rect.y = y - self.rect.height // 2
-        self.__scores = []
+        self.__scores = [100, 150, 200, 250, 300, 350, 400, 450]
         self.__creating_scores()
         self.__drawing = False
+        self.__eaten = None
+        self.__eaten_time = 0
         self.__start_time = pg.time.get_ticks()
         self.__eat_timer = 90
         self.__score_to_eat = 0
@@ -29,12 +33,16 @@ class Fruit(DrawableObject):
         self.eaten_sound.set_volume(1)
 
     def __draw_fruit(self):
+        if self.__eaten:
+            Text(game=self.game, text=str(self.__scores[self.__anim.get_cur_index()]), size=8, rect=self.rect).process_draw()
+
         if self.__drawing:
             self.screen.blit(self.__anim.current_image, self.rect)
 
     def __creating_scores(self):
-        for i in range(self.__anim.get_len_anim()):
-            self.__scores.append(randint(100, 500))
+        if len(self.__scores) < self.__anim.get_len_anim():
+            for i in range(len(self.__scores) - 1, self.__anim.get_len_anim()):
+                self.__scores.append(randint(100, 500))
 
     def __check_score(self):
         if self.__check_last_score():
@@ -50,6 +58,10 @@ class Fruit(DrawableObject):
         if pg.time.get_ticks() - self.__start_time >= 9000:  # 9000
             self.__drawing = True
             self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index()]
+        elif pg.time.get_ticks() - self.__start_time >= 2000:
+            self.__eaten = None
+        else:
+            self.__eaten = True
 
     def __change_image(self) -> None:  # __change_image
         self.__anim.change_cur_image((self.__anim.get_cur_index() + 1) % self.__anim.get_len_anim())
@@ -65,7 +77,9 @@ class Fruit(DrawableObject):
                 pg.mixer.Channel(0).play(self.eaten_sound)
                 self.__drawing = False
                 self.__start_time = pg.time.get_ticks()
-                self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index()]
+                self.__eaten = True
+                self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[
+                    self.__anim.get_cur_index()]
                 self.game.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
                 self.__change_image()
 
