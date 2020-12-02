@@ -82,14 +82,13 @@ class Base(Character):
         super().process_logic()
 
     def collision_check(self, object: Character):
-        return self.get_cell() == object.get_cell() and self.collision and not DISABLE_GHOSTS_COLLISION
+        return self.distance(self.rect.center, object.rect.center) < 3 and self.collision and not DISABLE_GHOSTS_COLLISION
 
     def counter(self) -> None:
         if self.work_counter:
             self.count_eat_seeds_in_home += 1
 
     def can_leave_home(self) -> bool:
-        # print(type(self).__name__, ' ', self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home, pg.time.get_ticks()-self.timer)
         return (self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home and self.work_counter) \
                or pg.time.get_ticks()-self.timer >= 4000 or self.is_can_leave_home
 
@@ -108,3 +107,7 @@ class Base(Character):
     def step(self) -> None:
         if not DISABLE_GHOSTS:
             super().step()
+
+    @staticmethod
+    def distance(pair_1: Tuple[int, int], pair_2: Tuple[int, int]):
+        return ((pair_1[0] - pair_2[0])**2 + (pair_1[1] - pair_2[1])**2)**(1/2)

@@ -1,7 +1,7 @@
 import pygame as pg
 import random
 
-from misc import LevelLoader, Color, CELL_SIZE, Font, get_path, Health
+from misc import LevelLoader, CELL_SIZE, Font, get_path, Health
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import base
@@ -15,8 +15,24 @@ class Scene(base.Scene):
     intro_sound = Sounds.INTRO
     gameover_sound = Sounds.GAMEOVER
 
-    def __init__(self, game) -> None:
-        self.__loader = LevelLoader(Maps.get(game.level_name))
+    def pre_init(self):
+        self.__load_from_map()
+        self.__create_sounds()
+
+        self.__timer_reset_pacman = 0
+        self.__seeds_eaten = 0
+        self.__max_seeds_eaten_to_prefered_ghost = 7
+
+        self.__work_ghost_counters = True
+        self.__first_run_ghost = True
+        self.first_run = True
+
+        self.hp = Health(3, 3)
+        self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
+                           20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
+
+    def __load_from_map(self):
+        self.__loader = LevelLoader(Maps.get(self.game.level_name))
         self.__map_data = self.__loader.get_map_data()
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()
@@ -24,19 +40,12 @@ class Scene(base.Scene):
         self.__player_position = self.__loader.get_player_position()
         self.__ghost_positions = self.__loader.get_ghost_positions()
         self.__fruit_position = self.__loader.get_fruit_position()
-        self.first_run = True
-        self.__timer_reset_pacman = 0
-        self.__seeds_eaten = 0
-        self.__work_ghost_counters = True
-        self.__max_seeds_eaten_to_prefered_ghost = 7
-        self.__first_run_ghost = True
+        self.__map = Map(self.game, self.__map_data)
+
+    def __create_sounds(self):
         self.timer = 0
         self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
         self.intro_sound.set_volume(0.5)
-        self.hp = Health(3, 3)
-        self.fruit = Fruit(game, game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
-                           20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
-        super().__init__(game)
 
     def __prepare_lives_meter(self) -> None:
         self.__last_hp = []
@@ -47,34 +56,18 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         self.objects = []
-        self.__map = Map(self.game, self.__map_data)
-        self.objects.append(self.__map)
-        self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
-        self.objects.append(self.__seeds)
-
-        self.__scores_label_text = Text(
-            self.game, 'SCORE', Font.MAIN_SCENE_SIZE,rect=pg.Rect(10, 0, 20, 20)
-        )
-        self.__scores_value_text = Text(
-            self.game, str(self.game.score), Font.MAIN_SCENE_SIZE,rect=pg.Rect(10, 8, 20, 20)
-        )
-        self.objects.append(self.__scores_label_text)
-        self.objects.append(self.__scores_value_text)
-
-        self.__highscores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE,
-                                            rect=pg.Rect(130, 0, 20, 20))
-        self.objects.append(self.__highscores_label_text)
-        self.__highscores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
-                                            rect=pg.Rect(130, 8, 20, 20), color=Color.WHITE)
-        self.objects.append(self.__highscores_value_text)
+        self.__create_map()
+        self.__create_hud()
 
         self.objects.append(self.fruit)
-
         self.__pacman = Pacman(self.game, self.__player_position)
-
         self.objects.append(self.__pacman)
-        self.__prepare_lives_meter()
 
+        self.__prepare_lives_meter()
+        self.__create_ghost()
+        self.__create_start_anim()
+
+    def __create_ghost(self):
         self.blinky = Blinky(self.game, self.__ghost_positions[3])
         self.pinky = Pinky(self.game, self.__ghost_positions[1])
         self.inky = Inky(self.game, self.__ghost_positions[0])
@@ -96,6 +89,12 @@ class Scene(base.Scene):
         self.objects.append(self.inky)
         self.objects.append(self.clyde)
 
+    def __create_map(self):
+        self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
+        self.objects.append(self.__map)
+        self.objects.append(self.__seeds)
+
+    def __create_start_anim(self):
         self.ready_text = Text(self.game, 'Ready', 30, font=Font.TITLE,
                                rect=pg.Rect(20, 0, 20, 20))
         self.ready_text.move_center(self.game.width // 2, self.game.height // 2)
@@ -108,6 +107,24 @@ class Scene(base.Scene):
         self.objects.append(self.ready_text)
         self.objects.append(self.go_text)
 
+    def __create_hud(self):
+        self.__scores_label_text = Text(
+            self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20))
+
+        self.__scores_value_text = Text(
+            self.game, str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
+
+        self.__high_scores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE,
+                                             rect=pg.Rect(130, 0, 20, 20))
+
+        self.__high_scores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
+                                             rect=pg.Rect(130, 8, 20, 20))
+
+        self.objects.append(self.__scores_label_text)
+        self.objects.append(self.__scores_value_text)
+        self.objects.append(self.__high_scores_label_text)
+        self.objects.append(self.__high_scores_value_text)
+
     @property
     def movements_data(self):
         return self.__movements_data
@@ -118,7 +135,7 @@ class Scene(base.Scene):
 
     def __start_pause(self) -> None:
         pg.mixer.pause()
-        self.game.set_scene(self.game.scenes.PAUSE)
+        self.game.scenes.set(self.game.scenes.PAUSE)
 
     def __change_prefered_ghost(self) -> None:
         self.__count_prefered_ghost += 1
@@ -148,10 +165,8 @@ class Scene(base.Scene):
                 self.__prefered_ghost.counter()
                 self.__prefered_ghost.update_timer()
             elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
-                #todo Sergey
                 self.__seeds_eaten += 1
                 self.__prefered_ghost.update_timer()
-
 
     def __check_first_run(self) -> None:
         if self.first_run:
@@ -186,7 +201,7 @@ class Scene(base.Scene):
                 pg.mixer.Channel(0).stop()
                 pg.mixer.Channel(1).stop()
                 pg.mixer.Channel(2).play(self.gameover_sound)
-                self.game.set_scene(self.game.scenes.GAMEOVER)
+                self.game.scenes.set(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
             self.__check_first_run()
@@ -206,6 +221,12 @@ class Scene(base.Scene):
                     self.__max_seeds_eaten_to_prefered_ghost = 17
                 elif self.__max_seeds_eaten_to_prefered_ghost == 17:
                     self.__max_seeds_eaten_to_prefered_ghost = 32
+
+            if self.__seeds.is_field_empty():
+                pg.mixer.Channel(0).stop()
+                pg.mixer.Channel(1).stop()
+                pg.mixer.Channel(2).play(self.gameover_sound)
+                self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
         else:
             self.start_label()
             self.inky.update_timer()
