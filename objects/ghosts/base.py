@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Animator, get_list_path, DISABLE_GHOSTS, DISABLE_GHOSTS_COLLISION
+from misc import Animator, get_list_path, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION
 from objects import Character
 from objects.pacman import Pacman
 from typing import Tuple
@@ -97,7 +97,7 @@ class Base(Character):
         pass
 
     def step(self) -> None:
-        if not DISABLE_GHOSTS:
+        if not DISABLE_GHOSTS_MOVING:
             super().step()
 
     @staticmethod
