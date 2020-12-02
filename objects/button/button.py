@@ -135,7 +135,7 @@ class Button(BaseButton):
 
 class LvlButton(Button):
     def click(self):
-        self.game.level_name = self.value
+        self.game.level_id = self.value
         self.game.records.update_records()
         self.game.scenes.set(self.game.scenes.MENU, reset=True)
 

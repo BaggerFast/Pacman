@@ -12,7 +12,6 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         self.__create_title()
-        self.__create_buttons()
         self.__create_indicator()
 
     def __create_title(self) -> None:
