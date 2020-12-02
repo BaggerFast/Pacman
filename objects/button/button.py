@@ -37,13 +37,15 @@ class Button(BaseButton):
         self,
         game,
         geometry: Union[tuple, pg.Rect],
-        function: Callable[[], None],
+        function: Callable[[], None] = None,
         text: str = 'Define me',
         colors: ButtonColor = BUTTON_DEFAULT_COLORS,
         center: Tuple[int, int] = None,
         text_size: int = 60,
         font=Font.DEFAULT,
-        active: bool = True
+        active: bool = True,
+        value=None,
+        scene: tuple = (None, None)
     ) -> None:
 
         super().__init__(game, geometry, function)
@@ -54,6 +56,8 @@ class Button(BaseButton):
         self.state = self.STATE_INITIAL
         self.surfaces = self.prepare_surfaces()
         self.left_button_pressed = False
+        self.value = value
+        self.scene = scene
         if center:
             self.move_center(*center)
 
@@ -127,3 +131,19 @@ class Button(BaseButton):
 
     def activate(self) -> None:
         self.state = self.STATE_CLICK
+
+
+class LvlButton(Button):
+    def click(self):
+        self.game.level_name = self.value
+        self.game.records.update_records()
+        self.game.scenes.set(self.game.scenes.MENU, reset=True)
+
+
+class SceneButton(Button):
+    def click(self):
+        if callable(self.scene[0]):
+            self.scene[0]()
+        else:
+            print(self.scene[1])
+            self.game.scenes.set(self.scene[0], reset=self.scene[1])

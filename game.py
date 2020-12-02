@@ -15,7 +15,7 @@ class Game:
             self.RECORDS = records.Scene(game)
             self.CREDITS = credits.Scene(game)
             self.ENDGAME = endgame.Scene(game)
-            self.__current = self.MENU
+            self.__current = None
 
         @property
         def current(self):
@@ -28,7 +28,8 @@ class Game:
 
             IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
             """
-            self.__current.on_deactivate()
+            if self.__current is not None:
+                self.__current.on_deactivate()
             self.__current = scene
             if reset:
                 self.__current.on_reset()
@@ -53,6 +54,7 @@ class Game:
         self.__game_over = False
         self.time_out = 125
         self.animate_timer = 0
+        self.scenes.set(self.scenes.MENU)
 
     @property
     def current_scene(self):

@@ -1,17 +1,14 @@
 import pygame as pg
 
 from objects import ButtonController, Button, Text
+from objects.button.button import SceneButton
 from scenes import base
-from misc import Color, Font
+from misc import Font
 
 
 class Scene(base.Scene):
-    def __init__(self, game):
-        super().__init__(game)
-
     def create_objects(self) -> None:
         self.__create_title()
-        self.__create_buttons()
         self.__create_indicator()
 
     def __create_title(self) -> None:
@@ -26,28 +23,20 @@ class Scene(base.Scene):
         self.objects.append(self.__indicator)
 
     def __create_buttons(self) -> None:
-        buttons = [
-            Button(self.game, pg.Rect(0, 0, 180, 35),
-                   self.__start_game, 'PLAY',
-                   center=(self.game.width // 2, 95),
-                   text_size=Font.BUTTON_TEXT_SIZE),
-            Button(self.game, pg.Rect(0, 0, 180, 35),
-                   self.__start_levels, 'LEVELS',
-                   center=(self.game.width // 2, 135),
-                   text_size=Font.BUTTON_TEXT_SIZE),
-            Button(self.game, pg.Rect(0, 0, 180, 35),
-                   self.__start_records, 'RECORDS',
-                   center=(self.game.width // 2, 175),
-                   text_size=Font.BUTTON_TEXT_SIZE),
-            Button(self.game, pg.Rect(0, 0, 180, 35),
-                   self.__start_titres, 'CREDITS',
-                   center=(self.game.width // 2, 215),
-                   text_size=Font.BUTTON_TEXT_SIZE),
-            Button(self.game, pg.Rect(0, 0, 180, 35),
-                   self.game.exit_game, 'EXIT',
-                   center=(self.game.width // 2, 255),
-                   text_size=Font.BUTTON_TEXT_SIZE)
-        ]
+        names = {
+            0: ("PLAY", self.game.scenes.MAIN, True),
+            1: ("LEVELS", self.game.scenes.LEVELS, False),
+            2: ("RECORDS", self.game.scenes.RECORDS, False),
+            3: ("CREDITS", self.game.scenes.CREDITS, False),
+            4: ("EXIT", self.game.exit_game, None)
+        }
+        buttons = []
+        for i in range(len(names)):
+            buttons.append(SceneButton(self.game, pg.Rect(0, 0, 180, 35),
+                   text=names[i][0],
+                   scene=(names[i][1], names[i][2]),
+                   center=(self.game.width // 2, 95+i*40),
+                   text_size=Font.BUTTON_TEXT_SIZE))
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
 
@@ -55,18 +44,10 @@ class Scene(base.Scene):
         self.__indicator.text = self.game.level_name.replace('_', ' ')
 
     def on_activate(self) -> None:
-        self.__level_indicator()
-        self.__button_controller.reset_state()
+        self.objects = []
+        self.create_objects()
+        self.__create_buttons()
 
-    def __start_game(self) -> None:
-        self.game.scenes.set(self.game.scenes.MAIN, reset=True)
 
-    def __start_records(self) -> None:
-        self.game.scenes.RECORDS.create_text_labels()
-        self.game.scenes.set(self.game.scenes.RECORDS)
 
-    def __start_titres(self) -> None:
-        self.game.scenes.set(self.game.scenes.CREDITS)
 
-    def __start_levels(self) -> None:
-        self.game.scenes.set(self.game.scenes.LEVELS)
