@@ -27,7 +27,7 @@ class Scene(base.Scene):
         self.__first_run_ghost = True
         self.first_run = True
 
-        self.hp = Health(1, 3)
+        self.hp = Health(3, 3)
         self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
 
@@ -234,8 +234,6 @@ class Scene(base.Scene):
             self.__change_prefered_ghost()
         for ghost in self.__ghosts:
             ghost.ghosts_ai(self.__pacman, self.blinky)
-            if type(ghost).__name__ == 'Blinky':
-                print(type(ghost).__name__,': ', ghost.mode, ghost.ai_timer, -(ghost.ai_timer - pg.time.get_ticks()))
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
         for ghost in self.__not_prefered_ghosts:
