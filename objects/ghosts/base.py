@@ -75,7 +75,7 @@ class Base(Character):
         super().process_logic()
 
     def collision_check(self, object: Character):
-        return self.get_cell() == object.get_cell() and self.collision and not DISABLE_GHOSTS_COLLISION
+        return self.distance(self.rect.center, object.rect.center) < 3 and self.collision and not DISABLE_GHOSTS_COLLISION
 
     def counter(self) -> None:
         if self.work_counter:
@@ -99,3 +99,7 @@ class Base(Character):
     def step(self) -> None:
         if not DISABLE_GHOSTS:
             super().step()
+
+    @staticmethod
+    def distance(pair_1: Tuple[int, int], pair_2: Tuple[int, int]):
+        return ((pair_1[0] - pair_2[0])**2 + (pair_1[1] - pair_2[1])**2)**(1/2)
