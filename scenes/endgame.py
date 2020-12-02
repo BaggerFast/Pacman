@@ -77,14 +77,12 @@ class Scene(base.Scene):
 
     def __unlock_level(self):
         if self.__is_last_level():
-            level_number = int(self.game.level_name[-1:])
-            next_level = 'level_' + str(level_number + 1)
+            next_level = self.game.level_id + 1
             self.game.unlock_level(next_level)
 
     def __next_level(self):
-        level_number = int(self.game.level_name[-1:])
-        next_level = 'level_' + str(level_number + 1)
-        self.game.level_name = next_level
+        next_level = self.game.level_id + 1
+        self.game.level_id = next_level
         self.game.records.update_records()
         self.game.scenes.set(self.game.scenes.MAIN, reset=True)
 
@@ -92,4 +90,4 @@ class Scene(base.Scene):
         self.recreate()
 
     def __is_last_level(self) -> bool:
-        return int(self.game.level_name[-1:]) != Maps.count
+        return (self.game.level_id + 1) < Maps.count
