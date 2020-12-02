@@ -2,7 +2,7 @@ from random import randint
 
 import pygame as pg
 
-from misc import CELL_SIZE, get_path
+from misc import CELL_SIZE, get_path, Color
 from objects import DrawableObject
 
 
@@ -55,7 +55,7 @@ class Map(DrawableObject):
 
         for x in range(self.surface.get_width()):
             for y in range(self.surface.get_height()):
-                if self.surface.get_at((x, y)) == (33, 33, 255):
+                if self.surface.get_at((x, y)) == Color.MAIN_MAP:
                     self.surface.set_at((x, y), self.color)  # Set the color of the pixel.
 
     def process_draw(self) -> None:

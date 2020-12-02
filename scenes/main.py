@@ -32,7 +32,7 @@ class Scene(base.Scene):
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
 
     def __load_from_map(self):
-        self.__loader = LevelLoader(Maps.get(self.game.level_name))
+        self.__loader = LevelLoader(Maps.levels[self.game.level_id])
         self.__map_data = self.__loader.get_map_data()
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()
@@ -41,11 +41,6 @@ class Scene(base.Scene):
         self.__ghost_positions = self.__loader.get_ghost_positions()
         self.__fruit_position = self.__loader.get_fruit_position()
         self.__map = Map(self.game, self.__map_data)
-
-    def __create_sounds(self):
-        self.timer = 0
-        self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
-        self.intro_sound.set_volume(0.5)
 
     def __prepare_lives_meter(self) -> None:
         self.__last_hp = []
@@ -66,6 +61,11 @@ class Scene(base.Scene):
         self.__prepare_lives_meter()
         self.__create_ghost()
         self.__create_start_anim()
+
+    def __create_sounds(self):
+        self.timer = 0
+        self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
+        self.intro_sound.set_volume(0.5)
 
     def __create_ghost(self):
         self.blinky = Blinky(self.game, self.__ghost_positions[3])
