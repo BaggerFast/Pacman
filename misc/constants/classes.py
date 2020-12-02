@@ -61,9 +61,9 @@ class Font:
 class Maps(NamedTuple):
     class Tuple(NamedTuple):
         value: Union[str, int]
-    level_1 = Tuple("original.json").value
-    level_2 = Tuple("new_map.json").value
-    level_3 = Tuple("map_6.json").value
+    level_1 = Tuple("1_map.json").value
+    level_2 = Tuple("2_map.json").value
+    level_3 = Tuple("5_map.json").value
     count = Tuple(3).value
 
     @staticmethod

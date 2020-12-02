@@ -8,9 +8,8 @@ class Map(DrawableObject):
     tile_names = [
         "space",
         "fat_up_wall", "fat_left_corner",
-        "fat_y_corner",
-        "up_wall", "left_corner",
-        "ghost_left_corner",
+        "fat_y_corner", "up_wall",
+        "left_corner", "ghost_left_corner",
         "ghost_door", "ghost_door_wall_left"
     ]
     tiles = []
@@ -58,4 +57,3 @@ class Map(DrawableObject):
 
     def process_logic(self) -> None:
         pass
-

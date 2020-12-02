@@ -42,7 +42,7 @@ class SeedLoader:
 
 
 class LevelLoader:
-    def __init__(self, filename="original.json") -> None:
+    def __init__(self, filename="1_map.json") -> None:
         self.filename = filename
         self.__load_map_json()
         self.movements_map = self.get_movements_data()
