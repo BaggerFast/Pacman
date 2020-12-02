@@ -1,5 +1,6 @@
 import pygame as pg
 from objects import ButtonController, Button, Text
+from objects.button.button import SceneButton
 from scenes import base, levels
 from misc import Color, Font, Maps
 
@@ -10,7 +11,6 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         self.__create_title()
-        self.__create_buttons()
         self.__create_score_text()
         self.__create_highscore_text()
 
@@ -28,16 +28,18 @@ class Scene(base.Scene):
                 self.game, pg.Rect(0, 0, 180, 35),
                 self.__next_level, 'NEXT LEVEL',
                 center=(self.game.width // 2, 210),
-                text_size=Font.BUTTON_TEXT_SIZE
-            ) if self.__is_last_level() else Button(
+                text_size=Font.BUTTON_TEXT_SIZE)
+            if self.__is_last_level() else SceneButton(
                 self.game, pg.Rect(0, 0, 180, 35),
-                self.__start_menu, 'EXIT',
+                text='EXIT',
+                scene=(self.game.scenes.MENU, False),
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE
             ),
-            Button(
+            SceneButton(
                 self.game, pg.Rect(0, 0, 180, 35),
-                self.__start_menu, 'MENU',
+                text='MENU',
+                scene=(self.game.scenes.MENU, False),
                 center=(self.game.width // 2, 250),
                 text_size=Font.BUTTON_TEXT_SIZE
             )
@@ -61,11 +63,8 @@ class Scene(base.Scene):
         self.__text_score.move_center(self.game.width // 2, 135)
         self.__text_highscore.text = f'High score: {self.game.records.data[-1]}'
         self.__text_highscore.move_center(self.game.width // 2, 165)
-        self.__button_controller.reset_state()
+        self.__create_buttons()
         self.__unlock_level()
-
-    def __start_menu(self) -> None:
-        self.game.scenes.set(self.game.scenes.MENU)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:

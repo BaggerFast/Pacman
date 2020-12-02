@@ -1,9 +1,8 @@
 from typing import Tuple
 
 import pygame as pg
-from misc import CELL_SIZE, Color, Sounds
+from misc import CELL_SIZE, Color, Sounds, HIGH_CALORIE_SEEDS
 from objects import DrawableObject
-from scenes import base
 
 
 class SeedContainer(DrawableObject):
@@ -26,6 +25,7 @@ class SeedContainer(DrawableObject):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col]:
                     self.__seeds_on_field += 1
+        self.__max_seeds = self.__seeds_on_field
 
     @property
     def x(self):
@@ -78,6 +78,6 @@ class SeedContainer(DrawableObject):
                     return True
 
     def is_field_empty(self) -> bool:
-        if self.__seeds_on_field == 0:
+        if self.__seeds_on_field == (self.__max_seeds - 10 if HIGH_CALORIE_SEEDS else 0):
             return True
         return False

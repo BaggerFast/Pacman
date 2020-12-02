@@ -16,7 +16,6 @@ class Game:
             self.CREDITS = credits.Scene(game)
             self.ENDGAME = endgame.Scene(game)
             self.__current = None
-            self.set(self.MENU)
 
         @property
         def current(self):
@@ -55,6 +54,7 @@ class Game:
         self.__game_over = False
         self.time_out = 125
         self.animate_timer = 0
+        self.scenes.set(self.scenes.MENU)
 
     @property
     def current_scene(self):
