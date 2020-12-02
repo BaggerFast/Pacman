@@ -7,23 +7,25 @@ from misc.path import get_path, get_list_path
 class Sounds:
     class Tuple(NamedTuple):
         mixer: pg.mixer.Sound
+
     class TupleList(NamedTuple):
         list: list
+
     pg.mixer.init()
-    CLICK = Tuple(pg.mixer.Sound(get_path('sounds', 'NAV', 'wav'))).mixer
-    DEAD = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_death', 'wav'))).mixer
-    GAMEOVER = Tuple(pg.mixer.Sound(get_path('sounds', 'GameOver', 'wav'))).mixer
-    BOOST = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_intermission', 'wav'))).mixer
-    SEED = Tuple(pg.mixer.Sound(get_path('sounds', 'leader2', 'wav'))).mixer
-    INTRO = TupleList(get_list_path('sounds/intro/', 'wav')).list
-    MOVE = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_chomp', 'wav'))).mixer
-    SIREN = Tuple(pg.mixer.Sound(get_path('sounds', 'siren', 'wav'))).mixer
-    FRUIT = Tuple(pg.mixer.Sound(get_path('sounds', 'eat_fruit', 'wav'))).mixer
+    CLICK = Tuple(pg.mixer.Sound(get_path('navigation', 'wav', 'sounds'))).mixer
+    DEAD = Tuple(pg.mixer.Sound(get_path('death', 'wav', 'sounds'))).mixer
+    GAMEOVER = Tuple(pg.mixer.Sound(get_path('gameover', 'wav', 'sounds'))).mixer
+    SEED = Tuple(pg.mixer.Sound(get_path('leader2', 'wav', 'sounds'))).mixer
+    INTRO = TupleList(get_list_path('wav', 'Sounds', 'intro')).list
+    MOVE = Tuple(pg.mixer.Sound(get_path('munch', 'wav', 'sounds'))).mixer
+    SIREN = Tuple(pg.mixer.Sound(get_path('siren', 'wav', 'sounds'))).mixer
+    FRUIT = Tuple(pg.mixer.Sound(get_path('eat_fruit', 'wav', 'sounds'))).mixer
 
 
 class Color(NamedTuple):
     class Tuple(NamedTuple):
         color: pg.Color
+
     RED = Tuple(pg.Color('red')).color
     BLUE = Tuple(pg.Color('blue')).color
     GREEN = Tuple(pg.Color('green')).color
@@ -43,6 +45,7 @@ class Color(NamedTuple):
 class Points:
     class Tuple(NamedTuple):
         value: int
+
     POINT_PER_SEED = Tuple(10).value
     POINT_PER_ENERGIZER = Tuple(50).value
     POINT_PER_FRUIT = Tuple(40).value
@@ -52,8 +55,9 @@ class Font:
     class Tuple(NamedTuple):
         size: int = 0
         font: str = ''
-    TITLE = Tuple(font=get_path('fonts', 'title', 'ttf')).font
-    DEFAULT = Tuple(font=get_path('fonts', 'default', 'ttf')).font
+
+    TITLE = Tuple(font=get_path('title', 'ttf', 'fonts')).font
+    DEFAULT = Tuple(font=get_path('default', 'ttf', 'fonts')).font
     MAIN_SCENE_SIZE = Tuple(size=10).size
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size
@@ -62,6 +66,7 @@ class Font:
 class Maps(NamedTuple):
     class Tuple(NamedTuple):
         value: Union[str, int]
+
     level_1 = Tuple("original.json").value
     level_2 = Tuple("new_map.json").value
     level_3 = Tuple("new_new_map.json").value
@@ -73,4 +78,4 @@ class Maps(NamedTuple):
 
     @staticmethod
     def keys():
-        return [f"level_{index+1}" for index in range(Maps.count)]
+        return [key for key in Maps.__dict__.keys() if key.startswith('level')]

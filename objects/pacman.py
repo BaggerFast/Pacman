@@ -20,14 +20,13 @@ class Pacman(Character):
 
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
         self.__walk_anim = Animator(
-            get_list_path('images/pacman/walk', 'png')
+            get_list_path('png', 'images', 'pacman', 'walk')
         )
         self.__dead_anim = Animator(
-            get_list_path('images/pacman/dead', 'png'), 100, False, True
+            get_list_path('png', 'images', 'pacman', 'dead'), 100, False, True
         )
         super().__init__(game, self.__walk_anim, start_pos)
         self.dead = False
-        self.death_sound.set_volume(0.5)
         self.__feature_rotate = "none"
         pg.mixer.Channel(3).unpause()
 

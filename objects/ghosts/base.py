@@ -17,16 +17,16 @@ class Base(Character):
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
 
         self.left_walk_anim = Animator(
-            get_list_path('images/ghost/' + type(self).__name__.lower() + '/left', 'png'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'left'), is_rotation=False
         )
         self.right_walk_anim = Animator(
-            get_list_path('images/ghost/' + type(self).__name__.lower() + '/right', 'png'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'right'), is_rotation=False
         )
         self.top_walk_anim = Animator(
-            get_list_path('images/ghost/' + type(self).__name__.lower() + '/top', 'png'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'top'), is_rotation=False
         )
         self.bottom_walk_anim = Animator(
-            get_list_path('images/ghost/' + type(self).__name__.lower() + '/bottom', 'png'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'bottom'), is_rotation=False
         )
 
         self.animations = [
@@ -44,7 +44,7 @@ class Base(Character):
         self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
         self.invisible_anim = Animator(
-            get_list_path('images/ghost/invisible', 'png'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', 'invisible'), is_rotation=False
         )
         self.is_invisible = False
         self.is_in_home = True
@@ -90,14 +90,13 @@ class Base(Character):
         super().process_logic()
 
     def collision_check(self, object: Character):
-        return self.get_cell() == object.get_cell() and self.collision and not DISABLE_GHOSTS_COLLISION
+        return self.distance(self.rect.center, object.rect.center) < 3 and self.collision and not DISABLE_GHOSTS_COLLISION
 
     def counter(self) -> None:
         if self.work_counter:
             self.count_eat_seeds_in_home += 1
 
     def can_leave_home(self) -> bool:
-        # print(type(self).__name__, ' ', self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home, pg.time.get_ticks()-self.timer)
         return (self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home and self.work_counter) \
                or pg.time.get_ticks()-self.timer >= 4000 or self.is_can_leave_home
 
@@ -127,3 +126,7 @@ class Base(Character):
 
     def draw_love_cell(self):
         pass
+
+    @staticmethod
+    def distance(pair_1: Tuple[int, int], pair_2: Tuple[int, int]):
+        return ((pair_1[0] - pair_2[0])**2 + (pair_1[1] - pair_2[1])**2)**(1/2)

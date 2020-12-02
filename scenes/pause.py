@@ -33,13 +33,13 @@ class Scene(base.Scene):
         self.objects.append(self.__main_text)
 
     def restart_game(self) -> None:
-        self.game.set_scene(self.game.scenes.MAIN, reset=True)
+        self.game.scenes.set(self.game.scenes.MAIN, reset=True)
 
     def continue_game(self) -> None:
-        self.game.set_scene(self.game.scenes.MAIN)
+        self.game.scenes.set(self.game.scenes.MAIN)
 
     def start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.MENU)
+        self.game.scenes.set(self.game.scenes.MENU)
 
     def process_event(self, event: pg.event.Event) -> None:
         super().process_event(event)

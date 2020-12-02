@@ -1,17 +1,19 @@
+from random import randint
+
 import pygame as pg
 
-from misc import CELL_SIZE, get_image_path
+from misc import CELL_SIZE, get_path
 from objects import DrawableObject
 
 
 class Map(DrawableObject):
     tile_names = [
-        "space.png",
-        "fat_up_wall.png", "fat_left_corner.png",
-        "fat_y_corner.png", "out_corner.png",
-        "up_wall.png", "left_corner.png",
-        "ghost_up_wall.png", "ghost_left_corner.png",
-        "ghost_door.png", "ghost_door_wall_left.png"
+        "space",
+        "fat_up_wall", "fat_left_corner",
+        "fat_y_corner", "out_corner",
+        "up_wall", "left_corner",
+        "ghost_up_wall", "ghost_left_corner",
+        "ghost_door", "ghost_door_wall_left"
     ]
     tiles = []
 
@@ -22,12 +24,13 @@ class Map(DrawableObject):
         self.map = map_data
         self.surface = pg.Surface((224, 248))
         self.__load_tiles()
+        self.color = self.rand_color()
         self.__render_map_surface()
 
     def __load_tiles(self) -> None:
         self.tiles = []
         for i in self.tile_names:
-            tile_path = get_image_path(i, "map")
+            tile_path = get_path(i, 'png', 'images', 'map')
             tile = pg.image.load(tile_path)
             self.tiles.append(tile)
 
@@ -50,6 +53,11 @@ class Map(DrawableObject):
             for x in range(len(self.map[y])):
                 self.__draw_cell(x, y)
 
+        for x in range(self.surface.get_width()):
+            for y in range(self.surface.get_height()):
+                if self.surface.get_at((x, y)) == (33, 33, 255):
+                    self.surface.set_at((x, y), self.color)  # Set the color of the pixel.
+
     def process_draw(self) -> None:
         self.game.screen.blit(self.surface, (self.x, self.y))
 
@@ -59,3 +67,23 @@ class Map(DrawableObject):
     def process_logic(self) -> None:
         pass
 
+    @staticmethod
+    def rand_color():
+        max_states = 7
+        min_val = 200
+        max_val = 230
+        state = randint(0, max_states)
+        if state == max_states:
+            color = (255, 255, 255)
+        elif state == max_states - 1:
+            color = (randint(min_val, max_val), 0, 0)
+        elif state == max_states - 2:
+            color = (0, randint(min_val, max_val), 0)
+        elif state == max_states - 3:
+            color = (0, 0, randint(min_val, max_val))
+        else:
+            excluded_color = randint(0, 2)
+            color = (randint(min_val, max_val) if excluded_color != 0 else 0,
+                     randint(min_val, max_val) if excluded_color != 1 else 0,
+                     randint(min_val, max_val) if excluded_color != 2 else 0)
+        return color

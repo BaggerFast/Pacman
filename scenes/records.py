@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc import Color, Font, get_image_path
+from misc import Color, Font, get_path
 from objects import Button, ButtonController, ImageObject, Text
 from scenes import base
 
@@ -22,15 +22,15 @@ class Scene(base.Scene):
         self.__five_text = Text(self.game, str(self.game.records.data[0]), 30, pg.Rect(60, 195, 0, 0), Color.WHITE)
 
     def __create_medals(self) -> None:
-        self.__gold_medal = ImageObject(self.game, get_image_path('1_golden', 'medal'), (16, 55))
+        self.__gold_medal = ImageObject(self.game, get_path('1_golden', 'png', 'images', 'medal'), (16, 55))
         self.__gold_medal.scale(35, 35)
-        self.__silver_medal = ImageObject(self.game, get_image_path('2_silver', 'medal'), (16, 90))
+        self.__silver_medal = ImageObject(self.game, get_path('2_silver', 'png', 'images', 'medal'), (16, 90))
         self.__silver_medal.scale(35, 35)
-        self.__bronze_medal = ImageObject(self.game, get_image_path('3_bronze', 'medal'), (16, 125))
+        self.__bronze_medal = ImageObject(self.game, get_path('3_bronze', 'png', 'images', 'medal'), (16, 125))
         self.__bronze_medal.scale(35, 35)
-        self.__stone_medal = ImageObject(self.game, get_image_path('4_stone', 'medal'), (16, 160))
+        self.__stone_medal = ImageObject(self.game, get_path('4_stone', 'png', 'images', 'medal'), (16, 160))
         self.__stone_medal.scale(35, 35)
-        self.__wooden_medal = ImageObject(self.game, get_image_path('5_wooden', 'medal'), (16, 195))
+        self.__wooden_medal = ImageObject(self.game, get_path('5_wooden', 'png', 'images', 'medal'), (16, 195))
         self.__wooden_medal.scale(35, 35)
 
     def __create_buttons(self) -> None:
@@ -50,7 +50,7 @@ class Scene(base.Scene):
         self.__error_text.move_center(self.game.width // 2, 100)
 
     def __start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.MENU)
+        self.game.scenes.set(self.game.scenes.MENU)
 
     def on_activate(self) -> None:
         self.__button_controller.reset_state()
@@ -84,4 +84,4 @@ class Scene(base.Scene):
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene(self.game.scenes.MENU)
+                self.game.scenes.set(self.game.scenes.MENU)

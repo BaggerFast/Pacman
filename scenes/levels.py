@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc import Color, Font
+from misc import Font
 from objects import ButtonController, Button, Text
 from scenes import base
 
@@ -47,31 +47,29 @@ class Scene(base.Scene):
         self.objects.append(self.__button_controller)
 
     def on_activate(self) -> None:
-        self.create_objects()
         self.__button_controller.reset_state()
 
     def __start_menu(self) -> None:
-        self.game.set_scene(self.game.scenes.MENU)
+        self.game.scenes.set(self.game.scenes.MENU)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.set_scene(self.game.scenes.MENU)
+                self.game.scenes.set(self.game.scenes.MENU)
 
-    def __set_level(self, name="level_1") -> None:
+    def set_level(self, name="level_1") -> None:
         """
         :param name: level_+id (e.g. level_1)
         """
         self.game.level_name = name
-        self.game.scenes.MAIN.recreate()
         self.game.records.update_records()
-        self.game.set_scene(self.game.scenes.MENU)
+        self.game.scenes.set(self.game.scenes.MENU, reset=True)
 
     def __level1(self) -> None:
-        self.__set_level("level_1")
+        self.set_level("level_1")
 
     def __level2(self) -> None:
-        self.__set_level("level_2")
+        self.set_level("level_2")
 
     def __level3(self) -> None:
-        self.__set_level("level_3")
+        self.set_level("level_3")

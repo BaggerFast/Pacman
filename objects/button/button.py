@@ -6,9 +6,9 @@ from objects.base import DrawableObject
 
 class BaseButton(DrawableObject):
     pg.mixer.init()
-    Click_sound = None
-    Hover_sound = None
-    Initial_sound = None
+    click_sound = None
+    hover_sound = None
+    initial_sound = None
 
     def __init__(self, game, geometry: Union[tuple, pg.Rect], function: Callable[[], None]) -> None:
         super().__init__(game)
@@ -41,7 +41,7 @@ class Button(BaseButton):
     STATE_INITIAL = 0
     STATE_HOVER = 1
     STATE_CLICK = 2
-    Click_sound = Sounds.CLICK
+    click_sound = Sounds.CLICK
 
     def __init__(
         self,
@@ -51,7 +51,7 @@ class Button(BaseButton):
         text: str = 'Define me',
         colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
         center: Tuple[float, float] = None,
-        text_size=60,
+        text_size: int = 60,
         font=Font.DEFAULT,
         active: bool = True
     ) -> None:
@@ -59,13 +59,11 @@ class Button(BaseButton):
         super().__init__(game, geometry, function)
         self.text = text
         self.font = pg.font.Font(font, text_size)
-        # self.text = Text(self.game, text)
         self.active = active
         self.colors: ButtonColor = self.parse_colors(colors)
         self.state = self.STATE_INITIAL
         self.surfaces = self.prepare_surfaces()
         self.left_button_pressed = False
-        self.Click_sound.set_volume(0.5)
         if center:
             self.move_center(*center)
 
@@ -99,7 +97,7 @@ class Button(BaseButton):
             self.left_button_pressed = True
         if self.mouse_hover(event.pos):
             self.state = self.STATE_CLICK
-            self.Click_sound.play()
+            self.click_sound.play()
 
     def process_mouse_button_up(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONUP:

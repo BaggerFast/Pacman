@@ -1,30 +1,19 @@
 import os
 
-
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 
 
-def get_image_path(filename: str, *folder: str) -> str:
-    """
-    :param filename: имя файла с расширением или без
-    :param folder: указать папки через пробел слева на право без image
-    :return: возращает полный путь файла строкой
-    """
-    extension = '.png'
-    if extension not in filename:
-        filename += extension
-    return os.path.join(*[ROOT_DIR, 'images'] + list(folder) + [filename])
-
-
-def get_path(folder: str, filename: str, extension: str) -> str:
+def get_path(filename: str, extension: str, *folder: str) -> str:
     """
     :param filename: имя файла с расширением или без
     :param folder: указать папки через пробел слева на право без image
     :param extension: указать расширение файла
     :return: возращает полный путь файла строкой
     """
-    extension = '.' + extension
-    return os.path.join(*[ROOT_DIR, folder] + [filename + extension])
+    folder = [i.lower() for i in folder]
+    extension = '.' + extension.lower()
+    filename = filename.lower() + extension
+    return os.path.join(*[ROOT_DIR] + list(folder) + [filename])
 
 
 def get_files_count(path: str) -> int:
@@ -35,18 +24,19 @@ def get_files_count(path: str) -> int:
     return count
 
 
-def get_list_path(folder: str, extension: str):
+def get_list_path(extension: str, *folder: str) -> list:
     """
     :param folder: указать папки через пробел слева на право без имени файла без image
     :param extension: указать расширение файла
     :return: возращает все пути до файлов для анимации автоматически
     """
     data = []
-    folder_path = ROOT_DIR + '/' + folder
-    frames_count = get_files_count(os.path.join(folder_path))
-    extension = '.' + extension
+    folder = [i.lower() for i in folder]
+    frames_count = get_files_count(os.path.join(*[ROOT_DIR] + list(folder)))
+    extension = '.' + extension.lower()
     for i in range(frames_count):
-        data.append(os.path.join(folder_path + '/' + str(i) + extension))
+        filename = str(i) + extension
+        data.append(os.path.join(*[ROOT_DIR] + list(folder) + [filename]))
     return data
 
 
