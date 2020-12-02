@@ -1,9 +1,8 @@
 CELL_SIZE = 8
+MAPS_COUNT = 3
 
 UNLOCK_LEVELS = True
+DEBUG = False
 INFINITY_LIVES = False
 DISABLE_GHOSTS = False
 DISABLE_GHOSTS_COLLISION = False
-
-# todo: finish realization
-DEBUG = True

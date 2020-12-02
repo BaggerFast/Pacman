@@ -10,15 +10,14 @@ class Sounds:
     class TupleList(NamedTuple):
         list: list
     pg.mixer.init()
-    CLICK = Tuple(pg.mixer.Sound(get_path('sounds', 'NAV', 'wav'))).mixer
-    DEAD = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_death', 'wav'))).mixer
-    GAMEOVER = Tuple(pg.mixer.Sound(get_path('sounds', 'GameOver', 'wav'))).mixer
-    BOOST = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_intermission', 'wav'))).mixer
-    SEED = Tuple(pg.mixer.Sound(get_path('sounds', 'leader2', 'wav'))).mixer
-    INTRO = TupleList(get_list_path('sounds/intro/', 'wav')).list
-    MOVE = Tuple(pg.mixer.Sound(get_path('sounds', 'pacman_chomp', 'wav'))).mixer
-    SIREN = Tuple(pg.mixer.Sound(get_path('sounds', 'siren', 'wav'))).mixer
-    FRUIT = Tuple(pg.mixer.Sound(get_path('sounds', 'eat_fruit', 'wav'))).mixer
+    CLICK = Tuple(pg.mixer.Sound(get_path('navigation', 'wav', 'sounds'))).mixer
+    DEAD = Tuple(pg.mixer.Sound(get_path('death', 'wav', 'sounds'))).mixer
+    GAMEOVER = Tuple(pg.mixer.Sound(get_path('gameover', 'wav', 'sounds'))).mixer
+    SEED = Tuple(pg.mixer.Sound(get_path('munch', 'wav', 'sounds'))).mixer
+    INTRO = TupleList(get_list_path('wav', 'Sounds', 'intro')).list
+    MOVE = Tuple(pg.mixer.Sound(get_path('munch', 'wav', 'sounds'))).mixer
+    SIREN = Tuple(pg.mixer.Sound(get_path('siren', 'wav', 'sounds'))).mixer
+    FRUIT = Tuple(pg.mixer.Sound(get_path('eat_fruit', 'wav', 'sounds'))).mixer
 
 
 class Color(NamedTuple):
@@ -52,8 +51,8 @@ class Font:
     class Tuple(NamedTuple):
         size: int = 0
         font: str = ''
-    TITLE = Tuple(font=get_path('fonts', 'title', 'ttf')).font
-    DEFAULT = Tuple(font=get_path('fonts', 'default', 'ttf')).font
+    TITLE = Tuple(font=get_path('title', 'ttf', 'fonts')).font
+    DEFAULT = Tuple(font=get_path('default', 'ttf', 'fonts')).font
     MAIN_SCENE_SIZE = Tuple(size=10).size
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size

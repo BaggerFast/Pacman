@@ -28,6 +28,9 @@ class Animator:
     def get_len_anim(self) -> int:
         return len(self.__images)
 
+    def get_cur_index(self) -> int:
+        return self.__current_image_index
+
     def stop(self) -> None:
         self.run = False
 

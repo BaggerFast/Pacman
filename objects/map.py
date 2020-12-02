@@ -1,17 +1,17 @@
 import pygame as pg
 
-from misc import CELL_SIZE, get_image_path
+from misc import CELL_SIZE, get_path
 from objects import DrawableObject
 
 
 class Map(DrawableObject):
     tile_names = [
-        "space.png",
-        "fat_up_wall.png", "fat_left_corner.png",
-        "fat_y_corner.png", "out_corner.png",
-        "up_wall.png", "left_corner.png",
-        "ghost_up_wall.png", "ghost_left_corner.png",
-        "ghost_door.png", "ghost_door_wall_left.png"
+        "space",
+        "fat_up_wall", "fat_left_corner",
+        "fat_y_corner", "out_corner",
+        "up_wall", "left_corner",
+        "ghost_up_wall", "ghost_left_corner",
+        "ghost_door", "ghost_door_wall_left"
     ]
     tiles = []
 
@@ -27,7 +27,7 @@ class Map(DrawableObject):
     def __load_tiles(self) -> None:
         self.tiles = []
         for i in self.tile_names:
-            tile_path = get_image_path(i, "map")
+            tile_path = get_path(i, 'png', 'images', 'map')
             tile = pg.image.load(tile_path)
             self.tiles.append(tile)
 
