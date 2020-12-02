@@ -151,7 +151,7 @@ class Scene(base.Scene):
         return self.__seeds.process_collision(self.__pacman)
 
     def __process_collision(self) -> None:
-        a = self.__collision()
+        seed_eaten = self.__collision()
         for ghost in self.__ghosts:
             if ghost.collision_check(self.__pacman):
                 self.__timer_reset_pacman = pg.time.get_ticks()
@@ -160,7 +160,7 @@ class Scene(base.Scene):
                     self.__prepare_lives_meter()
                 for ghost2 in self.__ghosts:
                     ghost2.invisible()
-        if a:
+        if seed_eaten:
             if self.__prefered_ghost is not None and self.__work_ghost_counters:
                 self.__prefered_ghost.counter()
                 self.__prefered_ghost.update_timer()
@@ -233,8 +233,9 @@ class Scene(base.Scene):
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
         for ghost in self.__ghosts:
-            ghost.ghosts_ai(self.__pacman, self.__blinky)
-            print(type(ghost).__name__,': ', ghost.mode, ghost.ai_timer, ghost.ai_timer - pg.time.get_ticks())
+            ghost.ghosts_ai(self.__pacman, self.blinky)
+            if type(ghost).__name__ == 'Blinky':
+                print(type(ghost).__name__,': ', ghost.mode, ghost.ai_timer, -(ghost.ai_timer - pg.time.get_ticks()))
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
         for ghost in self.__not_prefered_ghosts:

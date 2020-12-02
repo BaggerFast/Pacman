@@ -31,10 +31,6 @@ class Pacman(Character):
         pg.mixer.Channel(3).unpause()
 
     @property
-    def hp(self):
-        return self.__hp.lives
-
-    @property
     def dead_anim(self):
         return self.__dead_anim
 

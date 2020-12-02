@@ -3,7 +3,10 @@ import pygame as pg
 
 class Clyde(Base):
     max_count_eat_seeds_in_home = 60
-    love_point_in_runaway_mode = (0, 32)
+    love_point_in_scatter_mode = (0, 32)
+    def __init__(self, game, start_pos):
+        super().__init__(game, start_pos)
+        self.mode = 'Chase'
     def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()
@@ -19,7 +22,12 @@ class Clyde(Base):
                     self.collision = True
 
     def ghosts_ai(self, pacman, blinky) -> None:
-        if self.mode == 'Scater':
-            self.love_cell = self.love_point_in_runaway_mode
-            if pg.time.get_ticks() - self.ai_timer <= 7000:
-                self.toggle_mode()
+        super().ghosts_ai()
+        if self.mode == 'Scatter':
+            self.love_cell = self.love_point_in_scatter_mode
+            if self.two_cells_dis(self.get_cell(), pacman.get_cell()) >= 8:
+                self.mode = 'Chase'
+        elif self.mode == 'Chase':
+            self.love_cell = pacman.get_cell()
+            if self.two_cells_dis(self.get_cell(), pacman.get_cell()) <= 8:
+                self.mode = 'Scatter'

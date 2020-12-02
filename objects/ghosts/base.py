@@ -6,6 +6,7 @@ from typing import Tuple
 
 
 class Base(Character):
+    love_point_in_scatter_mode = (0, 0)
     max_count_eat_seeds_in_home = 0
     direction2 = {
         0: (1, 0, 0),
@@ -46,25 +47,22 @@ class Base(Character):
         self.invisible_anim = Animator(
             get_list_path('png', 'images', 'ghost', 'invisible'), is_rotation=False
         )
+        self.love_cell = (0, 0)
         self.is_invisible = False
         self.is_in_home = True
         self.work_counter = True
         self.set_direction("left")
-        self.love_point_in_refactor_mode = (0, 0)
-        self.love_cell = (0, 0)
         '''
             'Chase',
             'Scatter',
             'Frightened'
         '''
-        self.mode = 'Chase'
+        self.mode = 'Scatter'
     def process_logic(self) -> None:
         self.animator.timer_check()
         if self.in_center() and self.collision:
             if self.move_to(self.rotate):
                 self.go()
-            else:
-                self.stop()
             min_dis = 10000000000000
             cell = self.movement_cell(self.get_cell())
             '''
@@ -90,7 +88,7 @@ class Base(Character):
         super().process_logic()
 
     def collision_check(self, object: Character):
-        return self.distance(self.rect.center, object.rect.center) < 3 and self.collision and not DISABLE_GHOSTS_COLLISION
+        return self.two_cells_dis(self.rect.center, object.rect.center) < 4 and self.collision and not DISABLE_GHOSTS_COLLISION
 
     def counter(self) -> None:
         if self.work_counter:
@@ -108,25 +106,13 @@ class Base(Character):
         self.is_invisible = True
         self.collision = False
 
-    def toggle_mode(self):
-        if self.mode == 'Chase':
-            self.mode = 'Scater'
-        elif self.mode == 'Scater':
-            self.mode = 'Chase'
-
     def update_ai_timer(self):
-        ai_timer = pg.time.get_ticks()
+        self.ai_timer = pg.time.get_ticks()
 
-    def ghosts_ai(self, pacman: Pacman) -> None:
-        pass
+    def ghosts_ai(self) -> None:
+        if self.speed == 0:
+            self.ai_timer = pg.time.get_ticks()
 
     def step(self) -> None:
         if not DISABLE_GHOSTS:
             super().step()
-
-    def draw_love_cell(self):
-        pass
-
-    @staticmethod
-    def distance(pair_1: Tuple[int, int], pair_2: Tuple[int, int]):
-        return ((pair_1[0] - pair_2[0])**2 + (pair_1[1] - pair_2[1])**2)**(1/2)

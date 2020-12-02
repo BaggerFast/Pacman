@@ -3,7 +3,7 @@ import pygame as pg
 
 class Inky(Base):
     max_count_eat_seeds_in_home = 30
-    love_point_in_refactor_mode = (27, 32)
+    love_point_in_scatter_mode = (27, 32)
     def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()
@@ -19,11 +19,12 @@ class Inky(Base):
                     self.collision = True
 
     def ghosts_ai(self, pacman, blinky) -> None:
-        if self.mode == 'Scater':
-            self.love_cell = self.love_point_in_refactor_mode
-            if pg.time.get_ticks() - self.ai_timer <= 5000:
+        super().ghosts_ai()
+        if self.mode == 'Scatter':
+            self.love_cell = self.love_point_in_scatter_mode
+            if pg.time.get_ticks() - self.ai_timer >= 5000:
                 self.update_ai_timer()
-                self.toggle_mode()
+                self.mode = 'Chase'
         if self.mode == 'Chase':
             pacman_cell = pacman.get_cell()
             rotate = pacman.rotate
@@ -33,6 +34,6 @@ class Inky(Base):
             vector_blinky_cell_pinky_love_cell = (blinky_cell[0] - pinky_love_cell[0], blinky_cell[1] - pinky_love_cell[1])
             self.love_cell = (pinky_love_cell[0] + vector_blinky_cell_pinky_love_cell[0],
                               pinky_love_cell[1] + vector_blinky_cell_pinky_love_cell[1])
-            if pg.time.get_ticks() - self.ai_timer <= 20000:
+            if pg.time.get_ticks() - self.ai_timer >= 20000:
                 self.update_ai_timer()
-                self.toggle_mode()
+                self.mode = 'Scatter'
