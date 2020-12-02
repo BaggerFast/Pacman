@@ -1,5 +1,5 @@
 from .base import Base
-
+import pygame as pg
 
 class Pinky(Base):
     love_point_in_runaway_mode = (2, -3)
@@ -15,8 +15,15 @@ class Pinky(Base):
                     self.is_in_home = False
                     self.collision = True
 
-    def get_love_cell(self, pacman, blinky) -> None:
-        super().get_love_cell()
+    def ghosts_ai(self, pacman, blinky) -> None:
+        if self.mode == 'Scater':
+            self.love_cell = self.love_point_in_runaway_mode
+            if pg.time.get_ticks() - self.ai_timer <= 7000:
+                self.update_ai_timer()
+                self.toggle_mode()
         if self.mode == 'Chase':
             rotate = pacman.rotate
             self.love_cell = (pacman.get_cell()[0]+self.direction2[rotate][0]*2, pacman.get_cell()[1]+self.direction2[rotate][1]*2)
+            if pg.time.get_ticks() - self.ai_timer <= 20000:
+                self.update_ai_timer()
+                self.toggle_mode()

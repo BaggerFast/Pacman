@@ -230,7 +230,8 @@ class Scene(base.Scene):
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
         for ghost in self.__ghosts:
-            ghost.get_love_cell(self.__pacman, self.__blinky)
+            ghost.ghosts_ai(self.__pacman, self.__blinky)
+            print(type(ghost).__name__,': ', ghost.mode, ghost.ai_timer, ghost.ai_timer - pg.time.get_ticks())
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
         for ghost in self.__not_prefered_ghosts:

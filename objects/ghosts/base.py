@@ -36,7 +36,7 @@ class Base(Character):
             self.top_walk_anim,
         ]
 
-        super().__init__(game, self.right_walk_anim, start_pos)
+        super().__init__(game, self.top_walk_anim, start_pos)
 
         self.is_can_leave_home = False
         self.collision = False
@@ -49,15 +49,15 @@ class Base(Character):
         self.is_invisible = False
         self.is_in_home = True
         self.work_counter = True
-        self.love_cell = (8, 16)
         self.set_direction("left")
-        self.love_point_in_runaway_mode = (0,0)
+        self.love_point_in_refactor_mode = (0, 0)
+        self.love_cell = (0, 0)
         '''
             'Chase',
             'Scatter',
             'Frightened'
         '''
-        self.mode = 'Scatter'
+        self.mode = 'Chase'
     def process_logic(self) -> None:
         self.animator.timer_check()
         if self.in_center() and self.collision:
@@ -67,7 +67,15 @@ class Base(Character):
                 self.stop()
             min_dis = 10000000000000
             cell = self.movement_cell(self.get_cell())
-            cell[(self.rotate + 2) % 4] = 0
+            '''
+            rotate
+            
+            0:
+            1:
+            2:
+            3:
+            '''
+            cell[(self.rotate + 2) % 4] = False
             for i in range(4):
                 if cell[i]:
                     tmp_cell = (self.get_cell()[0]+self.direction2[i][0], self.get_cell()[1]+self.direction2[i][1])
@@ -101,10 +109,21 @@ class Base(Character):
         self.is_invisible = True
         self.collision = False
 
-    def get_love_cell(self, pacman: Pacman) -> None:
-        if self.mode == 'Scater':
-            self.love_cell = self.love_point_in_runaway_mode
+    def toggle_mode(self):
+        if self.mode == 'Chase':
+            self.mode = 'Scater'
+        elif self.mode == 'Scater':
+            self.mode = 'Chase'
+
+    def update_ai_timer(self):
+        ai_timer = pg.time.get_ticks()
+
+    def ghosts_ai(self, pacman: Pacman) -> None:
+        pass
 
     def step(self) -> None:
         if not DISABLE_GHOSTS:
             super().step()
+
+    def draw_love_cell(self):
+        pass

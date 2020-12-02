@@ -1,5 +1,5 @@
 from .base import Base
-
+import pygame as pg
 
 class Clyde(Base):
     max_count_eat_seeds_in_home = 60
@@ -18,5 +18,8 @@ class Clyde(Base):
                     self.is_in_home = False
                     self.collision = True
 
-    def get_love_cell(self, pacman, blinky) -> None:
-        pass
+    def ghosts_ai(self, pacman, blinky) -> None:
+        if self.mode == 'Scater':
+            self.love_cell = self.love_point_in_runaway_mode
+            if pg.time.get_ticks() - self.ai_timer <= 7000:
+                self.toggle_mode()
