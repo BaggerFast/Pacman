@@ -36,7 +36,7 @@ class Scene(base.Scene):
                    text_size=Font.BUTTON_TEXT_SIZE))
 
         for index in range(len(buttons)):
-            if self.game.level_name == buttons[index].text.lower().replace(' ', '_'):
+            if str(self.game.level_id + 1) == buttons[index].text[-1:]:
                 buttons[index] = Button(self.game, pg.Rect(0, 0, 180, 40),
                                         buttons[index].function, '» ' + buttons[index].text + ' «',
                                         center=(buttons[index].rect.centerx, buttons[index].rect.centery),
@@ -47,6 +47,7 @@ class Scene(base.Scene):
     def on_activate(self) -> None:
         self.objects = []
         self.create_objects()
+        self.create_objects()
         self.__button_controller.reset_state()
 
     def __start_menu(self) -> None:
@@ -56,3 +57,4 @@ class Scene(base.Scene):
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 self.game.scenes.set(self.game.scenes.MENU)
+

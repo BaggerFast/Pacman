@@ -1,5 +1,5 @@
 import pygame as pg
-from typing import NamedTuple, Union
+from typing import NamedTuple, Union, List
 
 from misc.path import get_path, get_list_path
 
@@ -68,15 +68,16 @@ class Maps(NamedTuple):
     class Tuple(NamedTuple):
         value: Union[str, int]
 
-    level_1 = Tuple("original.json").value
-    level_2 = Tuple("new_map.json").value
-    level_3 = Tuple("new_new_map.json").value
-    count = Tuple(3).value
+    class TupleList(NamedTuple):
+        list: list
+
+    levels = TupleList(["original.json", "new_map.json", "new_new_map.json"]).list
+    count = Tuple(len(levels)).value
 
     @staticmethod
-    def get(attr: str) -> str:
-        return getattr(Maps, attr)
+    def level_name(level_id: int = 0):
+        return f"level_{level_id + 1}"
 
     @staticmethod
-    def keys():
-        return [key for key in Maps.__dict__.keys() if key.startswith('level')]
+    def keys() -> List[int]:
+        return [i for i in range(Maps.count)]

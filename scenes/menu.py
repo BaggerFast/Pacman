@@ -3,12 +3,16 @@ import pygame as pg
 from objects import ButtonController, Button, Text
 from objects.button.button import SceneButton
 from scenes import base
-from misc import Font
+from misc import Color, Font, Maps
 
 
 class Scene(base.Scene):
+    def __init__(self, game):
+        super().__init__(game)
+
     def create_objects(self) -> None:
         self.__create_title()
+        self.__create_buttons()
         self.__create_indicator()
 
     def __create_title(self) -> None:
@@ -17,7 +21,7 @@ class Scene(base.Scene):
         self.objects.append(title)
 
     def __create_indicator(self) -> None:
-        self.__indicator = Text(self.game, self.game.level_name.replace('_', ' '),
+        self.__indicator = Text(self.game, Maps.level_name(self.game.level_id).replace('_', ' '),
                                 15, font=Font.TITLE)
         self.__indicator.move_center(self.game.width // 2, 60)
         self.objects.append(self.__indicator)
@@ -41,13 +45,10 @@ class Scene(base.Scene):
         self.objects.append(self.__button_controller)
 
     def __level_indicator(self) -> None:
-        self.__indicator.text = self.game.level_name.replace('_', ' ')
+        self.__indicator.text = Maps.level_name(self.game.level_id).replace('_', ' ')
 
     def on_activate(self) -> None:
         self.objects = []
         self.create_objects()
         self.__create_buttons()
-
-
-
 

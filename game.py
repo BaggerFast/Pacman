@@ -38,14 +38,14 @@ class Game:
     __size = width, height = 224, 285
     __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'walk'))
     __FPS = 60
-    __def_level = "level_1"
+    __def_level_id = 0
     pg.display.set_caption('PACMAN')
     pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
         self.__storage = Storage()
         self.unlocked_levels = Maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
-        self.level_name = self.__storage.last_level if self.__storage.last_level in self.unlocked_levels else self.__def_level
+        self.level_id = int(self.__storage.last_level) if int(self.__storage.last_level) in self.unlocked_levels else self.__def_level_id
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.score = Score()
         self.records = HighScore(self)
@@ -94,19 +94,18 @@ class Game:
 
     def exit_game(self) -> None:
         print('Bye bye')
-        self.__storage.last_level = self.level_name
+        self.__storage.last_level = self.level_id
         if not UNLOCK_LEVELS:
             self.__storage.unlocked_levels = self.unlocked_levels
         self.__storage.save()
         self.__game_over = True
 
-    def unlock_level(self, name: str = "level_1") -> None:
+    def unlock_level(self, level_id: int = 0) -> None:
         """
-
-        :param name:
+        :param level_id:
         """
-        if name in Maps.keys():
-            if not UNLOCK_LEVELS and name not in self.unlocked_levels:
-                self.unlocked_levels.append(name)
+        if level_id in Maps.keys():
+            if not UNLOCK_LEVELS and level_id not in self.unlocked_levels:
+                self.unlocked_levels.append(level_id)
         else:
-            raise Exception(f"Name error. {name} doesn't exist")
+            raise Exception(f"id error. id: {level_id} doesn't exist")
