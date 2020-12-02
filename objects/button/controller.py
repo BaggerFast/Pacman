@@ -9,8 +9,8 @@ from objects.button.button import Button
 
 class ButtonController(DrawableObject):
     click_sound = Sounds.CLICK
-    keys_previous = [pg.K_UP, pg.K_LEFT, pg.K_w, pg.K_a]
-    keys_next = [pg.K_DOWN, pg.K_RIGHT, pg.K_s, pg.K_d, pg.K_TAB]
+    keys_previous = [pg.K_UP, pg.K_w]
+    keys_next = [pg.K_DOWN, pg.K_s]
     keys_activate = [pg.K_SPACE, pg.K_RETURN]
 
     def __init__(self, game, buttons: List[Button]) -> None:
@@ -31,14 +31,20 @@ class ButtonController(DrawableObject):
         self.active_button_index -= 1
         if self.active_button_index < 0:
             self.active_button_index = len(self.buttons) - 1
-        self.buttons[self.active_button_index].select()
+        if self.buttons[self.active_button_index].active:
+            self.buttons[self.active_button_index].select()
+        else:
+            self.select_previous_button()
 
     def select_next_button(self) -> None:
         self.buttons[self.active_button_index].deselect()
         self.active_button_index += 1
         if self.active_button_index == len(self.buttons):
             self.active_button_index = 0
-        self.buttons[self.active_button_index].select()
+        if self.buttons[self.active_button_index].active:
+            self.buttons[self.active_button_index].select()
+        else:
+            self.select_next_button()
 
     def activate_current_button(self) -> None:
         self.click_sound.play()

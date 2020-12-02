@@ -10,20 +10,10 @@ class BaseButton(DrawableObject):
     hover_sound = None
     initial_sound = None
 
-    def __init__(self, game, geometry: Union[tuple, pg.Rect], function: Callable[[], None]) -> None:
+    def __init__(self, game, geometry: pg.Rect, function: Callable[[], None]) -> None:
         super().__init__(game)
-        if type(geometry) == tuple:
-            self.rect = pg.Rect(*geometry)
-        else:
-            self.rect = geometry
+        self.rect = geometry
         self.function = function
-
-    def parse_rect(self, geometry: Union[tuple, pg.Rect]) -> pg.Rect:
-        if type(geometry) == tuple:
-            return pg.Rect(*geometry)
-        elif type(geometry) == pg.Rect:
-            return geometry
-        raise TypeError('Invalid geometry type (can only be tuple or pygame.Rect')
 
     def process_event(self, event: pg.event.Event) -> None:
         if event.type == pg.MOUSEBUTTONUP:
@@ -31,7 +21,7 @@ class BaseButton(DrawableObject):
                 self.click()
 
     def process_draw(self) -> None:
-        pg.draw.rect(self.game.screen, Color.WHITE, self.rect, 0)
+        pg.draw.rect(self.game.screen, Color.WHITE, self.rect)
 
     def click(self) -> None:
         self.function()
@@ -49,8 +39,8 @@ class Button(BaseButton):
         geometry: Union[tuple, pg.Rect],
         function: Callable[[], None],
         text: str = 'Define me',
-        colors: Union[dict, ButtonColor] = BUTTON_DEFAULT_COLORS,
-        center: Tuple[float, float] = None,
+        colors: ButtonColor = BUTTON_DEFAULT_COLORS,
+        center: Tuple[int, int] = None,
         text_size: int = 60,
         font=Font.DEFAULT,
         active: bool = True
@@ -60,23 +50,12 @@ class Button(BaseButton):
         self.text = text
         self.font = pg.font.Font(font, text_size)
         self.active = active
-        self.colors: ButtonColor = self.parse_colors(colors)
+        self.colors: ButtonColor = colors
         self.state = self.STATE_INITIAL
         self.surfaces = self.prepare_surfaces()
         self.left_button_pressed = False
         if center:
             self.move_center(*center)
-
-    @staticmethod
-    def parse_colors(colors: Union[dict, ButtonColor]) -> ButtonColor:
-        if type(colors) == dict:
-            result = ButtonColor()
-            result.from_dict(colors)
-            return result
-        elif type(colors) == ButtonColor:
-            return colors
-        else:
-            raise TypeError('Invalid button colors type (can only be dict or ButtonColor)')
 
     def mouse_hover(self, pos: Tuple[Union[int, float], Union[int, float]]) -> bool:
         return bool(self.rect.collidepoint(pos)) and self.active

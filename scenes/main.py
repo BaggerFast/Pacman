@@ -42,11 +42,6 @@ class Scene(base.Scene):
         self.__fruit_position = self.__loader.get_fruit_position()
         self.__map = Map(self.game, self.__map_data)
 
-    def __create_sounds(self):
-        self.timer = 0
-        self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
-        self.intro_sound.set_volume(0.5)
-
     def __prepare_lives_meter(self) -> None:
         self.__last_hp = []
         for i in range(int(self.hp)):
@@ -66,6 +61,11 @@ class Scene(base.Scene):
         self.__prepare_lives_meter()
         self.__create_ghost()
         self.__create_start_anim()
+
+    def __create_sounds(self):
+        self.timer = 0
+        self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
+        self.intro_sound.set_volume(0.5)
 
     def __create_ghost(self):
         self.blinky = Blinky(self.game, self.__ghost_positions[3])

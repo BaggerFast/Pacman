@@ -40,6 +40,7 @@ class Color(NamedTuple):
     BRONZE = Tuple(pg.Color(205, 127, 50)).color
     WOODEN = Tuple(pg.Color(101, 67, 33)).color
     JET = Tuple(pg.Color(10, 10, 10)).color
+    MAIN_MAP = Tuple(pg.Color(33, 33, 255)).color
 
 
 class Points:
