@@ -145,5 +145,4 @@ class SceneButton(Button):
         if callable(self.scene[0]):
             self.scene[0]()
         else:
-            print(self.scene[1])
             self.game.scenes.set(self.scene[0], reset=self.scene[1])
