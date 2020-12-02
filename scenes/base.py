@@ -4,9 +4,9 @@ import pygame as pg
 class Scene:
     def __init__(self, game) -> None:
         self.game = game
-        self.pre_init()
         self.screen = self.game.screen
         self.objects = []
+        self.pre_init()
         self.create_objects()
 
     def process_event(self, event: pg.event.Event) -> None:
