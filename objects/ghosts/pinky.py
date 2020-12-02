@@ -15,8 +15,10 @@ class Pinky(Base):
                     self.is_in_home = False
                     self.collision = True
 
-    def ghosts_ai(self, pacman, blinky) -> None:
+    def ghosts_ai(self) -> None:
         super().ghosts_ai()
+        scene = self.game.current_scene
+        pacman = scene.pacman
         if self.mode == 'Scatter':
             self.love_cell = self.love_point_in_scatter_mode
             if pg.time.get_ticks() - self.ai_timer >= 7000:

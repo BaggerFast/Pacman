@@ -1,8 +1,8 @@
 import pygame as pg
 from misc import Animator, get_list_path, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION
 from objects import Character
-from objects.pacman import Pacman
 from typing import Tuple
+import random
 
 
 class Base(Character):
@@ -17,6 +17,10 @@ class Base(Character):
 
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
 
+        self.process_logic_iterator = 0
+        self.deceleration_multiplier = 1
+
+        # Обычные Анимация
         self.left_walk_anim = Animator(
             get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'left'), is_rotation=False
         )
@@ -28,6 +32,16 @@ class Base(Character):
         )
         self.bottom_walk_anim = Animator(
             get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'bottom'), is_rotation=False
+        )
+
+        # Анимации страха
+
+        self.frightened_walk_anim1 = Animator(
+            get_list_path('png', 'images', 'ghost', 'fear1'), is_rotation=False
+        )
+
+        self.frightened_walk_anim2 = Animator(
+            get_list_path('png', 'images', 'ghost', 'fear2'), is_rotation=False
         )
 
         self.animations = [
@@ -59,36 +73,18 @@ class Base(Character):
         '''
         self.mode = 'Scatter'
     def process_logic(self) -> None:
-        self.animator.timer_check()
-        if self.in_center() and self.collision:
-            if self.move_to(self.rotate):
-                self.go()
-            min_dis = 10000000000000
-            cell = self.movement_cell(self.get_cell())
-            '''
-            rotate
-            
-            0:
-            1:
-            2:
-            3:
-            '''
-            cell[(self.rotate + 2) % 4] = False
-            for i in range(4):
-                if cell[i]:
-                    tmp_cell = (self.get_cell()[0]+self.direction2[i][0], self.get_cell()[1]+self.direction2[i][1])
-                    if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
-                        min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
-                        self.shift_x, self.shift_y, self.rotate = self.direction2[i]
         if self.rotate is None:
             self.rotate = 0
-        self.animator = self.animations[self.rotate]
-        if not self.is_invisible:
+        if not self.is_invisible and self.mode != 'Frightened':
             self.animator = self.animations[self.rotate]
-        super().process_logic()
+        if not self.process_logic_iterator % self.deceleration_multiplier:
+            self.ghosts_ai()
+            self.step()
+        self.process_logic_iterator += 1
 
     def collision_check(self, object: Character):
-        return self.two_cells_dis(self.rect.center, object.rect.center) < 4 and self.collision and not DISABLE_GHOSTS_COLLISION
+        return (self.two_cells_dis(self.rect.center, object.rect.center) < 4 and self.collision and not DISABLE_GHOSTS_COLLISION,
+                self.mode != 'Frightened')
 
     def counter(self) -> None:
         if self.work_counter:
@@ -110,9 +106,49 @@ class Base(Character):
         self.ai_timer = pg.time.get_ticks()
 
     def ghosts_ai(self) -> None:
-        if self.speed == 0:
-            self.ai_timer = pg.time.get_ticks()
+        self.animator.timer_check()
+        if self.in_center() and self.collision:
+            if self.move_to(self.rotate):
+                self.go()
+            cell = self.movement_cell(self.get_cell())
+            cell[(self.rotate + 2) % 4] = False
+            '''
+            rotate
 
+            0:
+            1:
+            2:
+            3:
+            '''
+            if self.mode != 'Frightened':
+                min_dis = 10000000000000
+                for i in range(4):
+                    if cell[i]:
+                        tmp_cell = (self.get_cell()[0] + self.direction2[i][0], self.get_cell()[1] + self.direction2[i][1])
+                        if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
+                            min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
+                            self.shift_x, self.shift_y, self.rotate = self.direction2[i]
+            else:
+                while True:
+                    rand = random.randrange(4)
+                    if cell[rand]:
+                        break
+                self.shift_x, self.shift_y, self.rotate = self.direction2[rand]
+                if pg.time.get_ticks() - self.ai_timer >= 6000:
+                    self.animator = self.frightened_walk_anim2
+                if pg.time.get_ticks() - self.ai_timer >= 8000:
+                    self.update_ai_timer()
+                    self.deceleration_multiplier = 1
+                    self.mode = 'Scatter'
     def step(self) -> None:
         if not DISABLE_GHOSTS_MOVING:
             super().step()
+
+    def toggle_mode_to_frightened(self):
+        self.update_ai_timer()
+        self.mode = 'Frightened'
+        self.animator = self.frightened_walk_anim1
+        self.deceleration_multiplier = 2
+
+    def toggle_mode_to_eye(self):
+        pass

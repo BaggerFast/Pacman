@@ -55,8 +55,8 @@ class Scene(base.Scene):
         self.__create_hud()
 
         self.objects.append(self.fruit)
-        self.__pacman = Pacman(self.game, self.__player_position)
-        self.objects.append(self.__pacman)
+        self.pacman = Pacman(self.game, self.__player_position)
+        self.objects.append(self.pacman)
 
         self.__prepare_lives_meter()
         self.__create_ghost()
@@ -146,27 +146,28 @@ class Scene(base.Scene):
             self.__prefered_ghost = None
             self.__count_prefered_ghost = 0
 
-    def __collision(self):
-        self.fruit.process_collision(self.__pacman)
-        return self.__seeds.process_collision(self.__pacman)
-
     def __process_collision(self) -> None:
-        seed_eaten = self.__collision()
+        self.fruit.process_collision(self.pacman)
+        seed_eaten = self.__seeds.process_collision(self.pacman)
         for ghost in self.__ghosts:
-            if ghost.collision_check(self.__pacman):
+            if ghost.collision_check(self.pacman)[0] and ghost.collision_check(self.pacman)[1]:
                 self.__timer_reset_pacman = pg.time.get_ticks()
-                if not self.__pacman.dead:
-                    self.__pacman.death()
+                if not self.pacman.dead:
+                    self.pacman.death()
                     self.__prepare_lives_meter()
                 for ghost2 in self.__ghosts:
                     ghost2.invisible()
-        if seed_eaten:
+
+        if seed_eaten == 1:
             if self.__prefered_ghost is not None and self.__work_ghost_counters:
                 self.__prefered_ghost.counter()
                 self.__prefered_ghost.update_timer()
             elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
                 self.__seeds_eaten += 1
                 self.__prefered_ghost.update_timer()
+        elif seed_eaten == 2:
+            for ghost in self.__ghosts:
+                ghost.toggle_mode_to_frightened()
 
     def __check_first_run(self) -> None:
         if self.first_run:
@@ -196,8 +197,10 @@ class Scene(base.Scene):
             pg.mixer.Channel(3).play(self.siren_sound)
 
     def process_logic(self) -> None:
+        for ghost in self.__ghosts:
+            print(type(ghost).__name__, ': ', ghost.mode, pg.time.get_ticks() - ghost.ai_timer)
         if not pg.mixer.Channel(1).get_busy():
-            if self.__pacman.dead_anim.anim_finished and int(self.hp) < 1:
+            if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
                 pg.mixer.Channel(0).stop()
                 pg.mixer.Channel(1).stop()
                 pg.mixer.Channel(2).play(self.gameover_sound)
@@ -208,7 +211,7 @@ class Scene(base.Scene):
             self.__process_collision()
             self.go_text.surface.set_alpha(0)
             self.ready_text.surface.set_alpha(0)
-            if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.__pacman.animator.anim_finished:
+            if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
                 self.create_objects()
                 self.__seeds_eaten = 0
                 self.__work_ghost_counters = False
@@ -232,8 +235,6 @@ class Scene(base.Scene):
             self.inky.update_timer()
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
-        for ghost in self.__ghosts:
-            ghost.ghosts_ai(self.__pacman, self.blinky)
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
         for ghost in self.__not_prefered_ghosts:
@@ -252,7 +253,7 @@ class Scene(base.Scene):
     def on_activate(self) -> None:
         pg.mixer.Channel(0).unpause()
         pg.mixer.Channel(1).unpause()
-        if self.__pacman.animator != self.__pacman.dead_anim:
+        if self.pacman.animator != self.pacman.dead_anim:
             pg.mixer.Channel(3).unpause()
 
     def on_reset(self) -> None:
