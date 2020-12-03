@@ -150,13 +150,18 @@ class Scene(base.Scene):
         self.fruit.process_collision(self.pacman)
         seed_eaten = self.__seeds.process_collision(self.pacman)
         for ghost in self.__ghosts:
-            if ghost.collision_check(self.pacman)[0] and ghost.collision_check(self.pacman)[1]:
-                self.__timer_reset_pacman = pg.time.get_ticks()
-                if not self.pacman.dead:
-                    self.pacman.death()
-                    self.__prepare_lives_meter()
-                for ghost2 in self.__ghosts:
-                    ghost2.invisible()
+            if ghost.collision_check(self.pacman)[0]:
+                if ghost.collision_check(self.pacman)[1]:
+                    print(1, type(ghost).__name__, ': ', ghost.mode, pg.time.get_ticks() - ghost.ai_timer)
+                    self.__timer_reset_pacman = pg.time.get_ticks()
+                    if not self.pacman.dead:
+                        self.pacman.death()
+                        self.__prepare_lives_meter()
+                    for ghost2 in self.__ghosts:
+                        ghost2.invisible()
+                else:
+                    print(2, type(ghost).__name__, ': ', ghost.mode, pg.time.get_ticks() - ghost.ai_timer)
+                    ghost.toggle_mode_to_eaten()
 
         if seed_eaten == 1:
             if self.__prefered_ghost is not None and self.__work_ghost_counters:
@@ -197,8 +202,6 @@ class Scene(base.Scene):
             pg.mixer.Channel(3).play(self.siren_sound)
 
     def process_logic(self) -> None:
-        for ghost in self.__ghosts:
-            print(type(ghost).__name__, ': ', ghost.mode, pg.time.get_ticks() - ghost.ai_timer)
         if not pg.mixer.Channel(1).get_busy():
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
                 pg.mixer.Channel(0).stop()

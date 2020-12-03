@@ -35,21 +35,42 @@ class Base(Character):
         )
 
         # Анимации страха
-
         self.frightened_walk_anim1 = Animator(
             get_list_path('png', 'images', 'ghost', 'fear1'), is_rotation=False
         )
-
         self.frightened_walk_anim2 = Animator(
             get_list_path('png', 'images', 'ghost', 'fear2'), is_rotation=False
         )
 
-        self.animations = [
+        # Анимации съедения
+        self.eaten_left_walk_anim = Animator(
+            get_list_path('png', 'images', 'ghost', 'eaten', 'left'), is_rotation=False
+        )
+        self.eaten_right_walk_anim = Animator(
+            get_list_path('png', 'images', 'ghost', 'eaten', 'right'), is_rotation=False
+        )
+        self.eaten_top_walk_anim = Animator(
+            get_list_path('png', 'images', 'ghost', 'eaten', 'top'), is_rotation=False
+        )
+        self.eaten_bottom_walk_anim = Animator(
+            get_list_path('png', 'images', 'ghost', 'eaten', 'bottom'), is_rotation=False
+        )
+
+        self.normal_animations = [
             self.right_walk_anim,
             self.bottom_walk_anim,
             self.left_walk_anim,
             self.top_walk_anim,
         ]
+
+        self.eaten_animations = [
+            self.eaten_right_walk_anim,
+            self.eaten_bottom_walk_anim,
+            self.eaten_left_walk_anim,
+            self.eaten_top_walk_anim,
+        ]
+
+        self.animations = self.normal_animations
 
         super().__init__(game, self.top_walk_anim, start_pos)
 
@@ -70,6 +91,7 @@ class Base(Character):
             'Chase',
             'Scatter',
             'Frightened'
+            'Eaten'
         '''
         self.mode = 'Scatter'
     def process_logic(self) -> None:
@@ -84,7 +106,7 @@ class Base(Character):
 
     def collision_check(self, object: Character):
         return (self.two_cells_dis(self.rect.center, object.rect.center) < 4 and self.collision and not DISABLE_GHOSTS_COLLISION,
-                self.mode != 'Frightened')
+                self.mode != 'Frightened' and self.mode != 'Eaten')
 
     def counter(self) -> None:
         if self.work_counter:
@@ -106,6 +128,8 @@ class Base(Character):
         self.ai_timer = pg.time.get_ticks()
 
     def ghosts_ai(self) -> None:
+        if self.mode == 'Eaten':
+            print(self.love_cell)
         self.animator.timer_check()
         if self.in_center() and self.collision:
             if self.move_to(self.rotate):
@@ -128,6 +152,25 @@ class Base(Character):
                         if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
                             min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
                             self.shift_x, self.shift_y, self.rotate = self.direction2[i]
+                if self.mode == 'Eaten':
+                    self.deceleration_multiplier = 1
+                    self.love_cell = (self.game.current_scene.blinky.start_pos[0] // 8,
+                                      (self.game.current_scene.blinky.start_pos[1]-20) // 8)
+                    tmp_flag1 = False
+                    tmp_flag2 = False
+                    if self.get_cell() == self.love_cell:
+                        self.collision = False
+                        self.set_direction('down')
+                        tmp_flag1 = True
+                    if tmp_flag1 and self.rect.centery == self.game.current_scene.pinky.start_pos[0]:
+                        self.animations = self.normal_animations
+                        self.set_direction('up')
+                        tmp_flag2 = True
+                    if tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
+                        self.set_direction('left')
+                        self.mode = 'Scatter'
+                        self.collision = True
+                        self.update_ai_timer()
             else:
                 while True:
                     rand = random.randrange(4)
@@ -145,10 +188,12 @@ class Base(Character):
             super().step()
 
     def toggle_mode_to_frightened(self):
-        self.update_ai_timer()
-        self.mode = 'Frightened'
-        self.animator = self.frightened_walk_anim1
-        self.deceleration_multiplier = 2
+        if self.mode != 'Eaten':
+            self.update_ai_timer()
+            self.mode = 'Frightened'
+            self.animator = self.frightened_walk_anim1
+            self.deceleration_multiplier = 2
 
-    def toggle_mode_to_eye(self):
-        pass
+    def toggle_mode_to_eaten(self):
+        self.mode = 'Eaten'
+        self.animations = self.eaten_animations
