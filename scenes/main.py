@@ -27,7 +27,7 @@ class Scene(base.Scene):
         self.__first_run_ghost = True
         self.first_run = True
 
-        self.hp = Health(3, 3)
+        self.hp = Health(3, 4)
         self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
 
