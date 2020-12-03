@@ -109,7 +109,7 @@ class Base(Character):
         self.process_logic_iterator += 1
 
     def collision_check(self, pacman: Pacman):
-        return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 4 and self.collision and not DISABLE_GHOSTS_COLLISION,
+        return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 3 and self.collision and not DISABLE_GHOSTS_COLLISION,
                 self.mode != 'Frightened' and self.mode != 'Eaten')
 
     def counter(self) -> None:
