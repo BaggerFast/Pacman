@@ -19,6 +19,7 @@ class Base(Character):
 
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
+        self.acceleration_multiplier = 1
 
         # Обычные Анимация
         self.left_walk_anim = Animator(
@@ -104,8 +105,10 @@ class Base(Character):
         if not self.is_invisible and self.mode != 'Frightened':
             self.animator = self.animations[self.rotate]
         if not self.process_logic_iterator % self.deceleration_multiplier:
-            self.ghosts_ai()
-            self.step()
+            for i in range(self.acceleration_multiplier):
+                self.ghosts_ai()
+                self.step()
+                self.animator.timer_check()
         self.process_logic_iterator += 1
 
     def collision_check(self, pacman: Pacman):
@@ -132,7 +135,6 @@ class Base(Character):
         self.ai_timer = pg.time.get_ticks()
 
     def ghosts_ai(self) -> None:
-        self.animator.timer_check()
         if self.in_center() and self.collision:
             if self.move_to(self.rotate):
                 self.go()
@@ -173,6 +175,7 @@ class Base(Character):
                         self.gg_text.text = ' '
                         self.mode = 'Scatter'
                         self.collision = True
+                        self.acceleration_multiplier = 1
                         self.update_ai_timer()
             else:
                 while True:
@@ -201,3 +204,4 @@ class Base(Character):
     def toggle_mode_to_eaten(self):
         self.mode = 'Eaten'
         self.animations = self.eaten_animations
+        self.acceleration_multiplier = 2
