@@ -18,7 +18,9 @@ class Scene(base.Scene):
     def create_static_objects(self):
         self.__load_from_map()
         self.__create_sounds()
+        self.__pre_init()
 
+    def __pre_init(self):
         self.__timer_reset_pacman = 0
         self.__seeds_eaten = 0
         self.__max_seeds_eaten_to_prefered_ghost = 7
@@ -30,12 +32,12 @@ class Scene(base.Scene):
         self.hp = Health(1, 3)
         self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
-        self.create_static_text()
+        self.__create_static_text()
         self.timer = pg.time.get_ticks() / 1000
         pg.mixer.Channel(1).play(self.intro_sound)
         self.create_objects()
 
-    def create_static_text(self):
+    def __create_static_text(self):
         self.__scores_label_text = Text(
             self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20))
 
@@ -185,7 +187,7 @@ class Scene(base.Scene):
             for ghost in self.__ghosts:
                 ghost.toggle_mode_to_frightened()
 
-    def start_label(self) -> None:
+    def __start_label(self) -> None:
         current_time = pg.time.get_ticks() / 1000
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.state_text *= -1
@@ -237,7 +239,7 @@ class Scene(base.Scene):
                 pg.mixer.Channel(2).play(self.gameover_sound)
                 self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
         else:
-            self.start_label()
+            self.__start_label()
             self.inky.update_timer()
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
