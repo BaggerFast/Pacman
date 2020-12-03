@@ -2,7 +2,7 @@ import json
 import os
 from json import JSONDecodeError
 
-from misc import ROOT_DIR, create_file_if_not_exist
+from misc import ROOT_DIR, create_file_if_not_exist, FRUITS_COUNT
 
 
 class Storage:
@@ -16,12 +16,16 @@ class Storage:
                           ],
                           "unlocked_skins": [
                               "default"
+                          ],
+                          "eaten_fruits": [
+                              0 for _ in range(FRUITS_COUNT)
                           ]
                           }
-        self.last_level = None
+        self.last_level_id = None
         self.last_skin = None
         self.unlocked_levels = []
         self.unlocked_skins = []
+        self.eaten_fruits = []
         self.load()
 
     def save(self) -> None:
@@ -34,21 +38,15 @@ class Storage:
         with open(self.__storage_filepath, "r") as file:
             try:
                 json_dict = json.load(file)
-                if "last_level_id" in json_dict:
-                    self.__content["last_level_id"] = json_dict["last_level_id"]
-                if "last_skin" in json_dict:
-                    self.__content["last_skin"] = json_dict["last_skin"]
-                if "unlocked_levels" in json_dict:
-                    self.__content["unlocked_levels"] = json_dict["unlocked_levels"]
-                if "unlocked_skins" in json_dict:
-                    self.__content["unlocked_skins"] = json_dict["unlocked_skins"]
+                for key in self.__content.keys():
+                    if key in json_dict:
+                        self.__content[key] = json_dict[key]
             except JSONDecodeError:
                 pass
         self.update()
         self.save()
 
     def update(self):
-        self.last_level = self.__content["last_level_id"]
-        self.last_skin = self.__content["last_skin"]
-        self.unlocked_levels = self.__content["unlocked_levels"]
-        self.unlocked_skins = self.__content["unlocked_skins"]
+        for key in self.__dict__.keys():
+            if key != "_Storage__content":
+                self.__dict__[key] = self.__content[key]
