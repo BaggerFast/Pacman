@@ -5,9 +5,12 @@ from objects import ButtonController, Button, Text
 from scenes import base
 
 
-class Scene(base.Scene):
 
+class Scene(base.Scene):
     __scroll = 0
+    __counter = 0
+    __current_level = 0
+
 
     def __init__(self, game):
         super().__init__(game)
@@ -25,23 +28,49 @@ class Scene(base.Scene):
         buttons = [
             Button(self.game, pg.Rect(0, 0, 180, 40),
                    self.__level1, 'LEVEL 1',
-                   center=(self.game.width // 2, 90 + self.__scroll),
+                   center=(self.game.width // 2, self.button_y_cord(90)),
                    text_size=Font.BUTTON_TEXT_SIZE,
                    active="level_1" in self.game.unlocked_levels),
             Button(self.game, pg.Rect(0, 0, 180, 40),
                    self.__level2, 'LEVEL 2',
-                   center=(self.game.width // 2, 140 + self.__scroll),
+                   center=(self.game.width // 2, self.button_y_cord(140)),
                    text_size=Font.BUTTON_TEXT_SIZE,
                    active="level_2" in self.game.unlocked_levels),
             Button(self.game, pg.Rect(0, 0, 180, 40),
                    self.__level3, 'LEVEL 3',
-                   center=(self.game.width // 2, 190 + self.__scroll),
+                   center=(self.game.width // 2, self.button_y_cord(190)),
+                   text_size=Font.BUTTON_TEXT_SIZE,
+                   active="level_3" in self.game.unlocked_levels),
+            Button(self.game, pg.Rect(0, 0, 180, 40),
+                   self.__level4, 'LEVEL 4',
+                   center=(self.game.width // 2, self.button_y_cord(240)),
+                   text_size=Font.BUTTON_TEXT_SIZE,
+                   active="level_3" in self.game.unlocked_levels),
+            Button(self.game, pg.Rect(0, 0, 180, 40),
+                   self.__level5, 'LEVEL 5',
+                   center=(self.game.width // 2, self.button_y_cord(290)),
+                   text_size=Font.BUTTON_TEXT_SIZE,
+                   active="level_3" in self.game.unlocked_levels),
+            Button(self.game, pg.Rect(0, 0, 180, 40),
+                   self.__level6, 'LEVEL 6',
+                   center=(self.game.width // 2, self.button_y_cord(340)),
+                   text_size=Font.BUTTON_TEXT_SIZE,
+                   active="level_3" in self.game.unlocked_levels),
+            Button(self.game, pg.Rect(0, 0, 180, 40),
+                   self.__level7, 'LEVEL 7',
+                   center=(self.game.width // 2, self.button_y_cord(390)),
+                   text_size=Font.BUTTON_TEXT_SIZE,
+                   active="level_3" in self.game.unlocked_levels),
+            Button(self.game, pg.Rect(0, 0, 180, 40),
+                   self.__level8, 'LEVEL 8',
+                   center=(self.game.width // 2, self.button_y_cord(440)),
                    text_size=Font.BUTTON_TEXT_SIZE,
                    active="level_3" in self.game.unlocked_levels),
             Button(self.game, pg.Rect(0, 0, 180, 40),
                    self.__start_menu, 'MENU',
                    center=(self.game.width // 2, 250),
                    text_size=Font.BUTTON_TEXT_SIZE)
+
         ]
         for index in range(len(buttons)):
             if self.game.level_name == buttons[index].text.lower().replace(' ', '_'):
@@ -51,6 +80,11 @@ class Scene(base.Scene):
                                         text_size=Font.BUTTON_TEXT_SIZE)
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
+
+    def button_y_cord(self, y):
+        if 80 < self.__scroll + y < 290:
+            return self.__scroll+y
+        return 1000
 
     def on_activate(self) -> None:
         self.create_objects()
@@ -63,11 +97,19 @@ class Scene(base.Scene):
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 self.game.set_scene(self.game.scenes.MENU)
-            elif event.type == pg.MOUSEBUTTONDOWN and event.button == 4:
-                self.__scroll += 10
+            elif event.type == pg.KEYDOWN and event.key == pg.K_w and self.__counter > 0:
+                self.__counter -= 1
+                print(self.__counter)
+                self.__scroll += 50
+                self.objects = []
+                self.game.set_scene(self.game.scenes.LEVELS)
                 self.__create_buttons()
-            elif event.type == pg.MOUSEBUTTONDOWN and event.button == 5:
-                self.__scroll -= 10
+            elif event.type == pg.KEYDOWN and event.key == pg.K_s and self.__counter < 5:
+                self.__counter += 1
+                print(self.__counter)
+                self.__scroll -= 50
+                self.objects = []
+                self.game.set_scene(self.game.scenes.LEVELS)
                 self.__create_buttons()
 
     def __set_level(self, name="level_1") -> None:
@@ -87,3 +129,24 @@ class Scene(base.Scene):
 
     def __level3(self) -> None:
         self.__set_level("level_3")
+
+    def __level4(self) -> None:
+        pass
+        #Вызов уровня
+
+    def __level5(self) -> None:
+        pass
+        # Вызов уровня
+
+    def __level6(self) -> None:
+        pass
+        # Вызов уровня
+
+    def __level7(self) -> None:
+        pass
+        # Вызов уровня
+
+    def __level8(self) -> None:
+        pass
+        # Вызов уровня
+
