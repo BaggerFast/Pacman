@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path
+from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path, UNLOCK_SKINS
 from misc.storage import Storage
 from scenes import *
 
@@ -53,18 +53,24 @@ class Game:
             self.count = len(self.levels)
 
     __size = width, height = 224, 285
-    __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'walk'))
+    __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'default', 'walk'))
     __FPS = 60
     __def_level_id = 0
+    __def_skin = "default"
+    __all_skins = ["default", "chrome", "half_life"]
     pg.display.set_caption('PACMAN')
     pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
         self.maps = self.Maps()
+
         self.__storage = Storage()
         self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
         self.level_id = int(self.__storage.last_level) if int(
             self.__storage.last_level) in self.unlocked_levels else self.__def_level_id
+        self.unlocked_skins = self.__all_skins if UNLOCK_SKINS else self.__storage.unlocked_levels
+        self.skin = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
+
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.score = Score()
         self.records = HighScore(self)

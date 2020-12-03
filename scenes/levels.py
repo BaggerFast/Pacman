@@ -20,28 +20,28 @@ class Scene(base.Scene):
         for i in range(self.game.maps.count):
             buttons.append(
                 LvlButton(
-                   game=self.game,
-                   geometry=pg.Rect(0, 0, 180, 40),
-                   value=i,
-                   text='LEVEL' + str(i+1),
-                   center=(self.game.width // 2, 90+50*i),
-                   text_size=Font.BUTTON_TEXT_SIZE,
-                   active=i in self.game.unlocked_levels)
+                    game=self.game,
+                    geometry=pg.Rect(0, 0, 180, 40),
+                    value=i,
+                    text='LEVEL' + str(i + 1),
+                    center=(self.game.width // 2, 90 + 50 * i),
+                    text_size=Font.BUTTON_TEXT_SIZE,
+                    active=i in self.game.unlocked_levels)
             )
 
         buttons.append(SceneButton(self.game, pg.Rect(0, 0, 180, 40),
-                   text='MENU',
-                   scene=(self.game.scenes.MENU, False),
-                   center=(self.game.width // 2, 250),
-                   text_size=Font.BUTTON_TEXT_SIZE))
+                                   text='MENU',
+                                   scene=(self.game.scenes.MENU, False),
+                                   center=(self.game.width // 2, 250),
+                                   text_size=Font.BUTTON_TEXT_SIZE))
 
         for index in range(len(buttons)):
             if str(self.game.level_id + 1) == buttons[index].text[-1:]:
                 buttons[index] = LvlButton(self.game, pg.Rect(0, 0, 180, 40),
-                                        value=buttons[index].value,
-                                        text='» ' + buttons[index].text + ' «',
-                                        center=(buttons[index].rect.centerx, buttons[index].rect.centery),
-                                        text_size=Font.BUTTON_TEXT_SIZE)
+                                           value=buttons[index].value,
+                                           text='» ' + buttons[index].text + ' «',
+                                           center=(buttons[index].rect.centerx, buttons[index].rect.centery),
+                                           text_size=Font.BUTTON_TEXT_SIZE)
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
 
@@ -58,4 +58,3 @@ class Scene(base.Scene):
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 self.game.scenes.set(self.game.scenes.MENU)
-
