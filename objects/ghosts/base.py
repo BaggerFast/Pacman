@@ -1,6 +1,6 @@
 import pygame as pg
 from misc import Animator, get_list_path, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION
-from objects import Character, Pacman
+from objects import Character, Pacman, Text
 from typing import Tuple
 import random
 
@@ -94,7 +94,12 @@ class Base(Character):
             'Eaten'
         '''
         self.mode = 'Scatter'
+
+        #self.gg_text = Text(self.game, '', 5, pg.Rect(self.rect.x, self.rect.y, 0, 0), pg.Color(255, 255, 255))
+
+
     def process_logic(self) -> None:
+        self.gg_text.pos = (self.rect.x, self.rect.y)
         if self.rotate is None:
             self.rotate = 0
         if not self.is_invisible and self.mode != 'Frightened':

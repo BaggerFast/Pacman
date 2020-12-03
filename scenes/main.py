@@ -89,6 +89,11 @@ class Scene(base.Scene):
         self.objects.append(self.inky)
         self.objects.append(self.clyde)
 
+        self.objects.append(self.blinky.gg_text)
+        self.objects.append(self.pinky.gg_text)
+        self.objects.append(self.inky.gg_text)
+        self.objects.append(self.clyde.gg_text)
+
     def __create_map(self):
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
         self.objects.append(self.__map)
@@ -161,6 +166,7 @@ class Scene(base.Scene):
                 else:
                     if ghost.mode == 'Frightened':
                         self.game.score.eat_ghost()
+                        ghost.gg_text.text = str(200 * 2 ** self.game.score.fear_count)
                     ghost.toggle_mode_to_eaten()
 
         if seed_eaten == 1:
