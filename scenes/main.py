@@ -166,7 +166,6 @@ class Scene(base.Scene):
                 else:
                     if ghost.mode == 'Frightened':
                         ghost.gg_text.text = str(200 * 2 ** self.game.score.fear_count)
-                        print(self.game.score.fear_count)
                         self.game.score.eat_ghost()
                     ghost.toggle_mode_to_eaten()
 
