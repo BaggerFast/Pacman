@@ -33,8 +33,6 @@ class Scene(base.Scene):
         self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
         self.__create_static_text()
-        self.timer = pg.time.get_ticks() / 1000
-        pg.mixer.Channel(1).play(self.intro_sound)
         self.create_objects()
 
     def __create_static_text(self):
@@ -254,7 +252,7 @@ class Scene(base.Scene):
         for i in self.__last_hp:
             i.process_draw()
 
-    def additional_logic(self) -> None
+    def additional_logic(self) -> None:
         self.__scores_value_text.text = str(self.game.score)
 
     def on_activate(self) -> None:
@@ -267,3 +265,5 @@ class Scene(base.Scene):
         pg.mixer.stop()
         self.game.score.reset()
         self.game.scenes.MAIN.recreate()
+        self.timer = pg.time.get_ticks() / 1000
+        pg.mixer.Channel(1).play(self.intro_sound)
