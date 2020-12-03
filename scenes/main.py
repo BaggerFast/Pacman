@@ -6,7 +6,7 @@ from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import base
 from objects.fruits import Fruit
-from misc import Sounds, Maps
+from misc import Sounds
 
 
 class Scene(base.Scene):
@@ -32,7 +32,7 @@ class Scene(base.Scene):
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
 
     def __load_from_map(self):
-        self.__loader = LevelLoader(Maps.levels[self.game.level_id])
+        self.__loader = LevelLoader(self.game.maps.levels[self.game.level_id])
         self.__map_data = self.__loader.get_map_data()
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()

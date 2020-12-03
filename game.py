@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS
+from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List
 from misc.storage import Storage
 from scenes import *
 
@@ -35,6 +35,21 @@ class Game:
                 self.__current.on_reset()
             self.__current.on_activate()
 
+    class Maps:
+        def __init__(self):
+            self.levels = ["original.json", "new_map.json", "new_new_map.json"]
+            self.count = len(self.levels)
+
+        @staticmethod
+        def level_name(level_id: int = 0):
+            return f"level_{level_id + 1}"
+
+        def keys(self) -> List[int]:
+            return [i for i in range(self.count)]
+
+        def read_levels(self):
+            pass
+
     __size = width, height = 224, 285
     __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'walk'))
     __FPS = 60
@@ -43,9 +58,11 @@ class Game:
     pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
+        self.maps = self.Maps()
         self.__storage = Storage()
-        self.unlocked_levels = Maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
-        self.level_id = int(self.__storage.last_level) if int(self.__storage.last_level) in self.unlocked_levels else self.__def_level_id
+        self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
+        self.level_id = int(self.__storage.last_level) if int(
+            self.__storage.last_level) in self.unlocked_levels else self.__def_level_id
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.score = Score()
         self.records = HighScore(self)
@@ -104,7 +121,7 @@ class Game:
         """
         :param level_id:
         """
-        if level_id in Maps.keys():
+        if level_id in self.maps.keys():
             if not UNLOCK_LEVELS and level_id not in self.unlocked_levels:
                 self.unlocked_levels.append(level_id)
         else:

@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc import Font, Maps
+from misc import Font
 from objects import ButtonController, Text
 from objects.button.button import LvlButton, SceneButton
 from scenes import base
@@ -17,7 +17,7 @@ class Scene(base.Scene):
 
     def __create_buttons(self) -> None:
         buttons = []
-        for i in range(Maps.count):
+        for i in range(self.game.maps.count):
             buttons.append(
                 LvlButton(
                    game=self.game,

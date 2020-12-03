@@ -62,22 +62,3 @@ class Font:
     MAIN_SCENE_SIZE = Tuple(size=10).size
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size
-
-
-class Maps(NamedTuple):
-    class Tuple(NamedTuple):
-        value: Union[str, int]
-
-    class TupleList(NamedTuple):
-        list: list
-
-    levels = TupleList(["original.json", "new_map.json", "new_new_map.json"]).list
-    count = Tuple(len(levels)).value
-
-    @staticmethod
-    def level_name(level_id: int = 0):
-        return f"level_{level_id + 1}"
-
-    @staticmethod
-    def keys() -> List[int]:
-        return [i for i in range(Maps.count)]

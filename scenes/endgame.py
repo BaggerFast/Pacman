@@ -2,7 +2,7 @@ import pygame as pg
 from objects import ButtonController, Button, Text
 from objects.button.button import SceneButton
 from scenes import base, levels
-from misc import Color, Font, Maps
+from misc import Color, Font
 
 
 class Scene(base.Scene):
