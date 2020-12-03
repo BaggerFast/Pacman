@@ -140,6 +140,11 @@ class LvlButton(Button):
         self.game.scenes.set(self.game.scenes.MENU, reset=True)
 
 
+class SkinButton(Button):
+    def click(self):
+        self.game.pacman_color = self.value
+
+
 class SceneButton(Button):
     def click(self):
         if callable(self.scene[0]):

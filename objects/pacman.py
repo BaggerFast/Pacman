@@ -29,6 +29,8 @@ class Pacman(Character):
         self.dead = False
         self.__feature_rotate = "none"
         pg.mixer.Channel(3).unpause()
+        self.__dead_anim.recolor(self.game)
+        self.__walk_anim.recolor(self.game)
 
     @property
     def dead_anim(self):

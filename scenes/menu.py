@@ -29,16 +29,17 @@ class Scene(base.Scene):
         names = {
             0: ("PLAY", self.game.scenes.MAIN, True),
             1: ("LEVELS", self.game.scenes.LEVELS, False),
-            2: ("RECORDS", self.game.scenes.RECORDS, False),
-            3: ("CREDITS", self.game.scenes.CREDITS, False),
-            4: ("EXIT", self.game.exit_game, None)
+            2: ("SKINS", self.game.scenes.SKINS, False),
+            3: ("RECORDS", self.game.scenes.RECORDS, False),
+            4: ("CREDITS", self.game.scenes.CREDITS, False),
+            5: ("EXIT", self.game.exit_game, None)
         }
         buttons = []
         for i in range(len(names)):
-            buttons.append(SceneButton(self.game, pg.Rect(0, 0, 180, 35),
+            buttons.append(SceneButton(self.game, pg.Rect(0, 0, 180, 30),
                    text=names[i][0],
                    scene=(names[i][1], names[i][2]),
-                   center=(self.game.width // 2, 95+i*40),
+                   center=(self.game.width // 2, 95+i*33),
                    text_size=Font.BUTTON_TEXT_SIZE))
         self.objects.append(ButtonController(self.game, buttons))
 

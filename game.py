@@ -15,6 +15,7 @@ class Game:
             self.RECORDS = records.Scene(game)
             self.CREDITS = credits.Scene(game)
             self.ENDGAME = endgame.Scene(game)
+            self.SKINS = skins.Scene(game)
             self.__current = None
 
         @property
@@ -46,6 +47,7 @@ class Game:
         self.__storage = Storage()
         self.unlocked_levels = Maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
         self.level_id = int(self.__storage.last_level) if int(self.__storage.last_level) in self.unlocked_levels else self.__def_level_id
+        self.pacman_color = (255, 255, 0)
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.score = Score()
         self.records = HighScore(self)
