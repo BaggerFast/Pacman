@@ -253,8 +253,8 @@ class Scene(base.Scene):
 
     def process_draw(self) -> None:
         super().process_draw()
-        for i in range(len(self.__last_hp)):
-            self.__last_hp[i].process_draw()
+        for i in self.__last_hp:
+            i.process_draw()
         self.__scores_value_text.text = str(self.game.score)
 
     def on_deactivate(self) -> None:
