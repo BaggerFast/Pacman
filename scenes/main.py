@@ -165,8 +165,9 @@ class Scene(base.Scene):
                         ghost2.invisible()
                 else:
                     if ghost.mode == 'Frightened':
-                        self.game.score.eat_ghost()
                         ghost.gg_text.text = str(200 * 2 ** self.game.score.fear_count)
+                        print(self.game.score.fear_count)
+                        self.game.score.eat_ghost()
                     ghost.toggle_mode_to_eaten()
 
         if seed_eaten == 1:
@@ -177,6 +178,7 @@ class Scene(base.Scene):
                 self.__seeds_eaten += 1
                 self.__prefered_ghost.update_timer()
         elif seed_eaten == 2:
+            self.game.score.activate_fear_mode()
             for ghost in self.__ghosts:
                 ghost.toggle_mode_to_frightened()
 

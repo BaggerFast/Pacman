@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Animator, get_list_path, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION
+from misc import Animator, get_list_path, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION, Font
 from objects import Character, Pacman, Text
 from typing import Tuple
 import random
@@ -94,12 +94,11 @@ class Base(Character):
             'Eaten'
         '''
         self.mode = 'Scatter'
-
-        #self.gg_text = Text(self.game, '', 5, pg.Rect(self.rect.x, self.rect.y, 0, 0), pg.Color(255, 255, 255))
-
+        self.gg_text = Text(self.game, ' ', 10, pg.Rect(0, 0, 0, 0), pg.Color(255, 255, 255), Font.DEFAULT)
 
     def process_logic(self) -> None:
-        self.gg_text.pos = (self.rect.x, self.rect.y)
+        if self.mode != 'Eaten':
+            self.gg_text.rect = pg.Rect(self.rect.x, self.rect.y, 0, 0)
         if self.rotate is None:
             self.rotate = 0
         if not self.is_invisible and self.mode != 'Frightened':
@@ -171,11 +170,11 @@ class Base(Character):
                         tmp_flag2 = True
                     if tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
                         self.set_direction('left')
+                        self.gg_text.text = ' '
                         self.mode = 'Scatter'
                         self.collision = True
                         self.update_ai_timer()
             else:
-                self.game.score.activate_fear_mode()
                 while True:
                     rand = random.randrange(4)
                     if cell[rand]:
