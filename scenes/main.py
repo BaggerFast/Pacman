@@ -152,7 +152,6 @@ class Scene(base.Scene):
         for ghost in self.__ghosts:
             if ghost.collision_check(self.pacman)[0]:
                 if ghost.collision_check(self.pacman)[1]:
-                    print(1, type(ghost).__name__, ': ', ghost.mode, pg.time.get_ticks() - ghost.ai_timer)
                     self.__timer_reset_pacman = pg.time.get_ticks()
                     if not self.pacman.dead:
                         self.pacman.death()
@@ -160,7 +159,8 @@ class Scene(base.Scene):
                     for ghost2 in self.__ghosts:
                         ghost2.invisible()
                 else:
-                    print(2, type(ghost).__name__, ': ', ghost.mode, pg.time.get_ticks() - ghost.ai_timer)
+                    if ghost.mode == 'Frightened':
+                        self.game.score.eat_ghost()
                     ghost.toggle_mode_to_eaten()
 
         if seed_eaten == 1:

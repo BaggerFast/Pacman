@@ -1,6 +1,6 @@
 import pygame as pg
 from misc import Animator, get_list_path, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION
-from objects import Character
+from objects import Character, Pacman
 from typing import Tuple
 import random
 
@@ -104,8 +104,8 @@ class Base(Character):
             self.step()
         self.process_logic_iterator += 1
 
-    def collision_check(self, object: Character):
-        return (self.two_cells_dis(self.rect.center, object.rect.center) < 4 and self.collision and not DISABLE_GHOSTS_COLLISION,
+    def collision_check(self, pacman: Pacman):
+        return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 4 and self.collision and not DISABLE_GHOSTS_COLLISION,
                 self.mode != 'Frightened' and self.mode != 'Eaten')
 
     def counter(self) -> None:
@@ -128,8 +128,6 @@ class Base(Character):
         self.ai_timer = pg.time.get_ticks()
 
     def ghosts_ai(self) -> None:
-        if self.mode == 'Eaten':
-            print(self.love_cell)
         self.animator.timer_check()
         if self.in_center() and self.collision:
             if self.move_to(self.rotate):
@@ -172,6 +170,7 @@ class Base(Character):
                         self.collision = True
                         self.update_ai_timer()
             else:
+                self.game.score.activate_fear_mode()
                 while True:
                     rand = random.randrange(4)
                     if cell[rand]:
@@ -179,7 +178,8 @@ class Base(Character):
                 self.shift_x, self.shift_y, self.rotate = self.direction2[rand]
                 if pg.time.get_ticks() - self.ai_timer >= 6000:
                     self.animator = self.frightened_walk_anim2
-                if pg.time.get_ticks() - self.ai_timer >= 8000:
+                if pg.time.get_ticks() - self.ai_timer >= 8000000:
+                    self.game.score.deactivate_fear_mode()
                     self.update_ai_timer()
                     self.deceleration_multiplier = 1
                     self.mode = 'Scatter'
