@@ -15,7 +15,7 @@ class Scene(base.Scene):
     intro_sound = Sounds.INTRO
     gameover_sound = Sounds.GAMEOVER
 
-    def pre_init(self):
+    def create_static_objects(self):
         self.__load_from_map()
         self.__create_sounds()
 
@@ -27,9 +27,22 @@ class Scene(base.Scene):
         self.__first_run_ghost = True
         self.first_run = True
 
-        self.hp = Health(3, 4)
+        self.hp = Health(1, 3)
         self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
+        self.create_static_text()
+        self.timer = pg.time.get_ticks() / 1000
+        pg.mixer.Channel(1).play(self.intro_sound)
+        self.create_objects()
+
+    def create_static_text(self):
+        self.__scores_label_text = Text(
+            self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20))
+
+        self.__high_scores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE,
+                                             rect=pg.Rect(130, 0, 20, 20))
+        self.static_object.append(self.__scores_label_text)
+        self.static_object.append(self.__high_scores_label_text)
 
     def __load_from_map(self):
         self.__loader = LevelLoader(Maps.levels[self.game.level_id])
@@ -113,21 +126,12 @@ class Scene(base.Scene):
         self.objects.append(self.go_text)
 
     def __create_hud(self):
-        self.__scores_label_text = Text(
-            self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20))
-
+        self.__high_scores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
+                                             rect=pg.Rect(130, 8, 20, 20))
         self.__scores_value_text = Text(
             self.game, str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
 
-        self.__high_scores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE,
-                                             rect=pg.Rect(130, 0, 20, 20))
-
-        self.__high_scores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
-                                             rect=pg.Rect(130, 8, 20, 20))
-
-        self.objects.append(self.__scores_label_text)
         self.objects.append(self.__scores_value_text)
-        self.objects.append(self.__high_scores_label_text)
         self.objects.append(self.__high_scores_value_text)
 
     @property
@@ -181,13 +185,6 @@ class Scene(base.Scene):
             for ghost in self.__ghosts:
                 ghost.toggle_mode_to_frightened()
 
-    def __check_first_run(self) -> None:
-        if self.first_run:
-            self.timer = pg.time.get_ticks() / 1000
-            pg.mixer.Channel(1).play(self.intro_sound)
-            self.create_objects()
-            self.first_run = False
-
     def start_label(self) -> None:
         current_time = pg.time.get_ticks() / 1000
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
@@ -217,7 +214,6 @@ class Scene(base.Scene):
                 self.game.scenes.set(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
-            self.__check_first_run()
             self.__process_collision()
             self.go_text.surface.set_alpha(0)
             self.ready_text.surface.set_alpha(0)
@@ -255,10 +251,9 @@ class Scene(base.Scene):
         super().process_draw()
         for i in range(len(self.__last_hp)):
             self.__last_hp[i].process_draw()
-        self.__scores_value_text.text = str(self.game.score)
 
-    def on_deactivate(self) -> None:
-        pass
+    def additional_logic(self) -> None:
+        self.__scores_value_text.text = str(self.game.score)
 
     def on_activate(self) -> None:
         pg.mixer.Channel(0).unpause()

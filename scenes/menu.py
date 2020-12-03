@@ -1,23 +1,23 @@
 import pygame as pg
 
-from objects import ButtonController, Button, Text
+from objects import ButtonController, Text
 from objects.button.button import SceneButton
 from scenes import base
-from misc import Color, Font, Maps
+from misc import Font, Maps
 
 
 class Scene(base.Scene):
-    def __init__(self, game):
-        super().__init__(game)
+    def create_static_objects(self):
+        self.__create_title()
 
     def create_objects(self) -> None:
-        self.__create_title()
+        super().create_objects()
         self.__create_indicator()
 
     def __create_title(self) -> None:
         title = Text(self.game, 'PACMAN', 36, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
-        self.objects.append(title)
+        self.static_object.append(title)
 
     def __create_indicator(self) -> None:
         self.__indicator = Text(self.game, Maps.level_name(self.game.level_id).replace('_', ' '),
@@ -25,7 +25,7 @@ class Scene(base.Scene):
         self.__indicator.move_center(self.game.width // 2, 60)
         self.objects.append(self.__indicator)
 
-    def __create_buttons(self) -> None:
+    def create_buttons(self) -> None:
         names = {
             0: ("PLAY", self.game.scenes.MAIN, True),
             1: ("LEVELS", self.game.scenes.LEVELS, False),
@@ -40,14 +40,6 @@ class Scene(base.Scene):
                    scene=(names[i][1], names[i][2]),
                    center=(self.game.width // 2, 95+i*40),
                    text_size=Font.BUTTON_TEXT_SIZE))
-        self.__button_controller = ButtonController(self.game, buttons)
-        self.objects.append(self.__button_controller)
+        self.objects.append(ButtonController(self.game, buttons))
 
-    def __level_indicator(self) -> None:
-        self.__indicator.text = Maps.level_name(self.game.level_id).replace('_', ' ')
-
-    def on_activate(self) -> None:
-        self.objects = []
-        self.create_objects()
-        self.__create_buttons()
 

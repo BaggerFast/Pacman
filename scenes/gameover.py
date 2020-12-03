@@ -6,23 +6,23 @@ from misc import Color, Font
 
 
 class Scene(base.Scene):
-    def __init__(self, game):
-        super().__init__(game)
+    def create_static_objects(self):
+        self.__create_title()
 
     def create_objects(self) -> None:
-        self.__create_title()
+        super().create_objects()
+        self.__save_record()
         self.__create_score_text()
         self.__create_highscore_text()
 
     def __create_title(self) -> None:
-        title_game = Text(self.game, 'GAME', 40, font=Font.TITLE)
-        title_over = Text(self.game, 'OVER', 40, font=Font.TITLE)
-        title_game.move_center(self.game.width // 2, 30)
-        title_over.move_center(self.game.width // 2, 60 + 20)
-        self.objects.append(title_game)
-        self.objects.append(title_over)
+        text = ['GAME', 'OVER']
+        for i in range(2):
+            text[i] = Text(self.game, text[i], 40, font=Font.TITLE)
+            text[i].move_center(self.game.width // 2, 30 + i * 40)
+            self.static_object.append(text[i])
 
-    def __create_buttons(self) -> None:
+    def create_buttons(self) -> None:
         names = {
             0: ("RESTART", self.game.scenes.MAIN, True),
             1: ("MENU", self.game.scenes.MENU, False),
@@ -35,8 +35,7 @@ class Scene(base.Scene):
                 center=(self.game.width // 2, 210+40*i),
                 text_size=Font.BUTTON_TEXT_SIZE
             ))
-        self.__button_controller = ButtonController(self.game, buttons)
-        self.objects.append(self.__button_controller)
+        self.objects.append(ButtonController(self.game, buttons))
 
     def __create_score_text(self) -> None:
         self.__text_score = Text(self.game, f'Score: {self.game.score}', 20)
@@ -47,15 +46,6 @@ class Scene(base.Scene):
         self.__text_highscore = Text(self.game, f'High score: {self.game.records.data[-1]}', 20)
         self.__text_highscore.move_center(self.game.width // 2, 165)
         self.objects.append(self.__text_highscore)
-
-    def on_activate(self) -> None:
-        self.__save_record()
-        self.__text_score.text = f'Score: {self.game.score}'
-        self.__text_score.move_center(self.game.width // 2, 135)
-        self.__text_highscore.text = f'High score: {self.game.records.data[-1]}'
-        self.__text_highscore.move_center(self.game.width // 2, 165)
-        self.__create_buttons()
-        self.__button_controller.reset_state()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:

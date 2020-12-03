@@ -78,6 +78,6 @@ class SeedContainer(DrawableObject):
                     return 2
 
     def is_field_empty(self) -> bool:
-        if self.__seeds_on_field == (self.__max_seeds - 10 if HIGH_CALORIE_SEEDS else 0):
+        if self.__seeds_on_field == (self.__max_seeds - 200 if HIGH_CALORIE_SEEDS else 0):
             return True
         return False

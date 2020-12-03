@@ -3,7 +3,8 @@ from random import randint
 import pygame as pg
 
 from misc import Font
-from objects import Text, ButtonController, Button
+from objects import Text, ButtonController
+from objects.button.button import SceneButton
 from scenes import base
 
 
@@ -36,13 +37,12 @@ class Scene(base.Scene):
         "Тору Иватани",
         "Фил Спенсер",
         "☭",
-        "Польская корова",
+        "MSHP LOVE",
         "Хирохико Араки"
     ]
 
-    def __init__(self, game) -> None:
-        super().__init__(game)
-        self.game = game
+    def create_objects(self) -> None:
+        super().create_objects()
         self.__on_screen = 0
         self.start_pos = -30
         self.__speed = 0.3
@@ -50,19 +50,15 @@ class Scene(base.Scene):
         self.__students = []
         self.__students2 = self.__data.copy()
 
-    def create_objects(self) -> None:
-        self.__create_buttons()
-
-    def __create_buttons(self) -> None:
-        self.__back_button = Button(self.game,
-                                    pg.Rect(0, 0, 180, 40),
-                                    self.__start_menu,
-                                    'MENU',
-                                    center=(self.game.width // 2, 250),
-                                    text_size=Font.BUTTON_TEXT_SIZE)
-
-        self.__button_controller = ButtonController(self.game, [self.__back_button])
-        self.objects.append(self.__button_controller)
+    def create_buttons(self) -> None:
+        self.objects = []
+        back_button = SceneButton(self.game,
+            pg.Rect(0, 0, 180, 40),
+            scene=(self.game.scenes.MENU, False),
+            text='MENU',
+            center=(self.game.width // 2, 250),
+            text_size=Font.BUTTON_TEXT_SIZE)
+        self.objects.append(ButtonController(self.game, [back_button]))
 
     def __get_random_student_y(self) -> int:
         return randint(25, self.game.height - 75)
@@ -77,32 +73,23 @@ class Scene(base.Scene):
         tries = 0
         while not is_student_y_correct:
             student.move_center(self.start_pos, randint(25, self.game.height - 75))
-
             is_student_y_correct = True
             for student2 in self.__students:
                 if abs(student.rect.centery - student2.rect.centery) <= \
                     (student.rect.height + student2.rect.height) / 2:
                     is_student_y_correct = False
                     break
-
             tries += 1
-
             if tries > 100:
                 break
-
         student.speed = self.__speed + randint(-5, 15) / 100
         student.ttl = 0
         self.__students.append(student)
         self.objects.append(student)
         self.__on_screen += 1
 
-    def on_activate(self) -> None:
-        self.create_objects()
-        self.__button_controller.reset_state()
-
     def __process_students(self) -> None:
         students_to_delete = []
-
         for index, student in enumerate(self.__students):
             if student.rect.x >= self.game.width:
                 students_to_delete.append(index)
@@ -138,10 +125,6 @@ class Scene(base.Scene):
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.__start_menu()
+                self.game.scenes.set(self.game.scenes.MENU)
 
-    def __start_menu(self) -> None:
-        self.game.scenes.set(self.game.scenes.MENU)
-        self.__on_screen = 0
-        self.__students = []
-        self.objects = []
+

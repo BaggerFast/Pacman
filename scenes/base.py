@@ -6,8 +6,8 @@ class Scene:
         self.game = game
         self.screen = self.game.screen
         self.objects = []
-        self.pre_init()
-        self.create_objects()
+        self.static_object = []
+        self.create_static_objects()
 
     def process_event(self, event: pg.event.Event) -> None:
         for item in self.objects:
@@ -24,11 +24,15 @@ class Scene:
             item.process_draw()
         self.additional_draw()
 
-    def create_objects(self) -> None:
+    def create_static_objects(self):
         pass
 
+    def create_objects(self) -> None:
+        self.objects = []
+        self.create_buttons()
+
     def on_activate(self) -> None:
-        pass
+        self.create_objects()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         pass
@@ -37,7 +41,8 @@ class Scene:
         pass
 
     def additional_draw(self) -> None:
-        pass
+        for item in self.static_object:
+            item.process_draw()
 
     def on_deactivate(self) -> None:
         pass
@@ -45,10 +50,9 @@ class Scene:
     def on_reset(self) -> None:
         pass
 
-    def recreate(self) -> None:
-        self.pre_init()
-        self.objects = []
-        self.create_objects()
-
-    def pre_init(self):
+    def create_buttons(self):
         pass
+
+    def recreate(self) -> None:
+        self.create_static_objects()
+        self.create_objects()

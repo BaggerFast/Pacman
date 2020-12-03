@@ -93,7 +93,6 @@ class Game:
             self.__clock.tick(self.__FPS)
 
     def exit_game(self) -> None:
-        print('Bye bye')
         self.__storage.last_level = self.level_id
         if not UNLOCK_LEVELS:
             self.__storage.unlocked_levels = self.unlocked_levels

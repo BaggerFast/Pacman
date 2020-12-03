@@ -7,15 +7,15 @@ from scenes import base
 
 
 class Scene(base.Scene):
-    def create_objects(self) -> None:
+    def create_static_objects(self):
         self.__create_title()
 
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
-        self.objects.append(title)
+        self.static_object.append(title)
 
-    def __create_buttons(self) -> None:
+    def create_buttons(self) -> None:
         buttons = []
         for i in range(Maps.count):
             buttons.append(
@@ -42,17 +42,7 @@ class Scene(base.Scene):
                                         text='» ' + buttons[index].text + ' «',
                                         center=(buttons[index].rect.centerx, buttons[index].rect.centery),
                                         text_size=Font.BUTTON_TEXT_SIZE)
-        self.__button_controller = ButtonController(self.game, buttons)
-        self.objects.append(self.__button_controller)
-
-    def on_activate(self) -> None:
-        self.objects = []
-        self.create_objects()
-        self.__create_buttons()
-        self.__button_controller.reset_state()
-
-    def __start_menu(self) -> None:
-        self.game.scenes.set(self.game.scenes.MENU)
+        self.objects.append(ButtonController(self.game, buttons))
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
