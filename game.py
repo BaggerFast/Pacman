@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List
+from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path
 from misc.storage import Storage
 from scenes import *
 
@@ -37,8 +37,9 @@ class Game:
 
     class Maps:
         def __init__(self):
-            self.levels = ["original.json", "new_map.json", "new_new_map.json"]
-            self.count = len(self.levels)
+            self.levels = []
+            self.count = 0
+            self.read_levels()
 
         @staticmethod
         def level_name(level_id: int = 0):
@@ -48,7 +49,8 @@ class Game:
             return [i for i in range(self.count)]
 
         def read_levels(self):
-            pass
+            self.levels = get_list_path("json", "maps")
+            self.count = len(self.levels)
 
     __size = width, height = 224, 285
     __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'walk'))

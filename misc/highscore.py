@@ -27,12 +27,10 @@ class HighScore:
         create_file_if_not_exist(self.__json_filename, json.dumps(self.__json_default))
         with open(self.__json_filename, 'r') as file:
             record_table_json = json.load(file)
-        if len(record_table_json) < self.game.maps.count:
-            for level_id in self.game.maps.keys():
-                if str(level_id) not in record_table_json:
-                    record_table_json[level_id] = [0 for _ in range(self.__RECORDS_COUNT)]
-            with open(self.__json_filename, 'w') as file:
-                file.write(json.dumps(record_table_json))
+        for _ in range(len(record_table_json), self.game.maps.count):
+            record_table_json.append([0 for _ in range(self.__RECORDS_COUNT)])
+        with open(self.__json_filename, 'w') as file:
+            file.write(json.dumps(record_table_json))
         return record_table_json
 
     def save_json_record(self) -> None:
