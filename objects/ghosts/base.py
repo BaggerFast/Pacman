@@ -182,7 +182,7 @@ class Base(Character):
                 self.shift_x, self.shift_y, self.rotate = self.direction2[rand]
                 if pg.time.get_ticks() - self.ai_timer >= 6000:
                     self.animator = self.frightened_walk_anim2
-                if pg.time.get_ticks() - self.ai_timer >= 8000000:
+                if pg.time.get_ticks() - self.ai_timer >= 8000:
                     self.game.score.deactivate_fear_mode()
                     self.update_ai_timer()
                     self.deceleration_multiplier = 1
