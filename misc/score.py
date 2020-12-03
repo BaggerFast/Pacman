@@ -38,11 +38,12 @@ class Score:
 
     def activate_fear_mode(self) -> None:
         self.fear_mode = True
+        self.fear_count = 0
 
     def deactivate_fear_mode(self) -> None:
         self.fear_mode = False
         self.fear_count = 0
 
     def eat_ghost(self) -> None:
+        self + (200 * 2 ** self.fear_count)
         self.fear_count += 1
-        self + (100 * 2 ** self.fear_count)

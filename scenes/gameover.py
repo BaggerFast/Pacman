@@ -1,5 +1,6 @@
 import pygame as pg
 from objects import ButtonController, Button, Text
+from objects.button.button import SceneButton
 from scenes import base
 from misc import Color, Font
 
@@ -10,7 +11,6 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         self.__create_title()
-        self.__create_buttons()
         self.__create_score_text()
         self.__create_highscore_text()
 
@@ -23,20 +23,18 @@ class Scene(base.Scene):
         self.objects.append(title_over)
 
     def __create_buttons(self) -> None:
-        buttons = [
-            Button(
-                self.game, pg.Rect(0, 0, 180, 35),
-                self.__restart_game, 'RESTART',
-                center=(self.game.width // 2, 210),
+        names = {
+            0: ("RESTART", self.game.scenes.MAIN, True),
+            1: ("MENU", self.game.scenes.MENU, False),
+        }
+        buttons = []
+        for i in range(len(names)):
+            buttons.append(SceneButton(self.game, pg.Rect(0, 0, 180, 35),
+                text=names[i][0],
+                scene=(names[i][1], names[i][2]),
+                center=(self.game.width // 2, 210+40*i),
                 text_size=Font.BUTTON_TEXT_SIZE
-            ),
-            Button(
-                self.game, pg.Rect(0, 0, 180, 35),
-                self.__start_menu, 'MENU',
-                center=(self.game.width // 2, 250),
-                text_size=Font.BUTTON_TEXT_SIZE
-            )
-        ]
+            ))
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
 
@@ -56,13 +54,8 @@ class Scene(base.Scene):
         self.__text_score.move_center(self.game.width // 2, 135)
         self.__text_highscore.text = f'High score: {self.game.records.data[-1]}'
         self.__text_highscore.move_center(self.game.width // 2, 165)
+        self.__create_buttons()
         self.__button_controller.reset_state()
-
-    def __start_menu(self) -> None:
-        self.game.scenes.set(self.game.scenes.MENU)
-
-    def __restart_game(self) -> None:
-        self.game.scenes.set(self.game.scenes.MAIN, reset=True)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:

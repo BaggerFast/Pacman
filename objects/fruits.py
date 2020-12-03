@@ -21,7 +21,7 @@ class Fruit(DrawableObject):
         self.rect = self.__anim.current_image.get_rect()
         self.rect.x = x - self.rect.width // 2
         self.rect.y = y - self.rect.height // 2
-        self.__scores = [100, 150, 200, 250, 300, 350, 400, 450]
+        self.__scores = [100, 300, 500, 700, 1000, 2000, 3000, 5000]
         self.__creating_scores()
         self.__drawing = False
         self.__eaten = None
@@ -58,10 +58,8 @@ class Fruit(DrawableObject):
         if pg.time.get_ticks() - self.__start_time >= 9000:  # 9000
             self.__drawing = True
             self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index()]
-        elif pg.time.get_ticks() - self.__start_time >= 2000:
+        if pg.time.get_ticks() - self.__start_time >= 300:
             self.__eaten = None
-        else:
-            self.__eaten = True
 
     def __change_image(self) -> None:  # __change_image
         self.__anim.change_cur_image((self.__anim.get_cur_index() + 1) % self.__anim.get_len_anim())
@@ -84,7 +82,7 @@ class Fruit(DrawableObject):
                 self.__change_image()
 
     def process_logic(self):
-        temp = self.__check_score()
+        temp = True
         if temp:
             self.__check_time()
 

@@ -10,11 +10,11 @@ class HighScore:
     __RECORDS_COUNT = 5
 
     def __init__(self, game) -> None:
-        self.__json_default = {str(index): [0 for _ in range(self.__RECORDS_COUNT)] for index in range(Maps.count)}
+        self.__json_default = [[0 for _ in range(self.__RECORDS_COUNT)] for _ in range(Maps.count)]
         self.__game = game
         self.__level_id = self.__game.level_id
         self.__json_data = self.load_json_record()
-        self.__data = sorted(self.__json_data[str(self.__level_id)])
+        self.__data = sorted(self.__json_data[self.__level_id])
 
     @property
     def data(self):
@@ -31,7 +31,7 @@ class HighScore:
         if len(record_table_json) < Maps.count:
             for level_id in Maps.keys():
                 if str(level_id) not in record_table_json:
-                    record_table_json[str(level_id)] = [0 for _ in range(self.__RECORDS_COUNT)]
+                    record_table_json[level_id] = [0 for _ in range(self.__RECORDS_COUNT)]
             with open(self.__json_filename, 'w') as file:
                 file.write(json.dumps(record_table_json))
         return record_table_json
@@ -41,12 +41,12 @@ class HighScore:
             file.write(json.dumps(self.__json_data))
 
     def add_new_record(self, score) -> None:
-        self.__json_data[str(self.__level_id)].append(score)
-        self.__json_data[str(self.__level_id)] = sorted(self.__json_data[str(self.__level_id)])
-        self.__json_data[str(self.__level_id)] = self.__json_data[str(self.__level_id)][-self.__RECORDS_COUNT:]
-        self.__data = self.__json_data[str(self.__level_id)]
+        self.__json_data[self.__level_id].append(score)
+        self.__json_data[self.__level_id] = sorted(self.__json_data[self.__level_id])
+        self.__json_data[self.__level_id] = self.__json_data[self.__level_id][-self.__RECORDS_COUNT:]
+        self.__data = self.__json_data[self.__level_id]
         self.save_json_record()
 
     def update_records(self) -> None:
         self.__level_id = self.__game.level_id
-        self.__data = sorted(self.__json_data[str(self.__level_id)])
+        self.__data = sorted(self.__json_data[self.__level_id])
