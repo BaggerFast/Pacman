@@ -1,6 +1,6 @@
 CELL_SIZE: int = 8
 
-UNLOCK_LEVELS: bool = False
+UNLOCK_LEVELS: bool = True
 DEBUG: bool = False
 INFINITY_LIVES: bool = False
 DISABLE_GHOSTS_MOVING: bool = False

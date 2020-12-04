@@ -67,7 +67,6 @@ class Font:
 class Maps(NamedTuple):
     class Tuple(NamedTuple):
         value: Union[str, int]
-
     class TupleList(NamedTuple):
         list: list
 
