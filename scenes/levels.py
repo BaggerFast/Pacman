@@ -1,14 +1,22 @@
 import pygame as pg
 
 from misc import Font
-from objects import ButtonController, Text
+from objects import ButtonController, Text, ImageObject
 from objects.button.button import LvlButton, SceneButton
 from scenes import base
 
 
 class Scene(base.Scene):
+
+    def pre_init(self):
+        self.last_map = self.game.level_id
+
     def create_objects(self) -> None:
+        self.__create_map_preview()
         self.__create_title()
+
+    def __create_map_preview(self) -> None:
+        self.objects.append(ImageObject(self.game, self.game.maps.surfaces[self.last_map], (123, 100)))
 
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
@@ -21,10 +29,10 @@ class Scene(base.Scene):
             buttons.append(
                 LvlButton(
                     game=self.game,
-                    geometry=pg.Rect(0, 0, 180, 40),
+                    geometry=pg.Rect(0, 0, 80, 40),
                     value=i,
                     text='LEVEL' + str(i + 1),
-                    center=(self.game.width // 2, 90 + 50 * i),
+                    center=(self.game.width // 2 - 50, 90 + 50 * i),
                     text_size=Font.BUTTON_TEXT_SIZE,
                     active=i in self.game.unlocked_levels)
             )
@@ -37,9 +45,9 @@ class Scene(base.Scene):
 
         for index in range(len(buttons)):
             if str(self.game.level_id + 1) == buttons[index].text[-1:]:
-                buttons[index] = LvlButton(self.game, pg.Rect(0, 0, 180, 40),
+                buttons[index] = LvlButton(self.game, pg.Rect(0, 0, 110, 40),
                                            value=buttons[index].value,
-                                           text='» ' + buttons[index].text + ' «',
+                                           text='-' + buttons[index].text + '-',
                                            center=(buttons[index].rect.centerx, buttons[index].rect.centery),
                                            text_size=Font.BUTTON_TEXT_SIZE)
         self.__button_controller = ButtonController(self.game, buttons)

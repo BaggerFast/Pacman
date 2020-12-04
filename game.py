@@ -1,6 +1,6 @@
 import pygame as pg
 from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path, UNLOCK_SKINS, FRUITS_COUNT, \
-    LevelLoader, Animator, Union, Skins, Storage
+    LevelLoader, Animator, Union, Skins, Storage, DEBUG
 from objects import Map
 from scenes import *
 
@@ -117,6 +117,9 @@ class Game:
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
+            if event.type == pg.MOUSEBUTTONDOWN and DEBUG:
+                print(event.pos)
+
             self.__process_exit_events(event)
             self.scenes.current.process_event(event)
 

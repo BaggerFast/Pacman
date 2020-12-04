@@ -15,6 +15,7 @@ class Map(DrawableObject):
         "ghost_door", "ghost_door_wall_left"
     ]
     tiles = []
+    __prerender_scale = 2.5
 
     def __init__(self, game, map_data, x=0, y=20) -> None:
         super().__init__(game)
@@ -59,7 +60,7 @@ class Map(DrawableObject):
 
     def prerender_map_surface(self) -> pg.Surface:
         surface = pg.Surface((224, 248))
-        result = pg.Surface((224 // 4, 248 // 4))
+        result = pg.Surface((224 // self.__prerender_scale, 248 // self.__prerender_scale))
         for y in range(len(self.map)):
             for x in range(len(self.map[y])):
                 temp_surface = self.tiles[self.map[y][x][0]]
