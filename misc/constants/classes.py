@@ -69,8 +69,7 @@ class Maps(NamedTuple):
         value: Union[str, int]
     class TupleList(NamedTuple):
         list: list
-
-    levels = TupleList(["original.json", "new_map.json", "new_new_map.json"]).list
+    levels = TupleList(["1_map.json", "2_map.json", "3_map.json", "4_map_mshp.json", "5_map.json", "6_map.json", "7_map.json", "8_map.json", "9_map.json", "10_map.json"]).list
     count = Tuple(len(levels)).value
 
     @staticmethod

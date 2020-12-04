@@ -59,6 +59,5 @@ class Scene(base.Scene):
             y -= 1
 
     def additional_event_check(self, event: pg.event.Event) -> None:
-        if self.game.current_scene == self:
-            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.scenes.set(self.game.scenes.MENU)
+        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+            self.game.scenes.set(self.game.scenes.MENU)

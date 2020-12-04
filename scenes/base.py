@@ -55,19 +55,4 @@ class Scene:
         pass
 
     def recreate(self) -> None:
-        self.create_static_objects()
-        self.create_objects()
-
-
-class SubScene(Scene):
-    def __init__(self, game, rect: pg.rect):
-        super(SubScene, self).__init__(game)
-        self.rect = rect
-        self.screen = pg.Surface(rect)
-
-    def process_draw(self) -> None:
-        super(SubScene, self).process_draw()
-        self.game.screen.blit(self.screen, self.rect)
-
-    def recreate(self) -> None:
-        self.__init__(self.game, self.rect)
+        self.__init__(self.game)
