@@ -45,7 +45,8 @@ class Scene(base.Scene):
     def __prepare_lives_meter(self) -> None:
         self.__last_hp = []
         for i in range(int(self.hp)):
-            hp_image = ImageObject(self.game, get_path('1', 'png', 'images', 'pacman', self.game.skin_name, 'walk'), (5 + i * 20, 270))
+            hp_image = ImageObject(self.game, get_path('1', 'png', 'images', 'pacman', self.game.skin_name, 'walk'),
+                                   (5 + i * 20, 270))
             hp_image.rotate(180)
             self.__last_hp.append(hp_image)
 
@@ -114,16 +115,22 @@ class Scene(base.Scene):
 
     def __create_hud(self):
         self.__scores_label_text = Text(
-            self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20))
+            self.game,
+            'SCORE' if self.game.skin_name != 'chrome' else 'MEMORY',
+            Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20))
 
         self.__scores_value_text = Text(
-            self.game, str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
+            self.game,
+            str(self.game.score),
+            Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
 
-        self.__high_scores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE,
-                                             rect=pg.Rect(130, 0, 20, 20))
+        self.__high_scores_label_text = Text(
+            self.game, 'HIGHSCORE',
+            Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20))
 
-        self.__high_scores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
-                                             rect=pg.Rect(130, 8, 20, 20))
+        self.__high_scores_value_text = Text(
+            self.game, str(self.game.records.data[-1]),
+            Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 8, 20, 20))
 
         self.objects.append(self.__scores_label_text)
         self.objects.append(self.__scores_value_text)
@@ -255,7 +262,7 @@ class Scene(base.Scene):
         super().process_draw()
         for i in range(len(self.__last_hp)):
             self.__last_hp[i].process_draw()
-        self.__scores_value_text.text = str(self.game.score)
+        self.__scores_value_text.text = str(self.game.score) + ('' if self.game.skin_name != 'chrome' else ' Mb')
 
     def on_deactivate(self) -> None:
         pass
