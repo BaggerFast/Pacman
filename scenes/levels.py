@@ -12,6 +12,7 @@ class Scene(base.Scene):
     __current_level = 0
 
     def create_static_objects(self):
+        __counter = int(Maps.level_name(self.game.level_id)[-1:])
         self.__create_title()
 
     def __create_title(self) -> None:
