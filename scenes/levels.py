@@ -7,6 +7,10 @@ from scenes import base
 
 
 class Scene(base.Scene):
+    __scroll = 0
+    __counter = 0
+    __current_level = 0
+
     def create_static_objects(self):
         self.__create_title()
 
@@ -28,7 +32,6 @@ class Scene(base.Scene):
                    text_size=Font.BUTTON_TEXT_SIZE,
                    active=i in self.game.unlocked_levels)
             )
-
         buttons.append(SceneButton(self.game, pg.Rect(0, 0, 180, 40),
                    text='MENU',
                    scene=(self.game.scenes.MENU, False),
@@ -42,10 +45,36 @@ class Scene(base.Scene):
                                         text='» ' + buttons[index].text + ' «',
                                         center=(buttons[index].rect.centerx, buttons[index].rect.centery),
                                         text_size=Font.BUTTON_TEXT_SIZE)
-        self.objects.append(ButtonController(self.game, buttons))
+        self.__button_controller = ButtonController(self.game, buttons)
+        self.objects.append(self.__button_controller)
+
+    def button_y_cord(self, y):
+        if 80 < self.__scroll + y < 290:
+            return self.__scroll+y
+        return 1000
+
+    def on_activate(self) -> None:
+        self.create_objects()
+        self.__button_controller.reset_state()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 self.game.scenes.set(self.game.scenes.MENU)
+                self.game.set_scene(self.game.scenes.MENU)
+            elif event.type == pg.KEYDOWN and event.key == pg.K_w and self.__counter > 0:
+                self.__counter -= 1
+                print(self.__counter)
+                self.__scroll += 50
+                self.objects = []
+                self.game.set_scene(self.game.scenes.LEVELS)
+                self.create_buttons()
+            elif event.type == pg.KEYDOWN and event.key == pg.K_s and self.__counter < 5:
+                self.__counter += 1
+                print(self.__counter)
+                self.__scroll -= 50
+                self.objects = []
+                self.game.set_scene(self.game.scenes.LEVELS)
+                self.create_buttons()
+
 
