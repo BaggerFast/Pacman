@@ -5,3 +5,5 @@ from .highscore import HighScore
 from .loader import LevelLoader
 from .path import *
 from .score import Score
+from .storage import Storage
+from .skins import Skins

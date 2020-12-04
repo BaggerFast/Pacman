@@ -19,12 +19,8 @@ class Pacman(Character):
     death_sound = Sounds.DEAD
 
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
-        self.__walk_anim = Animator(
-            get_list_path('png', 'images', 'pacman', game.skin, 'walk')
-        )
-        self.__dead_anim = Animator(
-            get_list_path('png', 'images', 'pacman', game.skin, 'dead'), 100, False, True
-        )
+        self.__walk_anim = game.skins.current.walk
+        self.__dead_anim = game.skins.current.dead
         super().__init__(game, self.__walk_anim, start_pos)
         self.dead = False
         self.__feature_rotate = "none"

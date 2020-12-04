@@ -34,10 +34,10 @@ class Map(DrawableObject):
             self.tiles.append(tile)
 
     def __corner_preprocess(self, x, y, temp_surface: pg.surface.Surface) -> pg.surface.Surface:
-        flip_x = self.map[y][x][1] // (CELL_SIZE//2)
+        flip_x = self.map[y][x][1] // (CELL_SIZE // 2)
         flip_y = False
         temp_surface = pg.transform.flip(temp_surface, flip_x, flip_y)
-        rotate_angle = self.map[y][x][1] % (CELL_SIZE//2) * -90
+        rotate_angle = self.map[y][x][1] % (CELL_SIZE // 2) * -90
         temp_surface = pg.transform.rotate(temp_surface, rotate_angle)
         return temp_surface
 
@@ -56,6 +56,17 @@ class Map(DrawableObject):
             for y in range(self.surface.get_height()):
                 if self.surface.get_at((x, y)) == Color.MAIN_MAP:
                     self.surface.set_at((x, y), self.color)  # Set the color of the pixel.
+
+    def prerender_map_surface(self) -> pg.Surface:
+        surface = pg.Surface((224, 248))
+        result = pg.Surface((224 // 4, 248 // 4))
+        for y in range(len(self.map)):
+            for x in range(len(self.map[y])):
+                temp_surface = self.tiles[self.map[y][x][0]]
+                if len(self.map[y][x]) == 2:
+                    temp_surface = self.__corner_preprocess(x, y, temp_surface)
+                surface.blit(temp_surface, (x * CELL_SIZE, y * CELL_SIZE))
+        return pg.transform.smoothscale(surface, result.get_size(), result)
 
     def process_draw(self) -> None:
         self.game.screen.blit(self.surface, (self.x, self.y))

@@ -134,6 +134,12 @@ class Button(BaseButton):
 
 
 class LvlButton(Button):
+    """
+    def process_draw(self) -> None:
+        super().process_draw()
+        if self.state == self.STATE_HOVER:
+            self.game.screen.blit(self.game.maps.surfaces[self.value], self.rect.topleft)
+    """
     def click(self):
         self.game.level_id = self.value
         self.game.records.update_records()

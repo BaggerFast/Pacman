@@ -45,7 +45,7 @@ class Scene(base.Scene):
     def __prepare_lives_meter(self) -> None:
         self.__last_hp = []
         for i in range(int(self.hp)):
-            hp_image = ImageObject(self.game, get_path('1', 'png', 'images', 'pacman', self.game.skin, 'walk'), (5 + i * 20, 270))
+            hp_image = ImageObject(self.game, get_path('1', 'png', 'images', 'pacman', self.game.skin_name, 'walk'), (5 + i * 20, 270))
             hp_image.rotate(180)
             self.__last_hp.append(hp_image)
 
