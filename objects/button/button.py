@@ -45,7 +45,7 @@ class Button(BaseButton):
         font=Font.DEFAULT,
         active: bool = True,
         value=None,
-        scene: tuple = (None, None)
+        scene: Tuple[object, bool] = (None, False)
     ) -> None:
 
         super().__init__(game, geometry, function)
