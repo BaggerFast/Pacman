@@ -89,4 +89,4 @@ class Scene(base.Scene):
         self.recreate()
 
     def __is_last_level(self) -> bool:
-        return (self.game.level_id + 1) < Maps.count
+        return (self.game.level_id + 1) < self.game.maps.count

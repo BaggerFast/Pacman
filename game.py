@@ -149,7 +149,7 @@ class Game:
         else:
             raise Exception(f"Name error. Skin name: {skin_name} doesn't exist")
 
-    def store_fruits(self, fruit_id: int = 0, value: int = 0) -> None:
+    def store_fruit(self, fruit_id: int = 0, value: int = 0) -> None:
         """
         :param fruit_id: fruit id
         :param value: count of fruits
