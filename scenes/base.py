@@ -35,7 +35,8 @@ class Scene:
         self.create_objects()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
-        pass
+        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+            self.game.scenes.set(self.game.scenes.MENU)
 
     def additional_logic(self) -> None:
         pass

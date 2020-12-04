@@ -11,9 +11,10 @@ from misc import Sounds, Maps
 
 class Scene(base.Scene):
     pg.mixer.init()
-    siren_sound = Sounds.SIREN
     intro_sound = Sounds.INTRO
-    gameover_sound = Sounds.GAMEOVER
+    intro_channel = pg.mixer.Channel(1)
+    gameover_channel = pg.mixer.Channel(2)
+    siren_channel = pg.mixer.Channel(3)
 
     def create_static_objects(self):
         self.__load_from_map()
@@ -140,11 +141,8 @@ class Scene(base.Scene):
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.__start_pause()
-
-    def __start_pause(self) -> None:
-        pg.mixer.pause()
-        self.game.scenes.set(self.game.scenes.PAUSE)
+            pg.mixer.pause()
+            self.game.scenes.set(self.game.scenes.PAUSE)
 
     def __change_prefered_ghost(self) -> None:
         self.__count_prefered_ghost += 1
@@ -202,15 +200,15 @@ class Scene(base.Scene):
                 self.ready_text.surface.set_alpha(0)
 
     def __play_music(self):
-        if not pg.mixer.Channel(3).get_busy() and not self.first_run:
-            pg.mixer.Channel(3).play(self.siren_sound)
+        if not pg.mixer.Channel(3).get_busy():
+            self.siren_channel.play(Sounds.SIREN)
 
     def process_logic(self) -> None:
         if not pg.mixer.Channel(1).get_busy():
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
                 pg.mixer.Channel(0).stop()
                 pg.mixer.Channel(1).stop()
-                pg.mixer.Channel(2).play(self.gameover_sound)
+                self.gameover_channel.play(Sounds.GAMEOVER)
                 self.game.scenes.set(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
@@ -234,7 +232,7 @@ class Scene(base.Scene):
             if self.__seeds.is_field_empty():
                 pg.mixer.Channel(0).stop()
                 pg.mixer.Channel(1).stop()
-                pg.mixer.Channel(2).play(self.gameover_sound)
+                self.gameover_channel.play(Sounds.GAMEOVER)
                 self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
         else:
             self.__start_label()
@@ -266,4 +264,4 @@ class Scene(base.Scene):
         self.game.score.reset()
         self.game.scenes.MAIN.recreate()
         self.timer = pg.time.get_ticks() / 1000
-        pg.mixer.Channel(1).play(self.intro_sound)
+        self.intro_channel.play(self.intro_sound)

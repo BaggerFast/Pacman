@@ -57,11 +57,6 @@ class Scene(base.Scene):
         self.__text_highscore.move_center(self.game.width // 2, 165)
         self.objects.append(self.__text_highscore)
 
-    def additional_event_check(self, event: pg.event.Event) -> None:
-        if self.game.current_scene == self:
-            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.scenes.set(self.game.scenes.MENU)
-
     def __save_record(self) -> None:
         self.game.records.add_new_record(int(self.game.score))
 
