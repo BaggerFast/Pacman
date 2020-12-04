@@ -2,18 +2,19 @@ import json
 import os
 from json import JSONDecodeError
 
-from misc import ROOT_DIR, create_file_if_not_exist, FRUITS_COUNT
+from misc import ROOT_DIR, create_file_if_not_exist, FRUITS_COUNT, HIGHSCORES_COUNT
 
 
 class Storage:
     __storage_filepath = os.path.join(ROOT_DIR, "saves", "storage.json")
 
-    def __init__(self) -> None:
+    def __init__(self, game) -> None:
         self.last_level_id = 0
         self.last_skin = "default"
         self.unlocked_levels = [0]
         self.unlocked_skins = ["default"]
         self.eaten_fruits = [0 for _ in range(FRUITS_COUNT)]
+        self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(game.maps.count)]
         self.load()
 
     def save(self) -> None:

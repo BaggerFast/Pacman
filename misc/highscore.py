@@ -1,19 +1,26 @@
-import json
 import os.path
 
-from misc.path import create_file_if_not_exist  # НЕ УДАЛЯТЬ .path (Без него ошибка из-за зацикленного импорта)
+from misc import HIGHSCORES_COUNT, List
 
 
 class HighScore:
     __json_filename = os.path.join('saves', 'records.json')
-    __RECORDS_COUNT = 5
 
     def __init__(self, game) -> None:
         self.game = game
-        self.__json_default = [[0 for _ in range(self.__RECORDS_COUNT)] for _ in range(self.game.maps.count)]
         self.__level_id = self.game.level_id
-        self.__json_data = self.load_json_record()
-        self.__data = sorted(self.__json_data[self.__level_id])
+        for _ in range(len(self.highscores), self.game.maps.count):
+            self.highscores.append([0 for _ in range(HIGHSCORES_COUNT)])
+
+        self.__data = sorted(self.highscores[self.__level_id])
+
+    @property
+    def highscores(self) -> List[List[int]]:
+        return self.game.highscores
+
+    @highscores.setter
+    def highscores(self, value):
+        self.game.highscores = value
 
     @property
     def data(self):
@@ -23,27 +30,12 @@ class HighScore:
     def level_id(self):
         return self.__level_id
 
-    def load_json_record(self) -> dict:
-        create_file_if_not_exist(self.__json_filename, json.dumps(self.__json_default))
-        with open(self.__json_filename, 'r') as file:
-            record_table_json = json.load(file)
-        for _ in range(len(record_table_json), self.game.maps.count):
-            record_table_json.append([0 for _ in range(self.__RECORDS_COUNT)])
-        with open(self.__json_filename, 'w') as file:
-            file.write(json.dumps(record_table_json))
-        return record_table_json
-
-    def save_json_record(self) -> None:
-        with open(self.__json_filename, 'w') as file:
-            file.write(json.dumps(self.__json_data))
-
     def add_new_record(self, score) -> None:
-        self.__json_data[self.__level_id].append(score)
-        self.__json_data[self.__level_id] = sorted(self.__json_data[self.__level_id])
-        self.__json_data[self.__level_id] = self.__json_data[self.__level_id][-self.__RECORDS_COUNT:]
-        self.__data = self.__json_data[self.__level_id]
-        self.save_json_record()
+        self.highscores[self.__level_id].append(score)
+        self.highscores[self.__level_id] = sorted(self.highscores[self.__level_id])
+        self.highscores[self.__level_id] = self.highscores[self.__level_id][-HIGHSCORES_COUNT:]
+        self.game.highscores = self.highscores
 
     def update_records(self) -> None:
         self.__level_id = self.game.level_id
-        self.__data = sorted(self.__json_data[self.__level_id])
+        self.__data = sorted(self.highscores[self.__level_id])

@@ -76,6 +76,7 @@ class Game:
     pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
+        self.maps = self.__Maps(self)
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.__clock = pg.time.Clock()
         self.__game_over = False
@@ -84,16 +85,16 @@ class Game:
         self.skins = Skins()
         self.score = Score()
 
-        self.__storage = Storage()
+        self.__storage = Storage(self)
         self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
         self.level_id = int(self.__storage.last_level_id) if int(
             self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
         self.unlocked_skins = self.skins.all_skins if UNLOCK_SKINS else self.__storage.unlocked_skins
         self.skin_name = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
         self.eaten_fruits = self.__storage.eaten_fruits
+        self.highscores = self.__storage.highscores
 
         self.skins.current = self.skin_name
-        self.maps = self.__Maps(self)
         self.records = HighScore(self)
         self.scenes = self.__Scenes(self)
         self.scenes.set(self.scenes.MENU)
@@ -142,6 +143,7 @@ class Game:
             self.__storage.unlocked_levels = self.unlocked_levels
         if not UNLOCK_SKINS:
             self.__storage.unlocked_skins = self.unlocked_skins
+        self.__storage.highscores = self.highscores
         self.__storage.save()
         self.__game_over = True
         print('Bye bye')
