@@ -57,7 +57,7 @@ class Scene(base.Scene):
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.game.scenes.MENU)
-        elif event.type == pg.KEYDOWN and (event.key == pg.K_DOWN or event.key == pg.K_s) and self.__counter < Maps.count-3:
+        elif event.type == pg.KEYDOWN and (event.key == pg.K_DOWN or event.key == pg.K_s) and self.__counter < Maps.count-1:
             self.__counter += 1
             self.__scroll -= 50
             self.game.scenes.set(self.game.scenes.LEVELS)

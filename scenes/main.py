@@ -10,8 +10,8 @@ from misc import Sounds, Maps
 
 
 class Scene(base.Scene):
-    pg.mixer.init()
     intro_sound = Sounds.INTRO
+    pacman_channel = pg.mixer.Channel(0)
     intro_channel = pg.mixer.Channel(1)
     gameover_channel = pg.mixer.Channel(2)
     siren_channel = pg.mixer.Channel(3)
@@ -19,22 +19,26 @@ class Scene(base.Scene):
     def create_static_objects(self):
         self.__load_from_map()
         self.__create_sounds()
+        self.__create_static_text()
+        self.__create_start_anim()
+        self.__create_hud()
+        self.__create_health()
         self.__pre_init()
+        self.create_objects()
 
     def __pre_init(self):
         self.__timer_reset_pacman = 0
         self.__seeds_eaten = 0
         self.__max_seeds_eaten_to_prefered_ghost = 7
-
         self.__work_ghost_counters = True
         self.__first_run_ghost = True
-        self.first_run = True
-
-        self.hp = Health(1, 3)
         self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
-        self.__create_static_text()
-        self.create_objects()
+
+    def __create_health(self):
+        self.hp = Health(3, 3)
+        self.__hp_hud = []
+        self.__prepare_lives_meter()
 
     def __create_static_text(self):
         self.__scores_label_text = Text(
@@ -57,29 +61,41 @@ class Scene(base.Scene):
         self.__map = Map(self.game, self.__map_data)
 
     def __prepare_lives_meter(self) -> None:
-        self.__last_hp = []
+        self.__hp_hud = []
         for i in range(int(self.hp)):
             hp_image = ImageObject(self.game, get_path('1', 'png', 'images', 'pacman', 'walk'), (5 + i * 20, 270))
             hp_image.rotate(180)
-            self.__last_hp.append(hp_image)
-
-    def create_objects(self) -> None:
-        self.objects = []
-        self.__create_map()
-        self.__create_hud()
-
-        self.objects.append(self.fruit)
-        self.pacman = Pacman(self.game, self.__player_position)
-        self.objects.append(self.pacman)
-
-        self.__prepare_lives_meter()
-        self.__create_ghost()
-        self.__create_start_anim()
+            self.__hp_hud.append(hp_image)
 
     def __create_sounds(self):
         self.timer = 0
         self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
         self.intro_sound.set_volume(0.5)
+
+    def __create_start_anim(self):
+        self.text = ['READY', 'GO!']
+        for i in range(2):
+            self.text[i] = Text(self.game, self.text[i], 30, font=Font.TITLE, rect=pg.Rect(20, 0, 20, 20))
+            self.text[i].move_center(self.game.width // 2, self.game.height // 2)
+            self.text[i].surface.set_alpha(0)
+            self.static_object.append(self.text[i])
+        self.state_text = 1
+
+    def create_objects(self) -> None:
+        self.objects = []
+        self.siren_channel.unpause()
+        #self.text[len(self.text)-1].surface.set_alpha(0)
+        self.__create_map()
+        self.__create_ghost()
+
+        self.objects.append(self.fruit)
+        self.pacman = Pacman(self.game, self.__player_position)
+        self.objects.append(self.pacman)
+
+    def __create_map(self):
+        self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
+        self.objects.append(self.__map)
+        self.objects.append(self.__seeds)
 
     def __create_ghost(self):
         self.blinky = Blinky(self.game, self.__ghost_positions[3])
@@ -98,42 +114,18 @@ class Scene(base.Scene):
         self.__prefered_ghost = self.pinky
         self.__count_prefered_ghost = 0
 
-        self.objects.append(self.blinky)
-        self.objects.append(self.pinky)
-        self.objects.append(self.inky)
-        self.objects.append(self.clyde)
-
-        self.objects.append(self.blinky.gg_text)
-        self.objects.append(self.pinky.gg_text)
-        self.objects.append(self.inky.gg_text)
-        self.objects.append(self.clyde.gg_text)
-
-    def __create_map(self):
-        self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
-        self.objects.append(self.__map)
-        self.objects.append(self.__seeds)
-
-    def __create_start_anim(self):
-        self.ready_text = Text(self.game, 'Ready', 30, font=Font.TITLE,
-                               rect=pg.Rect(20, 0, 20, 20))
-        self.ready_text.move_center(self.game.width // 2, self.game.height // 2)
-        self.go_text = Text(self.game, 'GO!', 30, font=Font.TITLE,
-                            rect=pg.Rect(20, 0, 20, 20))
-        self.go_text.move_center(self.game.width // 2, self.game.height // 2)
-        self.state_text = 1
-        self.ready_text.surface.set_alpha(0)
-        self.go_text.surface.set_alpha(0)
-        self.objects.append(self.ready_text)
-        self.objects.append(self.go_text)
+        for ghost in self.__ghosts:
+            self.objects.append(ghost)
+            self.objects.append(ghost.gg_text)
 
     def __create_hud(self):
         self.__high_scores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
                                              rect=pg.Rect(130, 8, 20, 20))
+        self.static_object.append(self.__high_scores_value_text)
+
         self.__scores_value_text = Text(
             self.game, str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
-
-        self.objects.append(self.__scores_value_text)
-        self.objects.append(self.__high_scores_value_text)
+        self.static_object.append(self.__scores_value_text)
 
     @property
     def movements_data(self):
@@ -161,6 +153,8 @@ class Scene(base.Scene):
                 if ghost.collision_check(self.pacman)[1]:
                     self.__timer_reset_pacman = pg.time.get_ticks()
                     if not self.pacman.dead:
+                        self.pacman_channel.play(Sounds.DEAD)
+                        self.siren_channel.pause()
                         self.pacman.death()
                         self.__prepare_lives_meter()
                     for ghost2 in self.__ghosts:
@@ -189,32 +183,29 @@ class Scene(base.Scene):
             self.state_text *= -1
         if self.state_text == 1:
             if current_time - self.timer < self.intro_sound.get_length() / 4 * 3:
-                self.ready_text.surface.set_alpha(255)
+                self.text[0].surface.set_alpha(255)
             else:
-                self.ready_text.surface.set_alpha(0)
-                self.go_text.surface.set_alpha(255)
+                self.text[0].surface.set_alpha(0)
+                self.text[1].surface.set_alpha(255)
         else:
             if current_time - self.timer < self.intro_sound.get_length() / 4 * 3:
-                self.ready_text.surface.set_alpha(0)
+                self.text[0].surface.set_alpha(0)
             else:
-                self.ready_text.surface.set_alpha(0)
+                self.text[1].surface.set_alpha(0)
 
     def __play_music(self):
-        if not pg.mixer.Channel(3).get_busy():
+        if not self.siren_channel.get_busy():
             self.siren_channel.play(Sounds.SIREN)
 
     def process_logic(self) -> None:
-        if not pg.mixer.Channel(1).get_busy():
+        if not self.intro_channel.get_busy():
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
-                pg.mixer.Channel(0).stop()
-                pg.mixer.Channel(1).stop()
+                self.pacman_channel.stop()
                 self.gameover_channel.play(Sounds.GAMEOVER)
                 self.game.scenes.set(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
             self.__process_collision()
-            self.go_text.surface.set_alpha(0)
-            self.ready_text.surface.set_alpha(0)
             if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
                 self.create_objects()
                 self.__seeds_eaten = 0
@@ -230,8 +221,6 @@ class Scene(base.Scene):
                     self.__max_seeds_eaten_to_prefered_ghost = 32
 
             if self.__seeds.is_field_empty():
-                pg.mixer.Channel(0).stop()
-                pg.mixer.Channel(1).stop()
                 self.gameover_channel.play(Sounds.GAMEOVER)
                 self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
         else:
@@ -245,19 +234,21 @@ class Scene(base.Scene):
             if ghost != self.__prefered_ghost:
                 ghost.update_timer()
 
-    def process_draw(self) -> None:
-        super().process_draw()
-        for i in self.__last_hp:
-            i.process_draw()
+    def additional_draw(self) -> None:
+        super().additional_draw()
+        for hp in self.__hp_hud:
+            hp.process_draw()
 
     def additional_logic(self) -> None:
         self.__scores_value_text.text = str(self.game.score)
+        self.__prepare_lives_meter()
 
     def on_activate(self) -> None:
-        pg.mixer.Channel(0).unpause()
-        pg.mixer.Channel(1).unpause()
+        self.intro_channel.unpause()
         if self.pacman.animator != self.pacman.dead_anim:
-            pg.mixer.Channel(3).unpause()
+            self.siren_channel.unpause()
+        if self.pacman.animator == self.pacman.dead_anim:
+            self.pacman_channel.unpause()
 
     def on_reset(self) -> None:
         pg.mixer.stop()

@@ -15,9 +15,6 @@ class Pacman(Character):
         pg.K_d: 'right'
     }
 
-    pg.mixer.init()
-    death_sound = Sounds.DEAD
-
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
         self.__walk_anim = Animator(
             get_list_path('png', 'images', 'pacman', 'walk')
@@ -28,7 +25,7 @@ class Pacman(Character):
         super().__init__(game, self.__walk_anim, start_pos)
         self.dead = False
         self.__feature_rotate = "none"
-        pg.mixer.Channel(3).unpause()
+
 
     @property
     def dead_anim(self):
@@ -54,8 +51,6 @@ class Pacman(Character):
             super().process_logic()
 
     def death(self) -> None:
-        pg.mixer.Channel(3).pause()
-        pg.mixer.Channel(0).play(self.death_sound)
         if not INFINITY_LIVES:
             self.game.current_scene.hp -= 1
         self.animator = self.__dead_anim
