@@ -56,14 +56,14 @@ class Scene(base.Scene):
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.game.scenes.MENU)
-        elif event.type == pg.KEYDOWN and event.key == pg.K_DOWN and self.__counter < Maps.count-3:
+        elif event.type == pg.KEYDOWN and (event.key == pg.K_DOWN or event.key == pg.K_s) and self.__counter < Maps.count-3:
             self.__counter += 1
             self.__scroll -= 50
             self.game.scenes.set(self.game.scenes.LEVELS)
             self.__button_controller.reset_state()
             for i in range(self.__counter+1):
                 self.__button_controller.select_next_button()
-        elif event.type == pg.KEYDOWN and event.key == pg.K_UP and self.__counter > 0:
+        elif event.type == pg.KEYDOWN and (event.key == pg.K_UP or event.key == pg.K_w) and self.__counter > 0:
             self.__counter -= 1
             self.__scroll += 50
             self.game.scenes.set(self.game.scenes.LEVELS)
