@@ -34,9 +34,9 @@ class Scene(base.Scene):
                 a[key].update_volume()
 
     def create_title(self) -> None:
-        text = ["SETTING"]
+        text = ["SETTINGS"]
         for i in range(len(text)):
-            text[i] = Text(self.game, text[i], 40, font=Font.TITLE)
+            text[i] = Text(self.game, text[i], 30, font=Font.TITLE)
             text[i].move_center(self.game.width // 2, 30 + i * 40)
             self.static_object.append(text[i])
 

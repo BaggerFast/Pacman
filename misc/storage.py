@@ -15,6 +15,7 @@ class Storage:
         self.unlocked_skins = ["default"]
         self.eaten_fruits = [0 for _ in range(FRUITS_COUNT)]
         self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(game.maps.count)]
+        self.settings = {"mute": False}
         self.load()
 
     def save(self) -> None:

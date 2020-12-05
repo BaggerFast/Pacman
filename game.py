@@ -4,7 +4,7 @@ import pygame as pg
 from PIL import Image, ImageFilter
 
 from misc import Sounds
-from misc.SoundController import SoundController
+from misc.sound_controller import SoundController
 from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path, UNLOCK_SKINS, FRUITS_COUNT, \
     LevelLoader, Skins, Storage, DEBUG
 from objects import Map
@@ -64,7 +64,11 @@ class Game:
             self.levels = []
             self.count = 0
             self.read_levels()
-            self.surfaces = self.prerender_surfaces()
+            self.__surfaces = self.prerender_surfaces()
+
+        @property
+        def surfaces(self):
+            return self.__surfaces
 
         @staticmethod
         def level_name(level_id: int = 0):
@@ -110,6 +114,14 @@ class Game:
         self.skins = Skins()
         self.score = Score()
 
+        self.read_from_storage()
+
+        self.skins.current = self.skin_name
+        self.records = HighScore(self)
+        self.scenes = self.__Scenes(self)
+        self.scenes.set(self.scenes.MENU)
+
+    def read_from_storage(self):
         self.__storage = Storage(self)
         self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
         self.level_id = int(self.__storage.last_level_id) if int(
@@ -118,11 +130,19 @@ class Game:
         self.skin_name = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
         self.eaten_fruits = self.__storage.eaten_fruits
         self.highscores = self.__storage.highscores
+        self.settings.MUTE = self.__storage.settings["mute"]
 
-        self.skins.current = self.skin_name
-        self.records = HighScore(self)
-        self.scenes = self.__Scenes(self)
-        self.scenes.set(self.scenes.MENU)
+    def save_to_storage(self):
+        self.__storage.settings["mute"] = self.settings.MUTE
+        self.__storage.last_level_id = self.level_id
+        self.__storage.last_skin = self.skin_name
+        self.__storage.eaten_fruits = self.eaten_fruits
+        if not UNLOCK_LEVELS:
+            self.__storage.unlocked_levels = self.unlocked_levels
+        if not UNLOCK_SKINS:
+            self.__storage.unlocked_skins = self.unlocked_skins
+        self.__storage.highscores = self.highscores
+        self.__storage.save()
 
     @property
     def current_scene(self):
@@ -178,15 +198,7 @@ class Game:
             self.__clock.tick(self.__FPS)
 
     def exit_game(self) -> None:
-        self.__storage.last_level_id = self.level_id
-        self.__storage.last_skin = self.skin_name
-        self.__storage.eaten_fruits = self.eaten_fruits
-        if not UNLOCK_LEVELS:
-            self.__storage.unlocked_levels = self.unlocked_levels
-        if not UNLOCK_SKINS:
-            self.__storage.unlocked_skins = self.unlocked_skins
-        self.__storage.highscores = self.highscores
-        self.__storage.save()
+        self.save_to_storage()
         self.__game_over = True
         print('Bye bye')
 

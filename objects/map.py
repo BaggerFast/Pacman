@@ -15,7 +15,6 @@ class Map(DrawableObject):
         "ghost_door", "ghost_door_wall_left"
     ]
     tiles = []
-    __prerender_scale = 2.5
 
     def __init__(self, game, map_data, x=0, y=20) -> None:
         super().__init__(game)
@@ -60,15 +59,14 @@ class Map(DrawableObject):
                     self.surface.set_at((x, y), self.color)  # Set the color of the pixel.
 
     def prerender_map_surface(self) -> pg.Surface:
-        surface = pg.Surface((224, 248))
-        result = pg.Surface((224 // self.__prerender_scale, 248 // self.__prerender_scale))
+        surface = pg.Surface(self.__size)
         for y in range(len(self.map)):
             for x in range(len(self.map[y])):
                 temp_surface = self.tiles[self.map[y][x][0]]
                 if len(self.map[y][x]) == 2:
                     temp_surface = self.__corner_preprocess(x, y, temp_surface)
                 surface.blit(temp_surface, (x * CELL_SIZE, y * CELL_SIZE))
-        return pg.transform.smoothscale(surface, result.get_size(), result)
+        return surface
 
     def process_draw(self) -> None:
         self.game.screen.blit(self.surface, (self.x, self.y))
