@@ -12,7 +12,6 @@ from scenes import base
 class Scene(base.Scene):
     # Константы
     __button_size = 50
-    __scroll_length = 7 * __button_size
     __out_of_field = 1000
     __top_field_y = 80
     __bottom_field_y = 290
@@ -43,8 +42,8 @@ class Scene(base.Scene):
 
         if self.__scroll > 0:
             self.__scroll = 0
-        if self.__scroll < -self.__scroll_length:
-            self.__scroll = -self.__scroll_length
+        if self.__scroll < -(self.__button_size*7):
+            self.__scroll = -(self.__button_size*7)
 
         self.__unlocked_level = self.unlocked()
 
