@@ -1,3 +1,4 @@
+from copy import copy
 from typing import Union, Dict
 import pygame as pg
 
@@ -9,9 +10,17 @@ class Skins:
 
         def __init__(self, skin_name):
             self.name = skin_name
-            self.walk = Animator(get_list_path('png', 'images', 'pacman', self.name, 'walk'))
-            self.dead = Animator(get_list_path('png', 'images', 'pacman', self.name, 'dead'), 100, False, True)
+            self.__walk = Animator(get_list_path('png', 'images', 'pacman', self.name, 'walk'))
+            self.__dead = Animator(get_list_path('png', 'images', 'pacman', self.name, 'dead'), 100, False, True)
             self.__surface = self.prerender_surface()
+
+        @property
+        def walk(self):
+            return copy(self.__walk)
+
+        @property
+        def dead(self):
+            return copy(self.__dead)
 
         @property
         def surface(self):
