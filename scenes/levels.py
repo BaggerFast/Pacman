@@ -13,7 +13,6 @@ class Scene(base.Scene):
     # Константы
     __button_size = 50
     __scroll_length = 7 * __button_size
-    __levels_amount = 10
     __out_of_field = 1000
     __top_field_y = 80
     __bottom_field_y = 290
@@ -28,7 +27,7 @@ class Scene(base.Scene):
     class LvlButton(Button):
         def __init__(self, **args):
             self.value = args.pop("value")
-            super(Scene.LvlButton, self).__init__(**args)
+            super().__init__(**args)
 
         def click(self):
             self.game.level_id = self.value

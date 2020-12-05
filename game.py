@@ -10,6 +10,7 @@ class Game:
     class Settings:
         def __init__(self):
             self.MUTE = False
+            self.FUN = False
 
     class Music:
         def __init__(self, game):
