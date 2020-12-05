@@ -1,8 +1,11 @@
 import pygame as pg
 
 from objects import ButtonController, Text
+from objects import ButtonController, Text
+from objects.button.button import SceneButton
 from scenes import base
 from misc import Font, Maps
+from misc import Font
 
 
 class Scene(base.Scene):

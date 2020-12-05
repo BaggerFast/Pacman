@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Union
 
 import pygame as pg
 
@@ -6,14 +6,17 @@ from objects import DrawableObject
 
 
 class ImageObject(DrawableObject):
-    def __init__(self, game, filename: str = None, size: Tuple[int, int] = (0, 0)) -> None:
+    def __init__(self, game, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0)) -> None:
         super().__init__(game)
-        if filename:
-            self.__filename = filename
+        if isinstance(image, str):
+            self.__filename = image
+            self.image = pg.image.load(self.__filename).convert_alpha()
+        elif isinstance(image, pg.Surface):
+            self.image = image
         self.image = pg.image.load(self.__filename).convert_alpha()
 
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = size
+        self.rect.x, self.rect.y = pos
 
     def scale(self, x, y) -> None:
         self.image = pg.transform.scale(self.image, (x, y))

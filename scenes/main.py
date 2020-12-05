@@ -8,7 +8,7 @@ from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import base
 from objects.fruits import Fruit
-from misc import Sounds, Maps
+from misc import Sounds
 
 
 class Scene(base.Scene):
@@ -49,7 +49,7 @@ class Scene(base.Scene):
         self.static_object.append(self.__high_scores_label_text)
 
     def __load_from_map(self):
-        self.__loader = LevelLoader(Maps.levels[self.game.level_id])
+        self.__loader = LevelLoader(self.game.maps.levels[self.game.level_id])
         self.__map_data = self.__loader.get_map_data()
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()
@@ -62,7 +62,8 @@ class Scene(base.Scene):
     def __prepare_lives_meter(self) -> None:
         self.__hp_hud = []
         for i in range(int(self.hp)):
-            hp_image = ImageObject(self.game, get_path('1', 'png', 'images', 'pacman', 'walk'), (5 + i * 20, 270))
+            hp_image = ImageObject(self.game, get_path('1', 'png', 'images', 'pacman', self.game.skin_name, 'walk'),
+                                   (5 + i * 20, 270))
             hp_image.rotate(180)
             self.__hp_hud.append(hp_image)
 

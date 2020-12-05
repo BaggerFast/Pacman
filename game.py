@@ -6,16 +6,19 @@ from PIL import Image, ImageFilter, ImageDraw
 from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS, Sounds
 from misc.SoundController import SoundController
 from misc.storage import Storage
+from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path, UNLOCK_SKINS, FRUITS_COUNT, \
+    LevelLoader, Animator, Union, Skins, Storage, DEBUG
+from objects import Map
 from scenes import *
 
 
 class Game:
-    class Settings:
+    class __Settings:
         def __init__(self):
             self.MUTE = False
             self.FUN = False
 
-    class Music:
+    class __Music:
         def __init__(self, game):
             self.pacman = SoundController(game, sound=Sounds.DEAD)
             self.click = SoundController(game, sound=Sounds.CLICK)
@@ -26,7 +29,7 @@ class Game:
             self.fruit = SoundController(game, channel=4, sound=Sounds.FRUIT)
 
 
-    class Scenes:
+    class __Scenes:
         def __init__(self, game):
             self.PAUSE = pause.Scene(game)
             self.MENU = menu.Scene(game)
@@ -57,28 +60,70 @@ class Game:
                 self.__current.on_reset()
             self.__current.on_activate()
 
+    class __Maps:
+        def __init__(self, game):
+            self.game = game
+            self.levels = []
+            self.count = 0
+            self.read_levels()
+            self.surfaces = self.prerender_surfaces()
+
+        @staticmethod
+        def level_name(level_id: int = 0):
+            return f"level_{level_id + 1}"
+
+        def __load_from_map(self, level_id: int = 0) -> None:
+            self.__loader = LevelLoader(self.levels[level_id])
+            self.__map_data = self.__loader.get_map_data()
+            self.__map = Map(self.game, self.__map_data)
+
+        def keys(self) -> List[int]:
+            return [i for i in range(self.count)]
+
+        def read_levels(self) -> None:
+            self.levels = get_list_path("json", "maps")
+            self.count = len(self.levels)
+
+        def prerender_surfaces(self) -> List[pg.Surface]:
+            surfaces = []
+            for level_id in range(self.count):
+                self.__load_from_map(level_id)
+                surfaces.append(self.__map.prerender_map_surface())
+            return surfaces
+
     __size = width, height = 224, 285
-    __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'walk'))
+    __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'default', 'walk'))
     __FPS = 60
     __def_level_id = 0
+    __def_skin = "default"
     pg.display.set_caption('PACMAN')
     pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
-        self.__storage = Storage()
-        self.unlocked_levels = Maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
-        self.level_id = int(self.__storage.last_level) if int(self.__storage.last_level) in self.unlocked_levels else self.__def_level_id
+        self.maps = self.__Maps(self)
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
-        self.score = Score()
-        self.records = HighScore(self)
-        self.settings = self.Settings()
-        self.sounds = self.Music(self)
-        self.scenes = self.Scenes(self)
+        self.settings = self.__Settings()
+        self.sounds = self.__Music(self)
         self.__clock = pg.time.Clock()
         self.__game_over = False
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
+        self.skins = Skins()
+        self.score = Score()
+
+        self.__storage = Storage(self)
+        self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
+        self.level_id = int(self.__storage.last_level_id) if int(
+            self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
+        self.unlocked_skins = self.skins.all_skins if UNLOCK_SKINS else self.__storage.unlocked_skins
+        self.skin_name = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
+        self.eaten_fruits = self.__storage.eaten_fruits
+        self.highscores = self.__storage.highscores
+
+        self.skins.current = self.skin_name
+        self.records = HighScore(self)
+        self.scenes = self.__Scenes(self)
         self.scenes.set(self.scenes.MENU)
 
     @property
@@ -99,6 +144,9 @@ class Game:
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
+            if event.type == pg.MOUSEBUTTONDOWN and DEBUG:
+                print(event.pos)
+
             self.__process_exit_events(event)
             self.scenes.current.process_event(event)
 
@@ -131,18 +179,44 @@ class Game:
             self.__clock.tick(self.__FPS)
 
     def exit_game(self) -> None:
-        self.__storage.last_level = self.level_id
+        self.__storage.last_level_id = self.level_id
+        self.__storage.last_skin = self.skin_name
+        self.__storage.eaten_fruits = self.eaten_fruits
         if not UNLOCK_LEVELS:
             self.__storage.unlocked_levels = self.unlocked_levels
+        if not UNLOCK_SKINS:
+            self.__storage.unlocked_skins = self.unlocked_skins
+        self.__storage.highscores = self.highscores
         self.__storage.save()
         self.__game_over = True
+        print('Bye bye')
 
     def unlock_level(self, level_id: int = 0) -> None:
         """
-        :param level_id:
+        :param level_id: level id
         """
-        if level_id in Maps.keys():
+        if level_id in self.maps.keys():
             if not UNLOCK_LEVELS and level_id not in self.unlocked_levels:
                 self.unlocked_levels.append(level_id)
         else:
-            raise Exception(f"id error. id: {level_id} doesn't exist")
+            raise Exception(f"id error. Map id: {level_id} doesn't exist")
+
+    def unlock_skin(self, skin_name: str = 0) -> None:
+        """
+        :param skin_name: skin name
+        """
+        if skin_name in self.skins.all_skins:
+            if not UNLOCK_SKINS and skin_name not in self.unlocked_skins:
+                self.unlocked_skins.append(skin_name)
+        else:
+            raise Exception(f"Name error. Skin name: {skin_name} doesn't exist")
+
+    def store_fruit(self, fruit_id: int = 0, value: int = 0) -> None:
+        """
+        :param fruit_id: fruit id
+        :param value: count of fruits
+        """
+        if fruit_id in range(FRUITS_COUNT):
+            self.eaten_fruits[fruit_id] = value
+        else:
+            raise Exception(f"id error. Fruit id: {fruit_id} doesn't exist")

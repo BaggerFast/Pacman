@@ -95,3 +95,7 @@ class ButtonController(DrawableObject):
     def process_draw(self) -> None:
         for button in self.buttons:
             button.process_draw()
+
+    def process_logic(self) -> None:
+        for button in self.buttons:
+            button.process_logic()
