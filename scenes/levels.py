@@ -17,9 +17,6 @@ class Scene(base.Scene):
             self.__counter += 1
             self.__scroll -= 50
 
-    def activate_scroll(self, event: pg.event.Event):
-        self.__is_scroll_active = True
-
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
@@ -60,11 +57,9 @@ class Scene(base.Scene):
         return 1000
 
     def additional_event_check(self, event: pg.event.Event) -> None:
-        self.activate_scroll(event)
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.game.scenes.MENU)
-        elif event.type == pg.KEYDOWN and (
-            event.key == pg.K_DOWN or event.key == pg.K_s):
+        elif event.type == pg.KEYDOWN and (event.key == pg.K_DOWN or event.key == pg.K_s) and self.__is_scroll_active:
             if self.__counter == 10:
                 self.__counter = -1
                 self.__scroll += 350
@@ -73,21 +68,23 @@ class Scene(base.Scene):
                 self.__scroll -= 50
             print(self.__counter)
             self.game.scenes.set(self.game.scenes.LEVELS)
-            self.__button_controller.reset_state()
             for i in range(self.__counter + 1):
                 self.__button_controller.select_next_button()
 
-        elif event.type == pg.KEYDOWN and (event.key == pg.K_UP or event.key == pg.K_w):
+        elif event.type == pg.KEYDOWN and (event.key == pg.K_UP or event.key == pg.K_w) and self.__is_scroll_active:
             if self.__counter == 0:
                 self.__counter = 11
-                self.__scroll -= 350
+                self.__scroll -= 400
             self.__counter -= 1
-            if 8 > self.__counter > 0:
+            if 8 > self.__counter > -1:
                 self.__scroll += 50
 
             print(self.__counter)
             self.game.scenes.set(self.game.scenes.LEVELS)
-            self.__button_controller.reset_state()
             for i in range(self.__counter + 1):
                 self.__button_controller.select_next_button()
-
+        elif event.type == pg.KEYDOWN and (
+            event.key == pg.K_UP or event.key == pg.K_DOWN or event.key == pg.K_w or event.key == pg.K_s) and not self.__is_scroll_active:
+            for i in range(self.__counter + 1):
+                self.__button_controller.select_next_button()
+            self.__is_scroll_active = True

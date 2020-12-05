@@ -23,6 +23,10 @@ class ButtonController(DrawableObject):
         self.deselect_current_button()
         self.active_button_index = -1
 
+    def set_state(self, index):
+        self.active_button_index = index
+        self.click_sound.set_volume(0.5)
+
     def deselect_current_button(self) -> None:
         self.buttons[self.active_button_index].deselect()
 
