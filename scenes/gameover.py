@@ -1,7 +1,7 @@
 import pygame as pg
 from objects import ButtonController, Text
 from scenes import base
-from misc import Color, Font, BUTTON_TRANSPERENT_COLORS
+from misc import Font, BUTTON_TRANSPERENT_COLORS
 
 
 class Scene(base.Scene):
