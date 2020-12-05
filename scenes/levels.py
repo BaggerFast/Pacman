@@ -47,12 +47,13 @@ class Scene(base.Scene):
                                    text_size=Font.BUTTON_TEXT_SIZE))
 
         for index in range(len(buttons)):
-            if str(self.game.level_id + 1) == buttons[index].text[-1:]:
+            if str(self.game.level_id + 1) == buttons[index].text[-1:] or str(self.game.level_id + 1) == buttons[index].text[-2:]:
                 buttons[index] = LvlButton(self.game, pg.Rect(0, 0, 180, 40),
                                            value=buttons[index].value,
                                            text='» ' + buttons[index].text + ' «',
                                            center=(buttons[index].rect.centerx, buttons[index].rect.centery),
                                            text_size=Font.BUTTON_TEXT_SIZE)
+
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
 
