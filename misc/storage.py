@@ -10,6 +10,7 @@ class Storage:
                          "unlocked_levels": [
                              0
                          ]}
+    unlocked_levels = []
 
     def __init__(self) -> None:
         self.last_level = None
