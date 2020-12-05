@@ -1,35 +1,9 @@
+from random import choice
 import pygame as pg
 from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS, Sounds
+from misc.SoundController import SoundController
 from misc.storage import Storage
 from scenes import *
-
-
-class Sound:
-    def __init__(self, game, channel: int, volume: int, sound):
-        self.sound = sound
-        self.game = game
-        self.volume_on = volume
-        self.channel = pg.mixer.Channel(channel)
-        self.update_volume()
-
-    def play(self):
-        self.channel.play(self.sound)
-
-    def pause(self):
-        self.channel.pause()
-
-    def unpause(self):
-        self.channel.unpause()
-
-    def stop(self):
-        self.channel.stop()
-
-    def get_busy(self):
-        return self.channel.get_busy()
-
-    def update_volume(self):
-        self.volume = 0 if self.game.settings.MUTE else self.volume_on
-        self.sound.set_volume(self.volume)
 
 
 class Game:
@@ -39,10 +13,14 @@ class Game:
 
     class Music:
         def __init__(self, game):
-            self.pacman1 = Sound(game, 0, 10, Sounds.DEAD)
-            #self.intro = Sound(game, 1, 1, Sounds.INTRO[1])
-            self.gameover = Sound(game, 2, 1, Sounds.GAMEOVER)
-            self.siren = Sound(game, 3, 1, Sounds.SIREN)
+            self.pacman = SoundController(game, sound=Sounds.DEAD)
+            self.click = SoundController(game, sound=Sounds.CLICK)
+            self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
+            self.gameover = SoundController(game, channel=2, sound=Sounds.GAMEOVER)
+            self.siren = SoundController(game, channel=3, sound=Sounds.SIREN)
+            self.seed = SoundController(game, channel=4, sound=Sounds.SEED)
+            self.fruit = SoundController(game, channel=4, sound=Sounds.FRUIT)
+
 
     class Scenes:
         def __init__(self, game):
@@ -89,9 +67,9 @@ class Game:
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.score = Score()
         self.records = HighScore(self)
-        self.scenes = self.Scenes(self)
         self.settings = self.Settings()
         self.sounds = self.Music(self)
+        self.scenes = self.Scenes(self)
         self.__clock = pg.time.Clock()
         self.__game_over = False
         self.time_out = 125

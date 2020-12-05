@@ -5,11 +5,6 @@ from objects.base import DrawableObject
 
 
 class BaseButton(DrawableObject):
-    pg.mixer.init()
-    click_sound = None
-    hover_sound = None
-    initial_sound = None
-
     def __init__(self, game, geometry: pg.Rect, function: Callable[[], None]) -> None:
         super().__init__(game)
         self.rect = geometry
@@ -31,7 +26,6 @@ class Button(BaseButton):
     STATE_INITIAL = 0
     STATE_HOVER = 1
     STATE_CLICK = 2
-    click_sound = Sounds.CLICK
 
     def __init__(
         self,
@@ -80,7 +74,7 @@ class Button(BaseButton):
             self.left_button_pressed = True
         if self.mouse_hover(event.pos):
             self.state = self.STATE_CLICK
-            self.click_sound.play()
+            self.game.sounds.click.play()
 
     def process_mouse_button_up(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONUP:
@@ -154,3 +148,4 @@ class SettingButtons(Button):
         self.a = self.game.sounds.__dict__
         for key in self.a.keys():
             self.a[key].update_volume()
+        print(self.game.settings.MUTE)

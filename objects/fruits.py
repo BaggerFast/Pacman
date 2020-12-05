@@ -10,8 +10,6 @@ from objects import Text, ImageObject
 
 
 class Fruit(DrawableObject):
-    eaten_sound = Sounds.FRUIT
-
     def __init__(self, game, pos: tuple) -> None:
         self.game = game
         super().__init__(game)
@@ -29,7 +27,6 @@ class Fruit(DrawableObject):
         self.__eat_timer = 90
         self.__score_to_eat = 0
         self.__score_tolerance = 150
-        self.eaten_sound.set_volume(1)
 
     def __draw_fruit(self):
         if self.__eaten:
@@ -75,7 +72,7 @@ class Fruit(DrawableObject):
         if self.__drawing:
             if (self.rect.x == min(object.rect.left, object.rect.right)) \
                     and (self.rect.y == object.rect.y):
-                pg.mixer.Channel(0).play(self.eaten_sound)
+                self.game.sounds.fruit.play()
                 self.__drawing = False
                 self.__start_time = pg.time.get_ticks()
                 self.__eaten = True

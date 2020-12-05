@@ -1,7 +1,7 @@
 import pygame as pg
 import random
 
-from misc import LevelLoader, CELL_SIZE, Font, get_path, Health
+from misc import LevelLoader, Font, get_path, Health
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import base
@@ -11,10 +11,6 @@ from misc import Sounds, Maps
 
 class Scene(base.Scene):
     intro_sound = Sounds.INTRO
-    pacman_channel = pg.mixer.Channel(0)
-    intro_channel = pg.mixer.Channel(1)
-    gameover_channel = pg.mixer.Channel(2)
-    siren_channel = pg.mixer.Channel(3)
 
     def create_static_objects(self):
         self.__load_from_map()
@@ -84,11 +80,10 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         self.objects = []
-        self.siren_channel.unpause()
-        #self.text[len(self.text)-1].surface.set_alpha(0)
+        self.game.sounds.siren.unpause()
         self.__create_map()
         self.__create_ghost()
-
+        self.text[len(self.text) - 1].surface.set_alpha(0)
         self.objects.append(self.fruit)
         self.pacman = Pacman(self.game, self.__player_position)
         self.objects.append(self.pacman)
@@ -154,8 +149,8 @@ class Scene(base.Scene):
                 if ghost.collision_check(self.pacman)[1]:
                     self.__timer_reset_pacman = pg.time.get_ticks()
                     if not self.pacman.dead:
-                        self.game.sounds.pacman1.play()
-                        self.siren_channel.pause()
+                        self.game.sounds.pacman.play()
+                        self.game.sounds.siren.pause()
                         self.pacman.death()
                         self.__prepare_lives_meter()
                     for ghost2 in self.__ghosts:
@@ -195,14 +190,14 @@ class Scene(base.Scene):
                 self.text[1].surface.set_alpha(0)
 
     def __play_music(self):
-        if not self.siren_channel.get_busy():
-            self.siren_channel.play(Sounds.SIREN)
+        if not self.game.sounds.siren.get_busy():
+            self.game.sounds.siren.play()
 
     def process_logic(self) -> None:
-        if not self.intro_channel.get_busy():
+        if not self.game.sounds.intro.get_busy():
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
-                self.pacman_channel.stop()
-                self.gameover_channel.play(Sounds.GAMEOVER)
+                self.game.sounds.pacman.stop()
+                self.game.sounds.gameover.play()
                 self.game.scenes.set(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
@@ -222,7 +217,7 @@ class Scene(base.Scene):
                     self.__max_seeds_eaten_to_prefered_ghost = 32
 
             if self.__seeds.is_field_empty():
-                self.gameover_channel.play(Sounds.GAMEOVER)
+                self.game.sounds.gameover.play()
                 self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
         else:
             self.__start_label()
@@ -245,15 +240,15 @@ class Scene(base.Scene):
         self.__prepare_lives_meter()
 
     def on_activate(self) -> None:
-        self.intro_channel.unpause()
+        self.game.sounds.intro.unpause()
         if self.pacman.animator != self.pacman.dead_anim:
-            self.siren_channel.unpause()
+            self.game.sounds.siren.unpause()
         if self.pacman.animator == self.pacman.dead_anim:
-            self.pacman_channel.unpause()
+            self.game.sounds.pacman.unpause()
 
     def on_reset(self) -> None:
         pg.mixer.stop()
         self.game.score.reset()
         self.game.scenes.MAIN.recreate()
         self.timer = pg.time.get_ticks() / 1000
-        self.intro_channel.play(self.intro_sound)
+        self.game.sounds.intro.play()

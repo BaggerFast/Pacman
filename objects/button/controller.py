@@ -1,14 +1,10 @@
 from typing import List, Tuple, Union
-
 import pygame as pg
-
-from misc import Sounds
 from objects import DrawableObject
 from objects.button.button import Button
 
 
 class ButtonController(DrawableObject):
-    click_sound = Sounds.CLICK
     keys_previous = [pg.K_UP, pg.K_w]
     keys_next = [pg.K_DOWN, pg.K_s]
     keys_activate = [pg.K_SPACE, pg.K_RETURN]
@@ -17,7 +13,6 @@ class ButtonController(DrawableObject):
         super().__init__(game)
         self.buttons = buttons
         self.active_button_index = -1
-        self.click_sound.set_volume(0.5)
 
     def reset_state(self) -> None:
         self.deselect_current_button()
@@ -25,7 +20,6 @@ class ButtonController(DrawableObject):
 
     def set_state(self, index):
         self.active_button_index = index
-        self.click_sound.set_volume(0.5)
 
     def deselect_current_button(self) -> None:
         self.buttons[self.active_button_index].deselect()
@@ -51,7 +45,7 @@ class ButtonController(DrawableObject):
             self.select_next_button()
 
     def activate_current_button(self) -> None:
-        self.click_sound.play()
+        self.game.sounds.click.play()
         self.buttons[self.active_button_index].activate()
 
     def click_current_button(self) -> None:

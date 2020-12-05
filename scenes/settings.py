@@ -1,5 +1,5 @@
 import pygame as pg
-from objects import ButtonController, Button, Text
+from objects import ButtonController, Text
 from objects.button.button import SceneButton, SettingButtons
 from scenes import base
 from misc import Font
@@ -12,9 +12,6 @@ class Scene(base.Scene):
             text[i] = Text(self.game, text[i], 40, font=Font.TITLE)
             text[i].move_center(self.game.width // 2, 30 + i * 40)
             self.static_object.append(text[i])
-
-    def print1(self):
-        pass
 
     def create_buttons(self) -> None:
         names = ['MUTE']
