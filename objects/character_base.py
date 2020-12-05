@@ -1,10 +1,8 @@
 import pygame as pg
 
-from misc import CELL_SIZE, Animator, get_path
+from misc import CELL_SIZE, Animator
 from objects import DrawableObject
 from typing import Tuple
-
-from PIL import Image, ImageFilter, ImageDraw
 
 
 class Character(DrawableObject):

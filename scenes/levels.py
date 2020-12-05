@@ -3,7 +3,7 @@ import os
 
 import pygame as pg
 
-from misc import Font, Maps, ROOT_DIR
+from misc import Font, ROOT_DIR
 from objects import ButtonController, Text
 from objects.button import Button
 from scenes import base
@@ -34,7 +34,7 @@ class Scene(base.Scene):
             self.game.scenes.set(self.game.scenes.MENU, reset=True)
 
     def create_static_objects(self):
-        __counter = int(Maps.level_name(self.game.level_id)[-1:])
+        __counter = int(self.game.maps.level_name(self.game.level_id)[-1:])
         self.__create_title()
         for i in range(self.game.level_id):
             self.__counter += 1

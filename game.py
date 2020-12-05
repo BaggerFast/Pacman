@@ -1,13 +1,12 @@
 from random import choice
 
 import pygame as pg
-from PIL import Image, ImageFilter, ImageDraw
+from PIL import Image, ImageFilter
 
-from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS, Sounds
+from misc import Sounds
 from misc.SoundController import SoundController
-from misc.storage import Storage
 from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path, UNLOCK_SKINS, FRUITS_COUNT, \
-    LevelLoader, Animator, Union, Skins, Storage, DEBUG
+    LevelLoader, Skins, Storage, DEBUG
 from objects import Map
 from scenes import *
 
@@ -27,7 +26,6 @@ class Game:
             self.siren = SoundController(game, channel=3, sound=Sounds.SIREN)
             self.seed = SoundController(game, channel=4, sound=Sounds.SEED)
             self.fruit = SoundController(game, channel=4, sound=Sounds.FRUIT)
-
 
     class __Scenes:
         def __init__(self, game):
@@ -162,7 +160,8 @@ class Game:
             current_time = pg.time.get_ticks() / 1000
             surify = pg.image.tostring(self.scenes.MAIN.template, 'RGBA')
             impil = Image.frombytes('RGBA', self.__size, surify)
-            piler = impil.filter(ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count)))
+            piler = impil.filter(
+                ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count)))
             surface = pg.image.fromstring(
                 piler.tobytes(), piler.size, piler.mode).convert()
             self.screen.blit(surface, (0, 0))

@@ -1,9 +1,8 @@
 import pygame as pg
-from misc import Sounds, INFINITY_LIVES
-from misc.path import get_list_path, get_path
+from misc import INFINITY_LIVES
+from misc.path import get_path
 from objects.character_base import Character
-from misc.health import Health
-from misc.animator import Animator
+
 from typing import Tuple
 
 
@@ -21,7 +20,6 @@ class Pacman(Character):
         super().__init__(game, self.__walk_anim, start_pos, get_path('aura', 'png', 'images', 'pacman'))
         self.dead = False
         self.__feature_rotate = "none"
-
 
     @property
     def dead_anim(self):
