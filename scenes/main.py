@@ -32,8 +32,7 @@ class Scene(base.Scene):
         self.__max_seeds_eaten_to_prefered_ghost = 7
         self.__work_ghost_counters = True
         self.__first_run_ghost = True
-        self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
-                           20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
+        self.fruit = Fruit(self.game, self.__fruit_position)
 
     def __create_health(self):
         self.hp = Health(3, 3)
@@ -42,10 +41,12 @@ class Scene(base.Scene):
 
     def __create_static_text(self):
         self.__scores_label_text = Text(
-            self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20))
+            self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20)
+        )
 
-        self.__high_scores_label_text = Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE,
-                                             rect=pg.Rect(130, 0, 20, 20))
+        self.__high_scores_label_text = Text(
+            self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)
+        )
         self.static_object.append(self.__scores_label_text)
         self.static_object.append(self.__high_scores_label_text)
 

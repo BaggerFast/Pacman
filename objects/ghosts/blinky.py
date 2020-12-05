@@ -1,8 +1,10 @@
 from .base import Base
 import pygame as pg
 
+
 class Blinky(Base):
     love_point_in_scatter_mode = (33, -3)
+
     def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()

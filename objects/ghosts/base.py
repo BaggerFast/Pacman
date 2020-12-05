@@ -95,7 +95,10 @@ class Base(Character):
             'Eaten'
         '''
         self.mode = 'Scatter'
-        self.gg_text = Text(self.game, ' ', 10, pg.Rect(0, 0, 0, 0), pg.Color(255, 255, 255), Font.DEFAULT)
+        self.gg_text = Text(
+            self.game, ' ',
+            10, pg.Rect(0, 0, 0, 0),
+        )
 
     def process_logic(self) -> None:
         if self.mode != 'Eaten':
@@ -112,7 +115,8 @@ class Base(Character):
         self.process_logic_iterator += 1
 
     def collision_check(self, pacman: Pacman):
-        return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 3 and self.collision and not DISABLE_GHOSTS_COLLISION,
+        return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 3 and
+                self.collision and not DISABLE_GHOSTS_COLLISION,
                 self.mode != 'Frightened' and self.mode != 'Eaten')
 
     def counter(self) -> None:
@@ -152,7 +156,10 @@ class Base(Character):
                 min_dis = 10000000000000
                 for i in range(4):
                     if cell[i]:
-                        tmp_cell = (self.get_cell()[0] + self.direction2[i][0], self.get_cell()[1] + self.direction2[i][1])
+                        tmp_cell = (
+                            self.get_cell()[0] + self.direction2[i][0],
+                            self.get_cell()[1] + self.direction2[i][1]
+                        )
                         if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
                             min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
                             self.shift_x, self.shift_y, self.rotate = self.direction2[i]
@@ -190,6 +197,7 @@ class Base(Character):
                     self.update_ai_timer()
                     self.deceleration_multiplier = 1
                     self.mode = 'Scatter'
+
     def step(self) -> None:
         if not DISABLE_GHOSTS_MOVING:
             super().step()

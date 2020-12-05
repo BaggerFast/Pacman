@@ -12,15 +12,14 @@ from objects import Text, ImageObject
 class Fruit(DrawableObject):
     eaten_sound = Sounds.FRUIT
 
-    def __init__(self, game, screen, x, y) -> None:
+    def __init__(self, game, pos: tuple) -> None:
         self.game = game
         super().__init__(game)
-        self.screen = screen
+        self.screen = game.screen
         self.__anim = Animator(get_list_path('png', 'images', 'fruit'), False, False)
         self.__image = self.__anim.current_image
         self.rect = self.__anim.current_image.get_rect()
-        self.rect.x = x - self.rect.width // 2
-        self.rect.y = y - self.rect.height // 2
+        self.move_center(*self.pos_from_cell(pos))
         self.__scores = [100, 300, 500, 700, 1000, 2000, 3000, 5000]
         self.__creating_scores()
         self.__drawing = False
@@ -92,3 +91,7 @@ class Fruit(DrawableObject):
 
     def process_draw(self) -> None:
         self.__draw_fruit()
+
+    @staticmethod
+    def pos_from_cell(cell: Tuple[int, int]) -> Tuple[int, int]:
+        return cell[0] * CELL_SIZE + CELL_SIZE // 2, cell[1] * CELL_SIZE + 20 + CELL_SIZE // 2
