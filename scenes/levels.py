@@ -17,6 +17,11 @@ class Scene(base.Scene):
             self.__counter += 1
             self.__scroll -= 50
 
+        if self.__scroll > 0:
+            self.__scroll = 0
+        if self.__scroll < -350:
+            self.__scroll = -350
+
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
@@ -61,23 +66,34 @@ class Scene(base.Scene):
             self.game.scenes.set(self.game.scenes.MENU)
         elif event.type == pg.KEYDOWN and (event.key == pg.K_DOWN or event.key == pg.K_s) and self.__is_scroll_active:
             if self.__counter == 10:
-                self.__counter = -1
-                self.__scroll += 350
-            self.__counter += 1
-            if 8 > self.__counter > 0:
-                self.__scroll -= 50
-            print(self.__counter)
+                self.__counter = 0
+                self.__scroll = 0
+            else:
+                self.__counter += 1
+                self.__scroll = self.__counter*-50
+
+                if self.__scroll > 0:
+                    self.__scroll = 0
+                if self.__scroll < -350:
+                    self.__scroll = -350
+
             self.game.scenes.set(self.game.scenes.LEVELS)
             for i in range(self.__counter + 1):
                 self.__button_controller.select_next_button()
 
         elif event.type == pg.KEYDOWN and (event.key == pg.K_UP or event.key == pg.K_w) and self.__is_scroll_active:
             if self.__counter == 0:
-                self.__counter = 11
-                self.__scroll -= 400
-            self.__counter -= 1
-            if 8 > self.__counter > -1:
-                self.__scroll += 50
+                self.__counter = 10
+                self.__scroll = -350
+            else:
+                self.__counter -= 1
+                self.__scroll = self.__counter*-50
+
+                if self.__scroll > 0:
+                    self.__scroll = 0
+                if self.__scroll < -350:
+                    self.__scroll = -350
+
             self.game.scenes.set(self.game.scenes.LEVELS)
             for i in range(self.__counter + 1):
                 self.__button_controller.select_next_button()
@@ -86,3 +102,5 @@ class Scene(base.Scene):
             for i in range(self.__counter + 1):
                 self.__button_controller.select_next_button()
             self.__is_scroll_active = True
+
+        print(self.__counter, self.__scroll)
