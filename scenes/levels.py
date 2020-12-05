@@ -6,15 +6,19 @@ from scenes import base
 
 
 class Scene(base.Scene):
+    __is_scroll_active = False
     __scroll = 0
     __counter = 0
 
     def create_static_objects(self):
         __counter = int(Maps.level_name(self.game.level_id)[-1:])
         self.__create_title()
-        for i in range(self.game.level_id + 1):
+        for i in range(self.game.level_id):
             self.__counter += 1
             self.__scroll -= 50
+
+    def activate_scroll(self, event: pg.event.Event):
+        self.__is_scroll_active = True
 
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
@@ -56,22 +60,34 @@ class Scene(base.Scene):
         return 1000
 
     def additional_event_check(self, event: pg.event.Event) -> None:
+        self.activate_scroll(event)
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.game.scenes.MENU)
         elif event.type == pg.KEYDOWN and (
-            event.key == pg.K_DOWN or event.key == pg.K_s) and self.__counter < Maps.count - 1:
+            event.key == pg.K_DOWN or event.key == pg.K_s):
+            if self.__counter == 10:
+                self.__counter = -1
+                self.__scroll += 350
             self.__counter += 1
-            self.__scroll -= 50
+            if 8 > self.__counter > 0:
+                self.__scroll -= 50
+            print(self.__counter)
             self.game.scenes.set(self.game.scenes.LEVELS)
             self.__button_controller.reset_state()
             for i in range(self.__counter + 1):
                 self.__button_controller.select_next_button()
-            print(self.game.level_id + 1)
-        elif event.type == pg.KEYDOWN and (event.key == pg.K_UP or event.key == pg.K_w) and self.__counter > 0:
+
+        elif event.type == pg.KEYDOWN and (event.key == pg.K_UP or event.key == pg.K_w):
+            if self.__counter == 0:
+                self.__counter = 11
+                self.__scroll -= 350
             self.__counter -= 1
-            self.__scroll += 50
+            if 8 > self.__counter > 0:
+                self.__scroll += 50
+
+            print(self.__counter)
             self.game.scenes.set(self.game.scenes.LEVELS)
             self.__button_controller.reset_state()
             for i in range(self.__counter + 1):
                 self.__button_controller.select_next_button()
-            print(self.game.level_id + 1)
+
