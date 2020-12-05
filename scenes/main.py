@@ -195,6 +195,8 @@ class Scene(base.Scene):
 
     def process_logic(self) -> None:
         if not self.game.sounds.intro.get_busy():
+            self.text[0].surface.set_alpha(0)
+            self.text[1].surface.set_alpha(0)
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
                 self.game.sounds.pacman.stop()
                 self.game.sounds.gameover.play()

@@ -13,7 +13,6 @@ class Scene(base.Scene):
     # Константы
     __scroll_length = 350
     __button_size = 50
-    __levels_amount = 10
     __out_of_field = 1000
     __top_field_y = 80
     __bottom_field_y = 290
@@ -121,7 +120,6 @@ class Scene(base.Scene):
                     self.__scroll = 0
                 if self.__scroll <= self.unlocked() * -self.__button_size:
                     self.__scroll = self.unlocked() * -self.__button_size
-            print(self.__counter)
 
             self.game.scenes.set(self.game.scenes.LEVELS)
             for i in range(self.__counter + 1):
