@@ -1,6 +1,5 @@
 import pygame as pg
-from objects import ButtonController,Text
-from objects.button.button import SceneButton
+from objects import ButtonController, Text
 from scenes import base
 from misc import Font
 
@@ -14,7 +13,9 @@ class Scene(base.Scene):
         }
         buttons = []
         for i in range(len(names)):
-            buttons.append(SceneButton(self.game, pg.Rect(0, 0, 180, 45),
+            buttons.append(self.SceneButton(
+                game=self.game,
+                geometry=pg.Rect(0, 0, 180, 45),
                 text=names[i][0],
                 scene=(names[i][1], names[i][2]),
                 center=(self.game.width // 2, 100+61*i),

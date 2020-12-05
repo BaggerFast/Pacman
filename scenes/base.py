@@ -1,7 +1,19 @@
 import pygame as pg
+from objects.button import Button
 
 
 class Scene:
+    class SceneButton(Button):
+        def __init__(self, **args):
+            self.scene = args.pop("scene")
+            super(Scene.SceneButton, self).__init__(**args)
+
+        def click(self):
+            if callable(self.scene[0]):
+                self.scene[0]()
+            else:
+                self.game.scenes.set(self.scene[0], reset=self.scene[1])
+
     def __init__(self, game) -> None:
         self.game = game
         self.screen = self.game.screen

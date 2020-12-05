@@ -1,10 +1,11 @@
 import json
+import os
 
 import pygame as pg
-import os
+
 from misc import Font, Maps, ROOT_DIR
 from objects import ButtonController, Text
-from objects.button.button import LvlButton, SceneButton
+from objects.button import Button
 from scenes import base
 
 
@@ -14,6 +15,17 @@ class Scene(base.Scene):
     __counter = 0
 
     __storage_filepath = os.path.join(ROOT_DIR, "saves", "storage.json")
+
+    class LvlButton(Button):
+        def __init__(self, **args):
+            self.value = args.pop("value")
+            super(Scene.LvlButton, self).__init__(**args)
+
+
+        def click(self):
+            self.game.level_id = self.value
+            self.game.records.update_records()
+            self.game.scenes.set(self.game.scenes.MENU, reset=True)
 
     def create_static_objects(self):
         __counter = int(Maps.level_name(self.game.level_id)[-1:])
@@ -36,7 +48,7 @@ class Scene(base.Scene):
         buttons = []
         for i in range(Maps.count):
             buttons.append(
-                LvlButton(
+                self.LvlButton(
                     game=self.game,
                     geometry=pg.Rect(0, 0, 180, 40),
                     value=i,
@@ -45,19 +57,18 @@ class Scene(base.Scene):
                     text_size=Font.BUTTON_TEXT_SIZE,
                     active=i in self.game.unlocked_levels)
             )
-        buttons.append(SceneButton(self.game, pg.Rect(0, 0, 180, 40),
-                                   text='MENU',
-                                   scene=(self.game.scenes.MENU, False),
-                                   center=(self.game.width // 2, 250),
-                                   text_size=Font.BUTTON_TEXT_SIZE))
+        buttons.append(self.SceneButton(
+            game=self.game,
+            geometry=pg.Rect(0, 0, 180, 40),
+            text='MENU',
+            scene=(self.game.scenes.MENU, False),
+            center=(self.game.width // 2, 250),
+            text_size=Font.BUTTON_TEXT_SIZE))
 
         for index in range(len(buttons)):
-            if str(self.game.level_id + 1) == buttons[index].text[-1:] or str(self.game.level_id + 1) == buttons[index].text[-2:]:
-                buttons[index] = LvlButton(self.game, pg.Rect(0, 0, 180, 40),
-                                           value=buttons[index].value,
-                                           text='» ' + buttons[index].text + ' «',
-                                           center=(buttons[index].rect.centerx, buttons[index].rect.centery),
-                                           text_size=Font.BUTTON_TEXT_SIZE)
+            if str(self.game.level_id + 1) == buttons[index].text[-1:] \
+                or str(self.game.level_id + 1) == buttons[index].text[-2:]:
+                buttons[index].text = '» ' + buttons[index].text + ' «'
 
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
@@ -76,11 +87,11 @@ class Scene(base.Scene):
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.game.scenes.MENU)
         elif event.type == pg.KEYDOWN and (event.key == pg.K_DOWN or event.key == pg.K_s) and self.__is_scroll_active:
-            if self.__counter == self.unlocked()+1:
+            if self.__counter == self.unlocked() + 1:
                 self.__counter = 0
             else:
                 self.__counter += 1
-                self.__scroll = self.__counter*-50
+                self.__scroll = self.__counter * -50
                 if self.__scroll > 0:
                     self.__scroll = 0
                 if self.__scroll < self.unlocked() * -50:
@@ -95,7 +106,7 @@ class Scene(base.Scene):
                 self.__counter = 10
             else:
                 self.__counter -= 1
-                self.__scroll = self.__counter*-50
+                self.__scroll = self.__counter * -50
                 if self.__scroll > 0:
                     self.__scroll = 0
                 if self.__scroll < self.unlocked() * -50:

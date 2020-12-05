@@ -1,7 +1,6 @@
 import pygame as pg
 from misc import Color, Font, get_path
 from objects import ButtonController, ImageObject, Text
-from objects.button.button import SceneButton
 from scenes import base
 
 
@@ -16,7 +15,9 @@ class Scene(base.Scene):
         self.__create_text_labels()
 
     def create_buttons(self) -> None:
-        back_button = SceneButton(self.game, pg.Rect(0, 0, 180, 40),
+        back_button = self.SceneButton(
+            game=self.game,
+            geometry=pg.Rect(0, 0, 180, 40),
             text='MENU',
             scene=(self.game.scenes.MENU, False),
             center=(self.game.width // 2, 250),

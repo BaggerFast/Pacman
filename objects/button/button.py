@@ -38,8 +38,6 @@ class Button(BaseButton):
         text_size: int = 60,
         font=Font.DEFAULT,
         active: bool = True,
-        value=True,
-        scene: tuple = (None, None)
     ) -> None:
 
         super().__init__(game, geometry, function)
@@ -50,8 +48,6 @@ class Button(BaseButton):
         self.state = self.STATE_INITIAL
         self.surfaces = self.prepare_surfaces()
         self.left_button_pressed = False
-        self.value = value
-        self.scene = scene
         if center:
             self.move_center(*center)
 
@@ -139,43 +135,3 @@ class Button(BaseButton):
 
     def activate(self) -> None:
         self.state = self.STATE_CLICK
-
-
-class LvlButton(Button):
-    def click(self):
-        self.game.level_id = self.value
-        self.game.records.update_records()
-        self.game.scenes.set(self.game.scenes.MENU, reset=True)
-
-
-class SceneButton(Button):
-    def click(self):
-        if callable(self.scene[0]):
-            self.scene[0]()
-        else:
-            self.game.scenes.set(self.scene[0], reset=self.scene[1])
-
-
-class SettingButtons(Button):
-    def __init__(self, game, name, i):
-        super(SettingButtons, self).__init__(
-            game=game,
-            geometry=pg.Rect(0, 0, 180, 35),
-            text=name+(" OFF" if game.settings.MUTE else " ON "),
-            center=(game.width // 2, 95 + i * 33),
-            text_size=Font.BUTTON_TEXT_SIZE,
-            colors=BUTTON_RED_COLORS if game.settings.MUTE else BUTTON_GREEN_COLORS
-        )
-        self.name = name
-
-    def click(self):
-        self.game.settings.MUTE = not self.game.settings.MUTE
-        if self.game.settings.MUTE:
-            self.text = self.name + " OFF"
-            self.colors = BUTTON_RED_COLORS
-        else:
-            self.text = self.name + " ON "
-            self.colors = BUTTON_GREEN_COLORS
-        a = self.game.sounds.__dict__
-        for key in a.keys():
-            a[key].update_volume()
