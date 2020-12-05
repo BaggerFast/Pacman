@@ -78,8 +78,6 @@ class Scene(base.Scene):
             self.__counter -= 1
             if 8 > self.__counter > -1:
                 self.__scroll += 50
-
-            print(self.__counter)
             self.game.scenes.set(self.game.scenes.LEVELS)
             for i in range(self.__counter + 1):
                 self.__button_controller.select_next_button()
