@@ -1,5 +1,8 @@
+import json
+
 import pygame as pg
-from misc import Font, Maps, storage
+import os
+from misc import Font, Maps, ROOT_DIR
 from objects import ButtonController, Text
 from objects.button.button import LvlButton, SceneButton
 from scenes import base
@@ -9,6 +12,8 @@ class Scene(base.Scene):
     __is_scroll_active = False
     __scroll = 0
     __counter = 0
+
+    __storage_filepath = os.path.join(ROOT_DIR, "saves", "storage.json")
 
     def create_static_objects(self):
         __counter = int(Maps.level_name(self.game.level_id)[-1:])
@@ -62,21 +67,24 @@ class Scene(base.Scene):
             return self.__scroll + y
         return 1000
 
+    def unlocked(self) -> int:
+        with open(self.__storage_filepath, "r") as file:
+            json_dict = json.load(file)
+            return json_dict["level_id"]
+
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.game.scenes.MENU)
         elif event.type == pg.KEYDOWN and (event.key == pg.K_DOWN or event.key == pg.K_s) and self.__is_scroll_active:
-            if self.__counter == 10:
+            if self.__counter == self.unlocked()+1:
                 self.__counter = 0
-                self.__scroll = 0
             else:
                 self.__counter += 1
                 self.__scroll = self.__counter*-50
-
                 if self.__scroll > 0:
                     self.__scroll = 0
-                if self.__scroll < -350:
-                    self.__scroll = -350
+                if self.__scroll < self.unlocked() * -50:
+                    self.__scroll = self.unlocked() * -50
 
             self.game.scenes.set(self.game.scenes.LEVELS)
             for i in range(self.__counter + 1):
@@ -85,15 +93,13 @@ class Scene(base.Scene):
         elif event.type == pg.KEYDOWN and (event.key == pg.K_UP or event.key == pg.K_w) and self.__is_scroll_active:
             if self.__counter == 0:
                 self.__counter = 10
-                self.__scroll = -350
             else:
                 self.__counter -= 1
                 self.__scroll = self.__counter*-50
-
                 if self.__scroll > 0:
                     self.__scroll = 0
-                if self.__scroll < -350:
-                    self.__scroll = -350
+                if self.__scroll < self.unlocked() * -50:
+                    self.__scroll = self.unlocked() * -50
 
             self.game.scenes.set(self.game.scenes.LEVELS)
             for i in range(self.__counter + 1):
