@@ -10,6 +10,15 @@ from scenes import base
 
 
 class Scene(base.Scene):
+    # Константы
+    __scroll_length = 350
+    __button_size = 50
+    __levels_amount = 10
+    __out_of_field = 1000
+    __top_field_y = 80
+    __bottom_field_y = 290
+
+    # Переменые класса
     __is_scroll_active = False
     __scroll = 0
     __counter = 0
@@ -21,7 +30,6 @@ class Scene(base.Scene):
             self.value = args.pop("value")
             super(Scene.LvlButton, self).__init__(**args)
 
-
         def click(self):
             self.game.level_id = self.value
             self.game.records.update_records()
@@ -32,12 +40,12 @@ class Scene(base.Scene):
         self.__create_title()
         for i in range(self.game.level_id):
             self.__counter += 1
-            self.__scroll -= 50
+            self.__scroll -= self.__button_size
 
         if self.__scroll > 0:
             self.__scroll = 0
-        if self.__scroll < -350:
-            self.__scroll = -350
+        if self.__scroll < -self.__scroll_length:
+            self.__scroll = -self.__scroll_length
 
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
@@ -74,43 +82,46 @@ class Scene(base.Scene):
         self.objects.append(self.__button_controller)
 
     def button_y_cord(self, y):
-        if 80 < self.__scroll + y < 290:
+        if self.__top_field_y < self.__scroll + y < self.__bottom_field_y:
             return self.__scroll + y
-        return 1000
+        return self.__out_of_field
 
     def unlocked(self) -> int:
         with open(self.__storage_filepath, "r") as file:
             json_dict = json.load(file)
-            return json_dict["level_id"]
+            return len(json_dict["unlocked_levels"])
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.game.scenes.MENU)
         elif event.type == pg.KEYDOWN and (event.key == pg.K_DOWN or event.key == pg.K_s) and self.__is_scroll_active:
-            if self.__counter == self.unlocked() + 1:
+            if self.__counter == self.unlocked():
                 self.__counter = 0
+                self.__scroll = 0
             else:
                 self.__counter += 1
-                self.__scroll = self.__counter * -50
+                self.__scroll = self.__counter * -self.__button_size
                 if self.__scroll > 0:
                     self.__scroll = 0
-                if self.__scroll < self.unlocked() * -50:
-                    self.__scroll = self.unlocked() * -50
+                if self.__scroll <= self.unlocked() * -self.__button_size:
+                    self.__scroll = self.unlocked() * -self.__button_size
 
             self.game.scenes.set(self.game.scenes.LEVELS)
             for i in range(self.__counter + 1):
                 self.__button_controller.select_next_button()
 
         elif event.type == pg.KEYDOWN and (event.key == pg.K_UP or event.key == pg.K_w) and self.__is_scroll_active:
-            if self.__counter == 0:
-                self.__counter = 10
+            if self.__counter <= 0:
+                self.__counter = self.unlocked()
+                self.__scroll_length = -self.__button_size * self.unlocked()
             else:
                 self.__counter -= 1
-                self.__scroll = self.__counter * -50
+                self.__scroll = self.__counter * -self.__button_size
                 if self.__scroll > 0:
                     self.__scroll = 0
-                if self.__scroll < self.unlocked() * -50:
-                    self.__scroll = self.unlocked() * -50
+                if self.__scroll <= self.unlocked() * -self.__button_size:
+                    self.__scroll = self.unlocked() * -self.__button_size
+            print(self.__counter)
 
             self.game.scenes.set(self.game.scenes.LEVELS)
             for i in range(self.__counter + 1):
