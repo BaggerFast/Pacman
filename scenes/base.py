@@ -25,7 +25,7 @@ class Scene:
         self.additional_draw()
 
     def create_static_objects(self):
-        pass
+        self.create_title()
 
     def create_objects(self) -> None:
         self.objects = []
@@ -52,6 +52,9 @@ class Scene:
         pass
 
     def create_buttons(self):
+        pass
+
+    def create_title(self):
         pass
 
     def recreate(self) -> None:

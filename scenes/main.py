@@ -154,7 +154,7 @@ class Scene(base.Scene):
                 if ghost.collision_check(self.pacman)[1]:
                     self.__timer_reset_pacman = pg.time.get_ticks()
                     if not self.pacman.dead:
-                        self.pacman_channel.play(Sounds.DEAD)
+                        self.game.sounds.pacman1.play()
                         self.siren_channel.pause()
                         self.pacman.death()
                         self.__prepare_lives_meter()

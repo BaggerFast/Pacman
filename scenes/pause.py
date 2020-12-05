@@ -5,11 +5,7 @@ from scenes import base
 from misc import Font
 
 
-
 class Scene(base.Scene):
-    def create_static_objects(self):
-        self.__create_title()
-
     def create_buttons(self) -> None:
         names = {
             0: ("CONTINUE", self.game.scenes.MAIN, False),
@@ -25,7 +21,7 @@ class Scene(base.Scene):
                 text_size=Font.BUTTON_TEXT_SIZE))
         self.objects.append(ButtonController(self.game, buttons))
 
-    def __create_title(self) -> None:
+    def create_title(self) -> None:
         self.__main_text = Text(self.game, 'PAUSE', 40, font=Font.TITLE)
         self.__main_text.move_center(self.game.width // 2, 35)
         self.static_object.append(self.__main_text)

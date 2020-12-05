@@ -44,7 +44,7 @@ class Button(BaseButton):
         text_size: int = 60,
         font=Font.DEFAULT,
         active: bool = True,
-        value=None,
+        value=True,
         scene: tuple = (None, None)
     ) -> None:
 
@@ -146,3 +146,11 @@ class SceneButton(Button):
             self.scene[0]()
         else:
             self.game.scenes.set(self.scene[0], reset=self.scene[1])
+
+
+class SettingButtons(Button):
+    def click(self):
+        self.game.settings.MUTE = not self.game.settings.MUTE
+        self.a = self.game.sounds.__dict__
+        for key in self.a.keys():
+            self.a[key].update_volume()

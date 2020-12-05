@@ -6,9 +6,6 @@ from misc import Color, Font, Maps
 
 
 class Scene(base.Scene):
-    def create_static_objects(self):
-        self.__create_title()
-
     def create_objects(self) -> None:
         super().create_objects()
         self.__save_record()
@@ -16,9 +13,9 @@ class Scene(base.Scene):
         self.__create_highscore_text()
         self.__unlock_level()
 
-    def __create_title(self) -> None:
+    def create_title(self) -> None:
         text = ["YOU", "WON"]
-        for i in range(2):
+        for i in range(len(text)):
             text[i] = Text(self.game, text[i], 40, font=Font.TITLE)
             text[i].move_center(self.game.width // 2, 30 + i * 40)
             self.static_object.append(text[i])

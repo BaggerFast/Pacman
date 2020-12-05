@@ -1,10 +1,49 @@
 import pygame as pg
-from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS
+from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS, Sounds
 from misc.storage import Storage
 from scenes import *
 
 
+class Sound:
+    def __init__(self, game, channel: int, volume: int, sound):
+        self.sound = sound
+        self.game = game
+        self.volume_on = volume
+        self.channel = pg.mixer.Channel(channel)
+        self.update_volume()
+
+    def play(self):
+        self.channel.play(self.sound)
+
+    def pause(self):
+        self.channel.pause()
+
+    def unpause(self):
+        self.channel.unpause()
+
+    def stop(self):
+        self.channel.stop()
+
+    def get_busy(self):
+        return self.channel.get_busy()
+
+    def update_volume(self):
+        self.volume = 0 if self.game.settings.MUTE else self.volume_on
+        self.sound.set_volume(self.volume)
+
+
 class Game:
+    class Settings:
+        def __init__(self):
+            self.MUTE = False
+
+    class Music:
+        def __init__(self, game):
+            self.pacman1 = Sound(game, 0, 10, Sounds.DEAD)
+            #self.intro = Sound(game, 1, 1, Sounds.INTRO[1])
+            self.gameover = Sound(game, 2, 1, Sounds.GAMEOVER)
+            self.siren = Sound(game, 3, 1, Sounds.SIREN)
+
     class Scenes:
         def __init__(self, game):
             self.PAUSE = pause.Scene(game)
@@ -15,6 +54,7 @@ class Game:
             self.RECORDS = records.Scene(game)
             self.CREDITS = credits.Scene(game)
             self.ENDGAME = endgame.Scene(game)
+            self.SETTINGS = settings.Scene(game)
             self.__current = None
 
         @property
@@ -50,6 +90,8 @@ class Game:
         self.score = Score()
         self.records = HighScore(self)
         self.scenes = self.Scenes(self)
+        self.settings = self.Settings()
+        self.sounds = self.Music(self)
         self.__clock = pg.time.Clock()
         self.__game_over = False
         self.time_out = 125
