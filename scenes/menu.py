@@ -17,8 +17,7 @@ class Scene(base.Scene):
         self.static_object.append(title)
 
     def __create_indicator(self) -> None:
-        self.__indicator = Text(self.game, Maps.level_name(self.game.level_id).replace('_', ' '),
-                                15, font=Font.TITLE)
+        self.__indicator = Text(self.game, Maps.level_name(self.game.level_id).replace('_', ' '), 15, font=Font.TITLE)
         self.__indicator.move_center(self.game.width // 2, 60)
         self.objects.append(self.__indicator)
 
@@ -33,11 +32,13 @@ class Scene(base.Scene):
         }
         buttons = []
         for i in range(len(names)):
-            buttons.append(SceneButton(self.game, pg.Rect(0, 0, 180, 30),
-                   text=names[i][0],
-                   scene=(names[i][1], names[i][2]),
-                   center=(self.game.width // 2, 95+i*33),
-                   text_size=Font.BUTTON_TEXT_SIZE))
+            buttons.append(
+                SceneButton(
+                    self.game, pg.Rect(0, 0, 180, 30),
+                    text=names[i][0],
+                    scene=(names[i][1], names[i][2]),
+                    center=(self.game.width // 2, 95 + i * 33),
+                    text_size=Font.BUTTON_TEXT_SIZE
+                )
+            )
         self.objects.append(ButtonController(self.game, buttons))
-
-

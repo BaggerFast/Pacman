@@ -1,6 +1,6 @@
 from typing import List, Union, Callable, Tuple
 import pygame as pg
-from misc import Color, Font, Sounds, ButtonColor, BUTTON_DEFAULT_COLORS
+from misc import Color, Font, ButtonColor, BUTTON_DEFAULT_COLORS, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from objects.base import DrawableObject
 
 
@@ -43,16 +43,15 @@ class Button(BaseButton):
     ) -> None:
 
         super().__init__(game, geometry, function)
-        self.text = text
+        self.__text = text
         self.font = pg.font.Font(font, text_size)
         self.active = active
-        self.colors: ButtonColor = colors
+        self.__colors: ButtonColor = colors
         self.state = self.STATE_INITIAL
         self.surfaces = self.prepare_surfaces()
         self.left_button_pressed = False
         self.value = value
         self.scene = scene
-        self.name = self.text
         if center:
             self.move_center(*center)
 
@@ -92,13 +91,27 @@ class Button(BaseButton):
             self.process_mouse_button_up(event)
             super().process_event(event)
 
-    def update_text(self, text: str) -> None:
-        self.text = text
+    @property
+    def colors(self):
+        return self.__colors
+
+    @colors.setter
+    def colors(self, colors: ButtonColor):
+        self.__colors = colors
+        self.surfaces = self.prepare_surfaces()
+
+    @property
+    def text(self):
+        return self.__text
+
+    @text.setter
+    def text(self, text: str):
+        self.__text = text
         self.surfaces = self.prepare_surfaces()
 
     def prepare_surfaces(self) -> List[pg.Surface]:
         surfaces = []
-        for index in range(len(self.colors.get_members_list())):
+        for index in range(len(self.__colors.get_members_list())):
             surfaces.append(self.prepare_surface(index))
         return surfaces
 
@@ -106,11 +119,11 @@ class Button(BaseButton):
         surface = pg.surface.Surface(self.rect.size)
         zero_rect = surface.get_rect()
 
-        text_surface = self.font.render(self.text, False, self.colors[state_index].text)
+        text_surface = self.font.render(self.text, False, self.__colors[state_index].text)
         zero_text_rect = text_surface.get_rect()
         zero_text_rect.center = zero_rect.center
 
-        pg.draw.rect(surface, self.colors[state_index].background, zero_rect, 0)
+        pg.draw.rect(surface, self.__colors[state_index].background, zero_rect, 0)
         surface.blit(text_surface, zero_text_rect)
 
         return surface
@@ -144,13 +157,25 @@ class SceneButton(Button):
 
 
 class SettingButtons(Button):
+    def __init__(self, game, name, i):
+        super(SettingButtons, self).__init__(
+            game=game,
+            geometry=pg.Rect(0, 0, 180, 35),
+            text=name+(" OFF" if game.settings.MUTE else " ON "),
+            center=(game.width // 2, 95 + i * 33),
+            text_size=Font.BUTTON_TEXT_SIZE,
+            colors=BUTTON_RED_COLORS if game.settings.MUTE else BUTTON_GREEN_COLORS
+        )
+        self.name = name
+
     def click(self):
         self.game.settings.MUTE = not self.game.settings.MUTE
         if self.game.settings.MUTE:
-            self.update_text(self.name + "-")
+            self.text = self.name + " OFF"
+            self.colors = BUTTON_RED_COLORS
         else:
-            self.update_text(self.name + "+")
-        self.a = self.game.sounds.__dict__
-        for key in self.a.keys():
-            self.a[key].update_volume()
-        print(self.game.settings.MUTE)
+            self.text = self.name + " ON "
+            self.colors = BUTTON_GREEN_COLORS
+        a = self.game.sounds.__dict__
+        for key in a.keys():
+            a[key].update_volume()

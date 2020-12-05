@@ -5,7 +5,7 @@ class Scene:
     def __init__(self, game) -> None:
         self.game = game
         self.screen = self.game.screen
-        self.objects = []
+        self.objects: list = []
         self.static_object = []
         self.create_static_objects()
 

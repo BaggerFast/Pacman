@@ -1,8 +1,9 @@
 import pygame as pg
+
+from misc import Font
 from objects import ButtonController, Text
 from objects.button.button import SceneButton, SettingButtons
 from scenes import base
-from misc import Font
 
 
 class Scene(base.Scene):
@@ -14,18 +15,17 @@ class Scene(base.Scene):
             self.static_object.append(text[i])
 
     def create_buttons(self) -> None:
-        names = ['Sound off']
+        names = ['Sound']
         self.buttons = []
         for i in range(len(names)):
-            self.buttons.append(SettingButtons(
-                game=self.game,
-                geometry=pg.Rect(0, 0, 180, 35),
-                text=names[i],
-                center=(self.game.width // 2, 95+i*33),
-                text_size=Font.BUTTON_TEXT_SIZE))
-        self.buttons.append(SceneButton(self.game, pg.Rect(0, 0, 180, 40),
-                                   text='MENU',
-                                   scene=(self.game.scenes.MENU, False),
-                                   center=(self.game.width // 2, 250),
-                                   text_size=Font.BUTTON_TEXT_SIZE))
+            self.buttons.append(SettingButtons(self.game, names[i], i))
+        self.buttons.append(
+            SceneButton(
+                self.game, pg.Rect(0, 0, 180, 40),
+                text='MENU',
+                scene=(self.game.scenes.MENU, False),
+                center=(self.game.width // 2, 250),
+                text_size=Font.BUTTON_TEXT_SIZE
+            )
+        )
         self.objects.append(ButtonController(self.game, self.buttons))
