@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Animator, get_list_path, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION, Font
+from misc import Animator, get_list_path, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION, Font, get_path
 from objects import Character, Pacman, Text
 from typing import Tuple
 import random
@@ -15,7 +15,7 @@ class Base(Character):
         3: (0, -1, 3)
     }
 
-    def __init__(self, game, start_pos: Tuple[int, int]) -> None:
+    def __init__(self, game, start_pos: Tuple[int, int], aura: str) -> None:
 
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
@@ -37,10 +37,10 @@ class Base(Character):
 
         # Анимации страха
         self.frightened_walk_anim1 = Animator(
-            get_list_path('png', 'images', 'ghost', 'fear1'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', 'fear1'), is_rotation=False, aura=get_path('aura_blue', 'png', 'images', 'ghost')
         )
         self.frightened_walk_anim2 = Animator(
-            get_list_path('png', 'images', 'ghost', 'fear2'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', 'fear2'), is_rotation=False, aura=get_path('aura_white', 'png', 'images', 'ghost')
         )
 
         # Анимации съедения
@@ -73,7 +73,7 @@ class Base(Character):
 
         self.animations = self.normal_animations
 
-        super().__init__(game, self.top_walk_anim, start_pos)
+        super().__init__(game, self.top_walk_anim, start_pos, aura)
 
         self.is_can_leave_home = False
         self.collision = False

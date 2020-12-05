@@ -21,7 +21,8 @@ class Map(DrawableObject):
         self.x = x
         self.y = y
         self.map = map_data
-        self.surface = pg.Surface((224, 248))
+        self.__size = (224, 248)
+        self.surface = pg.Surface(self.__size)
         self.__load_tiles()
         self.color = self.rand_color()
         self.__render_map_surface()

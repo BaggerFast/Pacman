@@ -1,3 +1,5 @@
+from copy import copy
+
 import pygame as pg
 import random
 
@@ -94,10 +96,10 @@ class Scene(base.Scene):
         self.objects.append(self.__seeds)
 
     def __create_ghost(self):
-        self.blinky = Blinky(self.game, self.__ghost_positions[3])
-        self.pinky = Pinky(self.game, self.__ghost_positions[1])
-        self.inky = Inky(self.game, self.__ghost_positions[0])
-        self.clyde = Clyde(self.game, self.__ghost_positions[2])
+        self.blinky = Blinky(self.game, self.__ghost_positions[3], get_path('aura', 'png', 'images', 'ghost', 'blinky'))
+        self.pinky = Pinky(self.game, self.__ghost_positions[1], get_path('aura', 'png', 'images', 'ghost', 'pinky'))
+        self.inky = Inky(self.game, self.__ghost_positions[0], get_path('aura', 'png', 'images', 'ghost', 'inky'))
+        self.clyde = Clyde(self.game, self.__ghost_positions[2], get_path('aura', 'png', 'images', 'ghost', 'clyde'))
 
         self.__ghosts = [
             self.blinky,
@@ -130,7 +132,9 @@ class Scene(base.Scene):
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             pg.mixer.pause()
-            self.game.scenes.set(self.game.scenes.PAUSE)
+            self.template = copy(self.screen)
+            self.game.timer = pg.time.get_ticks() / 1000
+            self.game.scenes.set(self.game.scenes.PAUSE, surface=True)
 
     def __change_prefered_ghost(self) -> None:
         self.__count_prefered_ghost += 1
@@ -200,10 +204,14 @@ class Scene(base.Scene):
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
                 self.game.sounds.pacman.stop()
                 self.game.sounds.gameover.play()
+                self.template = copy(self.screen)
+                self.game.timer = pg.time.get_ticks() / 1000
                 self.game.scenes.set(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
             self.__process_collision()
+            self.text[0].surface.set_alpha(0)
+            self.text[1].surface.set_alpha(0)
             if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
                 self.create_objects()
                 self.__seeds_eaten = 0
@@ -219,7 +227,10 @@ class Scene(base.Scene):
                     self.__max_seeds_eaten_to_prefered_ghost = 32
 
             if self.__seeds.is_field_empty():
+                self.game.sounds.pacman.stop()
                 self.game.sounds.gameover.play()
+                self.template = copy(self.screen)
+                self.game.timer = pg.time.get_ticks() / 1000
                 self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
         else:
             self.__start_label()

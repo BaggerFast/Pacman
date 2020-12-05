@@ -25,6 +25,7 @@ class Sounds:
 class Color(NamedTuple):
     class Tuple(NamedTuple):
         color: pg.Color
+        alpha: int = 0
 
     RED = Tuple(pg.Color('red')).color
     BLUE = Tuple(pg.Color('blue')).color
@@ -41,6 +42,7 @@ class Color(NamedTuple):
     WOODEN = Tuple(pg.Color(101, 67, 33)).color
     JET = Tuple(pg.Color(10, 10, 10)).color
     MAIN_MAP = Tuple(pg.Color(33, 33, 255)).color
+    TRANSPERENT = Tuple(pg.Color(0, 0, 0, 50)).color
 
 
 class Points:

@@ -1,3 +1,4 @@
+from misc import get_path
 from .base import Base
 import pygame as pg
 

@@ -1,7 +1,7 @@
 import pygame as pg
 from objects import ButtonController, Button, Text
 from scenes import base, levels
-from misc import Color, Font, Maps
+from misc import Color, Font, Maps, BUTTON_TRANSPERENT_COLORS
 
 
 class Scene(base.Scene):
@@ -25,14 +25,17 @@ class Scene(base.Scene):
                 self.game, pg.Rect(0, 0, 180, 35),
                 self.__next_level, 'NEXT LEVEL',
                 center=(self.game.width // 2, 210),
-                text_size=Font.BUTTON_TEXT_SIZE)
+                text_size=Font.BUTTON_TEXT_SIZE,
+                colors=BUTTON_TRANSPERENT_COLORS
+            )
             if self.__is_last_level() else self.SceneButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 35),
                 text='EXIT',
                 scene=(self.game.scenes.MENU, False),
                 center=(self.game.width // 2, 210),
-                text_size=Font.BUTTON_TEXT_SIZE
+                text_size=Font.BUTTON_TEXT_SIZE,
+                colors=BUTTON_TRANSPERENT_COLORS
             ),
             self.SceneButton(
                 game=self.game,
@@ -40,7 +43,8 @@ class Scene(base.Scene):
                 text='MENU',
                 scene=(self.game.scenes.MENU, False),
                 center=(self.game.width // 2, 250),
-                text_size=Font.BUTTON_TEXT_SIZE
+                text_size=Font.BUTTON_TEXT_SIZE,
+                colors=BUTTON_TRANSPERENT_COLORS
             )
         ]
         self.objects.append(ButtonController(self.game, buttons))

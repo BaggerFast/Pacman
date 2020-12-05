@@ -11,6 +11,7 @@ class ImageObject(DrawableObject):
         if filename:
             self.__filename = filename
         self.image = pg.image.load(self.__filename).convert_alpha()
+
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = size
 

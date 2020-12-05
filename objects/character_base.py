@@ -1,6 +1,10 @@
-from misc import CELL_SIZE, Animator
+import pygame as pg
+
+from misc import CELL_SIZE, Animator, get_path
 from objects import DrawableObject
 from typing import Tuple
+
+from PIL import Image, ImageFilter, ImageDraw
 
 
 class Character(DrawableObject):
@@ -12,8 +16,9 @@ class Character(DrawableObject):
         "none": (0, 0, None)
     }
 
-    def __init__(self, game, animator: Animator, start_pos: Tuple[int, int]) -> None:
+    def __init__(self, game, animator: Animator, start_pos: Tuple[int, int], aura: str = None) -> None:
         super().__init__(game)
+        self.__aura = pg.image.load(aura) if aura else aura
         self.animator = animator
         self.rect = self.animator.current_image.get_rect()
         self.shift_x, self.shift_y = self.direction["right"][:2]
@@ -49,6 +54,12 @@ class Character(DrawableObject):
 
     def process_draw(self) -> None:
         for i in range(-1, 2):
+            if self.animator.current_aura:
+                self.game.screen.blit(self.animator.current_aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
+                                                                   self.rect.centery - self.__aura.get_rect().height // 2))
+            else:
+                self.game.screen.blit(self.__aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
+                                                    self.rect.centery - self.__aura.get_rect().height // 2))
             self.game.screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
 
     def movement_cell(self, cell: Tuple[int, int]) -> list:

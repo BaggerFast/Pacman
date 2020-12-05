@@ -1,5 +1,8 @@
 from random import choice
+
 import pygame as pg
+from PIL import Image, ImageFilter, ImageDraw
+
 from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS, Sounds
 from misc.SoundController import SoundController
 from misc.storage import Storage
@@ -40,14 +43,14 @@ class Game:
         def current(self):
             return self.__current
 
-        def set(self, scene: base.Scene, reset: bool = False) -> None:
+        def set(self, scene: base.Scene, reset: bool = False, surface: bool = False) -> None:
             """
             :param scene: NEXT scene (contains in game.scenes.*)
             :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
-
+            :param surface: if surface == True background of new scene equal CURRENT scene with BLUR
             IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
             """
-            if self.__current is not None:
+            if self.__current is not None and not surface:
                 self.__current.on_deactivate()
             self.__current = scene
             if reset:
@@ -73,6 +76,7 @@ class Game:
         self.scenes = self.Scenes(self)
         self.__clock = pg.time.Clock()
         self.__game_over = False
+        self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
         self.scenes.set(self.scenes.MENU)
@@ -102,8 +106,21 @@ class Game:
         self.scenes.current.process_logic()
 
     def __process_all_draw(self) -> None:
-        self.screen.fill(Color.BLACK)
+        exceptions = [self.scenes.PAUSE, self.scenes.GAMEOVER, self.scenes.ENDGAME]
+        if not self.scenes.current in exceptions:
+            self.screen.fill(Color.BLACK)
+        else:
+            blur_count = 10
+            current_time = pg.time.get_ticks() / 1000
+            surify = pg.image.tostring(self.scenes.MAIN.template, 'RGBA')
+            impil = Image.frombytes('RGBA', self.__size, surify)
+            piler = impil.filter(ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count)))
+            surface = pg.image.fromstring(
+                piler.tobytes(), piler.size, piler.mode).convert()
+            self.screen.blit(surface, (0, 0))
+
         self.scenes.current.process_draw()
+
         pg.display.flip()
 
     def main_loop(self) -> None:
