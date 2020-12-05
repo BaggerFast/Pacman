@@ -1,5 +1,7 @@
 from typing import List, Tuple, Union
+
 import pygame as pg
+
 from objects import DrawableObject
 from objects.button.button import Button
 
