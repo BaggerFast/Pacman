@@ -52,6 +52,7 @@ class Button(BaseButton):
         self.left_button_pressed = False
         self.value = value
         self.scene = scene
+        self.name = self.text
         if center:
             self.move_center(*center)
 
@@ -93,7 +94,7 @@ class Button(BaseButton):
 
     def update_text(self, text: str) -> None:
         self.text = text
-        self.prepare_surfaces()
+        self.surfaces = self.prepare_surfaces()
 
     def prepare_surfaces(self) -> List[pg.Surface]:
         surfaces = []
@@ -145,6 +146,10 @@ class SceneButton(Button):
 class SettingButtons(Button):
     def click(self):
         self.game.settings.MUTE = not self.game.settings.MUTE
+        if self.game.settings.MUTE:
+            self.update_text(self.name + "-")
+        else:
+            self.update_text(self.name + "+")
         self.a = self.game.sounds.__dict__
         for key in self.a.keys():
             self.a[key].update_volume()
