@@ -21,7 +21,7 @@ class Scene(base.Scene):
     __is_scroll_active = False
     __scroll = 0
     __counter = 0
-
+    unlocked_level = 0
     __storage_filepath = os.path.join(ROOT_DIR, "saves", "storage.json")
 
     class LvlButton(Button):
@@ -46,6 +46,8 @@ class Scene(base.Scene):
         if self.__scroll < -self.__scroll_length:
             self.__scroll = -self.__scroll_length
 
+        self.__unlocked_level = self.unlocked()
+
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
@@ -53,7 +55,7 @@ class Scene(base.Scene):
 
     def create_buttons(self) -> None:
         buttons = []
-        for i in range(Maps.count):
+        for i in range(10):
             buttons.append(
                 self.LvlButton(
                     game=self.game,
@@ -94,16 +96,17 @@ class Scene(base.Scene):
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.game.scenes.MENU)
         elif event.type == pg.KEYDOWN and (event.key == pg.K_DOWN or event.key == pg.K_s) and self.__is_scroll_active:
-            if self.__counter == self.unlocked():
+            if self.__counter == self.__unlocked_level+1:
                 self.__counter = 0
                 self.__scroll = 0
             else:
                 self.__counter += 1
                 self.__scroll = self.__counter * -self.__button_size
+
                 if self.__scroll > 0:
                     self.__scroll = 0
-                if self.__scroll <= self.unlocked() * -self.__button_size:
-                    self.__scroll = self.unlocked() * -self.__button_size
+                if self.__scroll < self.__unlocked_level * -self.__button_size:
+                    self.__scroll = self.__unlocked_level * -self.__button_size
 
             self.game.scenes.set(self.game.scenes.LEVELS)
             for i in range(self.__counter + 1):
@@ -111,15 +114,15 @@ class Scene(base.Scene):
 
         elif event.type == pg.KEYDOWN and (event.key == pg.K_UP or event.key == pg.K_w) and self.__is_scroll_active:
             if self.__counter <= 0:
-                self.__counter = self.unlocked()
-                self.__scroll_length = -self.__button_size * self.unlocked()
+                self.__counter = self.__unlocked_level
+                self.__scroll_length = -self.__button_size * self.__unlocked_level
             else:
                 self.__counter -= 1
                 self.__scroll = self.__counter * -self.__button_size
                 if self.__scroll > 0:
                     self.__scroll = 0
-                if self.__scroll <= self.unlocked() * -self.__button_size:
-                    self.__scroll = self.unlocked() * -self.__button_size
+                if self.__scroll <= self.__unlocked_level * -self.__button_size:
+                    self.__scroll = self.__unlocked_level * -self.__button_size
 
             self.game.scenes.set(self.game.scenes.LEVELS)
             for i in range(self.__counter + 1):
@@ -129,3 +132,5 @@ class Scene(base.Scene):
             for i in range(self.__counter + 1):
                 self.__button_controller.select_next_button()
             self.__is_scroll_active = True
+
+        print(self.__counter, self.__scroll)
