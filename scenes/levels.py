@@ -11,8 +11,9 @@ from scenes import base
 
 class Scene(base.Scene):
     # Константы
-    __scroll_length = 350
     __button_size = 50
+    __scroll_length = 7 * __button_size
+    __levels_amount = 10
     __out_of_field = 1000
     __top_field_y = 80
     __bottom_field_y = 290
