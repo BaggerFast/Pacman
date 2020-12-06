@@ -7,7 +7,6 @@ from misc import Animator, get_list_path, get_path
 
 class Skins:
     class __Skin:
-
         def __init__(self, skin_name):
             self.name = skin_name
             self.__walk = Animator(get_list_path('png', 'images', 'pacman', self.name, 'walk'))

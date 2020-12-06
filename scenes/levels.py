@@ -132,4 +132,3 @@ class Scene(base.Scene):
                 self.__button_controller.select_next_button()
             self.__is_scroll_active = True
 
-        print(self.__counter, self.__scroll)

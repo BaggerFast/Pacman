@@ -8,30 +8,36 @@ from scenes import base
 
 class Scene(base.Scene):
     class SettingButton(Button):
-        def __init__(self, game, name, i):
+        def __init__(self, game, name, i, var):
             super().__init__(
                 game=game,
                 geometry=pg.Rect(0, 0, 180, 35),
                 text=name + (" OFF" if game.settings.MUTE else " ON "),
-                center=(game.width // 2, 95 + i * 33),
+                center=(game.width // 2, 95 + i * 40),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_RED_COLORS if game.settings.MUTE else BUTTON_GREEN_COLORS,
             )
             self.name = name
+            self.var = var
+
+        def update(self, var):
+            if var == "MUTE":
+                b = self.game.sounds.__dict__
+                for key in b.keys():
+                    b[key].update()
+            elif var == "FUN":
+                print(self.game.settings.FUN)
 
         def click(self):
-            self.game.settings.MUTE = not self.game.settings.MUTE
-            if self.game.settings.MUTE:
+            a = self.game.settings.__dict__
+            a[self.var] = not a[self.var]
+            if a[self.var]:
                 self.text = self.name + " OFF"
                 self.colors = BUTTON_RED_COLORS
             else:
-                self.text = self.name + " ON "
+                self.text = self.name + " ON"
                 self.colors = BUTTON_GREEN_COLORS
-
-            a = self.game.sounds.__dict__
-
-            for key in a.keys():
-                a[key].update_volume()
+            self.update(self.var)
 
     def create_title(self) -> None:
         text = ["SETTINGS"]
@@ -41,10 +47,13 @@ class Scene(base.Scene):
             self.static_object.append(text[i])
 
     def create_buttons(self) -> None:
-        names = ["SOUND"]
+        names = [
+            ("SOUND", "MUTE"),
+            ("FUN", "FUN"),
+        ]
         self.buttons = []
         for i in range(len(names)):
-            self.buttons.append(self.SettingButton(self.game, names[i], i))
+            self.buttons.append(self.SettingButton(self.game, names[i][0], i, names[i][1]))
         self.buttons.append(
             self.SceneButton(
                 game=self.game,
@@ -56,3 +65,4 @@ class Scene(base.Scene):
             )
         )
         self.objects.append(ButtonController(self.game, self.buttons))
+

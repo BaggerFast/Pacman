@@ -12,23 +12,29 @@ from scenes import *
 
 
 class Game:
-    class __Settings:
-        MUTE = None
-        FUN = None
-
-        def __init__(self, storage):
-            self.MUTE = storage.settings.MUTE
-            self.FUN = storage.settings.FUN
+    class Settings:
+        def __init__(self, game):
+            self.MUTE = game.settings.MUTE
+            self.FUN = game.settings.FUN
 
     class __Music:
         def __init__(self, game):
             self.pacman = SoundController(game, sound=Sounds.DEAD)
             self.click = SoundController(game, sound=Sounds.CLICK)
-            self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
-            self.gameover = SoundController(game, channel=2, sound=Sounds.GAMEOVER)
+            if game.settings.FUN:
+                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
+                self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(choice(Sounds.GAMEOVER)))
+            else:
+                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0]))
+                self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
             self.siren = SoundController(game, channel=3, sound=Sounds.SIREN)
             self.seed = SoundController(game, channel=4, sound=Sounds.SEED)
             self.fruit = SoundController(game, channel=4, sound=Sounds.FRUIT)
+
+        def reload_sounds(self, game):
+            if game.settings.FUN:
+                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
+                self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(choice(Sounds.GAMEOVER)))
 
     class __Scenes:
         def __init__(self, game):
@@ -116,7 +122,8 @@ class Game:
         self.score = Score()
 
         self.read_from_storage()
-        self.settings = self.__Settings(self.__storage)
+        self.settings = self.Settings(self.__storage)
+
         self.sounds = self.__Music(self)
 
         self.skins.current = self.skin_name
@@ -136,6 +143,7 @@ class Game:
 
     def save_to_storage(self):
         self.__storage.settings.MUTE = self.settings.MUTE
+        self.__storage.settings.FUN = self.settings.FUN
         self.__storage.last_level_id = self.level_id
         self.__storage.last_skin = self.skin_name
         self.__storage.eaten_fruits = self.eaten_fruits
