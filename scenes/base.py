@@ -18,7 +18,7 @@ class Scene:
         self.game = game
         self.screen = self.game.screen
         self.objects: list = []
-        self.static_object = []
+        self.static_objects = []
         self.create_static_objects()
 
     def process_event(self, event: pg.event.Event) -> None:
@@ -54,7 +54,7 @@ class Scene:
         pass
 
     def additional_draw(self) -> None:
-        for item in self.static_object:
+        for item in self.static_objects:
             item.process_draw()
 
     def on_deactivate(self) -> None:

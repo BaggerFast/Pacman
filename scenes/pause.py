@@ -27,7 +27,7 @@ class Scene(base.Scene):
     def create_title(self) -> None:
         self.__main_text = Text(self.game, 'PAUSE', 40, font=Font.TITLE)
         self.__main_text.move_center(self.game.width // 2, 35)
-        self.static_object.append(self.__main_text)
+        self.static_objects.append(self.__main_text)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:

@@ -50,7 +50,7 @@ class Scene(base.Scene):
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
-        self.static_object.append(title)
+        self.static_objects.append(title)
 
     def create_buttons(self) -> None:
         buttons = []
@@ -87,9 +87,7 @@ class Scene(base.Scene):
         return self.__out_of_field
 
     def unlocked(self) -> int:
-        with open(self.__storage_filepath, "r") as file:
-            json_dict = json.load(file)
-            return len(json_dict["unlocked_levels"])
+        return len(self.game.unlocked_levels)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:

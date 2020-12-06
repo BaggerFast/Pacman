@@ -85,6 +85,8 @@ class Button(BaseButton):
             self.process_mouse_motion(event)
             self.process_mouse_button_down(event)
             self.process_mouse_button_up(event)
+            if self.state == self.STATE_HOVER:
+                self.on_hover()
             super().process_event(event)
 
     @property
@@ -136,3 +138,6 @@ class Button(BaseButton):
 
     def activate(self) -> None:
         self.state = self.STATE_CLICK
+
+    def on_hover(self) -> None:
+        pass

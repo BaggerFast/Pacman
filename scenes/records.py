@@ -27,7 +27,7 @@ class Scene(base.Scene):
     def __create_title(self) -> None:
         title = Text(self.game, 'RECORDS', 32, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
-        self.static_object.append(title)
+        self.static_objects.append(title)
 
     def __create_error_label(self) -> None:
         self.__error_text = Text(self.game, 'NO RECORDS', 24, color=Color.RED)

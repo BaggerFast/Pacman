@@ -13,7 +13,7 @@ class Scene(base.Scene):
     def create_title(self) -> None:
         title = Text(self.game, 'PACMAN', 36, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
-        self.static_object.append(title)
+        self.static_objects.append(title)
 
     def __create_indicator(self) -> None:
         self.__indicator = Text(self.game, self.game.maps.level_name(self.game.level_id).replace('_', ' '), 15, font=Font.TITLE)
@@ -35,10 +35,10 @@ class Scene(base.Scene):
             buttons.append(
                 self.SceneButton(
                     game=self.game,
-                    geometry=pg.Rect(0, 0, 180, 30),
+                    geometry=pg.Rect(0, 0, 180, 26),
                     text=names[i][0],
                     scene=(names[i][1], names[i][2]),
-                    center=(self.game.width // 2, 95 + i * 33),
+                    center=(self.game.width // 2, 95 + i * 28),
                     text_size=Font.BUTTON_TEXT_SIZE
                 )
             )

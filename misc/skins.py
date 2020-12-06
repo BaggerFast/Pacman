@@ -6,8 +6,8 @@ from misc import Animator, get_list_path, get_path
 
 
 class Skins:
-    class __Skin:
-        def __init__(self, skin_name):
+    class Skin:
+        def __init__(self, skin_name: str = "default"):
             self.name = skin_name
             self.__walk = Animator(get_list_path('png', 'images', 'pacman', self.name, 'walk'))
             self.__dead = Animator(get_list_path('png', 'images', 'pacman', self.name, 'dead'), 100, False, True)
@@ -32,7 +32,7 @@ class Skins:
         """
         param must be named like folder with skin
         """
-        self.default = None
+        self.default = self.Skin()
         self.chrome = None
         self.half_life = None
         self.load_skins()
@@ -46,7 +46,7 @@ class Skins:
     def load_skins(self) -> None:
         for key in self.__dict__.keys():
             if not key.startswith("_"):
-                self.__dict__[key] = self.__Skin(key)
+                self.__dict__[key] = self.Skin(key)
 
     @property
     def prerenders(self):
@@ -65,8 +65,8 @@ class Skins:
         return self.__current
 
     @current.setter
-    def current(self, value: Union[str, __Skin]):
+    def current(self, value: Union[str, Skin]):
         if isinstance(value, str):
             self.__current = self.__dict__[value]
-        elif isinstance(value, self.__Skin):
+        elif isinstance(value, self.Skin):
             self.__current = value

@@ -13,7 +13,6 @@ class ImageObject(DrawableObject):
             self.image = pg.image.load(self.__filename).convert_alpha()
         elif isinstance(image, pg.Surface):
             self.image = image
-        self.image = pg.image.load(self.__filename).convert_alpha()
 
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos

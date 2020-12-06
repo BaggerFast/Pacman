@@ -127,7 +127,7 @@ class Game:
 
         self.sounds = self.__Music(self)
 
-        self.skins.current = self.skin_name
+        self.skins.current = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
         self.records = HighScore(self)
         self.scenes = self.__Scenes(self)
         self.scenes.set(self.scenes.MENU)
@@ -138,7 +138,6 @@ class Game:
         self.level_id = int(self.__storage.last_level_id) if int(
             self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
         self.unlocked_skins = self.skins.all_skins if UNLOCK_SKINS else self.__storage.unlocked_skins
-        self.skin_name = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
         self.eaten_fruits = self.__storage.eaten_fruits
         self.highscores = self.__storage.highscores
 
@@ -146,7 +145,7 @@ class Game:
         self.__storage.settings.MUTE = self.settings.MUTE
         self.__storage.settings.FUN = self.settings.FUN
         self.__storage.last_level_id = self.level_id
-        self.__storage.last_skin = self.skin_name
+        self.__storage.last_skin = self.skins.current.name
         self.__storage.eaten_fruits = self.eaten_fruits
         if not UNLOCK_LEVELS:
             self.__storage.unlocked_levels = self.unlocked_levels

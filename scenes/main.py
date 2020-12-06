@@ -31,21 +31,21 @@ class Scene(base.Scene):
         self.fruit = Fruit(self.game, self.__fruit_position)
 
     def __create_health(self):
-        self.hp = Health(1, 3)
+        self.hp = Health(3, 4)
         self.__hp_hud = []
         self.__prepare_lives_meter()
 
     def __create_static_text(self):
         self.__scores_label_text = Text(
-            self.game, 'MEMORY' if self.game.skin_name == "chrome" else 'SCORE', Font.MAIN_SCENE_SIZE,
+            self.game, 'MEMORY' if self.game.skins.current.name == "chrome" else 'SCORE', Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(10, 0, 20, 20)
         )
 
         self.__high_scores_label_text = Text(
             self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)
         )
-        self.static_object.append(self.__scores_label_text)
-        self.static_object.append(self.__high_scores_label_text)
+        self.static_objects.append(self.__scores_label_text)
+        self.static_objects.append(self.__high_scores_label_text)
 
     def __load_from_map(self):
         self.__loader = LevelLoader(self.game.maps.levels[self.game.level_id])
@@ -61,7 +61,7 @@ class Scene(base.Scene):
     def __prepare_lives_meter(self) -> None:
         self.__hp_hud = []
         for i in range(int(self.hp)):
-            hp_image = ImageObject(self.game, get_path('1', 'png', 'images', 'pacman', self.game.skin_name, 'walk'),
+            hp_image = ImageObject(self.game, get_path('1', 'png', 'images', 'pacman', self.game.skins.current.name, 'walk'),
                                    (5 + i * 20, 270))
             hp_image.rotate(180)
             self.__hp_hud.append(hp_image)
@@ -76,7 +76,7 @@ class Scene(base.Scene):
             self.text[i] = Text(self.game, self.text[i], 30, font=Font.TITLE, rect=pg.Rect(20, 0, 20, 20))
             self.text[i].move_center(self.game.width // 2, self.game.height // 2)
             self.text[i].surface.set_alpha(0)
-            self.static_object.append(self.text[i])
+            self.static_objects.append(self.text[i])
         self.state_text = 1
 
     def create_objects(self) -> None:
@@ -118,10 +118,10 @@ class Scene(base.Scene):
     def __create_hud(self):
         self.__high_scores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
                                              rect=pg.Rect(130, 8, 20, 20))
-        self.static_object.append(self.__high_scores_value_text)
+        self.static_objects.append(self.__high_scores_value_text)
 
-        self.__scores_value_text = Text(self.game, str(self.game.score) + " Mb" if self.game.skin_name == "chrome" else str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
-        self.static_object.append(self.__scores_value_text)
+        self.__scores_value_text = Text(self.game, str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
+        self.static_objects.append(self.__scores_value_text)
 
     @property
     def movements_data(self):
@@ -245,7 +245,8 @@ class Scene(base.Scene):
             hp.process_draw()
 
     def additional_logic(self) -> None:
-        self.__scores_value_text.text = str(self.game.score) + " Mb" if self.game.skin_name == "chrome" else str(
+        self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"
+        self.__scores_value_text.text = str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(
             self.game.score)
         self.__prepare_lives_meter()
 

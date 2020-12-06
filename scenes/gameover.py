@@ -16,7 +16,7 @@ class Scene(base.Scene):
         for i in range(2):
             text[i] = Text(self.game, text[i], 40, font=Font.TITLE)
             text[i].move_center(self.game.width // 2, 30 + i * 40)
-            self.static_object.append(text[i])
+            self.static_objects.append(text[i])
 
     def create_buttons(self) -> None:
         names = {
