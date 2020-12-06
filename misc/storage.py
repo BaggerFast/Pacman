@@ -40,18 +40,18 @@ class Storage(Field):
         self.last_skin = "default"
         self.unlocked_levels = [0]
         self.unlocked_skins = ["default"]
+        self.settings = self.Settings()
         self.eaten_fruits = [0 for _ in range(FRUITS_COUNT)]
         self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(game.maps.count)]
-        self.settings = self.Settings()
         self.load()
 
     def save(self) -> None:
-        string = json.dumps(self.dict())
+        string = json.dumps(self.dict(), indent=2)
         with open(self.__storage_filepath, "w") as file:
             file.write(string)
 
     def load(self) -> None:
-        create_file_if_not_exist(self.__storage_filepath, json.dumps(self.dict()))
+        create_file_if_not_exist(self.__storage_filepath, json.dumps(self.dict(), indent=2))
         with open(self.__storage_filepath, "r") as file:
             try:
                 json_dict = json.load(file)

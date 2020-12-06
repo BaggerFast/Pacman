@@ -39,7 +39,8 @@ class Scene(base.Scene):
 
     def __create_static_text(self):
         self.__scores_label_text = Text(
-            self.game, 'SCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20)
+            self.game, 'MEMORY' if self.game.skin_name == "chrome" else 'SCORE', Font.MAIN_SCENE_SIZE,
+            rect=pg.Rect(10, 0, 20, 20)
         )
 
         self.__high_scores_label_text = Text(
@@ -122,8 +123,7 @@ class Scene(base.Scene):
                                              rect=pg.Rect(130, 8, 20, 20))
         self.static_object.append(self.__high_scores_value_text)
 
-        self.__scores_value_text = Text(
-            self.game, str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
+        self.__scores_value_text = Text(self.game, str(self.game.score) + " Mb" if self.game.skin_name == "chrome" else str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
         self.static_object.append(self.__scores_value_text)
 
     @property
@@ -250,7 +250,8 @@ class Scene(base.Scene):
             hp.process_draw()
 
     def additional_logic(self) -> None:
-        self.__scores_value_text.text = str(self.game.score)
+        self.__scores_value_text.text = str(self.game.score) + " Mb" if self.game.skin_name == "chrome" else str(
+            self.game.score)
         self.__prepare_lives_meter()
 
     def on_activate(self) -> None:
