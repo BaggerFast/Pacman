@@ -12,8 +12,6 @@ from misc import Sounds
 
 
 class Scene(base.Scene):
-    intro_sound = Sounds.INTRO
-
     def create_static_objects(self):
         self.__load_from_map()
         self.__create_sounds()
@@ -33,7 +31,7 @@ class Scene(base.Scene):
         self.fruit = Fruit(self.game, self.__fruit_position)
 
     def __create_health(self):
-        self.hp = Health(3, 3)
+        self.hp = Health(1, 3)
         self.__hp_hud = []
         self.__prepare_lives_meter()
 
@@ -69,8 +67,7 @@ class Scene(base.Scene):
 
     def __create_sounds(self):
         self.timer = 0
-        self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
-        self.intro_sound.set_volume(0.5)
+        self.intro_sound = self.game.sounds.intro.sound
 
     def __create_start_anim(self):
         self.text = ['READY', 'GO!']
@@ -203,8 +200,6 @@ class Scene(base.Scene):
             self.text[0].surface.set_alpha(0)
             self.text[1].surface.set_alpha(0)
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
-                self.game.sounds.pacman.stop()
-                self.game.sounds.gameover.play()
                 self.template = copy(self.screen)
                 self.game.timer = pg.time.get_ticks() / 1000
                 self.game.scenes.set(self.game.scenes.GAMEOVER)
@@ -262,6 +257,7 @@ class Scene(base.Scene):
 
     def on_reset(self) -> None:
         pg.mixer.stop()
+        self.game.sounds.reload_sounds(self.game)
         self.game.score.reset()
         self.game.scenes.MAIN.recreate()
         self.timer = pg.time.get_ticks() / 1000
