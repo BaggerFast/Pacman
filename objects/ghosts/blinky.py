@@ -3,7 +3,13 @@ import pygame as pg
 
 class Blinky(Base):
     love_point_in_scatter_mode = (33, -3)
+
+    def __init__(self, game, start_pos):
+        super().__init__(game, start_pos)
+        self.set_direction('left')
+
     def process_logic(self) -> None:
+        self.is_in_home = False
         if not self.is_invisible:
             super().process_logic()
             self.collision = True

@@ -3,6 +3,14 @@ import pygame as pg
 
 class Pinky(Base):
     love_point_in_scatter_mode = (2, -3)
+
+    def __init__(self, game, start_pos):
+        super().__init__(game, start_pos)
+        self.mode = 'Chase'
+        self.shift_y = -1
+        super().__init__(game, start_pos)
+        self.set_direction('down')
+
     def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()

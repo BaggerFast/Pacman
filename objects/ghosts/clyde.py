@@ -7,6 +7,9 @@ class Clyde(Base):
     def __init__(self, game, start_pos):
         super().__init__(game, start_pos)
         self.mode = 'Chase'
+        self.shift_y = 1
+        self.set_direction('up')
+
     def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()

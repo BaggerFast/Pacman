@@ -97,7 +97,18 @@ class Base(Character):
         self.mode = 'Scatter'
         self.gg_text = Text(self.game, ' ', 10, pg.Rect(0, 0, 0, 0), pg.Color(255, 255, 255), Font.DEFAULT)
 
+        #Временное решение
+        self.tmp_flag1 = False
+        self.tmp_flag2 = False
+
+
     def process_logic(self) -> None:
+        if self.is_in_home and not self.can_leave_home():
+            self.go()
+            if self.rect.centery >= self.start_pos[1] + 5:
+                self.set_direction('up')
+            elif self.rect.centery <= self.start_pos[1] - 5:
+                self.set_direction('down')
         if self.mode != 'Eaten':
             self.gg_text.rect = pg.Rect(self.rect.x, self.rect.y, 0, 0)
         if self.rotate is None:
@@ -105,10 +116,9 @@ class Base(Character):
         if not self.is_invisible and self.mode != 'Frightened':
             self.animator = self.animations[self.rotate]
         if not self.process_logic_iterator % self.deceleration_multiplier:
-            for i in range(self.acceleration_multiplier):
-                self.ghosts_ai()
-                self.step()
-                self.animator.timer_check()
+            self.ghosts_ai()
+            self.step()
+            self.animator.timer_check()
         self.process_logic_iterator += 1
 
     def collision_check(self, pacman: Pacman):
@@ -173,18 +183,16 @@ class Base(Character):
         if self.mode == 'Eaten':
             self.deceleration_multiplier = 1
             self.love_cell = (self.game.current_scene.blinky.start_pos[0] // 8,
-                              (self.game.current_scene.blinky.start_pos[1] - 20) // 8)
-            tmp_flag1 = False
-            tmp_flag2 = False
-            if self.get_cell() == self.love_cell:
+                              (self.game.current_scene.blinky.start_pos[1]-20) // 8)
+            if not self.tmp_flag1 and self.get_cell() == self.love_cell:
                 self.collision = False
                 self.set_direction('down')
-                tmp_flag1 = True
-            if tmp_flag1 and self.rect.centery == self.game.current_scene.pinky.start_pos[0]:
+                self.tmp_flag1 = True
+            if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.game.current_scene.pinky.start_pos[1]:
                 self.animations = self.normal_animations
                 self.set_direction('up')
-                tmp_flag2 = True
-            if tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
+                self.tmp_flag2 = True
+            if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
                 self.set_direction('left')
                 self.gg_text.text = ' '
                 self.mode = 'Scatter'
