@@ -14,8 +14,8 @@ class Sounds:
     pg.mixer.init()
     CLICK = Tuple(pg.mixer.Sound(get_path('navigation', 'wav', 'sounds'))).mixer
     DEAD = Tuple(pg.mixer.Sound(get_path('death', 'wav', 'sounds'))).mixer
-    GAMEOVER = Tuple(pg.mixer.Sound(get_path('gameover', 'wav', 'sounds'))).mixer
-    SEED = Tuple(pg.mixer.Sound(get_path('leader2', 'wav', 'sounds'))).mixer
+    GAMEOVER = TupleList(get_list_path('wav', 'Sounds', 'gameover')).list
+    SEED = Tuple(pg.mixer.Sound(get_path('munch', 'wav', 'sounds'))).mixer
     INTRO = TupleList(get_list_path('wav', 'Sounds', 'intro')).list
     MOVE = Tuple(pg.mixer.Sound(get_path('munch', 'wav', 'sounds'))).mixer
     SIREN = Tuple(pg.mixer.Sound(get_path('siren', 'wav', 'sounds'))).mixer
@@ -25,6 +25,7 @@ class Sounds:
 class Color(NamedTuple):
     class Tuple(NamedTuple):
         color: pg.Color
+        alpha: int = 0
 
     RED = Tuple(pg.Color('red')).color
     BLUE = Tuple(pg.Color('blue')).color
@@ -41,6 +42,7 @@ class Color(NamedTuple):
     WOODEN = Tuple(pg.Color(101, 67, 33)).color
     JET = Tuple(pg.Color(10, 10, 10)).color
     MAIN_MAP = Tuple(pg.Color(33, 33, 255)).color
+    TRANSPERENT = Tuple(pg.Color(0, 0, 0, 50)).color
 
 
 class Points:
@@ -62,22 +64,3 @@ class Font:
     MAIN_SCENE_SIZE = Tuple(size=10).size
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size
-
-
-class Maps(NamedTuple):
-    class Tuple(NamedTuple):
-        value: Union[str, int]
-
-    class TupleList(NamedTuple):
-        list: list
-
-    levels = TupleList(["original.json", "new_map.json", "new_new_map.json"]).list
-    count = Tuple(len(levels)).value
-
-    @staticmethod
-    def level_name(level_id: int = 0):
-        return f"level_{level_id + 1}"
-
-    @staticmethod
-    def keys() -> List[int]:
-        return [i for i in range(Maps.count)]

@@ -10,9 +10,8 @@ class Map(DrawableObject):
     tile_names = [
         "space",
         "fat_up_wall", "fat_left_corner",
-        "fat_y_corner", "out_corner",
-        "up_wall", "left_corner",
-        "ghost_up_wall", "ghost_left_corner",
+        "fat_y_corner", "up_wall",
+        "left_corner", "ghost_left_corner",
         "ghost_door", "ghost_door_wall_left"
     ]
     tiles = []
@@ -22,7 +21,8 @@ class Map(DrawableObject):
         self.x = x
         self.y = y
         self.map = map_data
-        self.surface = pg.Surface((224, 248))
+        self.__size = (224, 248)
+        self.surface = pg.Surface(self.__size)
         self.__load_tiles()
         self.color = self.rand_color()
         self.__render_map_surface()
@@ -35,10 +35,10 @@ class Map(DrawableObject):
             self.tiles.append(tile)
 
     def __corner_preprocess(self, x, y, temp_surface: pg.surface.Surface) -> pg.surface.Surface:
-        flip_x = self.map[y][x][1] // (CELL_SIZE//2)
+        flip_x = self.map[y][x][1] // (CELL_SIZE // 2)
         flip_y = False
         temp_surface = pg.transform.flip(temp_surface, flip_x, flip_y)
-        rotate_angle = self.map[y][x][1] % (CELL_SIZE//2) * -90
+        rotate_angle = self.map[y][x][1] % (CELL_SIZE // 2) * -90
         temp_surface = pg.transform.rotate(temp_surface, rotate_angle)
         return temp_surface
 
@@ -57,6 +57,16 @@ class Map(DrawableObject):
             for y in range(self.surface.get_height()):
                 if self.surface.get_at((x, y)) == Color.MAIN_MAP:
                     self.surface.set_at((x, y), self.color)  # Set the color of the pixel.
+
+    def prerender_map_surface(self) -> pg.Surface:
+        surface = pg.Surface(self.__size)
+        for y in range(len(self.map)):
+            for x in range(len(self.map[y])):
+                temp_surface = self.tiles[self.map[y][x][0]]
+                if len(self.map[y][x]) == 2:
+                    temp_surface = self.__corner_preprocess(x, y, temp_surface)
+                surface.blit(temp_surface, (x * CELL_SIZE, y * CELL_SIZE))
+        return surface
 
     def process_draw(self) -> None:
         self.game.screen.blit(self.surface, (self.x, self.y))

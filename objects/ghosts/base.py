@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Animator, get_list_path, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION, Font
+from misc import Animator, get_list_path, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION, Font, get_path
 from objects import Character, Pacman, Text
 from typing import Tuple
 import random
@@ -15,7 +15,7 @@ class Base(Character):
         3: (0, -1, 3)
     }
 
-    def __init__(self, game, start_pos: Tuple[int, int]) -> None:
+    def __init__(self, game, start_pos: Tuple[int, int], aura: str) -> None:
 
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
@@ -37,10 +37,10 @@ class Base(Character):
 
         # Анимации страха
         self.frightened_walk_anim1 = Animator(
-            get_list_path('png', 'images', 'ghost', 'fear1'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', 'fear1'), is_rotation=False, aura=get_path('aura_blue', 'png', 'images', 'ghost')
         )
         self.frightened_walk_anim2 = Animator(
-            get_list_path('png', 'images', 'ghost', 'fear2'), is_rotation=False
+            get_list_path('png', 'images', 'ghost', 'fear2'), is_rotation=False, aura=get_path('aura_white', 'png', 'images', 'ghost')
         )
 
         # Анимации съедения
@@ -73,7 +73,7 @@ class Base(Character):
 
         self.animations = self.normal_animations
 
-        super().__init__(game, self.top_walk_anim, start_pos)
+        super().__init__(game, self.top_walk_anim, start_pos, aura)
 
         self.is_can_leave_home = False
         self.collision = False
@@ -95,7 +95,10 @@ class Base(Character):
             'Eaten'
         '''
         self.mode = 'Scatter'
-        self.gg_text = Text(self.game, ' ', 10, pg.Rect(0, 0, 0, 0), pg.Color(255, 255, 255), Font.DEFAULT)
+        self.gg_text = Text(
+            self.game, ' ',
+            10, pg.Rect(0, 0, 0, 0),
+        )
 
         #Временное решение
         self.tmp_flag1 = False
@@ -116,13 +119,15 @@ class Base(Character):
         if not self.is_invisible and self.mode != 'Frightened':
             self.animator = self.animations[self.rotate]
         if not self.process_logic_iterator % self.deceleration_multiplier:
-            self.ghosts_ai()
-            self.step()
-            self.animator.timer_check()
+            for i in range(self.acceleration_multiplier):
+                self.ghosts_ai()
+                self.step()
+                self.animator.timer_check()
         self.process_logic_iterator += 1
 
     def collision_check(self, pacman: Pacman):
-        return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 3 and self.collision and not DISABLE_GHOSTS_COLLISION,
+        return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 3 and
+                self.collision and not DISABLE_GHOSTS_COLLISION,
                 self.mode != 'Frightened' and self.mode != 'Eaten')
 
     def counter(self) -> None:
@@ -162,7 +167,10 @@ class Base(Character):
                 min_dis = 10000000000000
                 for i in range(4):
                     if cell[i]:
-                        tmp_cell = (self.get_cell()[0] + self.direction2[i][0], self.get_cell()[1] + self.direction2[i][1])
+                        tmp_cell = (
+                            self.get_cell()[0] + self.direction2[i][0],
+                            self.get_cell()[1] + self.direction2[i][1]
+                        )
                         if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
                             min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
                             self.shift_x, self.shift_y, self.rotate = self.direction2[i]

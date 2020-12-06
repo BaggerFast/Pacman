@@ -1,5 +1,7 @@
+from misc import get_path
 from .base import Base
 import pygame as pg
+
 
 class Blinky(Base):
     love_point_in_scatter_mode = (33, -3)

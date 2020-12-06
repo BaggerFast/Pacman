@@ -6,9 +6,6 @@ from objects import DrawableObject
 
 
 class SeedContainer(DrawableObject):
-    eaten_sound = Sounds.SEED
-    gameover_sound = Sounds.GAMEOVER
-
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
         super().__init__(game)
         self.__x = x
@@ -66,7 +63,7 @@ class SeedContainer(DrawableObject):
                     if col * CELL_SIZE - 2 == object.rect.x:
                         self.__seeds[row][col] = None
                         if not pg.mixer.Channel(0).get_busy():
-                            self.eaten_sound.play()
+                            self.game.sounds.seed.play()
                         self.game.score.eat_seed()
                         self.__seeds_on_field -= 1
                         return 1

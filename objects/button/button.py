@@ -1,15 +1,10 @@
 from typing import List, Union, Callable, Tuple
 import pygame as pg
-from misc import Color, Font, Sounds, ButtonColor, BUTTON_DEFAULT_COLORS
+from misc import Color, Font, ButtonColor, BUTTON_DEFAULT_COLORS, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from objects.base import DrawableObject
 
 
 class BaseButton(DrawableObject):
-    pg.mixer.init()
-    click_sound = None
-    hover_sound = None
-    initial_sound = None
-
     def __init__(self, game, geometry: pg.Rect, function: Callable[[], None]) -> None:
         super().__init__(game)
         self.rect = geometry
@@ -31,7 +26,6 @@ class Button(BaseButton):
     STATE_INITIAL = 0
     STATE_HOVER = 1
     STATE_CLICK = 2
-    click_sound = Sounds.CLICK
 
     def __init__(
         self,
@@ -44,20 +38,16 @@ class Button(BaseButton):
         text_size: int = 60,
         font=Font.DEFAULT,
         active: bool = True,
-        value=None,
-        scene: tuple = (None, None)
     ) -> None:
 
         super().__init__(game, geometry, function)
-        self.text = text
+        self.__text = text
         self.font = pg.font.Font(font, text_size)
         self.active = active
-        self.colors: ButtonColor = colors
+        self.__colors: ButtonColor = colors
         self.state = self.STATE_INITIAL
         self.surfaces = self.prepare_surfaces()
         self.left_button_pressed = False
-        self.value = value
-        self.scene = scene
         if center:
             self.move_center(*center)
 
@@ -80,7 +70,7 @@ class Button(BaseButton):
             self.left_button_pressed = True
         if self.mouse_hover(event.pos):
             self.state = self.STATE_CLICK
-            self.click_sound.play()
+            self.game.sounds.click.play()
 
     def process_mouse_button_up(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONUP:
@@ -95,27 +85,44 @@ class Button(BaseButton):
             self.process_mouse_motion(event)
             self.process_mouse_button_down(event)
             self.process_mouse_button_up(event)
+            if self.state == self.STATE_HOVER:
+                self.on_hover()
             super().process_event(event)
 
-    def update_text(self, text: str) -> None:
-        self.text = text
-        self.prepare_surfaces()
+    @property
+    def colors(self):
+        return self.__colors
+
+    @colors.setter
+    def colors(self, colors: ButtonColor):
+        self.__colors = colors
+        self.surfaces = self.prepare_surfaces()
+
+    @property
+    def text(self):
+        return self.__text
+
+    @text.setter
+    def text(self, text: str):
+        self.__text = text
+        self.surfaces = self.prepare_surfaces()
 
     def prepare_surfaces(self) -> List[pg.Surface]:
         surfaces = []
-        for index in range(len(self.colors.get_members_list())):
+        for index in range(len(self.__colors.get_members_list())):
             surfaces.append(self.prepare_surface(index))
         return surfaces
 
     def prepare_surface(self, state_index: int) -> pg.Surface:
         surface = pg.surface.Surface(self.rect.size)
+        surface = surface.convert_alpha()
         zero_rect = surface.get_rect()
 
-        text_surface = self.font.render(self.text, False, self.colors[state_index].text)
+        text_surface = self.font.render(self.text, False, self.__colors[state_index].text)
         zero_text_rect = text_surface.get_rect()
         zero_text_rect.center = zero_rect.center
 
-        pg.draw.rect(surface, self.colors[state_index].background, zero_rect, 0)
+        pg.draw.rect(surface, self.__colors[state_index].background, zero_rect, 0)
         surface.blit(text_surface, zero_text_rect)
 
         return surface
@@ -132,17 +139,5 @@ class Button(BaseButton):
     def activate(self) -> None:
         self.state = self.STATE_CLICK
 
-
-class LvlButton(Button):
-    def click(self):
-        self.game.level_id = self.value
-        self.game.records.update_records()
-        self.game.scenes.set(self.game.scenes.MENU, reset=True)
-
-
-class SceneButton(Button):
-    def click(self):
-        if callable(self.scene[0]):
-            self.scene[0]()
-        else:
-            self.game.scenes.set(self.scene[0], reset=self.scene[1])
+    def on_hover(self) -> None:
+        pass

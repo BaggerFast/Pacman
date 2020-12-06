@@ -1,6 +1,7 @@
 from .base import Base
 import pygame as pg
 
+
 class Inky(Base):
     max_count_eat_seeds_in_home = 30
     love_point_in_scatter_mode = (27, 32)
@@ -41,10 +42,17 @@ class Inky(Base):
             rotate = pacman.rotate
             blinky_cell = blinky.get_cell()
             pinky_love_cell = (
-                pacman_cell[0] + self.direction2[rotate][0] * 2, pacman_cell[1] + self.direction2[rotate][1] * 2)
-            vector_blinky_cell_pinky_love_cell = (blinky_cell[0] - pinky_love_cell[0], blinky_cell[1] - pinky_love_cell[1])
-            self.love_cell = (pinky_love_cell[0] + vector_blinky_cell_pinky_love_cell[0],
-                              pinky_love_cell[1] + vector_blinky_cell_pinky_love_cell[1])
+                pacman_cell[0] + self.direction2[rotate][0] * 2,
+                pacman_cell[1] + self.direction2[rotate][1] * 2
+            )
+            vector_blinky_cell_pinky_love_cell = (
+                blinky_cell[0] - pinky_love_cell[0],
+                blinky_cell[1] - pinky_love_cell[1]
+            )
+            self.love_cell = (
+                pinky_love_cell[0] + vector_blinky_cell_pinky_love_cell[0],
+                pinky_love_cell[1] + vector_blinky_cell_pinky_love_cell[1]
+            )
             if pg.time.get_ticks() - self.ai_timer >= 20000:
                 self.update_ai_timer()
                 self.mode = 'Scatter'
