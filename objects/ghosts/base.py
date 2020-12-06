@@ -156,27 +156,6 @@ class Base(Character):
                         if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
                             min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
                             self.shift_x, self.shift_y, self.rotate = self.direction2[i]
-                if self.mode == 'Eaten':
-                    self.deceleration_multiplier = 1
-                    self.love_cell = (self.game.current_scene.blinky.start_pos[0] // 8,
-                                      (self.game.current_scene.blinky.start_pos[1]-20) // 8)
-                    tmp_flag1 = False
-                    tmp_flag2 = False
-                    if self.get_cell() == self.love_cell:
-                        self.collision = False
-                        self.set_direction('down')
-                        tmp_flag1 = True
-                    if tmp_flag1 and self.rect.centery == self.game.current_scene.pinky.start_pos[0]:
-                        self.animations = self.normal_animations
-                        self.set_direction('up')
-                        tmp_flag2 = True
-                    if tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
-                        self.set_direction('left')
-                        self.gg_text.text = ' '
-                        self.mode = 'Scatter'
-                        self.collision = True
-                        self.acceleration_multiplier = 1
-                        self.update_ai_timer()
             else:
                 while True:
                     rand = random.randrange(4)
@@ -190,6 +169,29 @@ class Base(Character):
                     self.update_ai_timer()
                     self.deceleration_multiplier = 1
                     self.mode = 'Scatter'
+
+        if self.mode == 'Eaten':
+            self.deceleration_multiplier = 1
+            self.love_cell = (self.game.current_scene.blinky.start_pos[0] // 8,
+                              (self.game.current_scene.blinky.start_pos[1] - 20) // 8)
+            tmp_flag1 = False
+            tmp_flag2 = False
+            if self.get_cell() == self.love_cell:
+                self.collision = False
+                self.set_direction('down')
+                tmp_flag1 = True
+            if tmp_flag1 and self.rect.centery == self.game.current_scene.pinky.start_pos[0]:
+                self.animations = self.normal_animations
+                self.set_direction('up')
+                tmp_flag2 = True
+            if tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
+                self.set_direction('left')
+                self.gg_text.text = ' '
+                self.mode = 'Scatter'
+                self.collision = True
+                self.acceleration_multiplier = 1
+                self.update_ai_timer()
+
     def step(self) -> None:
         if not DISABLE_GHOSTS_MOVING:
             super().step()

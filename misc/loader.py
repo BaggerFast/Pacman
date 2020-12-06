@@ -50,7 +50,7 @@ class LevelLoader:
             self.__json = json.load(f)
 
     def get_map_data(self) -> List[List[List[int]]]:
-        return self.__json['map']
+        return self.__json["map"]
 
     def get_movements_data(self) -> List[List[int]]:
         return self.__json["collision_map"]
