@@ -46,6 +46,7 @@ class Game:
             self.RECORDS = records.Scene(game)
             self.CREDITS = credits.Scene(game)
             self.ENDGAME = endgame.Scene(game)
+            self.SKINS = skins.Scene(game)
             self.SETTINGS = settings.Scene(game)
             self.__current = None
 

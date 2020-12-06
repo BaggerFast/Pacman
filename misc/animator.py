@@ -36,6 +36,14 @@ class Animator:
             self.__pathes.append(path_to_images[i])
             self.__images.append(pg.image.load(path_to_images[i]))
 
+    def recolor(self, game):
+        if game:
+            for i in range(len(self.__images)):
+                for x in range(self.__images[i].get_width()):
+                    for y in range(self.__images[i].get_height()):
+                        if self.__images[i].get_at((x, y)) == (255, 255, 0):
+                            self.__images[i].set_at((x, y), game.pacman_color)  # Set the color of the pixel.
+
     def get_len_anim(self) -> int:
         return len(self.__images)
 

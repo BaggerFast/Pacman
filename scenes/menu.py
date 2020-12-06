@@ -24,10 +24,11 @@ class Scene(base.Scene):
         names = {
             0: ("PLAY", self.game.scenes.MAIN, True),
             1: ("LEVELS", self.game.scenes.LEVELS, False),
-            2: ("SETTINGS", self.game.scenes.SETTINGS, False),
+            2: ("SKINS", self.game.scenes.SKINS, False),
             3: ("RECORDS", self.game.scenes.RECORDS, False),
-            4: ("CREDITS", self.game.scenes.CREDITS, False),
-            5: ("EXIT", self.game.exit_game, None)
+            4: ("SETTINGS", self.game.scenes.SETTINGS, False),
+            5: ("CREDITS", self.game.scenes.CREDITS, False),
+            6: ("EXIT", self.game.exit_game, None)
         }
         buttons = []
         for i in range(len(names)):
