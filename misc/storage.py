@@ -5,7 +5,34 @@ from json import JSONDecodeError
 from misc import ROOT_DIR, create_file_if_not_exist, FRUITS_COUNT, HIGHSCORES_COUNT
 
 
-class Storage:
+class Field:
+    def dict(self):
+        data = {}
+        for key in self.__dict__.keys():
+            if hasattr(self.__dict__[key], 'dict'):
+                data[key] = self.__dict__[key].dict()
+            else:
+                if hasattr(self.__dict__[key], '__dict__'):
+                    data[key] = self.__dict__[key].__dict__
+                else:
+                    data[key] = self.__dict__[key]
+        return data
+
+    def read_dict(self, value):
+        for key in self.__dict__.keys():
+            if key in value.keys():
+                if hasattr(self.__dict__[key], 'dict'):
+                    self.__dict__[key].read_dict(value[key])
+                else:
+                    self.__dict__[key] = value[key]
+
+
+class Storage(Field):
+    class Settings(Field):
+        def __init__(self):
+            self.MUTE = False
+            self.FUN = False
+
     __storage_filepath = os.path.join(ROOT_DIR, "saves", "storage.json")
 
     def __init__(self, game) -> None:
@@ -15,31 +42,20 @@ class Storage:
         self.unlocked_skins = ["default"]
         self.eaten_fruits = [0 for _ in range(FRUITS_COUNT)]
         self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(game.maps.count)]
-        self.create_settings(game)
+        self.settings = self.Settings()
         self.load()
 
-    def create_settings(self, game):
-        self.settings = {}
-        data = set(vars(game.Settings).keys())
-        for i in data:
-            if i.isupper():
-                self.settings[i] = False
-        print(self.settings)
-
     def save(self) -> None:
-        string = json.dumps(self.__dict__)
+        string = json.dumps(self.dict())
         with open(self.__storage_filepath, "w") as file:
             file.write(string)
 
     def load(self) -> None:
-        create_file_if_not_exist(self.__storage_filepath, json.dumps(self.__dict__))
+        create_file_if_not_exist(self.__storage_filepath, json.dumps(self.dict()))
         with open(self.__storage_filepath, "r") as file:
             try:
                 json_dict = json.load(file)
-                for key in self.__dict__.keys():
-                    if key in json_dict:
-                        self.__dict__[key] = json_dict[key]
+                self.read_dict(json_dict)
             except JSONDecodeError:
                 pass
         self.save()
-
