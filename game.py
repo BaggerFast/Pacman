@@ -10,6 +10,7 @@ from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_lis
 from objects import Map
 from scenes import *
 
+
 class Game:
     class Settings:
         MUTE = None
@@ -25,9 +26,10 @@ class Game:
             self.click = SoundController(game, sound=Sounds.CLICK)
             if game.settings.FUN:
                 self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
+                self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(choice(Sounds.GAMEOVER)))
             else:
                 self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0]))
-            self.gameover = SoundController(game, channel=2, sound=Sounds.GAMEOVER)
+                self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
             self.siren = SoundController(game, channel=3, sound=Sounds.SIREN)
             self.seed = SoundController(game, channel=4, sound=Sounds.SEED)
             self.fruit = SoundController(game, channel=4, sound=Sounds.FRUIT)
@@ -35,6 +37,7 @@ class Game:
         def reload_sounds(self, game):
             if game.settings.FUN:
                 self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
+                self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(choice(Sounds.GAMEOVER)))
 
     class __Scenes:
         def __init__(self, game):
@@ -134,14 +137,14 @@ class Game:
         self.__storage = Storage(self)
         self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
         self.level_id = int(self.__storage.last_level_id) if int(
-        self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
+            self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
         self.unlocked_skins = self.skins.all_skins if UNLOCK_SKINS else self.__storage.unlocked_skins
         self.skin_name = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
         self.eaten_fruits = self.__storage.eaten_fruits
         self.highscores = self.__storage.highscores
 
     def save_to_storage(self):
-        self.__storage.settings["mute"] = self.settings.MUTE
+        self.__storage.settings["MUTE"] = self.settings.MUTE
         self.__storage.last_level_id = self.level_id
         self.__storage.last_skin = self.skin_name
         self.__storage.eaten_fruits = self.eaten_fruits
