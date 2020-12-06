@@ -27,17 +27,23 @@ class Game:
             if game.settings.FUN:
                 self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
                 self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(choice(Sounds.GAMEOVER)))
+                self.credits = SoundController(game, channel=5, sound=pg.mixer.Sound(choice(Sounds.CREDITS)))
             else:
                 self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0]))
                 self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
+                self.credits = SoundController(game, channel=5, sound=pg.mixer.Sound(Sounds.CREDITS[0]))
             self.siren = SoundController(game, channel=3, sound=Sounds.SIREN)
             self.seed = SoundController(game, channel=4, sound=Sounds.SEED)
             self.fruit = SoundController(game, channel=4, sound=Sounds.FRUIT)
 
         def reload_sounds(self, game):
             if game.settings.FUN:
-                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
-                self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(choice(Sounds.GAMEOVER)))
+                self.intro.sound = pg.mixer.Sound(choice(Sounds.INTRO))
+                self.gameover.sound = pg.mixer.Sound(choice(Sounds.GAMEOVER))
+
+        def reload_credit_sounds(self, game):
+            if game.settings.FUN:
+                self.credits.sound = pg.mixer.Sound(choice(Sounds.CREDITS))
 
     class __Scenes:
         def __init__(self, game):
@@ -117,14 +123,21 @@ class Game:
         self.maps = self.__Maps(self)
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.__clock = pg.time.Clock()
+
+
         self.__game_over = False
+
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
+
         self.animate_timer = 0
         self.skins = Skins()
         self.score = Score()
 
+
         self.read_from_storage()
+
+
         self.settings = self.Settings(self.__storage)
         self.sounds = self.__Music(self)
 
