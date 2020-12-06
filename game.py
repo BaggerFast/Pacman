@@ -10,12 +10,14 @@ from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_lis
 from objects import Map
 from scenes import *
 
-
 class Game:
-    class __Settings:
-        def __init__(self):
-            self.MUTE = False
-            self.FUN = False
+    class Settings:
+        MUTE = None
+        FUN = None
+
+        def __init__(self, storage):
+            self.MUTE = storage.settings["MUTE"]
+            self.FUN = storage.settings["FUN"]
 
     class __Music:
         def __init__(self, game):
@@ -104,8 +106,6 @@ class Game:
     def __init__(self) -> None:
         self.maps = self.__Maps(self)
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
-        self.settings = self.__Settings()
-        self.sounds = self.__Music(self)
         self.__clock = pg.time.Clock()
         self.__game_over = False
         self.timer = pg.time.get_ticks() / 1000
@@ -115,6 +115,8 @@ class Game:
         self.score = Score()
 
         self.read_from_storage()
+        self.settings = self.Settings(self.__storage)
+        self.sounds = self.__Music(self)
 
         self.skins.current = self.skin_name
         self.records = HighScore(self)
@@ -125,12 +127,11 @@ class Game:
         self.__storage = Storage(self)
         self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
         self.level_id = int(self.__storage.last_level_id) if int(
-            self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
+        self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
         self.unlocked_skins = self.skins.all_skins if UNLOCK_SKINS else self.__storage.unlocked_skins
         self.skin_name = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
         self.eaten_fruits = self.__storage.eaten_fruits
         self.highscores = self.__storage.highscores
-        self.settings.MUTE = self.__storage.settings["mute"]
 
     def save_to_storage(self):
         self.__storage.settings["mute"] = self.settings.MUTE
