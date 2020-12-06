@@ -48,3 +48,11 @@ class Scene(base.Scene):
 
     def __save_record(self) -> None:
         self.game.records.add_new_record(int(self.game.score))
+
+    def on_deactivate(self) -> None:
+        self.game.sounds.gameover.stop()
+
+    def on_activate(self) -> None:
+        super().on_activate()
+        self.game.sounds.pacman.stop()
+        self.game.sounds.gameover.play()
