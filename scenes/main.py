@@ -12,7 +12,7 @@ from misc import Sounds
 
 
 class Scene(base.Scene):
-    intro_sound = Sounds.INTRO
+    intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
 
     def create_static_objects(self):
         self.__load_from_map()
@@ -69,7 +69,7 @@ class Scene(base.Scene):
 
     def __create_sounds(self):
         self.timer = 0
-        self.intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
+        intro_sound = pg.mixer.Sound(random.choice(Sounds.INTRO))
         self.intro_sound.set_volume(0.5)
 
     def __create_start_anim(self):
@@ -262,6 +262,7 @@ class Scene(base.Scene):
 
     def on_reset(self) -> None:
         pg.mixer.stop()
+        self.game.sounds.reload_sounds(self.game)
         self.game.score.reset()
         self.game.scenes.MAIN.recreate()
         self.timer = pg.time.get_ticks() / 1000

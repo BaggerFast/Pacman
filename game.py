@@ -23,11 +23,18 @@ class Game:
         def __init__(self, game):
             self.pacman = SoundController(game, sound=Sounds.DEAD)
             self.click = SoundController(game, sound=Sounds.CLICK)
-            self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
+            if game.settings.FUN:
+                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
+            else:
+                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0]))
             self.gameover = SoundController(game, channel=2, sound=Sounds.GAMEOVER)
             self.siren = SoundController(game, channel=3, sound=Sounds.SIREN)
             self.seed = SoundController(game, channel=4, sound=Sounds.SEED)
             self.fruit = SoundController(game, channel=4, sound=Sounds.FRUIT)
+
+        def reload_sounds(self, game):
+            if game.settings.FUN:
+                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
 
     class __Scenes:
         def __init__(self, game):
