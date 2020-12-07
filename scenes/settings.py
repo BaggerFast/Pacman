@@ -9,34 +9,33 @@ from scenes import base
 class Scene(base.Scene):
     class SettingButton(Button):
         def __init__(self, game, name, i, var):
+            flag_var = getattr(game.settings, var)
             super().__init__(
                 game=game,
                 geometry=pg.Rect(0, 0, 180, 35),
-                text=name + (" OFF" if game.settings.MUTE else " ON "),
+                text=name + (" ON" if flag_var else " OFF"),
                 center=(game.width // 2, 95 + i * 40),
                 text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_RED_COLORS if game.settings.MUTE else BUTTON_GREEN_COLORS,
+                colors=BUTTON_GREEN_COLORS if flag_var else BUTTON_RED_COLORS,
             )
             self.name = name
             self.var = var
 
         def update(self, var):
-            if var == "MUTE":
-                b = self.game.sounds.__dict__
-                for key in b.keys():
-                    b[key].update()
-            elif var == "FUN":
-                print(self.game.settings.FUN)
+            if var == "VOLUME":
+                sounds = self.game.sounds.__dict__
+                for sound in sounds.keys():
+                    sounds[sound].update()
 
         def click(self):
-            a = self.game.settings.__dict__
-            a[self.var] = not a[self.var]
-            if a[self.var]:
-                self.text = self.name + " OFF"
-                self.colors = BUTTON_RED_COLORS
-            else:
+            flag_var = not getattr(self.game.settings, self.var)
+            setattr(self.game.settings, self.var, flag_var)
+            if flag_var:
                 self.text = self.name + " ON"
                 self.colors = BUTTON_GREEN_COLORS
+            else:
+                self.text = self.name + " OFF"
+                self.colors = BUTTON_RED_COLORS
             self.update(self.var)
 
     def create_title(self) -> None:
@@ -48,7 +47,7 @@ class Scene(base.Scene):
 
     def create_buttons(self) -> None:
         names = [
-            ("SOUND", "MUTE"),
+            ("SOUND", "VOLUME"),
             ("FUN", "FUN"),
         ]
         self.buttons = []
@@ -65,4 +64,3 @@ class Scene(base.Scene):
             )
         )
         self.objects.append(ButtonController(self.game, self.buttons))
-
