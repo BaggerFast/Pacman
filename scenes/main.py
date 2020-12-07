@@ -3,6 +3,8 @@ from copy import copy
 import pygame as pg
 import random
 
+import misc
+from misc import LevelLoader, CELL_SIZE, Font, get_path, Health, ControlCheats
 from misc import LevelLoader, Font, get_path, Health
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
@@ -82,6 +84,8 @@ class Scene(base.Scene):
     def create_objects(self) -> None:
         self.objects = []
         self.game.sounds.siren.unpause()
+        self.cheats = ControlCheats([['abv', self.add_hp]])
+        self.objects.append(self.cheats)
         self.__create_map()
         self.__create_ghost()
         self.text[len(self.text) - 1].surface.set_alpha(0)
@@ -95,10 +99,10 @@ class Scene(base.Scene):
         self.objects.append(self.__seeds)
 
     def __create_ghost(self):
-        self.blinky = Blinky(self.game, self.__ghost_positions[3], get_path('aura', 'png', 'images', 'ghost', 'blinky'))
-        self.pinky = Pinky(self.game, self.__ghost_positions[1], get_path('aura', 'png', 'images', 'ghost', 'pinky'))
-        self.inky = Inky(self.game, self.__ghost_positions[0], get_path('aura', 'png', 'images', 'ghost', 'inky'))
-        self.clyde = Clyde(self.game, self.__ghost_positions[2], get_path('aura', 'png', 'images', 'ghost', 'clyde'))
+        self.blinky = Blinky(self.game, self.__ghost_positions[3])
+        self.pinky = Pinky(self.game, self.__ghost_positions[1])
+        self.inky = Inky(self.game, self.__ghost_positions[0])
+        self.clyde = Clyde(self.game, self.__ghost_positions[2])
 
         self.__ghosts = [
             self.blinky,
