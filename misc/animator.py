@@ -66,6 +66,9 @@ class Animator:
         self.__current_image_index = index
         self.__current_image = self.__images[self.__current_image_index]
 
+    def change_cur_aura(self, aura: str = None) -> None:
+        self.__current_aura = pg.image.load(aura) if aura else aura
+
     def __image_swap(self) -> None:
         if self.__current_image_index == len(self.__images):
             self.__current_image_index = 0
