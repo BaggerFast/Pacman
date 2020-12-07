@@ -19,6 +19,7 @@ class Base(Character):
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
         self.acceleration_multiplier = 1
+        self.deceleration_multiplier_with_rect = 1
 
         # Обычные Анимация
         self.left_walk_anim = Animator(
@@ -105,6 +106,11 @@ class Base(Character):
 
 
     def process_logic(self) -> None:
+        self.deceleration_multiplier_with_rect = 1
+        for rect in self.game.current_scene.slow_ghost_rect:
+            if self.in_rect(rect):
+                self.deceleration_multiplier_with_rect = 2
+        self.deceleration_multiplier_with_rect *= self.deceleration_multiplier
         if self.is_in_home and not self.can_leave_home():
             self.go()
             if self.rect.centery >= self.start_pos[1] + 5:
@@ -117,7 +123,7 @@ class Base(Character):
             self.rotate = 0
         if not self.is_invisible and self.mode != 'Frightened':
             self.animator = self.animations[self.rotate]
-        if not self.process_logic_iterator % self.deceleration_multiplier:
+        if not self.process_logic_iterator % self.deceleration_multiplier_with_rect:
             for i in range(self.acceleration_multiplier):
                 self.ghosts_ai()
                 self.step()

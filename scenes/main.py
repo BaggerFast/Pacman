@@ -60,6 +60,7 @@ class Scene(base.Scene):
         self.__player_position = self.__loader.get_player_position()
         self.__ghost_positions = self.__loader.get_ghost_positions()
         self.__fruit_position = self.__loader.get_fruit_position()
+        self.slow_ghost_rect = self.__loader.get_slow_ghost_rect()
         self.__map = Map(self.game, self.__map_data)
 
     def __prepare_lives_meter(self) -> None:
@@ -86,7 +87,7 @@ class Scene(base.Scene):
     def create_objects(self) -> None:
         self.objects = []
         self.game.sounds.siren.unpause()
-        self.cheats = ControlCheats([['giniusvirginius', self.add_hp]])
+        self.cheats = ControlCheats([['abv', self.add_hp]])
         self.objects.append(self.cheats)
         self.__create_map()
         self.__create_ghost()
