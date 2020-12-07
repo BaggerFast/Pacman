@@ -75,3 +75,11 @@ class Scene(base.Scene):
 
     def __is_last_level(self):
         return (self.game.level_id + 1) < self.game.maps.count
+
+    def on_activate(self) -> None:
+        super().on_activate()
+        self.game.sounds.pacman.stop()
+        self.game.sounds.gameover.play()
+
+    def on_deactivate(self) -> None:
+        self.game.sounds.gameover.stop()

@@ -48,5 +48,7 @@ class Pacman(Character):
         if not INFINITY_LIVES:
             self.game.current_scene.hp -= 1
         self.animator = self.__dead_anim
+        self.game.sounds.pacman.play()
+        self.game.sounds.siren.pause()
         self.animator.start()
         self.dead = True
