@@ -78,6 +78,7 @@ class Fruit(DrawableObject):
                 self.__eaten = True
                 self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[
                     self.__anim.get_cur_index()]
+                self.game.store_fruit(self.__anim.get_cur_index(), 1)
                 self.game.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
                 self.__change_image()
 

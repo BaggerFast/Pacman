@@ -30,8 +30,9 @@ class Field:
 class Storage(Field):
     class __Settings(Field):
         def __init__(self):
-            self.VOLUME = False
+            self.MUTE = False
             self.FUN = False
+            self.VOLUME = 100
 
     __storage_filepath = os.path.join(ROOT_DIR, "saves", "storage.json")
 

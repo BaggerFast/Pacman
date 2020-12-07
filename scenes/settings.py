@@ -7,6 +7,19 @@ from scenes import base
 
 
 class Scene(base.Scene):
+    class SelectButton(Button):
+        def __init__(self, **args):
+            self.value = args.pop("value")
+            super().__init__(**args)
+
+        def click(self) -> None:
+            self.game.settings.VOLUME += self.value
+            self.game.settings.VOLUME = max(self.game.settings.VOLUME, 0)
+            self.game.settings.VOLUME = min(self.game.settings.VOLUME, 100)
+            self.game.scenes.current.volume_value.text = str(self.game.settings.VOLUME)
+            for sound in self.game.sounds.__dict__.keys():
+                self.game.sounds.__dict__[sound].update()
+
     class SettingButton(Button):
         def __init__(self, game, name, i, var):
             flag_var = getattr(game.settings, var)
@@ -22,7 +35,7 @@ class Scene(base.Scene):
             self.var = var
 
         def update(self, var):
-            if var == "VOLUME":
+            if var == "MUTE":
                 sounds = self.game.sounds.__dict__
                 for sound in sounds.keys():
                     sounds[sound].update()
@@ -38,6 +51,16 @@ class Scene(base.Scene):
                 self.colors = BUTTON_RED_COLORS
             self.update(self.var)
 
+    def create_static_objects(self):
+        self.volume_text = Text(self.game, "VOLUME", 24)
+        self.volume_text.move_center(self.game.width // 2, 170)
+        self.static_objects.append(self.volume_text)
+
+        self.volume_value = Text(self.game, str(self.game.settings.VOLUME), 26)
+        self.volume_value.move_center(self.game.width // 2, 200)
+        self.static_objects.append(self.volume_value)
+        self.create_title()
+
     def create_title(self) -> None:
         text = ["SETTINGS"]
         for i in range(len(text)):
@@ -47,7 +70,7 @@ class Scene(base.Scene):
 
     def create_buttons(self) -> None:
         names = [
-            ("SOUND", "VOLUME"),
+            ("SOUND", "MUTE"),
             ("FUN", "FUN"),
         ]
         self.buttons = []
@@ -63,4 +86,23 @@ class Scene(base.Scene):
                 text_size=Font.BUTTON_TEXT_SIZE
             )
         )
+        self.buttons.append(
+            self.SelectButton(
+                game=self.game,
+                geometry=pg.Rect(0, 0, 40, 35),
+                text='-',
+                center=(self.game.width // 2 - 60, 200),
+                value=-5
+            )
+        )
+        self.buttons.append(
+            self.SelectButton(
+                game=self.game,
+                geometry=pg.Rect(0, 0, 40, 35),
+                text='+',
+                center=(self.game.width // 2 + 65, 200),
+                value=5
+            )
+        )
+
         self.objects.append(ButtonController(self.game, self.buttons))
