@@ -2,9 +2,9 @@ from copy import copy
 
 import pygame as pg
 
-from objects import ButtonController, Text, Button
+from objects import ButtonController, Text, Button, ImageObject
 from scenes import base
-from misc import Font
+from misc import Font, get_path, get_list_path
 
 
 class Scene(base.Scene):
@@ -40,7 +40,17 @@ class Scene(base.Scene):
         self.objects = []
         self.preview = copy(self.game.skins.current.image)
         self.objects.append(self.preview)
+        self.create_fruits()
         self.create_buttons()
+
+    def create_fruits(self):
+        self.fruit_images = get_list_path('png', 'images', 'fruit')
+        for index in range(len(self.fruit_images)):
+            fruit = ImageObject(self.game, self.fruit_images[index], (self.game.width // 8 - 9 + index * 25, 60))
+            self.objects.append(fruit)
+            text = Text(self.game,str(self.game.eaten_fruits[index]),10)
+            text.move_center(self.game.width // 8 - 10 + index * 25, 60)
+            self.objects.append(text)
 
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT SKIN', 25, font=Font.TITLE)
