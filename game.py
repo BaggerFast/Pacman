@@ -18,7 +18,7 @@ class Game:
             self.FUN = storage.settings.FUN
             print(storage.settings.FUN)
 
-    class __Music:
+    class Music:
         def __init__(self, game):
             self.pacman = SoundController(game, sound=Sounds.DEAD)
             self.click = SoundController(game, sound=Sounds.CLICK)
@@ -40,7 +40,7 @@ class Game:
                 self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0]))
                 self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
 
-    class __Scenes:
+    class Scenes:
         def __init__(self, game):
             self.PAUSE = pause.Scene(game)
             self.MENU = menu.Scene(game)
@@ -72,7 +72,7 @@ class Game:
                 self.__current.on_reset()
             self.__current.on_activate()
 
-    class __Maps:
+    class Maps:
         def __init__(self, game):
             self.game = game
             self.levels = []
@@ -116,7 +116,7 @@ class Game:
     pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
-        self.maps = self.__Maps(self)
+        self.maps = self.Maps(self)
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.__clock = pg.time.Clock()
         self.__game_over = False
@@ -129,11 +129,11 @@ class Game:
         self.read_from_storage()
         self.settings = self.Settings(self.__storage)
 
-        self.sounds = self.__Music(self)
+        self.sounds = self.Music(self)
 
         self.skins.current = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
         self.records = HighScore(self)
-        self.scenes = self.__Scenes(self)
+        self.scenes = self.Scenes(self)
         self.scenes.set(self.scenes.MENU)
 
     def read_from_storage(self):

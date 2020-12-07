@@ -16,7 +16,8 @@ class BaseButton(DrawableObject):
                 self.click()
 
     def process_draw(self) -> None:
-        pg.draw.rect(self.game.screen, Color.WHITE, self.rect)
+        if not self.is_hidden:
+            pg.draw.rect(self.game.screen, Color.WHITE, self.rect)
 
     def click(self) -> None:
         self.function()
@@ -126,7 +127,8 @@ class Button(BaseButton):
         return surface
 
     def process_draw(self) -> None:
-        self.game.screen.blit(self.surfaces[self.state], self.rect.topleft)
+        if not self.is_hidden:
+            self.game.screen.blit(self.surfaces[self.state], self.rect.topleft)
 
     def select(self) -> None:
         self.state = self.STATE_HOVER
