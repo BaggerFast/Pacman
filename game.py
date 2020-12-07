@@ -78,11 +78,11 @@ class Game:
             self.levels = []
             self.count = 0
             self.read_levels()
-            self.__surfaces = self.prerender_surfaces()
+            self.__images = self.prerender_surfaces()
 
         @property
-        def surfaces(self):
-            return self.__surfaces
+        def images(self):
+            return self.__images
 
         @staticmethod
         def level_name(level_id: int = 0):
@@ -101,11 +101,12 @@ class Game:
             self.count = len(self.levels)
 
         def prerender_surfaces(self) -> List[pg.Surface]:
-            surfaces = []
+            images = []
             for level_id in range(self.count):
                 self.__load_from_map(level_id)
-                surfaces.append(self.__map.prerender_map_surface())
-            return surfaces
+                image = self.__map.prerender_map_image()
+                images.append(image)
+            return images
 
     __size = width, height = 224, 285
     __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'default', 'walk'))
@@ -123,7 +124,7 @@ class Game:
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
-        self.skins = Skins()
+        self.skins = Skins(self)
         self.score = Score()
 
         self.read_from_storage()

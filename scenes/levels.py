@@ -1,3 +1,5 @@
+from copy import copy
+
 import pygame as pg
 
 from misc import Font
@@ -19,14 +21,14 @@ class Scene(base.Scene):
 
         def select(self) -> None:
             self.game.scenes.current.is_current = True
-            self.game.scenes.current.preview.image = self.value[1]
-            self.game.scenes.current.preview.smoothscale(100, 100)
+            self.game.scenes.current.preview.image = self.value[1].image
+
             super().select()
 
         def deselect(self) -> None:
             if not self.game.scenes.current.is_current:
-                self.game.scenes.current.preview.image = self.game.maps.surfaces[self.game.level_id]
-                self.game.scenes.current.preview.smoothscale(100, 100)
+                self.game.scenes.current.preview.image = self.game.maps.images[self.game.level_id].image
+
             super().deselect()
 
     __buttons_on_scene = 4
@@ -55,7 +57,7 @@ class Scene(base.Scene):
                 self.LvlButton(
                     game=self.game,
                     geometry=pg.Rect(0, 0, 100, 40),
-                    value=(i, self.game.maps.surfaces[i]),
+                    value=(i, self.game.maps.images[i]),
                     text='LEVEL' + str(i + 1),
                     center=(self.game.width // 2 - 55, (85 + 40 * counter)),
                     text_size=Font.BUTTON_TEXT_SIZE-4,
@@ -83,8 +85,7 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         self.objects = []
-        self.preview = ImageObject(self.game, self.game.maps.surfaces[self.game.level_id], (110, 95))
-        self.preview.smoothscale(100, 100)
+        self.preview = copy(self.game.maps.images[self.game.level_id])
         self.objects.append(self.preview)
         self.create_buttons()
 

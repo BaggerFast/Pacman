@@ -3,7 +3,7 @@ from random import randint
 import pygame as pg
 
 from misc import CELL_SIZE, get_path, Color
-from objects import DrawableObject
+from objects import DrawableObject, ImageObject
 
 
 class Map(DrawableObject):
@@ -58,7 +58,7 @@ class Map(DrawableObject):
                 if self.surface.get_at((x, y)) == Color.MAIN_MAP:
                     self.surface.set_at((x, y), self.color)  # Set the color of the pixel.
 
-    def prerender_map_surface(self) -> pg.Surface:
+    def prerender_map_image(self) -> pg.Surface:
         surface = pg.Surface(self.__size)
         for y in range(len(self.map)):
             for x in range(len(self.map[y])):
@@ -66,7 +66,16 @@ class Map(DrawableObject):
                 if len(self.map[y][x]) == 2:
                     temp_surface = self.__corner_preprocess(x, y, temp_surface)
                 surface.blit(temp_surface, (x * CELL_SIZE, y * CELL_SIZE))
-        return surface
+
+        image = ImageObject(self.game, surface, (110, 95))
+        image.smoothscale(100, 100)
+
+        # Threshold
+        for x in range(image.image.get_width()):
+            for y in range(image.image.get_height()):
+                if image.image.get_at((x, y))[2] > 0:
+                    image.image.set_at((x, y), (0, 0, min(image.image.get_at((x, y))[2] * 5, 255), 255))  # Set the color of the pixel.
+        return image
 
     def process_draw(self) -> None:
         self.game.screen.blit(self.surface, (self.x, self.y))
