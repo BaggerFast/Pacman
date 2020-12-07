@@ -65,4 +65,5 @@ class Font:
     DEFAULT = Tuple(font=get_path('default', 'ttf', 'fonts')).font
     MAIN_SCENE_SIZE = Tuple(size=10).size
     BUTTON_TEXT_SIZE = Tuple(size=24).size
+    BUTTON_FOR_SKINS_TEXT_SIZE = Tuple(size=16).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size
