@@ -18,19 +18,25 @@ class Scene(base.Scene):
             self.game.scenes.set(self.game.scenes.MENU, reset=True)
 
         def select(self) -> None:
+            self.game.scenes.current.is_current = True
             self.game.scenes.current.preview.image = self.value[1]
             self.game.scenes.current.preview.smoothscale(100, 100)
             super().select()
 
-        def process_event(self, event: pg.event.Event) -> None:
-            if self.state == self.STATE_HOVER:
+        def deselect(self) -> None:
+            if not self.game.scenes.current.is_current:
                 self.game.scenes.current.preview.image = self.game.maps.surfaces[self.game.level_id]
                 self.game.scenes.current.preview.smoothscale(100, 100)
-            super().process_event(event)
+            super().deselect()
 
     __buttons_on_scene = 4
 
+    def process_event(self, event: pg.event.Event) -> None:
+        self.is_current = False
+        super().process_event(event)
+
     def create_static_objects(self):
+        self.is_current = False
         self.__scroll = self.game.level_id
         self.__scroll = min(self.__scroll, self.game.maps.count - self.__buttons_on_scene)
         self.__scroll = max(self.__scroll, 0)

@@ -1,3 +1,4 @@
+from datetime import time, datetime
 from typing import List, Union, Callable, Tuple
 import pygame as pg
 from misc import Color, Font, ButtonColor, BUTTON_DEFAULT_COLORS
@@ -59,9 +60,9 @@ class Button(BaseButton):
         if event.type != pg.MOUSEMOTION:
             return
         if self.mouse_hover(event.pos):
-            if not self.left_button_pressed:
+            if not self.left_button_pressed and self.state != self.STATE_HOVER:
                 self.select()
-        else:
+        elif self.state != self.STATE_INITIAL:
             self.deselect()
 
     def process_mouse_button_down(self, event: pg.event.Event) -> None:
@@ -78,7 +79,7 @@ class Button(BaseButton):
             return
         if event.button == pg.BUTTON_LEFT:
             self.left_button_pressed = False
-        if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT:
+        if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT and self.state != self.STATE_INITIAL:
             self.deselect()
 
     def process_event(self, event: pg.event.Event) -> None:

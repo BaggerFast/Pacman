@@ -14,18 +14,24 @@ class Scene(base.Scene):
         def click(self):
             self.game.skins.current = self.value
 
+        def deselect(self) -> None:
+            if not self.game.scenes.current.is_current:
+                self.game.scenes.current.preview.image = self.game.skins.current.surface
+                self.game.scenes.current.preview.scale(75, 75)
+            super().deselect()
+
         def select(self) -> None:
+            self.game.scenes.current.is_current = True
             self.game.scenes.current.preview.image = self.value.surface
             self.game.scenes.current.preview.scale(75, 75)
             super().select()
 
-        def process_event(self, event: pg.event.Event) -> None:
-            if self.state == self.STATE_HOVER:
-                self.game.scenes.current.preview.image = self.game.skins.current.surface
-                self.game.scenes.current.preview.scale(75, 75)
-            super().process_event(event)
+    def process_event(self, event: pg.event.Event) -> None:
+        self.is_current = False
+        super().process_event(event)
 
     def create_static_objects(self):
+        self.is_current = False
         self.__create_title()
 
     def create_objects(self) -> None:
