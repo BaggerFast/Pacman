@@ -12,7 +12,7 @@ class BaseButton(DrawableObject):
         self.function = function
 
     def process_event(self, event: pg.event.Event) -> None:
-        if event.type == pg.MOUSEBUTTONUP:
+        if event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
             if self.rect.collidepoint(event.pos):
                 self.click()
 
