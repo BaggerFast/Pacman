@@ -14,21 +14,26 @@ class Scene(base.Scene):
         def click(self):
             self.game.skins.current = self.value
 
-        def process_event(self, event: pg.event.Event) -> None:
-            super().process_event(event)
-
-        def on_hover(self) -> None:
+        def select(self) -> None:
             self.game.scenes.current.preview.image = self.value.surface
             self.game.scenes.current.preview.scale(75, 75)
+            super().select()
+
+        def process_event(self, event: pg.event.Event) -> None:
+            if self.state == self.STATE_HOVER:
+                self.game.scenes.current.preview.image = self.game.skins.current.surface
+                self.game.scenes.current.preview.scale(75, 75)
+            super().process_event(event)
 
     def create_static_objects(self):
         self.__create_title()
 
     def create_objects(self) -> None:
-        super().create_objects()
+        self.objects = []
         self.preview = ImageObject(self.game, self.game.skins.current.surface, (130, 110))
         self.preview.scale(75, 75)
         self.objects.append(self.preview)
+        self.create_buttons()
 
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT SKIN', 25, font=Font.TITLE)
@@ -47,7 +52,7 @@ class Scene(base.Scene):
         for i in range(len(skins)):
             buttons.append(self.SkinButton(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 120, 30),
+                geometry=pg.Rect(0, 0, 120, 33),
                 text=skins[i][0],
                 value=skins[i][1],
                 center=(self.game.width // 2 - 45, 115 + i * 33),

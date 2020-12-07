@@ -28,7 +28,7 @@ class Field:
 
 
 class Storage(Field):
-    class Settings(Field):
+    class __Settings(Field):
         def __init__(self):
             self.VOLUME = False
             self.FUN = False
@@ -40,7 +40,7 @@ class Storage(Field):
         self.last_skin = "default"
         self.unlocked_levels = [0]
         self.unlocked_skins = ["default"]
-        self.settings = self.Settings()
+        self.settings = self.__Settings()
         self.eaten_fruits = [0 for _ in range(FRUITS_COUNT)]
         self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(game.maps.count)]
         self.load()

@@ -1,51 +1,38 @@
-import json
-import os
-
 import pygame as pg
 
-from misc import Font, ROOT_DIR
-from objects import ButtonController, Text
+from misc import Font
+from objects import ButtonController, Text, ImageObject
 from objects.button import Button
 from scenes import base
 
 
 class Scene(base.Scene):
-    # Константы
-    __button_size = 50
-    __out_of_field = 1000
-    __top_field_y = 80
-    __bottom_field_y = 290
-
-    # Переменые класса
-    __is_scroll_active = False
-    __scroll = 0
-    __counter = 0
-    unlocked_level = 0
-    __storage_filepath = os.path.join(ROOT_DIR, "saves", "storage.json")
-
     class LvlButton(Button):
         def __init__(self, **args):
             self.value = args.pop("value")
             super().__init__(**args)
 
         def click(self):
-            self.game.level_id = self.value
+            self.game.level_id = self.value[0]
             self.game.records.update_records()
             self.game.scenes.set(self.game.scenes.MENU, reset=True)
 
+        def select(self) -> None:
+            self.game.scenes.current.preview.image = self.value[1]
+            self.game.scenes.current.preview.smoothscale(100, 100)
+            super().select()
+
+        def process_event(self, event: pg.event.Event) -> None:
+            if self.state == self.STATE_HOVER:
+                self.game.scenes.current.preview.image = self.game.maps.surfaces[self.game.level_id]
+                self.game.scenes.current.preview.smoothscale(100, 100)
+            super().process_event(event)
+
     def create_static_objects(self):
-        __counter = int(self.game.maps.level_name(self.game.level_id)[-1:])
+        self.__scroll = self.game.level_id
+        self.__scroll = min(self.__scroll, self.game.maps.count - 3)
+        self.__scroll = max(self.__scroll, 0)
         self.__create_title()
-        for i in range(self.game.level_id):
-            self.__counter += 1
-            self.__scroll -= self.__button_size
-
-        if self.__scroll > 0:
-            self.__scroll = 0
-        if self.__scroll < -(self.__button_size*7):
-            self.__scroll = -(self.__button_size*7)
-
-        self.__unlocked_level = self.unlocked()
 
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
@@ -54,17 +41,19 @@ class Scene(base.Scene):
 
     def create_buttons(self) -> None:
         buttons = []
-        for i in range(10):
+        counter = 0
+        for i in range(self.__scroll, self.__scroll + 3):
             buttons.append(
                 self.LvlButton(
                     game=self.game,
-                    geometry=pg.Rect(0, 0, 180, 40),
-                    value=i,
+                    geometry=pg.Rect(0, 0, 100, 40),
+                    value=(i, self.game.maps.surfaces[i]),
                     text='LEVEL' + str(i + 1),
-                    center=(self.game.width // 2, self.button_y_cord(90 + 50 * i)),
+                    center=(self.game.width // 2 - 55, (90 + 50 * counter)),
                     text_size=Font.BUTTON_TEXT_SIZE,
                     active=i in self.game.unlocked_levels)
             )
+            counter += 1
         buttons.append(self.SceneButton(
             game=self.game,
             geometry=pg.Rect(0, 0, 180, 40),
@@ -76,57 +65,27 @@ class Scene(base.Scene):
         for index in range(len(buttons)):
             if str(self.game.level_id + 1) == buttons[index].text[-1:] \
                 or str(self.game.level_id + 1) == buttons[index].text[-2:]:
-                buttons[index].text = '» ' + buttons[index].text + ' «'
+                buttons[index].text = '-' + buttons[index].text + '-'
 
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
 
-    def button_y_cord(self, y):
-        if self.__top_field_y < self.__scroll + y < self.__bottom_field_y:
-            return self.__scroll + y
-        return self.__out_of_field
-
     def unlocked(self) -> int:
         return len(self.game.unlocked_levels)
+
+    def create_objects(self) -> None:
+        self.objects = []
+        self.preview = ImageObject(self.game, self.game.maps.surfaces[self.game.level_id], (110, 95))
+        self.preview.smoothscale(100, 100)
+        self.objects.append(self.preview)
+        self.create_buttons()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.game.scenes.MENU)
-        elif event.type == pg.KEYDOWN and (event.key == pg.K_DOWN or event.key == pg.K_s) and self.__is_scroll_active:
-            if self.__counter == self.__unlocked_level+1:
-                self.__counter = 0
-                self.__scroll = 0
-            else:
-                self.__counter += 1
-                self.__scroll = self.__counter * -self.__button_size
-
-                if self.__scroll > 0:
-                    self.__scroll = 0
-                if self.__scroll < self.__unlocked_level * -self.__button_size:
-                    self.__scroll = self.__unlocked_level * -self.__button_size
-
-            self.game.scenes.set(self.game.scenes.LEVELS)
-            for i in range(self.__counter + 1):
-                self.__button_controller.select_next_button()
-
-        elif event.type == pg.KEYDOWN and (event.key == pg.K_UP or event.key == pg.K_w) and self.__is_scroll_active:
-            if self.__counter <= 0:
-                self.__counter = self.__unlocked_level
-                self.__scroll_length = -self.__button_size * self.__unlocked_level
-            else:
-                self.__counter -= 1
-                self.__scroll = self.__counter * -self.__button_size
-                if self.__scroll > 0:
-                    self.__scroll = 0
-                if self.__scroll <= self.__unlocked_level * -self.__button_size:
-                    self.__scroll = self.__unlocked_level * -self.__button_size
-
-            self.game.scenes.set(self.game.scenes.LEVELS)
-            for i in range(self.__counter + 1):
-                self.__button_controller.select_next_button()
-        elif event.type == pg.KEYDOWN and (
-            event.key == pg.K_UP or event.key == pg.K_DOWN or event.key == pg.K_w or event.key == pg.K_s) and not self.__is_scroll_active:
-            for i in range(self.__counter + 1):
-                self.__button_controller.select_next_button()
-            self.__is_scroll_active = True
-
+        elif event.type == pg.MOUSEWHEEL:
+            self.__scroll -= event.y
+            self.__scroll = min(self.__scroll, self.game.maps.count - 3)
+            self.__scroll = max(self.__scroll, 0)
+            print(self.__scroll)
+            self.create_objects()

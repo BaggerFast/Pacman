@@ -2,8 +2,9 @@ import pygame as pg
 
 
 class DrawableObject:
-    def __init__(self, game) -> None:
+    def __init__(self, game, is_hidden=False) -> None:
         self.game = game
+        self.is_hidden = is_hidden
         self.rect = pg.rect.Rect(0, 0, 0, 0)
 
     def move(self, x, y) -> None:
