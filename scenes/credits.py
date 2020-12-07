@@ -115,11 +115,19 @@ class Scene(base.Scene):
             self.__students.clear()
         elif pg.time.get_ticks() % 190 == 0 and not len(self.__students) == len(self.__students2):
             self.__create_student()
+        if not self.game.sounds.credits.get_busy():
+            self.game.sounds.reload_credit_sounds(self.game)
+            self.game.sounds.credits.play()
         self.__process_students()
+
+    def on_activate(self) -> None:
+        super().on_activate()
+
+    def on_deactivate(self) -> None:
+        super().on_deactivate()
+        self.game.sounds.credits.stop()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 self.game.scenes.set(self.game.scenes.MENU)
-
-

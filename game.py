@@ -13,33 +13,37 @@ from scenes import *
 
 class Game:
     class Settings:
-        def __init__(self, storage):
-            self.MUTE = storage.settings.MUTE
-            self.FUN = storage.settings.FUN
-            self.VOLUME = storage.settings.VOLUME
+        MUTE = None
+        FUN = None
 
-    class Music:
+        def __init__(self, storage):
+            self.MUTE = storage.settings["MUTE"]
+            self.FUN = storage.settings["FUN"]
+
+    class __Music:
         def __init__(self, game):
             self.pacman = SoundController(game, sound=Sounds.DEAD)
             self.click = SoundController(game, sound=Sounds.CLICK)
             self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0]))
             self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
+            self.credits = SoundController(game, channel=5, sound=pg.mixer.Sound(Sounds.CREDITS[0]))
             self.siren = SoundController(game, channel=3, sound=Sounds.SIREN)
             self.seed = SoundController(game, channel=4, sound=Sounds.SEED)
             self.fruit = SoundController(game, channel=4, sound=Sounds.FRUIT)
+
             if game.settings.FUN:
+                self.credits = SoundController(game, channel=5, sound=pg.mixer.Sound(choice(Sounds.CREDITS)))
                 self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
                 self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(choice(Sounds.GAMEOVER)))
                 self.seed = SoundController(game, channel=4, sound=Sounds.SEED_FUN)
 
 
+
         def reload_sounds(self, game):
             if game.settings.FUN:
-                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
-                self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(choice(Sounds.GAMEOVER)))
-            else:
-                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0]))
-                self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
+                self.intro.sound = pg.mixer.Sound(choice(Sounds.INTRO))
+                self.gameover.sound = pg.mixer.Sound(choice(Sounds.GAMEOVER))
+                self.credits.sound = pg.mixer.Sound(choice(Sounds.CREDITS))
 
     class Scenes:
         def __init__(self, game):
