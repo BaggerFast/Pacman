@@ -16,7 +16,6 @@ class Game:
         def __init__(self, storage):
             self.VOLUME = storage.settings.VOLUME
             self.FUN = storage.settings.FUN
-            print(storage.settings.FUN)
 
     class Music:
         def __init__(self, game):

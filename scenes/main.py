@@ -1,19 +1,15 @@
-from copy import copy
-
 import pygame as pg
-import random
 
-import misc
-from misc import LevelLoader, CELL_SIZE, Font, get_path, Health, ControlCheats
+from misc import ControlCheats
 from misc import LevelLoader, Font, get_path, Health
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
+from objects.fruits import Fruit
 from objects.ghosts import *
 from scenes import base
-from objects.fruits import Fruit
-from misc import Sounds
 
 
 class Scene(base.Scene):
+
     def create_static_objects(self):
         self.__load_from_map()
         self.__create_sounds()
@@ -66,7 +62,8 @@ class Scene(base.Scene):
     def __prepare_lives_meter(self) -> None:
         self.__hp_hud = []
         for i in range(int(self.hp)):
-            hp_image = ImageObject(self.game, get_path('1', 'png', 'images', 'pacman', self.game.skins.current.name, 'walk'),
+            hp_image = ImageObject(self.game,
+                                   get_path('1', 'png', 'images', 'pacman', self.game.skins.current.name, 'walk'),
                                    (5 + i * 20, 270))
             hp_image.rotate(180)
             self.__hp_hud.append(hp_image)
@@ -105,10 +102,10 @@ class Scene(base.Scene):
         self.objects.append(self.__seeds)
 
     def __create_ghost(self):
-        self.blinky = Blinky(self.game, self.__ghost_positions[3], get_path('aura', 'png', 'images', 'ghost', 'blinky'))
-        self.pinky = Pinky(self.game, self.__ghost_positions[1], get_path('aura', 'png', 'images', 'ghost', 'pinky'))
-        self.inky = Inky(self.game, self.__ghost_positions[0], get_path('aura', 'png', 'images', 'ghost', 'inky'))
-        self.clyde = Clyde(self.game, self.__ghost_positions[2], get_path('aura', 'png', 'images', 'ghost', 'clyde'))
+        self.blinky = Blinky(self.game, self.__ghost_positions[3])
+        self.pinky = Pinky(self.game, self.__ghost_positions[1])
+        self.inky = Inky(self.game, self.__ghost_positions[0])
+        self.clyde = Clyde(self.game, self.__ghost_positions[2])
 
         self.__ghosts = [
             self.blinky,
@@ -126,11 +123,17 @@ class Scene(base.Scene):
             self.objects.append(ghost.gg_text)
 
     def __create_hud(self):
-        self.__high_scores_value_text = Text(self.game, str(self.game.records.data[-1]), Font.MAIN_SCENE_SIZE,
+        self.__high_scores_value_text = Text(self.game,
+                                             str(self.game.records.data[-1]),
+                                             Font.MAIN_SCENE_SIZE,
                                              rect=pg.Rect(130, 8, 20, 20))
         self.static_objects.append(self.__high_scores_value_text)
 
-        self.__scores_value_text = Text(self.game, str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(self.game.score), Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
+        self.__scores_value_text = Text(
+            self.game,
+            str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(self.game.score),
+            Font.MAIN_SCENE_SIZE,
+            rect=pg.Rect(10, 8, 20, 20))
         self.static_objects.append(self.__scores_value_text)
 
     @property
@@ -140,7 +143,7 @@ class Scene(base.Scene):
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             pg.mixer.pause()
-            self.template = copy(self.screen)
+            self.template = self.screen.copy()
             self.game.timer = pg.time.get_ticks() / 1000
             self.game.scenes.set(self.game.scenes.PAUSE, surface=True)
 
@@ -212,7 +215,7 @@ class Scene(base.Scene):
             self.text[0].surface.set_alpha(0)
             self.text[1].surface.set_alpha(0)
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
-                self.template = copy(self.screen)
+                self.template = self.screen.copy()
                 self.game.timer = pg.time.get_ticks() / 1000
                 self.game.scenes.set(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
@@ -234,7 +237,7 @@ class Scene(base.Scene):
                 elif self.__max_seeds_eaten_to_prefered_ghost == 17:
                     self.__max_seeds_eaten_to_prefered_ghost = 32
             if self.__seeds.is_field_empty():
-                self.template = copy(self.screen)
+                self.template = self.screen.copy()
                 self.game.timer = pg.time.get_ticks() / 1000
                 self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
         else:
@@ -263,7 +266,8 @@ class Scene(base.Scene):
 
     def additional_logic(self) -> None:
         self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"
-        self.__scores_value_text.text = str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(
+        self.__scores_value_text.text = str(
+            self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(
             self.game.score)
         self.__prepare_lives_meter()
 

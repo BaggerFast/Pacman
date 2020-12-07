@@ -6,8 +6,8 @@ import pygame as pg
 class Blinky(Base):
     love_point_in_scatter_mode = (33, -3)
 
-    def __init__(self, game, start_pos: Tuple[int, int], aura: str):
-        super().__init__(game, start_pos, aura)
+    def __init__(self, game, start_pos: Tuple[int, int]):
+        super().__init__(game, start_pos)
         self.mode = 'Scatter'
         self.set_direction('left')
 
