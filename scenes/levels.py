@@ -28,9 +28,11 @@ class Scene(base.Scene):
                 self.game.scenes.current.preview.smoothscale(100, 100)
             super().process_event(event)
 
+    __buttons_on_scene = 4
+
     def create_static_objects(self):
         self.__scroll = self.game.level_id
-        self.__scroll = min(self.__scroll, self.game.maps.count - 3)
+        self.__scroll = min(self.__scroll, self.game.maps.count - self.__buttons_on_scene)
         self.__scroll = max(self.__scroll, 0)
         self.__create_title()
 
@@ -42,15 +44,15 @@ class Scene(base.Scene):
     def create_buttons(self) -> None:
         buttons = []
         counter = 0
-        for i in range(self.__scroll, self.__scroll + 3):
+        for i in range(self.__scroll, self.__scroll + self.__buttons_on_scene):
             buttons.append(
                 self.LvlButton(
                     game=self.game,
                     geometry=pg.Rect(0, 0, 100, 40),
                     value=(i, self.game.maps.surfaces[i]),
                     text='LEVEL' + str(i + 1),
-                    center=(self.game.width // 2 - 55, (90 + 50 * counter)),
-                    text_size=Font.BUTTON_TEXT_SIZE,
+                    center=(self.game.width // 2 - 55, (85 + 40 * counter)),
+                    text_size=Font.BUTTON_TEXT_SIZE-4,
                     active=i in self.game.unlocked_levels)
             )
             counter += 1
@@ -85,7 +87,6 @@ class Scene(base.Scene):
             self.game.scenes.set(self.game.scenes.MENU)
         elif event.type == pg.MOUSEWHEEL:
             self.__scroll -= event.y
-            self.__scroll = min(self.__scroll, self.game.maps.count - 3)
+            self.__scroll = min(self.__scroll, self.game.maps.count - self.__buttons_on_scene)
             self.__scroll = max(self.__scroll, 0)
-            print(self.__scroll)
             self.create_objects()
