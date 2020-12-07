@@ -2,7 +2,7 @@ import pygame as pg
 
 from misc import CELL_SIZE, Animator
 from objects import DrawableObject
-from typing import Tuple
+from typing import Tuple, List
 
 
 class Character(DrawableObject):
@@ -74,6 +74,11 @@ class Character(DrawableObject):
 
     def get_cell(self) -> Tuple[int, int]:
         return self.rect.centerx // CELL_SIZE, (self.rect.centery - 20) // CELL_SIZE
+
+    def in_rect(self, rect: List[int]) -> bool:
+        print(rect[0] <= self.get_cell()[0] <= rect[2] and rect[1] <= self.get_cell()[1] <= rect[3])
+        return rect[0] <= self.get_cell()[0] <= rect[2] \
+               and rect[1] <= self.get_cell()[1] <= rect[3]
 
     @staticmethod
     def two_cells_dis(cell1: Tuple[int, int], cell2: Tuple[int, int]) -> float:

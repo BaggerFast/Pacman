@@ -74,3 +74,6 @@ class LevelLoader:
 
     def get_fruit_position(self) -> Tuple[Union[int, float], Union[int, float]]:
         return self.__json["fruit_pos"]
+
+    def get_slow_ghost_rect(self):
+        return self.__json["slow_ghost_rect"]

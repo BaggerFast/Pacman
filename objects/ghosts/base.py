@@ -16,10 +16,10 @@ class Base(Character):
     }
 
     def __init__(self, game, start_pos: Tuple[int, int], aura: str) -> None:
-
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
         self.acceleration_multiplier = 1
+        self.deceleration_multiplier_with_rect = 1
 
         # Обычные Анимация
         self.left_walk_anim = Animator(
@@ -106,6 +106,11 @@ class Base(Character):
 
 
     def process_logic(self) -> None:
+        self.deceleration_multiplier_with_rect = 1
+        for rect in self.game.current_scene.slow_ghost_rect:
+            if self.in_rect(rect):
+                self.deceleration_multiplier_with_rect = 2
+        self.deceleration_multiplier_with_rect *= self.deceleration_multiplier
         if self.is_in_home and not self.can_leave_home():
             self.go()
             if self.rect.centery >= self.start_pos[1] + 5:
@@ -118,7 +123,7 @@ class Base(Character):
             self.rotate = 0
         if not self.is_invisible and self.mode != 'Frightened':
             self.animator = self.animations[self.rotate]
-        if not self.process_logic_iterator % self.deceleration_multiplier:
+        if not self.process_logic_iterator % self.deceleration_multiplier_with_rect:
             for i in range(self.acceleration_multiplier):
                 self.ghosts_ai()
                 self.step()
@@ -145,6 +150,10 @@ class Base(Character):
         self.animator = self.invisible_anim
         self.is_invisible = True
         self.collision = False
+
+    def visible(self) -> None:
+        self.is_invisible = False
+        self.collision = True
 
     def update_ai_timer(self):
         self.ai_timer = pg.time.get_ticks()
@@ -180,14 +189,14 @@ class Base(Character):
                     if cell[rand]:
                         break
                 self.shift_x, self.shift_y, self.rotate = self.direction2[rand]
-        if self.mode == 'Frightened':
-            if pg.time.get_ticks() - self.ai_timer >= 6000:
-                self.animator = self.frightened_walk_anim2
-            if pg.time.get_ticks() - self.ai_timer >= 8000:
-                self.game.score.deactivate_fear_mode()
-                self.update_ai_timer()
-                self.deceleration_multiplier = 1
-                self.mode = 'Scatter'
+                if pg.time.get_ticks() - self.ai_timer >= 6000:
+                    self.animator = self.frightened_walk_anim2
+                if pg.time.get_ticks() - self.ai_timer >= 8000:
+                    self.game.score.deactivate_fear_mode()
+                    self.update_ai_timer()
+                    self.deceleration_multiplier = 1
+                    self.animations = self.normal_animations
+                    self.mode = 'Scatter'
 
         if self.mode == 'Eaten':
             self.deceleration_multiplier = 1
@@ -206,7 +215,6 @@ class Base(Character):
             if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
                 self.deceleration_multiplier = 1
                 self.set_direction('left')
-                self.gg_text.text = ' '
                 self.mode = 'Scatter'
                 self.collision = True
                 self.update_ai_timer()
