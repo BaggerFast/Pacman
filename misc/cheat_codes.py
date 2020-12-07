@@ -1,17 +1,24 @@
 import pygame as pg
 
 
-class ControlCheatCodes:
-    class CheatCode:
-        def __init__(self, cheat_code: str, function):
-            self.cheat_code = cheat_code
-            self.function = function
+class Cheat:
+    def __init__(self, cheat):
+        self.cheat_code = cheat[0]
+        self.function = cheat[1]
 
-        def run(self):
-            self.function()
+    def run(self):
+        self.function()
 
+    def check_enter_code(self, enter_code):
+        if enter_code == self.cheat_code:
+            self.run()
+
+
+class ControlCheats:
     def __init__(self, cheat_codes):
-        self.cheat_codes = cheat_codes
+        self.cheat_codes = []
+        for cheat in cheat_codes:
+            self.cheat_codes.append(Cheat(cheat))
         self.timer = pg.time.get_ticks()
         self.enter_code = ''
         self.old_enter_code = ''
@@ -26,6 +33,7 @@ class ControlCheatCodes:
         elif self.old_enter_code != self.enter_code:
             self.update_timer()
         self.old_enter_code = self.enter_code
+
 
     def process_event(self, event):
         if event.type == pg.KEYDOWN:

@@ -1,7 +1,8 @@
 import pygame as pg
 import random
 
-from misc import LevelLoader, CELL_SIZE, Font, get_path, Health
+import misc
+from misc import LevelLoader, CELL_SIZE, Font, get_path, Health, ControlCheats
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.ghosts import *
 from scenes import base
@@ -29,11 +30,18 @@ class Scene(base.Scene):
         self.__first_run_ghost = True
         self.first_run = True
 
-        self.hp = Health(1, 3)
+        self.hp = Health(3, 4)
         self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
+
+        self.cheats = ControlCheats([['abv', self.infinity_lives]])
+
         self.__create_static_text()
         self.create_objects()
+
+    def infinity_lives(self):
+        misc.variables.INFINITY_LIVES = True
+        print('круто')
 
     def __create_static_text(self):
         self.__scores_label_text = Text(
@@ -205,7 +213,9 @@ class Scene(base.Scene):
         if not pg.mixer.Channel(3).get_busy() and not self.first_run:
             pg.mixer.Channel(3).play(self.siren_sound)
 
+
     def process_logic(self) -> None:
+        self.cheats.process_logic()
         if not pg.mixer.Channel(1).get_busy():
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
                 pg.mixer.Channel(0).stop()
