@@ -1,6 +1,5 @@
 import pygame as pg
-from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS
-from misc.storage import Storage
+from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS, ControlCheatCodes, Storage
 from scenes import *
 
 
@@ -57,6 +56,7 @@ class Game:
         self.time_out = 125
         self.animate_timer = 0
         self.scenes.set(self.scenes.MENU)
+        self.cheat_codes = ControlCheatCodes(1)
 
     @property
     def current_scene(self):
@@ -76,10 +76,12 @@ class Game:
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
+            self.cheat_codes.process_event(event)
             self.__process_exit_events(event)
             self.scenes.current.process_event(event)
 
     def __process_all_logic(self) -> None:
+        self.cheat_codes.process_logic()
         self.scenes.current.process_logic()
 
     def __process_all_draw(self) -> None:
