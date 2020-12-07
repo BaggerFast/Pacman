@@ -75,4 +75,4 @@ class Scene(base.Scene):
         self.game.scenes.set(self.game.scenes.MAIN, reset=True)
 
     def __is_last_level(self):
-        return (self.game.level_id + 1) < self.game.count
+        return (self.game.level_id + 1) < self.game.maps.count
