@@ -77,16 +77,6 @@ class Scene(base.Scene):
         for i in range(len(names)):
             self.buttons.append(self.SettingButton(self.game, names[i][0], i, names[i][1]))
         self.buttons.append(
-            self.SceneButton(
-                game=self.game,
-                geometry=pg.Rect(0, 0, 180, 40),
-                text='MENU',
-                scene=(self.game.scenes.MENU, False),
-                center=(self.game.width // 2, 250),
-                text_size=Font.BUTTON_TEXT_SIZE
-            )
-        )
-        self.buttons.append(
             self.SelectButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 40, 35),
@@ -102,6 +92,16 @@ class Scene(base.Scene):
                 text='+',
                 center=(self.game.width // 2 + 65, 200),
                 value=5
+            )
+        )
+        self.buttons.append(
+            self.SceneButton(
+                game=self.game,
+                geometry=pg.Rect(0, 0, 180, 40),
+                text='MENU',
+                scene=(self.game.scenes.MENU, False),
+                center=(self.game.width // 2, 250),
+                text_size=Font.BUTTON_TEXT_SIZE
             )
         )
 
