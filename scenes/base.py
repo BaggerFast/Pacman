@@ -8,7 +8,7 @@ class Scene:
             self.scene = args.pop("scene")
             super(Scene.SceneButton, self).__init__(**args)
 
-        def click(self):
+        def click(self) -> None:
             if callable(self.scene[0]):
                 self.scene[0]()
             else:
@@ -36,7 +36,7 @@ class Scene:
             item.process_draw()
         self.additional_draw()
 
-    def create_static_objects(self):
+    def create_static_objects(self) -> None:
         self.create_title()
 
     def create_objects(self) -> None:
@@ -63,10 +63,10 @@ class Scene:
     def on_reset(self) -> None:
         pass
 
-    def create_buttons(self):
+    def create_buttons(self) -> None:
         pass
 
-    def create_title(self):
+    def create_title(self) -> None:
         pass
 
     def recreate(self) -> None:

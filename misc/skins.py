@@ -10,10 +10,16 @@ class Skins:
     class Skin:
         def __init__(self, game, skin_name: str = "default"):
             self.name = skin_name
+            self.skin_cost = {}
             self.__game = game
             self.__walk = Animator(get_list_path('png', 'images', 'pacman', self.name, 'walk'))
             self.__dead = Animator(get_list_path('png', 'images', 'pacman', self.name, 'dead'), 100, False, True)
             self.__image = self.prerender_surface()
+
+
+        @property
+        def is_unlocked(self):
+            return self.name in self.__game.unlocked_skins
 
         @property
         def walk(self):
@@ -36,14 +42,21 @@ class Skins:
         """
         param must be named like folder with skin
         """
+        self.__skins_cost = {"default": {0: 0, 1: 0},
+                             "half_life": {2: 10, 4: 7},
+                             "chrome": {6: 5, 7: 4}}
         self.__game = game
         self.default = self.Skin(self.__game)
-        self.chrome = None
         self.half_life = None
+        self.chrome = None
         self.load_skins()
 
         self.__current = self.default
         self.__prerenders = self.prerender_surfaces()
+
+    @property
+    def skins_cost(self):
+        return self.__skins_cost
 
     def prerender_surfaces(self) -> Dict[str, pg.Surface]:
         return {key: self.__dict__[key].image for key in self.all_skins}
@@ -52,6 +65,7 @@ class Skins:
         for key in self.__dict__.keys():
             if not key.startswith("_"):
                 self.__dict__[key] = self.Skin(self.__game, key)
+                self.__dict__[key].skin_cost = self.__skins_cost[key]
 
     @property
     def prerenders(self):

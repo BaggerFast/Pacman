@@ -84,3 +84,9 @@ BUTTON_RED_COLORS = ButtonColor(
     hover=ButtonStateColor(text=Color.WHITE, background=Color.RED),
     click=ButtonStateColor(text=Color.WHITE, background=Color.DARK_RED)
 )
+
+BUTTON_SKIN_BUY = ButtonColor(
+    static=ButtonStateColor(text=Color.YELLOW, background=Color.BLACK),
+    hover=ButtonStateColor(text=Color.WHITE, background=Color.JET),
+    click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK)
+)
