@@ -66,7 +66,7 @@ class Button(BaseButton):
             self.deselect()
 
     def process_mouse_button_down(self, event: pg.event.Event) -> None:
-        if event.type != pg.MOUSEBUTTONDOWN:
+        if event.type != pg.MOUSEBUTTONDOWN and event.type != pg.MOUSEWHEEL:
             return
         if event.button == pg.BUTTON_LEFT:
             self.left_button_pressed = True
@@ -75,7 +75,7 @@ class Button(BaseButton):
             self.game.sounds.click.play()
 
     def process_mouse_button_up(self, event: pg.event.Event) -> None:
-        if event.type != pg.MOUSEBUTTONUP:
+        if event.type != pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
             return
         if event.button == pg.BUTTON_LEFT:
             self.left_button_pressed = False
