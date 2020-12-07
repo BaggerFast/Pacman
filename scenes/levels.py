@@ -3,7 +3,7 @@ from copy import copy
 import pygame as pg
 
 from misc import Font
-from objects import ButtonController, Text, ImageObject
+from objects import ButtonController, Text
 from objects.button import Button
 from scenes import base
 
@@ -89,11 +89,22 @@ class Scene(base.Scene):
         self.objects.append(self.preview)
         self.create_buttons()
 
+    def scroll_threshold(self) -> None:
+        self.__scroll = min(self.__scroll, self.game.maps.count - self.__buttons_on_scene)
+        self.__scroll = max(self.__scroll, 0)
+
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.game.scenes.MENU)
         elif event.type == pg.MOUSEWHEEL:
             self.__scroll -= event.y
-            self.__scroll = min(self.__scroll, self.game.maps.count - self.__buttons_on_scene)
-            self.__scroll = max(self.__scroll, 0)
+            self.scroll_threshold()
             self.create_objects()
+        elif event.type == pg.KEYDOWN:
+            if event.key == pg.K_e or event.key == pg.K_q:
+                if event.key == pg.K_e:
+                    self.__scroll += 1
+                elif event.key == pg.K_q:
+                    self.__scroll -= 1
+                self.scroll_threshold()
+                self.create_objects()

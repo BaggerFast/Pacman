@@ -69,7 +69,7 @@ class Map(DrawableObject):
         return surface
 
     def prerender_map_image_scaled(self) -> ImageObject:
-        image = ImageObject(self.game, self.prerender_map_surface(), (110, 95))
+        image = ImageObject(self.game, self.prerender_map_surface(), (110, 96))
         image.smoothscale(100, 100)
 
         # Threshold
