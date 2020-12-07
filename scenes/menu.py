@@ -5,7 +5,7 @@ from PIL import ImageFilter, Image
 from objects.map import rand_color
 from objects import ButtonController, Text, ImageObject
 from scenes import base
-from misc import Font, BUTTON_TRANSPERENT_COLORS, Color
+from misc import Font, BUTTON_TRANSPERENT_COLORS, Color, BUTTON_MENU
 
 
 class Scene(base.Scene):
@@ -15,7 +15,7 @@ class Scene(base.Scene):
         self.color = rand_color()
         self.change_color()
         self.blur()
-        self.image = ImageObject(self.game, self.preview, (0, 20))
+        self.image = ImageObject(self.game, self.preview, (0, 0))
         self.objects.append(self.image)
         self.create_buttons()
         self.__create_indicator()
@@ -28,7 +28,8 @@ class Scene(base.Scene):
                     self.preview.set_at((x, y), self.color)  # Set the color of the pixel
 
     def blur(self):
-        blur_count = 5
+        blur_count = 4
+        self.preview = pg.transform.smoothscale(self.preview, self.game.screen.get_size())
         rect = self.preview.get_rect()
         surify = pg.image.tostring(self.preview, 'RGBA')
         impil = Image.frombytes('RGBA', (rect.width, rect.height), surify)
@@ -65,7 +66,7 @@ class Scene(base.Scene):
                     scene=(names[i][1], names[i][2]),
                     center=(self.game.width // 2, 95 + i * 28),
                     text_size=Font.BUTTON_TEXT_SIZE,
-                    colors=BUTTON_TRANSPERENT_COLORS
+                    colors=BUTTON_MENU
                 )
             )
         self.objects.append(ButtonController(self.game, buttons))

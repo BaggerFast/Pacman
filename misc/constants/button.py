@@ -68,8 +68,8 @@ BUTTON_DEFAULT_COLORS = ButtonColor(
 )
 
 BUTTON_TRANSPERENT_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Color.GRAY, background=Color.TRANSPERENT),
-    hover=ButtonStateColor(text=Color.WHITE, background=Color.TRANSPERENT),
+    static=ButtonStateColor(text=Color.GRAY, background=Color.HALF_TRANSPERENT),
+    hover=ButtonStateColor(text=Color.WHITE, background=Color.HALF_TRANSPERENT),
     click=ButtonStateColor(text=Color.WHITE, background=Color.JET)
 )
 
@@ -89,4 +89,10 @@ BUTTON_SKIN_BUY = ButtonColor(
     static=ButtonStateColor(text=Color.YELLOW, background=Color.BLACK),
     hover=ButtonStateColor(text=Color.WHITE, background=Color.JET),
     click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK)
+)
+
+BUTTON_MENU = ButtonColor(
+    static=ButtonStateColor(text=Color.GRAY, background=Color.TRANSPERENT),
+    hover=ButtonStateColor(text=Color.WHITE, background=Color.TRANSPERENT),
+    click=ButtonStateColor(text=Color.WHITE, background=Color.JET)
 )
