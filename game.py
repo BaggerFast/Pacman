@@ -13,9 +13,10 @@ from scenes import *
 
 class Game:
     class Settings:
-        def __init__(self, game):
-            self.MUTE = game.settings.MUTE
-            self.FUN = game.settings.FUN
+        def __init__(self, storage):
+            self.VOLUME = storage.settings.VOLUME
+            self.FUN = storage.settings.FUN
+            print(storage.settings.FUN)
 
     class __Music:
         def __init__(self, game):
@@ -35,6 +36,9 @@ class Game:
             if game.settings.FUN:
                 self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(choice(Sounds.INTRO)))
                 self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(choice(Sounds.GAMEOVER)))
+            else:
+                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0]))
+                self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
 
     class __Scenes:
         def __init__(self, game):
@@ -142,7 +146,7 @@ class Game:
         self.highscores = self.__storage.highscores
 
     def save_to_storage(self):
-        self.__storage.settings.MUTE = self.settings.MUTE
+        self.__storage.settings.VOLUME = self.settings.VOLUME
         self.__storage.settings.FUN = self.settings.FUN
         self.__storage.last_level_id = self.level_id
         self.__storage.last_skin = self.skins.current.name
