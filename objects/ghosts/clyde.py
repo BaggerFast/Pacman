@@ -1,3 +1,4 @@
+from typing import Tuple
 from .base import Base
 import pygame as pg
 
@@ -6,7 +7,7 @@ class Clyde(Base):
     max_count_eat_seeds_in_home = 60
     love_point_in_scatter_mode = (0, 32)
 
-    def __init__(self, game, start_pos, aura):
+    def __init__(self, game, start_pos: Tuple[int, int], aura: str):
         super().__init__(game, start_pos, aura)
         self.mode = 'Chase'
         self.shift_y = 1

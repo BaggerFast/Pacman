@@ -1,3 +1,4 @@
+from typing import Tuple
 from .base import Base
 import pygame as pg
 
@@ -6,11 +7,9 @@ class Inky(Base):
     max_count_eat_seeds_in_home = 30
     love_point_in_scatter_mode = (27, 32)
 
-    def __init__(self, game, start_pos):
-        super().__init__(game, start_pos)
-        self.mode = 'Chase'
+    def __init__(self, game, start_pos: Tuple[int, int], aura: str):
+        super().__init__(game, start_pos, aura)
         self.shift_y = 1
-        super().__init__(game, start_pos)
         self.set_direction('up')
 
     def process_logic(self) -> None:

@@ -150,7 +150,7 @@ class Base(Character):
         self.ai_timer = pg.time.get_ticks()
 
     def ghosts_ai(self) -> None:
-        if self.in_center() and self.collision:
+        if self.in_center() and self.collision and not self.is_invisible:
             if self.move_to(self.rotate):
                 self.go()
             cell = self.movement_cell(self.get_cell())
@@ -198,15 +198,19 @@ class Base(Character):
                 self.tmp_flag1 = True
             if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.game.current_scene.pinky.start_pos[1]:
                 self.animations = self.normal_animations
+                self.acceleration_multiplier = 1
+                self.deceleration_multiplier = 2
                 self.set_direction('up')
                 self.tmp_flag2 = True
             if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
+                self.deceleration_multiplier = 1
                 self.set_direction('left')
                 self.gg_text.text = ' '
                 self.mode = 'Scatter'
                 self.collision = True
-                self.acceleration_multiplier = 1
                 self.update_ai_timer()
+                self.tmp_flag1 = False
+                self.tmp_flag2 = False
 
     def step(self) -> None:
         if not DISABLE_GHOSTS_MOVING:

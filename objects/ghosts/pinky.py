@@ -1,3 +1,4 @@
+from typing import Tuple
 from .base import Base
 import pygame as pg
 
@@ -5,11 +6,9 @@ import pygame as pg
 class Pinky(Base):
     love_point_in_scatter_mode = (2, -3)
 
-    def __init__(self, game, start_pos):
-        super().__init__(game, start_pos)
-        self.mode = 'Chase'
+    def __init__(self, game, start_pos: Tuple[int, int], aura: str):
+        super().__init__(game, start_pos, aura)
         self.shift_y = -1
-        super().__init__(game, start_pos)
         self.set_direction('down')
 
     def process_logic(self) -> None:

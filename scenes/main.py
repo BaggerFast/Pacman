@@ -230,7 +230,9 @@ class Scene(base.Scene):
                 self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
         else:
             self.__start_label()
-            self.inky.update_timer()
+            for ghost in self.__ghosts:
+                ghost.update_ai_timer()
+                ghost.update_timer()
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
             self.__change_prefered_ghost()
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
