@@ -17,11 +17,11 @@ class Skins:
 
         @property
         def walk(self):
-            return copy(self.__walk)
+            return self.__walk
 
         @property
         def dead(self):
-            return copy(self.__dead)
+            return self.__dead
 
         @property
         def image(self):
