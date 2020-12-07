@@ -3,7 +3,7 @@ from copy import copy
 import pygame as pg
 
 from misc import Font
-from objects import ButtonController, Text, ImageObject
+from objects import ButtonController, Text
 from objects.button import Button
 from scenes import base
 

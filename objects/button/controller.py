@@ -51,6 +51,7 @@ class ButtonController(DrawableObject):
         self.buttons[self.active_button_index].activate()
 
     def click_current_button(self) -> None:
+        self.buttons[self.active_button_index].select()
         self.buttons[self.active_button_index].click()
 
     def process_key_down(self, event: pg.event.Event) -> None:
