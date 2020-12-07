@@ -36,6 +36,7 @@ class Scene(base.Scene):
         "Фил Спенсер",
         "☭",
         "MSHP LOVE",
+        "Польская корова",
         "Хирохико Араки"
     ]
 
@@ -100,11 +101,7 @@ class Scene(base.Scene):
                     min(
                         255,
                         self.game.width - (
-                            (
-                                student.rect.midbottom[0] - self.game.width // 2
-                            )
-                            ** 2 * 0.06 - self.__alpha_delta
-                        )
+                            (student.rect.midbottom[0] - self.game.width // 2) ** 2 * 0.06 - self.__alpha_delta)
                     )
                 )
 
