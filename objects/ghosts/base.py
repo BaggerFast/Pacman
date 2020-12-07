@@ -202,7 +202,7 @@ class Base(Character):
             self.deceleration_multiplier = 1
             self.love_cell = (self.game.current_scene.blinky.start_pos[0] // 8,
                               (self.game.current_scene.blinky.start_pos[1]-20) // 8)
-            if not self.tmp_flag1 and self.get_cell() == self.love_cell:
+            if not self.tmp_flag1 and self.rect.center == self.game.current_scene.blinky.start_pos:
                 self.collision = False
                 self.set_direction('down')
                 self.tmp_flag1 = True
