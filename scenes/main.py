@@ -31,6 +31,8 @@ class Scene(base.Scene):
         self.__work_ghost_counters = True
         self.__first_run_ghost = True
         self.fruit = Fruit(self.game, self.__fruit_position)
+        self.ghost_text_timer = pg.time.get_ticks()
+        self.ghost_text_flag = False
 
     def __create_health(self):
         self.hp = Health(3, 4)
@@ -168,7 +170,11 @@ class Scene(base.Scene):
                 else:
                     if ghost.mode == 'Frightened':
                         ghost.gg_text.text = str(200 * 2 ** self.game.score.fear_count)
+                        for ghost2 in self.__ghosts:
+                            ghost.invisible()
                         self.game.score.eat_ghost()
+                        self.ghost_text_flag = True
+                        self.ghost_text_timer = pg.time.get_ticks()
                     ghost.toggle_mode_to_eaten()
 
         if seed_eaten == 1:
@@ -248,6 +254,12 @@ class Scene(base.Scene):
         for ghost in self.__not_prefered_ghosts:
             if ghost != self.__prefered_ghost:
                 ghost.update_timer()
+        if self.ghost_text_flag:
+            if pg.time.get_ticks() - self.ghost_text_timer >= 1000:
+                for ghost in self.__ghosts:
+                    ghost.visible()
+                    ghost.gg_text.text = ' '
+                self.ghost_text_flag = False
 
     def additional_draw(self) -> None:
         super().additional_draw()

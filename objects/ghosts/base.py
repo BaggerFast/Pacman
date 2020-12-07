@@ -16,7 +16,6 @@ class Base(Character):
     }
 
     def __init__(self, game, start_pos: Tuple[int, int], aura: str) -> None:
-
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
         self.acceleration_multiplier = 1
@@ -146,6 +145,10 @@ class Base(Character):
         self.is_invisible = True
         self.collision = False
 
+    def visible(self) -> None:
+        self.is_invisible = False
+        self.collision = True
+
     def update_ai_timer(self):
         self.ai_timer = pg.time.get_ticks()
 
@@ -186,6 +189,7 @@ class Base(Character):
                     self.game.score.deactivate_fear_mode()
                     self.update_ai_timer()
                     self.deceleration_multiplier = 1
+                    self.animations = self.normal_animations
                     self.mode = 'Scatter'
 
         if self.mode == 'Eaten':
@@ -205,7 +209,6 @@ class Base(Character):
             if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
                 self.deceleration_multiplier = 1
                 self.set_direction('left')
-                self.gg_text.text = ' '
                 self.mode = 'Scatter'
                 self.collision = True
                 self.update_ai_timer()
