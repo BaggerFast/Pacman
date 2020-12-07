@@ -20,7 +20,7 @@ class Sounds:
     MOVE = Tuple(pg.mixer.Sound(get_path('munch', 'wav', 'sounds'))).mixer
     SIREN = Tuple(pg.mixer.Sound(get_path('siren', 'wav', 'sounds'))).mixer
     FRUIT = Tuple(pg.mixer.Sound(get_path('eat_fruit', 'wav', 'sounds'))).mixer
-    CREDITS = TupleList(get_list_path('wav', 'Sounds', 'credits')).list
+    CREDITS = TupleList(get_list_path('mp3', 'Sounds', 'credits')).list
 
 
 class Color(NamedTuple):

@@ -126,11 +126,9 @@ class Scene(base.Scene):
 
     def on_activate(self) -> None:
         super().on_activate()
-        self.game.sounds.credits.play()
 
     def on_deactivate(self) -> None:
         super().on_deactivate()
-        self.game.sounds.reload_credit_sounds(self.game)
         self.game.sounds.credits.stop()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
