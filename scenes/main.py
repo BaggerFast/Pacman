@@ -95,7 +95,6 @@ class Scene(base.Scene):
 
     def add_hp(self):
         self.hp += 1
-        print('круто')
 
     def __create_map(self):
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
@@ -159,8 +158,6 @@ class Scene(base.Scene):
                 if ghost.collision_check(self.pacman)[1]:
                     self.__timer_reset_pacman = pg.time.get_ticks()
                     if not self.pacman.dead:
-                        self.game.sounds.pacman.play()
-                        self.game.sounds.siren.pause()
                         self.pacman.death()
                         self.__prepare_lives_meter()
                     for ghost2 in self.__ghosts:
@@ -229,10 +226,7 @@ class Scene(base.Scene):
                     self.__max_seeds_eaten_to_prefered_ghost = 17
                 elif self.__max_seeds_eaten_to_prefered_ghost == 17:
                     self.__max_seeds_eaten_to_prefered_ghost = 32
-
             if self.__seeds.is_field_empty():
-                self.game.sounds.pacman.stop()
-                self.game.sounds.gameover.play()
                 self.template = copy(self.screen)
                 self.game.timer = pg.time.get_ticks() / 1000
                 self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
