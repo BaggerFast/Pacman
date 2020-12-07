@@ -55,7 +55,7 @@ class Character(DrawableObject):
             if self.animator.current_aura:
                 self.game.screen.blit(self.animator.current_aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
                                                                    self.rect.centery - self.__aura.get_rect().height // 2))
-            else:
+            elif self.__aura:
                 self.game.screen.blit(self.__aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
                                                     self.rect.centery - self.__aura.get_rect().height // 2))
             self.game.screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
