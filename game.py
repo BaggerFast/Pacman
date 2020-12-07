@@ -103,7 +103,7 @@ class Game:
             images = []
             for level_id in range(self.count):
                 self.__load_from_map(level_id)
-                image = self.__map.prerender_map_image()
+                image = self.__map.prerender_map_image_scaled()
                 images.append(image)
             return images
 
