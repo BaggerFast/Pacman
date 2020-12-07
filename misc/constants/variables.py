@@ -3,7 +3,7 @@ FRUITS_COUNT: int = 8
 HIGHSCORES_COUNT: int = 5
 
 UNLOCK_SKINS: bool = False
-UNLOCK_LEVELS: bool = False
+UNLOCK_LEVELS: bool = True
 DEBUG: bool = False
 INFINITY_LIVES: bool = False
 DISABLE_GHOSTS_MOVING: bool = False

@@ -84,7 +84,7 @@ class Scene(base.Scene):
     def create_objects(self) -> None:
         self.objects = []
         self.game.sounds.siren.unpause()
-        self.cheats = ControlCheats([['abv', self.add_hp]])
+        self.cheats = ControlCheats([['giniusvirginius', self.add_hp]])
         self.objects.append(self.cheats)
         self.__create_map()
         self.__create_ghost()
@@ -93,16 +93,20 @@ class Scene(base.Scene):
         self.pacman = Pacman(self.game, self.__player_position)
         self.objects.append(self.pacman)
 
+    def add_hp(self):
+        self.hp += 1
+        print('круто')
+
     def __create_map(self):
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
         self.objects.append(self.__map)
         self.objects.append(self.__seeds)
 
     def __create_ghost(self):
-        self.blinky = Blinky(self.game, self.__ghost_positions[3])
-        self.pinky = Pinky(self.game, self.__ghost_positions[1])
-        self.inky = Inky(self.game, self.__ghost_positions[0])
-        self.clyde = Clyde(self.game, self.__ghost_positions[2])
+        self.blinky = Blinky(self.game, self.__ghost_positions[3], get_path('aura', 'png', 'images', 'ghost', 'blinky'))
+        self.pinky = Pinky(self.game, self.__ghost_positions[1], get_path('aura', 'png', 'images', 'ghost', 'pinky'))
+        self.inky = Inky(self.game, self.__ghost_positions[0], get_path('aura', 'png', 'images', 'ghost', 'inky'))
+        self.clyde = Clyde(self.game, self.__ghost_positions[2], get_path('aura', 'png', 'images', 'ghost', 'clyde'))
 
         self.__ghosts = [
             self.blinky,

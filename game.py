@@ -1,7 +1,6 @@
 from random import choice
 
 import pygame as pg
-from misc import Color, HighScore, get_path, Score, Maps, UNLOCK_LEVELS, Storage
 from PIL import Image, ImageFilter
 
 from misc import Sounds
