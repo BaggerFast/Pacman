@@ -18,7 +18,7 @@ class Scene(base.Scene):
 
         def deselect(self) -> None:
             scene = self.game.scenes.current
-            if not scene.current.is_current:
+            if not scene.is_current:
                 scene.preview.image = self.game.skins.current.image.image
             super().deselect()
 
