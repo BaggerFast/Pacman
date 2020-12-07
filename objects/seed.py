@@ -1,13 +1,12 @@
-from typing import Tuple
-
 import pygame as pg
-from misc import CELL_SIZE, Color, Sounds, HIGH_CALORIE_SEEDS
+from misc import CELL_SIZE, Color, HIGH_CALORIE_SEEDS, get_path
 from objects import DrawableObject
 
 
 class SeedContainer(DrawableObject):
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
         super().__init__(game)
+        self.__ram_img = pg.image.load(get_path("ram", "png", "images"))
         self.__x = x
         self.__y = y
         self.__seeds = seed_data
@@ -36,8 +35,12 @@ class SeedContainer(DrawableObject):
         for row in range(len(self.__seeds)):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col]:
-                    pg.draw.circle(self.game.screen, Color.WHITE, (self.__x + col * CELL_SIZE + CELL_SIZE // 2,
-                                                                   self.y + row * CELL_SIZE + CELL_SIZE // 2), 1)
+                    if self.game.skins.current.name == "chrome":
+                        self.game.screen.blit(self.__ram_img, (self.x + col * CELL_SIZE + CELL_SIZE // 2 - 6,
+                                                               self.y + row * CELL_SIZE + CELL_SIZE // 2 - 6))
+                    else:
+                        pg.draw.circle(self.game.screen, Color.WHITE, (self.x + col * CELL_SIZE + CELL_SIZE // 2,
+                                                                       self.y + row * CELL_SIZE + CELL_SIZE // 2), 1)
 
     def __draw_energizers(self) -> None:
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:

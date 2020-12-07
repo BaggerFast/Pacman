@@ -8,7 +8,7 @@ class HighScore:
 
     def __init__(self, game) -> None:
         self.game = game
-        self.__level_id = self.game.level_id
+        self.__level_id = self.game.maps.cur_id
         for _ in range(len(self.highscores), self.game.maps.count):
             self.highscores.append([0 for _ in range(HIGHSCORES_COUNT)])
 
@@ -37,5 +37,5 @@ class HighScore:
         self.game.highscores = self.highscores
 
     def update_records(self) -> None:
-        self.__level_id = self.game.level_id
+        self.__level_id = self.game.maps.cur_id
         self.__data = sorted(self.highscores[self.__level_id])

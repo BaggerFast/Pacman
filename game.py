@@ -76,12 +76,18 @@ class Game:
             self.game = game
             self.levels = []
             self.count = 0
+            self.cur_id = 0
             self.read_levels()
             self.__images = self.prerender_surfaces()
 
         @property
         def images(self):
             return self.__images
+
+        @property
+        def full_surface(self):
+            self.__load_from_map(self.cur_id)
+            return self.__map.prerender_map_surface()
 
         @staticmethod
         def level_name(level_id: int = 0):
@@ -103,7 +109,7 @@ class Game:
             images = []
             for level_id in range(self.count):
                 self.__load_from_map(level_id)
-                image = self.__map.prerender_map_image()
+                image = self.__map.prerender_map_image_scaled()
                 images.append(image)
             return images
 
@@ -139,7 +145,7 @@ class Game:
     def read_from_storage(self):
         self.__storage = Storage(self)
         self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
-        self.level_id = int(self.__storage.last_level_id) if int(
+        self.cur_id = int(self.__storage.last_level_id) if int(
             self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
         self.unlocked_skins = self.skins.all_skins if UNLOCK_SKINS else self.__storage.unlocked_skins
         self.eaten_fruits = self.__storage.eaten_fruits
@@ -148,7 +154,7 @@ class Game:
     def save_to_storage(self):
         self.__storage.settings.VOLUME = self.settings.VOLUME
         self.__storage.settings.FUN = self.settings.FUN
-        self.__storage.last_level_id = self.level_id
+        self.__storage.last_level_id = self.cur_id
         self.__storage.last_skin = self.skins.current.name
         self.__storage.eaten_fruits = self.eaten_fruits
         if not UNLOCK_LEVELS:

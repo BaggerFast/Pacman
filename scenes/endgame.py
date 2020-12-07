@@ -64,17 +64,17 @@ class Scene(base.Scene):
 
     def __unlock_level(self):
         if self.__is_last_level():
-            next_level = self.game.level_id + 1
+            next_level = self.game.maps.cur_id + 1
             self.game.unlock_level(next_level)
 
     def __next_level(self):
-        next_level = self.game.level_id + 1
-        self.game.level_id = next_level
+        next_level = self.game.maps.cur_id + 1
+        self.game.maps.cur_id = next_level
         self.game.records.update_records()
         self.game.scenes.set(self.game.scenes.MAIN, reset=True)
 
     def __is_last_level(self):
-        return (self.game.level_id + 1) < self.game.maps.count
+        return (self.game.maps.cur_id + 1) < self.game.maps.count
 
     def on_activate(self) -> None:
         super().on_activate()
