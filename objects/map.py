@@ -74,7 +74,7 @@ class Map(DrawableObject):
         for x in range(image.image.get_width()):
             for y in range(image.image.get_height()):
                 if image.image.get_at((x, y))[2] > 0:
-                    image.image.set_at((x, y), (0, 0, 255, 255))  # Set the color of the pixel.
+                    image.image.set_at((x, y), (0, 0, min(image.image.get_at((x, y))[2] * 5, 255), 255))  # Set the color of the pixel.
         return image
 
     def process_draw(self) -> None:
