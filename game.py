@@ -176,8 +176,8 @@ class Game:
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
-            if event.type == pg.MOUSEBUTTONDOWN and DEBUG:
-                print(event.pos)
+            if DEBUG and event.type != pg.MOUSEMOTION:
+                print(event)
 
             self.__process_exit_events(event)
             self.scenes.current.process_event(event)
