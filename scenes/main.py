@@ -48,7 +48,7 @@ class Scene(base.Scene):
         self.static_objects.append(self.__high_scores_label_text)
 
     def __load_from_map(self):
-        self.__loader = LevelLoader(self.game.maps.levels[self.game.level_id])
+        self.__loader = LevelLoader(self.game.maps.levels[self.game.maps.cur_id])
         self.__map_data = self.__loader.get_map_data()
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()

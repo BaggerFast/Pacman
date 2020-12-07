@@ -15,7 +15,7 @@ class Scene(base.Scene):
             super().__init__(**args)
 
         def click(self):
-            self.game.level_id = self.value[0]
+            self.game.maps.cur_id = self.value[0]
             self.game.records.update_records()
             self.game.scenes.set(self.game.scenes.MENU, reset=True)
 
@@ -27,7 +27,7 @@ class Scene(base.Scene):
 
         def deselect(self) -> None:
             if not self.game.scenes.current.is_current:
-                self.game.scenes.current.preview.image = self.game.maps.images[self.game.level_id].image
+                self.game.scenes.current.preview.image = self.game.maps.images[self.game.maps.cur_id].image
 
             super().deselect()
 
@@ -39,7 +39,7 @@ class Scene(base.Scene):
 
     def create_static_objects(self):
         self.is_current = False
-        self.__scroll = self.game.level_id
+        self.__scroll = self.game.maps.cur_id
         self.__scroll = min(self.__scroll, self.game.maps.count - self.__buttons_on_scene)
         self.__scroll = max(self.__scroll, 0)
         self.__create_title()
@@ -73,8 +73,8 @@ class Scene(base.Scene):
             text_size=Font.BUTTON_TEXT_SIZE))
 
         for index in range(len(buttons)):
-            if str(self.game.level_id + 1) == buttons[index].text[-1:] \
-                or str(self.game.level_id + 1) == buttons[index].text[-2:]:
+            if str(self.game.maps.cur_id + 1) == buttons[index].text[-1:] \
+                or str(self.game.maps.cur_id + 1) == buttons[index].text[-2:]:
                 buttons[index].text = '-' + buttons[index].text + '-'
 
         self.__button_controller = ButtonController(self.game, buttons)
@@ -85,7 +85,7 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         self.objects = []
-        self.preview = copy(self.game.maps.images[self.game.level_id])
+        self.preview = copy(self.game.maps.images[self.game.maps.cur_id])
         self.objects.append(self.preview)
         self.create_buttons()
 
