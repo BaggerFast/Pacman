@@ -34,14 +34,8 @@ class Scene(base.Scene):
         self.fruit = Fruit(self.game, self.game.screen, 0 + self.__fruit_position[0] * CELL_SIZE + CELL_SIZE // 2,
                            20 + self.__fruit_position[1] * CELL_SIZE + CELL_SIZE // 2)
 
-        self.cheats = ControlCheats([['abv', self.infinity_lives]])
-
         self.__create_static_text()
         self.create_objects()
-
-    def infinity_lives(self):
-        misc.variables.INFINITY_LIVES = True
-        print('круто')
 
     def __create_static_text(self):
         self.__scores_label_text = Text(
@@ -72,6 +66,8 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         self.objects = []
+        self.cheats = ControlCheats([['abv', self.add_hp]])
+        self.objects.append(self.cheats)
         self.__create_map()
         self.__create_hud()
 
@@ -82,6 +78,10 @@ class Scene(base.Scene):
         self.__prepare_lives_meter()
         self.__create_ghost()
         self.__create_start_anim()
+
+    def add_hp(self):
+        self.hp += 1
+        print('круто')
 
     def __create_sounds(self):
         self.timer = 0
@@ -213,9 +213,7 @@ class Scene(base.Scene):
         if not pg.mixer.Channel(3).get_busy() and not self.first_run:
             pg.mixer.Channel(3).play(self.siren_sound)
 
-
     def process_logic(self) -> None:
-        self.cheats.process_logic()
         if not pg.mixer.Channel(1).get_busy():
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
                 pg.mixer.Channel(0).stop()

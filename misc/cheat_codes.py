@@ -1,5 +1,7 @@
 import pygame as pg
 
+import misc
+
 
 class Cheat:
     def __init__(self, cheat):
@@ -16,9 +18,9 @@ class Cheat:
 
 class ControlCheats:
     def __init__(self, cheat_codes):
-        self.cheat_codes = []
+        self.cheats = []
         for cheat in cheat_codes:
-            self.cheat_codes.append(Cheat(cheat))
+            self.cheats.append(Cheat(cheat))
         self.timer = pg.time.get_ticks()
         self.enter_code = ''
         self.old_enter_code = ''
@@ -27,6 +29,8 @@ class ControlCheats:
         self.timer = pg.time.get_ticks()
 
     def process_logic(self):
+        for cheat in self.cheats:
+            cheat.check_enter_code(self.enter_code)
         if self.old_enter_code == self.enter_code and pg.time.get_ticks() - self.timer >= 1000:
             self.enter_code = ''
             self.update_timer()
@@ -34,6 +38,8 @@ class ControlCheats:
             self.update_timer()
         self.old_enter_code = self.enter_code
 
+    def process_draw(self):
+        pass
 
     def process_event(self, event):
         if event.type == pg.KEYDOWN:
