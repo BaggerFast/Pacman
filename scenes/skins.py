@@ -13,6 +13,7 @@ class Scene(base.Scene):
 
         def click(self):
             self.game.skins.current = self.value
+            self.select()
 
         def deselect(self) -> None:
             if not self.game.scenes.current.is_current:
