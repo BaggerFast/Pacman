@@ -42,6 +42,8 @@ class Color(NamedTuple):
     WOODEN = Tuple(pg.Color(101, 67, 33)).color
     JET = Tuple(pg.Color(10, 10, 10)).color
     MAIN_MAP = Tuple(pg.Color(33, 33, 255)).color
+    DARK_RED = Tuple(pg.Color(125, 0, 0)).color
+    DARK_GREEN = Tuple(pg.Color(0, 125, 0)).color
     TRANSPERENT = Tuple(pg.Color(0, 0, 0, 50)).color
 
 

@@ -97,7 +97,7 @@ class Scene(base.Scene):
             elif student.rect.x != -105:
                 student.ttl += 1
                 student.move(student.ttl * student.speed + self.start_pos, student.rect.y)
-                student.image.set_alpha(
+                student.surface.set_alpha(
                     min(
                         255,
                         self.game.width - (
