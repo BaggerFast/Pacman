@@ -1,3 +1,5 @@
+from copy import copy
+
 import pygame as pg
 
 from objects import ButtonController, Text, Button
@@ -7,28 +9,23 @@ from misc import Font
 
 class Scene(base.Scene):
     class SkinButton(Button):
-        def __init__(self, **args):
+        def __init__(self, **args) -> object:
             self.value = args.pop("value")
             super().__init__(**args)
 
         def click(self):
             self.game.skins.current = self.value
-            self.select()
 
         def deselect(self) -> None:
-            if not self.game.scenes.current.is_current:
-                scene = self.game.scenes.current
-                scene.objects.pop(scene.objects.index(scene.preview))
-                scene.preview = self.game.skins.current.image
-                scene.objects.append(scene.preview)
+            scene = self.game.scenes.current
+            if not scene.current.is_current:
+                scene.preview.image = self.game.skins.current.image.image
             super().deselect()
 
         def select(self) -> None:
-            self.game.scenes.current.is_current = True
             scene = self.game.scenes.current
-            scene.objects.pop(scene.objects.index(scene.preview))
-            scene.preview = self.value.image
-            scene.objects.append(scene.preview)
+            scene.is_current = True
+            scene.preview.image = self.value.image.image
             super().select()
 
     def process_event(self, event: pg.event.Event) -> None:
@@ -41,7 +38,7 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         self.objects = []
-        self.preview = self.game.skins.current.image
+        self.preview = copy(self.game.skins.current.image)
         self.objects.append(self.preview)
         self.create_buttons()
 
