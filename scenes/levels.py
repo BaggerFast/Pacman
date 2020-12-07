@@ -1,5 +1,3 @@
-from copy import copy
-
 import pygame as pg
 
 from misc import Font
@@ -21,13 +19,19 @@ class Scene(base.Scene):
 
         def select(self) -> None:
             self.game.scenes.current.is_current = True
-            self.game.scenes.current.preview.image = self.value[1].image
+            scene = self.game.scenes.current
+            scene.objects.pop(scene.objects.index(scene.preview))
+            scene.preview = self.value[1]
+            scene.objects.append(scene.preview)
 
             super().select()
 
         def deselect(self) -> None:
-            if not self.game.scenes.current.is_current:
-                self.game.scenes.current.preview.image = self.game.maps.images[self.game.level_id].image
+            scene = self.game.scenes.current
+            if not scene.is_current:
+                scene.objects.pop(scene.objects.index(scene.preview))
+                scene.preview = self.game.maps.images[self.game.level_id]
+                scene.objects.append(scene.preview)
 
             super().deselect()
 
@@ -85,7 +89,7 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         self.objects = []
-        self.preview = copy(self.game.maps.images[self.game.level_id])
+        self.preview = self.game.maps.images[self.game.level_id]
         self.objects.append(self.preview)
         self.create_buttons()
 
