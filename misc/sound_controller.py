@@ -14,7 +14,7 @@ class SoundController:
         self.update()
 
     def update(self):
-        self.volume = 0 if not self.game.settings.VOLUME else self.volume_on
+        self.volume = 0 if not self.game.settings.MUTE else self.game.settings.VOLUME / 100
         self.sound.set_volume(self.volume)
 
     def play(self):

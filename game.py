@@ -14,8 +14,9 @@ from scenes import *
 class Game:
     class Settings:
         def __init__(self, storage):
-            self.VOLUME = storage.settings.VOLUME
+            self.MUTE = storage.settings.MUTE
             self.FUN = storage.settings.FUN
+            self.VOLUME = storage.settings.VOLUME
 
     class Music:
         def __init__(self, game):
@@ -152,8 +153,9 @@ class Game:
         self.highscores = self.__storage.highscores
 
     def save_to_storage(self):
-        self.__storage.settings.VOLUME = self.settings.VOLUME
+        self.__storage.settings.MUTE = self.settings.MUTE
         self.__storage.settings.FUN = self.settings.FUN
+        self.__storage.settings.VOLUME = self.settings.VOLUME
         self.__storage.last_level_id = self.cur_id
         self.__storage.last_skin = self.skins.current.name
         self.__storage.eaten_fruits = self.eaten_fruits
@@ -248,6 +250,6 @@ class Game:
         :param value: count of fruits
         """
         if fruit_id in range(FRUITS_COUNT):
-            self.eaten_fruits[fruit_id] = value
+            self.eaten_fruits[fruit_id] += value
         else:
             raise Exception(f"id error. Fruit id: {fruit_id} doesn't exist")
