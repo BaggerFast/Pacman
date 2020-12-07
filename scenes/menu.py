@@ -16,6 +16,7 @@ class Scene(base.Scene):
         self.change_color()
         self.blur()
         self.image = ImageObject(self.game, self.preview, (0, 20))
+        #self.image.scale((,0)
         self.objects.append(self.image)
         self.create_buttons()
         self.__create_indicator()

@@ -16,6 +16,7 @@ class Sounds:
     DEAD = Tuple(pg.mixer.Sound(get_path('death', 'wav', 'sounds'))).mixer
     GAMEOVER = TupleList(get_list_path('wav', 'Sounds', 'gameover')).list
     SEED = Tuple(pg.mixer.Sound(get_path('munch', 'wav', 'sounds'))).mixer
+    SEED_FUN = Tuple(pg.mixer.Sound(get_path('leader2', 'wav', 'sounds'))).mixer
     INTRO = TupleList(get_list_path('wav', 'Sounds', 'intro')).list
     MOVE = Tuple(pg.mixer.Sound(get_path('munch', 'wav', 'sounds'))).mixer
     SIREN = Tuple(pg.mixer.Sound(get_path('siren', 'wav', 'sounds'))).mixer
