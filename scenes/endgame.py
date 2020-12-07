@@ -11,7 +11,6 @@ class Scene(base.Scene):
         self.__create_score_text()
         self.__create_highscore_text()
         self.__unlock_level()
-        levels.Scene.unlocked_level += 1
 
     def create_title(self) -> None:
         text = ["YOU", "WON"]
