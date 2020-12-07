@@ -25,20 +25,17 @@ class Scene(base.Scene):
             if var == "VOLUME":
                 sounds = self.game.sounds.__dict__
                 for sound in sounds.keys():
-                    print(sounds[sound])
                     sounds[sound].update()
-            elif var == "FUN":
-                print(self.game.settings.FUN)
 
         def click(self):
             flag_var = not getattr(self.game.settings, self.var)
             setattr(self.game.settings, self.var, flag_var)
             if flag_var:
-                self.text = self.name + " OFF"
-                self.colors = BUTTON_RED_COLORS
-            else:
                 self.text = self.name + " ON"
                 self.colors = BUTTON_GREEN_COLORS
+            else:
+                self.text = self.name + " OFF"
+                self.colors = BUTTON_RED_COLORS
             self.update(self.var)
 
     def create_title(self) -> None:
