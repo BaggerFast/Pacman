@@ -44,11 +44,11 @@ class Color(NamedTuple):
     SILVER = Tuple(pg.Color(192, 192, 192)).color
     BRONZE = Tuple(pg.Color(205, 127, 50)).color
     WOODEN = Tuple(pg.Color(101, 67, 33)).color
-    JET = Tuple(pg.Color(10, 10, 10)).color
+    JET = Tuple(pg.Color(10, 10, 10, 120)).color
     MAIN_MAP = Tuple(pg.Color(33, 33, 255)).color
     DARK_RED = Tuple(pg.Color(125, 0, 0)).color
     DARK_GREEN = Tuple(pg.Color(0, 125, 0)).color
-    HALF_TRANSPERENT = Tuple(pg.Color(0, 0, 0, 50)).color
+    HALF_TRANSPERENT = Tuple(pg.Color(0, 0, 0, 40)).color
     TRANSPERENT = Tuple(pg.Color(0, 0, 0, 0)).color
 
 
