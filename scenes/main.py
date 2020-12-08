@@ -62,7 +62,7 @@ class Scene(base.Scene):
 
     def __prepare_lives_meter(self) -> None:
         self.__hp_hud = []
-        for i in range(int(self.hp)):
+        for i in range(int(self.hp) - 1):
             hp_image = ImageObject(self.game,
                                    get_path('1', 'png', 'images', 'pacman', self.game.skins.current.name, 'walk'),
                                    (5 + i * 20, 270))
@@ -183,8 +183,7 @@ class Scene(base.Scene):
                 else:
                     if ghost.mode == 'Frightened':
                         ghost.gg_text.text = str(200 * 2 ** self.game.score.fear_count)
-                        for ghost2 in self.__ghosts:
-                            ghost.invisible()
+                        ghost.invisible()
                         self.game.score.eat_ghost()
                         self.ghost_text_flag = True
                         self.ghost_text_timer = pg.time.get_ticks()
