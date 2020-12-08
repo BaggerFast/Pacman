@@ -100,11 +100,15 @@ class Scene(base.Scene):
             self.SceneButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 40),
-                text='MENU',
-                scene=(self.game.scenes.MENU, False),
+                text='BACK',
+                scene=(self.prev_scene, False),
                 center=(self.game.width // 2, 250),
                 text_size=Font.BUTTON_TEXT_SIZE
             )
         )
 
         self.objects.append(ButtonController(self.game, self.buttons))
+
+    def additional_event_check(self, event: pg.event.Event) -> None:
+        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+            self.game.scenes.set(self.prev_scene)

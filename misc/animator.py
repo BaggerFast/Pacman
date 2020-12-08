@@ -81,4 +81,10 @@ class Animator:
             self.change_rotation()
 
     def change_rotation(self) -> None:
-        self.__current_image = pg.transform.rotate(self.current_image, -90 * self.rotate)
+        if self.rotate == 2:
+            self.mirror_x()
+        else:
+            self.__current_image = pg.transform.rotate(self.current_image, -90 * self.rotate)
+
+    def mirror_x(self) -> None:
+        self.__current_image = pg.transform.flip(self.current_image, True, False)

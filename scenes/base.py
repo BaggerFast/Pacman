@@ -16,6 +16,7 @@ class Scene:
 
     def __init__(self, game) -> None:
         self.game = game
+        self.prev_scene = None
         self.screen: pg.Surface = self.game.screen
         self.objects: list = []
         self.static_objects = []

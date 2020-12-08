@@ -77,6 +77,7 @@ class Game:
             :param surface: if surface == True background of new scene equal CURRENT scene with BLUR
             IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
             """
+            scene.prev_scene = self.__current
             if self.__current is not None and not surface:
                 self.__current.on_deactivate()
             self.__current = scene
@@ -127,7 +128,7 @@ class Game:
             return images
 
     __size = width, height = 224, 285
-    __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'default', 'walk'))
+    __icon = pg.transform.scale(pg.image.load(get_path('ico', 'png', 'images',)), (256, 256))
     __FPS = 60
     __def_level_id = 0
     __def_skin = "default"
@@ -207,6 +208,7 @@ class Game:
             self.scenes.current.process_event(event)
 
     def __process_all_logic(self) -> None:
+        self.__FPS = 60 if self.skins.current.name != "edge" else 30
         self.scenes.current.process_logic()
 
     def __process_all_draw(self) -> None:

@@ -9,13 +9,12 @@ class SoundController:
     def __init__(self, game, sound, channel: int = 0, volume: int = 1):
         self.sound = sound
         self.game = game
-        self.volume_on = volume
+        self.volume = volume
         self.channel = pg.mixer.Channel(channel)
         self.update()
 
     def update(self):
         self.volume = 0 if not self.game.settings.MUTE else self.game.settings.VOLUME / 100
-        self.sound.set_volume(self.volume)
 
     def play(self):
         self.sound.set_volume(self.volume)
