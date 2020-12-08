@@ -109,11 +109,6 @@ class Base(Character):
         self.tmp_flag2 = False
 
     def process_logic(self) -> None:
-        if self.mode == 'Frightened' and not self.game.sounds.pellet.get_busy():
-            self.game.sounds.pellet.play()
-            self.game.sounds.siren.status = False
-        if self.mode != 'Frightened' and not self.game.sounds.pellet.get_busy():
-            self.game.sounds.siren.status = True
         self.deceleration_multiplier_with_rect = 1
         for rect in self.game.current_scene.slow_ghost_rect:
             if self.in_rect(rect):

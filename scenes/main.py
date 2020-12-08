@@ -207,10 +207,21 @@ class Scene(base.Scene):
                 self.text[1].surface.set_alpha(0)
 
     def __play_music(self):
-        if not self.game.sounds.siren.get_busy() and self.game.sounds.siren.status:
+        if not self.game.sounds.siren.get_busy():
             self.game.sounds.siren.play()
-        if not self.game.sounds.siren.status:
-            self.game.sounds.siren.stop()
+
+    def __check_ghosts(self):
+        flag = False
+        for ghost in self.__ghosts:
+            if ghost.mode == 'Frightened':
+                flag = True
+        if flag:
+            self.game.sounds.siren.pause()
+            if not self.game.sounds.pellet.get_busy():
+                self.game.sounds.pellet.play()
+        else:
+            self.game.sounds.siren.unpause()
+            self.game.sounds.pellet.stop()
 
     def process_logic(self) -> None:
         if not self.game.sounds.intro.get_busy():
@@ -224,6 +235,8 @@ class Scene(base.Scene):
             super(Scene, self).process_logic()
             self.__play_music()
             self.__process_collision()
+            if self.pacman.animator != self.pacman.dead_anim:
+                self.__check_ghosts()
             self.text[0].surface.set_alpha(0)
             self.text[1].surface.set_alpha(0)
             if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
