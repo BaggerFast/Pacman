@@ -77,6 +77,7 @@ class Game:
             :param surface: if surface == True background of new scene equal CURRENT scene with BLUR
             IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
             """
+            scene.prev_scene = self.__current
             if self.__current is not None and not surface:
                 self.__current.on_deactivate()
             self.__current = scene
