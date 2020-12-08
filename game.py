@@ -128,7 +128,7 @@ class Game:
             return images
 
     __size = width, height = 224, 285
-    __icon = pg.image.load(get_path('1', 'png', 'images', 'pacman', 'default', 'walk'))
+    __icon = pg.transform.scale(pg.image.load(get_path('ico', 'png', 'images',)), (256, 256))
     __FPS = 60
     __def_level_id = 0
     __def_skin = "default"
