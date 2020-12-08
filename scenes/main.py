@@ -57,6 +57,7 @@ class Scene(base.Scene):
         self.__ghost_positions = self.__loader.get_ghost_positions()
         self.__fruit_position = self.__loader.get_fruit_position()
         self.slow_ghost_rect = self.__loader.get_slow_ghost_rect()
+        self.cant_up_ghost_rect = self.__loader.get_cant_up_ghost_rect()
         self.__map = Map(self.game, self.__map_data)
 
     def __prepare_lives_meter(self) -> None:
@@ -102,10 +103,10 @@ class Scene(base.Scene):
         self.objects.append(self.__seeds)
 
     def __create_ghost(self):
-        self.blinky = Blinky(self.game, self.__ghost_positions[3])
-        self.pinky = Pinky(self.game, self.__ghost_positions[1])
-        self.inky = Inky(self.game, self.__ghost_positions[0])
-        self.clyde = Clyde(self.game, self.__ghost_positions[2])
+        self.blinky = Blinky(self.game, self.__ghost_positions[3], 8000, 20000, 7000)
+        self.pinky = Pinky(self.game, self.__ghost_positions[1], 8000, 20000, 7000)
+        self.inky = Inky(self.game, self.__ghost_positions[0], 8000, 20000, 5000)
+        self.clyde = Clyde(self.game, self.__ghost_positions[2], 8000, 0, 0)
 
         self.__ghosts = [
             self.blinky,

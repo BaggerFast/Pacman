@@ -77,3 +77,6 @@ class LevelLoader:
 
     def get_slow_ghost_rect(self):
         return self.__json["slow_ghost_rect"]
+
+    def get_cant_up_ghost_rect(self):
+        return self.__json["cant_up_ghost_rect"]
