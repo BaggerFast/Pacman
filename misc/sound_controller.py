@@ -18,6 +18,7 @@ class SoundController:
         self.sound.set_volume(self.volume)
 
     def play(self):
+        self.sound.set_volume(self.volume)
         self.channel.play(self.sound)
 
     def pause(self):
@@ -31,4 +32,3 @@ class SoundController:
 
     def get_busy(self):
         return self.channel.get_busy()
-

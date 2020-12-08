@@ -20,7 +20,6 @@ class Scene(base.Scene):
         self.create_buttons()
         self.__create_indicator()
 
-
     def change_color(self):
         for x in range(self.preview.get_width()):
             for y in range(self.preview.get_height()):
@@ -33,7 +32,8 @@ class Scene(base.Scene):
         rect = self.preview.get_rect()
         surify = pg.image.tostring(self.preview, 'RGBA')
         impil = Image.frombytes('RGBA', (rect.width, rect.height), surify)
-        piler = impil.filter(ImageFilter.GaussianBlur(radius=blur_count))
+        piler = impil.resize(self.game.size).\
+            filter(ImageFilter.GaussianBlur(radius=blur_count))
         self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
     def create_title(self) -> None:

@@ -65,7 +65,7 @@ class SeedContainer(DrawableObject):
                 if self.__seeds[row][col] and row * CELL_SIZE + 18 == object.rect.y:
                     if col * CELL_SIZE - 2 == object.rect.x:
                         self.__seeds[row][col] = None
-                        if not pg.mixer.Channel(0).get_busy():
+                        if not self.game.sounds.seed.get_busy():
                             self.game.sounds.seed.play()
                         self.game.score.eat_seed()
                         self.__seeds_on_field -= 1

@@ -70,7 +70,7 @@ class Scene(base.Scene):
 
     def __create_sounds(self):
         self.timer = 0
-        self.intro_sound = self.game.sounds.intro.sound
+        self.intro_sound = self.game.sounds.intro
 
     def __create_start_anim(self):
         self.text = ['READY', 'GO!']
@@ -86,10 +86,10 @@ class Scene(base.Scene):
         self.game.sounds.siren.unpause()
         self.cheats = ControlCheats([['abv', self.add_hp]])
         self.objects.append(self.cheats)
-        self.__create_map()
-        self.__create_ghost()
         self.text[len(self.text) - 1].surface.set_alpha(0)
+        self.__create_map()
         self.objects.append(self.fruit)
+        self.__create_ghost()
         self.pacman = Pacman(self.game, self.__player_position)
         self.objects.append(self.pacman)
 
@@ -195,13 +195,13 @@ class Scene(base.Scene):
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.state_text *= -1
         if self.state_text == 1:
-            if current_time - self.timer < self.intro_sound.get_length() / 4 * 3:
+            if current_time - self.timer < self.intro_sound.sound.get_length() / 4 * 3:
                 self.text[0].surface.set_alpha(255)
             else:
                 self.text[0].surface.set_alpha(0)
                 self.text[1].surface.set_alpha(255)
         else:
-            if current_time - self.timer < self.intro_sound.get_length() / 4 * 3:
+            if current_time - self.timer < self.intro_sound.sound.get_length() / 4 * 3:
                 self.text[0].surface.set_alpha(0)
             else:
                 self.text[1].surface.set_alpha(0)
@@ -210,17 +210,33 @@ class Scene(base.Scene):
         if not self.game.sounds.siren.get_busy():
             self.game.sounds.siren.play()
 
+    def __check_ghosts(self):
+        flag = False
+        for ghost in self.__ghosts:
+            if ghost.mode == 'Frightened':
+                flag = True
+        if flag:
+            self.game.sounds.siren.pause()
+            if not self.game.sounds.pellet.get_busy():
+                self.game.sounds.pellet.play()
+        else:
+            self.game.sounds.siren.unpause()
+            self.game.sounds.pellet.stop()
+
     def process_logic(self) -> None:
         if not self.game.sounds.intro.get_busy():
             self.text[0].surface.set_alpha(0)
             self.text[1].surface.set_alpha(0)
-            if self.pacman.dead_anim.anim_finished and int(self.hp) < 1:
+            if self.pacman.dead_anim.anim_finished and int(self.hp) < 1 \
+                and not self.game.sounds.pacman.get_busy():
                 self.template = self.screen.copy()
                 self.game.timer = pg.time.get_ticks() / 1000
                 self.game.scenes.set(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
             self.__process_collision()
+            if self.pacman.animator != self.pacman.dead_anim:
+                self.__check_ghosts()
             self.text[0].surface.set_alpha(0)
             self.text[1].surface.set_alpha(0)
             if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:

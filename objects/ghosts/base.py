@@ -108,7 +108,6 @@ class Base(Character):
         self.tmp_flag1 = False
         self.tmp_flag2 = False
 
-
     def process_logic(self) -> None:
         self.deceleration_multiplier_with_rect = 1
         for rect in self.game.current_scene.slow_ghost_rect:
@@ -145,7 +144,7 @@ class Base(Character):
 
     def can_leave_home(self) -> bool:
         return (self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home and self.work_counter) \
-               or pg.time.get_ticks()-self.timer >= 4000 or self.is_can_leave_home
+               or pg.time.get_ticks() - self.timer >= 4000 or self.is_can_leave_home
 
     def update_timer(self) -> None:
         self.timer = pg.time.get_ticks()
@@ -200,6 +199,7 @@ class Base(Character):
                     self.update_ai_timer()
                     self.deceleration_multiplier = 1
                     self.animations = self.normal_animations
+                    self.game.sounds.pellet.stop()
                     self.mode = 'Scatter'
 
         if self.mode == 'Eaten':
@@ -237,6 +237,8 @@ class Base(Character):
             self.deceleration_multiplier = 2
 
     def toggle_mode_to_eaten(self):
+        if self.mode != 'Eaten':
+            self.game.sounds.ghost.play()
         self.mode = 'Eaten'
         self.animations = self.eaten_animations
         self.acceleration_multiplier = 2

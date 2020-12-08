@@ -3,6 +3,7 @@ from random import randint
 import pygame as pg
 
 from misc import Font
+from objects.button import Button
 from objects import Text, ButtonController
 from scenes import base
 
@@ -12,7 +13,7 @@ class Scene(base.Scene):
         "Архипов Евгений",
         "Смирнов Андрей",
         "Грачев Егор",
-        "Александров Даниил",
+        "Aleksandrov Daniil",
         "Егоров Александр",
         "Сергеев Сергей",
         "Бурдонов Арсений",
@@ -36,7 +37,6 @@ class Scene(base.Scene):
         "Фил Спенсер",
         "☭",
         "MSHP LOVE",
-        "Польская корова",
         "Хирохико Араки"
     ]
 
@@ -51,14 +51,21 @@ class Scene(base.Scene):
 
     def create_buttons(self) -> None:
         self.objects = []
-        back_button = self.SceneButton(
+        buttons = []
+        buttons.append(self.SceneButton(
             game=self.game,
-            geometry=pg.Rect(0, 0, 180, 40),
+            geometry=pg.Rect(0, 0, 100, 35),
             scene=(self.game.scenes.MENU, False),
-            text='MENU',
-            center=(self.game.width // 2, 250),
-            text_size=Font.BUTTON_TEXT_SIZE)
-        self.objects.append(ButtonController(self.game, [back_button]))
+            text="MENU",
+            center=(self.game.width // 4, 250),
+            text_size=Font.BUTTON_TEXT_SIZE))
+        buttons.append(Button(game=self.game,
+            geometry=pg.Rect(0, 0, 100, 35),
+            text="SKIP",
+            function=self.__skip_sound,
+            center=(self.game.width // 4 + 110, 250),
+            text_size=Font.BUTTON_TEXT_SIZE))
+        self.objects.append(ButtonController(self.game, buttons))
 
     def __get_random_student_y(self) -> int:
         return randint(25, self.game.height - 75)
@@ -116,11 +123,23 @@ class Scene(base.Scene):
             self.__students.clear()
         elif pg.time.get_ticks() % 190 == 0 and not len(self.__students) == len(self.__students2):
             self.__create_student()
+        if not self.game.sounds.credits.get_busy():
+            self.game.sounds.reload_sounds(self.game)
+            self.game.sounds.credits.play()
         self.__process_students()
+
+    def on_activate(self) -> None:
+        super().on_activate()
+
+    def on_deactivate(self) -> None:
+        super().on_deactivate()
+        self.game.sounds.credits.stop()
+
+    def __skip_sound(self):
+        self.game.sounds.reload_sounds(self.game)
+        self.game.sounds.credits.play()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if self.game.current_scene == self:
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 self.game.scenes.set(self.game.scenes.MENU)
-
-

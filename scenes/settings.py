@@ -35,7 +35,7 @@ class Scene(base.Scene):
             self.var = var
 
         def update(self, var):
-            if var == "MUTE":
+            if var == "MUTE" or var == "FUN":
                 sounds = self.game.sounds.__dict__
                 for sound in sounds.keys():
                     sounds[sound].update()
