@@ -34,8 +34,8 @@ class Skins:
             return self.__image
 
         def prerender_surface(self) -> pg.Surface:
-            image = ImageObject(self.__game, pg.image.load(get_path('1', 'png', 'images', 'pacman', self.name, 'walk')), (130, 110))
-            image.scale(75, 75)
+            image = ImageObject(self.__game, pg.image.load(get_path('1', 'png', 'images', 'pacman', self.name, 'walk')), (145, 125))
+            image.scale(70, 70)
             return image
 
     def __init__(self, game):
@@ -43,12 +43,18 @@ class Skins:
         param must be named like folder with skin
         """
         self.__skins_cost = {"default": {0: 0, 1: 0},
-                             "half_life": {2: 10, 4: 7},
+                             "half_life": {1: 14, 2: 10},
+                             "windows": {2: 12, 3: 8},
+                             "pokeball": {3: 10, 4: 7},
+                             "edge": {4: 7, 5: 6},
                              "chrome": {6: 5, 7: 4}}
         self.__game = game
         self.default = self.Skin(self.__game)
         self.half_life = None
+        self.pokeball = None
+        self.edge = None
         self.chrome = None
+        self.windows = None
         self.load_skins()
 
         self.__current = self.default

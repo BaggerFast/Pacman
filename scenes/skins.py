@@ -73,7 +73,10 @@ class Scene(base.Scene):
         self.skins = {
             0: ('PACMAN', self.game.skins.default),
             1: ('HALF-LIFE', self.game.skins.half_life),
-            2: ('CHROME', self.game.skins.chrome),
+            2: ('WINDOWS', self.game.skins.windows),
+            3: ('POKEBALL', self.game.skins.pokeball),
+            4: ('EDGE', self.game.skins.edge),
+            5: ('CHROME', self.game.skins.chrome),
         }
         self.objects = []
         self.preview = copy(self.game.skins.current.image)
@@ -118,25 +121,25 @@ class Scene(base.Scene):
         buttons = []
 
         self.button_pos_x = self.game.width // 2 - 65
-        self.button_pos_y = 115
-        self.button_pos_multiply_y = 33
+        self.button_pos_y = 90
+        self.button_pos_multiply_y = 25
         for i in range(len(self.skins)):
             if self.skins[i][1].is_unlocked:
                 buttons.append(self.SkinButton(
                     game=self.game,
-                    geometry=pg.Rect(0, 0, 90, 33),
+                    geometry=pg.Rect(0, 0, 90, 25),
                     text=self.skins[i][0],
                     value=self.skins[i][1],
-                    center=(self.button_pos_x, 115 + i * self.button_pos_multiply_y),
+                    center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
                     text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
                     active=self.skins[i][1].name in self.game.unlocked_skins))
             else:
                 buttons.append(self.BuyButton(
                     game=self.game,
-                    geometry=pg.Rect(0, 0, 90, 33),
+                    geometry=pg.Rect(0, 0, 90, 25),
                     text=self.skins[i][0],
                     value=self.skins[i],
-                    center=(self.button_pos_x, 115 + i * self.button_pos_multiply_y),
+                    center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
                     text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
                     colors=BUTTON_SKIN_BUY
                 ))
