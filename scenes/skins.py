@@ -16,6 +16,7 @@ class Scene(base.Scene):
         def click(self) -> None:
             self.game.skins.current = self.value
             self.select()
+            self.game.scenes.current.update_button_text()
 
         def deselect(self) -> None:
             scene = self.game.scenes.current
@@ -123,7 +124,7 @@ class Scene(base.Scene):
             if self.skins[i][1].is_unlocked:
                 buttons.append(self.SkinButton(
                     game=self.game,
-                    geometry=pg.Rect(0, 0, 75, 33),
+                    geometry=pg.Rect(0, 0, 90, 33),
                     text=self.skins[i][0],
                     value=self.skins[i][1],
                     center=(self.button_pos_x, 115 + i * self.button_pos_multiply_y),
@@ -132,7 +133,7 @@ class Scene(base.Scene):
             else:
                 buttons.append(self.BuyButton(
                     game=self.game,
-                    geometry=pg.Rect(0, 0, 75, 33),
+                    geometry=pg.Rect(0, 0, 90, 33),
                     text=self.skins[i][0],
                     value=self.skins[i],
                     center=(self.button_pos_x, 115 + i * self.button_pos_multiply_y),
@@ -148,4 +149,16 @@ class Scene(base.Scene):
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE))
 
-        self.objects.append(ButtonController(self.game, buttons))
+        self.__button_controller = ButtonController(self.game, buttons)
+        self.objects.append(self.__button_controller)
+        self.update_button_text()
+
+    def update_button_text(self):
+        buttons = self.__button_controller.buttons
+        for index in range(len(buttons)):
+            if hasattr(buttons[index], "value") and hasattr(buttons[index].value, "name"):
+                if self.game.skins.current.name == buttons[index].value.name:
+                    if not (buttons[index].text.startswith("-") or buttons[index].text.endswith("-")):
+                        buttons[index].text = '-' + buttons[index].text + '-'
+                else:
+                    buttons[index].text = buttons[index].text.strip('-')

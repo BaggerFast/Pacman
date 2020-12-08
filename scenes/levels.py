@@ -73,9 +73,9 @@ class Scene(base.Scene):
             text_size=Font.BUTTON_TEXT_SIZE))
 
         for index in range(len(buttons)):
-            if str(self.game.maps.cur_id + 1) == buttons[index].text[-1:] \
-                or str(self.game.maps.cur_id + 1) == buttons[index].text[-2:]:
-                buttons[index].text = '-' + buttons[index].text + '-'
+            if hasattr(buttons[index], "value"):
+                if self.game.maps.cur_id == buttons[index].value[0]:
+                    buttons[index].text = '-' + buttons[index].text + '-'
 
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
