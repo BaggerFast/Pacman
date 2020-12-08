@@ -27,8 +27,7 @@ class Scene(base.Scene):
                     self.preview.set_at((x, y), self.color)  # Set the color of the pixel
 
     def blur(self):
-        blur_count = 4
-        self.preview = pg.transform.smoothscale(self.preview, self.game.screen.get_size())
+        blur_count = 5
         rect = self.preview.get_rect()
         surify = pg.image.tostring(self.preview, 'RGBA')
         impil = Image.frombytes('RGBA', (rect.width, rect.height), surify)
