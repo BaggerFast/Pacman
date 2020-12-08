@@ -66,7 +66,7 @@ class Scene(base.Scene):
             hp_image = ImageObject(self.game,
                                    get_path('1', 'png', 'images', 'pacman', self.game.skins.current.name, 'walk'),
                                    (5 + i * 20, 270))
-            hp_image.rotate(180)
+            hp_image.image = pg.transform.flip(hp_image.image, True, False)
             self.__hp_hud.append(hp_image)
 
     def __create_sounds(self):
