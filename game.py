@@ -36,11 +36,12 @@ class Game:
             else:
                 self.pacman = SoundController(game, sound=pg.mixer.Sound(Sounds.DEAD[0]))
                 self.seed = SoundController(game, channel=4, sound=pg.mixer.Sound(Sounds.SEED))
-                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0]))
+                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0] if not game.skins.current == game.skins.pokeball else Sounds.POC_INTRO))
                 self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
 
         def reload_sounds(self, game):
             self.credits = SoundController(game, channel=5, sound=pg.mixer.Sound(choice(Sounds.CREDITS)))
+            self.siren = SoundController(game, channel=3, sound=pg.mixer.Sound(choice(Sounds.SIREN)))
             if game.settings.FUN:
                 self.pacman = SoundController(game, sound=pg.mixer.Sound(choice(Sounds.DEAD)))
                 self.seed = SoundController(game, channel=4, sound=pg.mixer.Sound(Sounds.SEED_FUN))
@@ -49,7 +50,7 @@ class Game:
             else:
                 self.pacman = SoundController(game, sound=pg.mixer.Sound(Sounds.DEAD[0]))
                 self.seed = SoundController(game, channel=4, sound=pg.mixer.Sound(Sounds.SEED))
-                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0]))
+                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0] if not game.skins.current == game.skins.pokeball else Sounds.POC_INTRO))
                 self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
 
     class Scenes:

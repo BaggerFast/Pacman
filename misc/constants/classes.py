@@ -17,6 +17,7 @@ class Sounds:
     SEED_FUN = Tuple(pg.mixer.Sound(get_path('leader', 'mp3', 'sounds'))).mixer
     FRUIT = Tuple(pg.mixer.Sound(get_path('eat_fruit', 'mp3', 'sounds'))).mixer
     GHOST = Tuple(pg.mixer.Sound(get_path('eat_ghost', 'mp3', 'sounds'))).mixer
+    POC_INTRO = Tuple(pg.mixer.Sound(get_path("pocemon_intro", 'mp3', 'sounds'))).mixer
     INTERMISSION = Tuple(pg.mixer.Sound(get_path('intermission', 'mp3', 'sounds'))).mixer
     PELLET = Tuple(pg.mixer.Sound(get_path('power_pellet', 'mp3', 'sounds'))).mixer
     DEAD = TupleList(get_list_path('mp3', 'sounds', 'death')).list
@@ -24,6 +25,7 @@ class Sounds:
     INTRO = TupleList(get_list_path('mp3', 'Sounds', 'intro')).list
     SIREN = TupleList(get_list_path('mp3', 'sounds', 'siren')).list
     CREDITS = TupleList(get_list_path('mp3', 'sounds', 'credits')).list
+
 
 
 class Color(NamedTuple):
