@@ -17,6 +17,7 @@ class Game:
             self.MUTE = storage.settings.MUTE
             self.FUN = storage.settings.FUN
             self.VOLUME = storage.settings.VOLUME
+            self.DIFFICULTY = storage.settings.DIFFICULTY
 
     class Music:
         def __init__(self, game):
@@ -170,6 +171,7 @@ class Game:
         self.__storage.settings.MUTE = self.settings.MUTE
         self.__storage.settings.FUN = self.settings.FUN
         self.__storage.settings.VOLUME = self.settings.VOLUME
+        self.__storage.settings.DIFFICULTY = self.settings.DIFFICULTY
         self.__storage.last_level_id = self.maps.cur_id
         self.__storage.last_skin = self.skins.current.name
         self.__storage.eaten_fruits = self.eaten_fruits

@@ -33,6 +33,7 @@ class Storage(Field):
             self.MUTE = False
             self.FUN = False
             self.VOLUME = 100
+            self.DIFFICULTY = 0
 
     __storage_filepath = os.path.join(ROOT_DIR, "saves", "storage.json")
 

@@ -85,7 +85,7 @@ class Scene(base.Scene):
     def create_objects(self) -> None:
         self.objects = []
         self.game.sounds.siren.unpause()
-        self.cheats = ControlCheats([['abv', self.add_hp]])
+        self.cheats = ControlCheats([['aezakmi', self.add_hp]])
         self.objects.append(self.cheats)
         self.text[len(self.text) - 1].surface.set_alpha(0)
         self.__create_map()
@@ -103,10 +103,21 @@ class Scene(base.Scene):
         self.objects.append(self.__seeds)
 
     def __create_ghost(self):
-        self.blinky = Blinky(self.game, self.__ghost_positions[3], 8000, 20000, 7000)
-        self.pinky = Pinky(self.game, self.__ghost_positions[1], 8000, 20000, 7000)
-        self.inky = Inky(self.game, self.__ghost_positions[0], 8000, 20000, 5000)
-        self.clyde = Clyde(self.game, self.__ghost_positions[2], 8000, 0, 0)
+        if self.game.settings.DIFFICULTY == 0:
+            self.blinky = Blinky(self.game, self.__ghost_positions[3], 8000, 20000, 7000)
+            self.pinky = Pinky(self.game, self.__ghost_positions[1], 8000, 20000, 7000)
+            self.inky = Inky(self.game, self.__ghost_positions[0], 8000, 20000, 5000)
+            self.clyde = Clyde(self.game, self.__ghost_positions[2], 8000, 0, 0)
+        elif self.game.settings.DIFFICULTY == 1:
+            self.blinky = Blinky(self.game, self.__ghost_positions[3], 4000, 40000, 5000)
+            self.pinky = Pinky(self.game, self.__ghost_positions[1], 4000, 40000, 5000)
+            self.inky = Inky(self.game, self.__ghost_positions[0], 4000, 40000, 3000)
+            self.clyde = Clyde(self.game, self.__ghost_positions[2], 4000, 0, 0)
+        elif self.game.settings.DIFFICULTY == 2:
+            self.blinky = Blinky(self.game, self.__ghost_positions[3], 2000, 80000, 3000)
+            self.pinky = Pinky(self.game, self.__ghost_positions[1], 2000, 80000, 3000)
+            self.inky = Inky(self.game, self.__ghost_positions[0], 2000, 80000, 1000)
+            self.clyde = Clyde(self.game, self.__ghost_positions[2], 2000, 0, 0)
 
         self.__ghosts = [
             self.blinky,

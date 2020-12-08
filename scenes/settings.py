@@ -7,6 +7,30 @@ from scenes import base
 
 
 class Scene(base.Scene):
+    class DifficultyButton(Button):
+
+        __dificulties = {
+            0: "easy",
+            1: "medium",
+            2: "hard"
+        }
+
+        def __init__(self, **args):
+            super().__init__(**args)
+            self.value = self.game.settings.DIFFICULTY
+            self.update_text()
+
+        def click(self) -> None:
+            self.value += 1
+            if self.value > 2:
+                self.value = 0
+            self.update_text()
+            self.select()
+            self.game.settings.DIFFICULTY = self.value
+
+        def update_text(self):
+            self.text = self.__dificulties[self.value]
+
     class SelectButton(Button):
         def __init__(self, **args):
             self.value = args.pop("value")
@@ -27,7 +51,7 @@ class Scene(base.Scene):
                 game=game,
                 geometry=pg.Rect(0, 0, 180, 35),
                 text=name + (" ON" if flag_var else " OFF"),
-                center=(game.width // 2, 95 + i * 40),
+                center=(game.width // 2, 75 + i * 40),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_GREEN_COLORS if flag_var else BUTTON_RED_COLORS,
             )
@@ -51,15 +75,16 @@ class Scene(base.Scene):
                 self.colors = BUTTON_RED_COLORS
             self.update(self.var)
 
-    __volume_position = 175
+    __volume_position = 150
+    __difficulty_pos = 210
 
     def create_static_objects(self):
-        self.volume_text = Text(self.game, "VOLUME", 24)
+        self.volume_text = Text(self.game, "VOLUME", 20)
         self.volume_text.move_center(self.game.width // 2, self.__volume_position)
         self.static_objects.append(self.volume_text)
 
-        self.volume_value = Text(self.game, str(self.game.settings.VOLUME) + "%", 26)
-        self.volume_value.move_center(self.game.width // 2, self.__volume_position + 30)
+        self.volume_value = Text(self.game, str(self.game.settings.VOLUME) + "%", 20)
+        self.volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
         self.static_objects.append(self.volume_value)
         self.create_title()
 
@@ -96,6 +121,15 @@ class Scene(base.Scene):
                 value=5
             )
         )
+        if self.prev_scene == self.game.scenes.MENU:
+            self.buttons.append(
+                self.DifficultyButton(
+                    game=self.game,
+                    geometry=pg.Rect(0, 0, 120, 35),
+                    center=(self.game.width // 2, self.__difficulty_pos),
+                    text_size=Font.BUTTON_TEXT_SIZE
+                )
+            )
         self.buttons.append(
             self.SceneButton(
                 game=self.game,
