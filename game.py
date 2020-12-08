@@ -158,7 +158,7 @@ class Game:
     def read_from_storage(self):
         self.__storage = Storage(self)
         self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
-        self.cur_id = int(self.__storage.last_level_id) if int(
+        self.maps.cur_id = int(self.__storage.last_level_id) if int(
             self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
         self.unlocked_skins = self.skins.all_skins if UNLOCK_SKINS else self.__storage.unlocked_skins
         self.eaten_fruits = self.__storage.eaten_fruits
@@ -168,7 +168,7 @@ class Game:
         self.__storage.settings.MUTE = self.settings.MUTE
         self.__storage.settings.FUN = self.settings.FUN
         self.__storage.settings.VOLUME = self.settings.VOLUME
-        self.__storage.last_level_id = self.cur_id
+        self.__storage.last_level_id = self.maps.cur_id
         self.__storage.last_skin = self.skins.current.name
         self.__storage.eaten_fruits = self.eaten_fruits
         if not UNLOCK_LEVELS:
@@ -211,7 +211,7 @@ class Game:
 
     def __process_all_draw(self) -> None:
         exceptions = [self.scenes.PAUSE, self.scenes.GAMEOVER, self.scenes.ENDGAME]
-        if not self.scenes.current in exceptions:
+        if self.scenes.current not in exceptions:
             self.screen.fill(Color.BLACK)
         else:
             blur_count = 10

@@ -17,7 +17,7 @@ class Pacman(Character):
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
         self.__walk_anim = game.skins.current.walk
         self.__dead_anim = game.skins.current.dead
-        super().__init__(game, self.__walk_anim, start_pos, get_path('aura', 'png', 'images', 'pacman'))
+        super().__init__(game, self.__walk_anim, start_pos, get_path('aura', 'png', 'images', 'pacman', game.skins.current.name))
         self.dead = False
         self.__feature_rotate = "none"
 
