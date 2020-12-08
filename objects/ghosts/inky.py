@@ -7,8 +7,8 @@ class Inky(Base):
     max_count_eat_seeds_in_home = 30
     love_point_in_scatter_mode = (27, 32)
 
-    def __init__(self, game, start_pos: Tuple[int, int]):
-        super().__init__(game, start_pos)
+    def __init__(self, game, start_pos: Tuple[int, int], frightened_time=8000, chase_time=20000, scatter_time=5000):
+        super().__init__(game, start_pos, frightened_time, chase_time, scatter_time)
         self.shift_y = 1
         self.set_direction('up')
 
@@ -33,7 +33,7 @@ class Inky(Base):
         blinky = scene.blinky
         if self.mode == 'Scatter':
             self.love_cell = self.love_point_in_scatter_mode
-            if pg.time.get_ticks() - self.ai_timer >= 5000:
+            if pg.time.get_ticks() - self.ai_timer >= self.scatter_time:
                 self.update_ai_timer()
                 self.mode = 'Chase'
         if self.mode == 'Chase':
@@ -52,6 +52,6 @@ class Inky(Base):
                 pinky_love_cell[0] + vector_blinky_cell_pinky_love_cell[0],
                 pinky_love_cell[1] + vector_blinky_cell_pinky_love_cell[1]
             )
-            if pg.time.get_ticks() - self.ai_timer >= 20000:
+            if pg.time.get_ticks() - self.ai_timer >= self.chase_time:
                 self.update_ai_timer()
                 self.mode = 'Scatter'

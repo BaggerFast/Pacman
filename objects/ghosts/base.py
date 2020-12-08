@@ -15,11 +15,15 @@ class Base(Character):
         3: (0, -1, 3)
     }
 
-    def __init__(self, game, start_pos: Tuple[int, int]) -> None:
+    def __init__(self, game, start_pos: Tuple[int, int], frightened_time, chase_time, scatter_time) -> None:
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
         self.acceleration_multiplier = 1
         self.deceleration_multiplier_with_rect = 1
+
+        self.frightened_time = frightened_time
+        self.chase_time = chase_time
+        self.scatter_time = scatter_time
 
         # Обычные Анимация
         self.left_walk_anim = Animator(
@@ -167,6 +171,9 @@ class Base(Character):
                 self.go()
             cell = self.movement_cell(self.get_cell())
             cell[(self.rotate + 2) % 4] = False
+            for rect in self.game.current_scene.cant_up_ghost_rect:
+                if self.in_rect(rect):
+                    cell[3] = False
             '''
             rotate
 
@@ -192,15 +199,17 @@ class Base(Character):
                     if cell[rand]:
                         break
                 self.shift_x, self.shift_y, self.rotate = self.direction2[rand]
-                if pg.time.get_ticks() - self.ai_timer >= 6000:
-                    self.animator = self.frightened_walk_anim2
-                if pg.time.get_ticks() - self.ai_timer >= 8000:
-                    self.game.score.deactivate_fear_mode()
-                    self.update_ai_timer()
-                    self.deceleration_multiplier = 1
-                    self.animations = self.normal_animations
-                    self.game.sounds.pellet.stop()
-                    self.mode = 'Scatter'
+
+        if self.mode == 'Frightened':
+            if pg.time.get_ticks() - self.ai_timer >= self.frightened_time-2000:
+                self.animator = self.frightened_walk_anim2
+            if pg.time.get_ticks() - self.ai_timer >= self.frightened_time:
+                self.game.score.deactivate_fear_mode()
+                self.update_ai_timer()
+                self.deceleration_multiplier = 1
+                self.animations = self.normal_animations
+                self.game.sounds.pellet.stop()
+                self.mode = 'Scatter'
 
         if self.mode == 'Eaten':
             self.deceleration_multiplier = 1
@@ -230,7 +239,7 @@ class Base(Character):
             super().step()
 
     def toggle_mode_to_frightened(self):
-        if self.mode != 'Eaten':
+        if self.mode != 'Eaten' and self.frightened_time != 0:
             self.update_ai_timer()
             self.mode = 'Frightened'
             self.animator = self.frightened_walk_anim1

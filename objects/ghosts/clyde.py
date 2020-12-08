@@ -7,8 +7,8 @@ class Clyde(Base):
     max_count_eat_seeds_in_home = 60
     love_point_in_scatter_mode = (0, 32)
 
-    def __init__(self, game, start_pos: Tuple[int, int]):
-        super().__init__(game, start_pos)
+    def __init__(self, game, start_pos: Tuple[int, int], frightened_time=8000, chase_time=20000, scatter_time=7000):
+        super().__init__(game, start_pos, frightened_time, chase_time, scatter_time)
         self.mode = 'Chase'
         self.shift_y = 1
         self.set_direction('up')
