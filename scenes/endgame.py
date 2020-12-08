@@ -78,7 +78,6 @@ class Scene(base.Scene):
 
     def on_activate(self) -> None:
         super().on_activate()
-        self.game.sounds.pacman.stop()
         self.game.sounds.gameover.play()
 
     def on_deactivate(self) -> None:

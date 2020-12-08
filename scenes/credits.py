@@ -128,11 +128,7 @@ class Scene(base.Scene):
             self.game.sounds.credits.play()
         self.__process_students()
 
-    def on_activate(self) -> None:
-        super().on_activate()
-
     def on_deactivate(self) -> None:
-        super().on_deactivate()
         self.game.sounds.credits.stop()
 
     def __skip_sound(self):

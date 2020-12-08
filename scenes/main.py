@@ -291,6 +291,11 @@ class Scene(base.Scene):
         self.game.sounds.intro.unpause()
         if self.pacman.animator != self.pacman.dead_anim:
             self.game.sounds.siren.unpause()
+        for ghost in self.__ghosts:
+            if ghost.mode == "Frightened":
+                if self.game.sounds.pellet.get_busy():
+                    self.game.sounds.pellet.play()
+                    break
         if self.pacman.animator == self.pacman.dead_anim:
             self.game.sounds.pacman.unpause()
 
