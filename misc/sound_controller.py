@@ -7,6 +7,7 @@ def update(object):
 
 class SoundController:
     def __init__(self, game, sound, channel: int = 0, volume: int = 1):
+        self.status = True
         self.sound = sound
         self.game = game
         self.volume_on = volume
@@ -18,6 +19,7 @@ class SoundController:
         self.sound.set_volume(self.volume)
 
     def play(self):
+        self.sound.set_volume(self.volume)
         self.channel.play(self.sound)
 
     def pause(self):
@@ -31,4 +33,3 @@ class SoundController:
 
     def get_busy(self):
         return self.channel.get_busy()
-

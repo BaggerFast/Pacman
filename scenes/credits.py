@@ -54,13 +54,13 @@ class Scene(base.Scene):
         buttons = []
         buttons.append(self.SceneButton(
             game=self.game,
-            geometry=pg.Rect(0, 0, 100, 40),
+            geometry=pg.Rect(0, 0, 100, 35),
             scene=(self.game.scenes.MENU, False),
             text="MENU",
             center=(self.game.width // 4, 250),
             text_size=Font.BUTTON_TEXT_SIZE))
         buttons.append(Button(game=self.game,
-            geometry=pg.Rect(0, 0, 100, 40),
+            geometry=pg.Rect(0, 0, 100, 35),
             text="SKIP",
             function=self.__skip_sound,
             center=(self.game.width // 4 + 110, 250),
