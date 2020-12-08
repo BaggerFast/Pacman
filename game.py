@@ -208,6 +208,7 @@ class Game:
             self.scenes.current.process_event(event)
 
     def __process_all_logic(self) -> None:
+        self.__FPS = 60 if self.skins.current.name != "edge" else 30
         self.scenes.current.process_logic()
 
     def __process_all_draw(self) -> None:
