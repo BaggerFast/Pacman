@@ -182,7 +182,7 @@ class Scene(base.Scene):
                         ghost2.invisible()
                 else:
                     if ghost.mode == 'Frightened':
-                        ghost.gg_text.text = str(200 * 2 ** self.game.score.fear_count)
+                        ghost.gg_text.text = str((200 * self.game.difficulty ** 2) * 2 ** self.game.score.fear_count)
                         ghost.invisible()
                         self.game.score.eat_ghost()
                         self.ghost_text_flag = True

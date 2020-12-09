@@ -30,7 +30,7 @@ class Fruit(DrawableObject):
 
     def __draw_fruit(self):
         if self.__eaten:
-            Text(game=self.game, text=str(self.__scores[self.__anim.get_cur_index()-1]), size=10, rect=self.rect).process_draw()
+            Text(game=self.game, text=str(self.__scores[self.__anim.get_cur_index()-1] * self.game.difficulty), size=10, rect=self.rect).process_draw()
 
         if self.__drawing:
             self.screen.blit(self.__anim.current_image, self.rect)
@@ -78,7 +78,7 @@ class Fruit(DrawableObject):
                 self.__eaten = True
                 self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[
                     self.__anim.get_cur_index()]
-                self.game.store_fruit(self.__anim.get_cur_index(), 1)
+                self.game.store_fruit(self.__anim.get_cur_index(), 1 * self.game.difficulty)
                 self.game.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
                 self.__change_image()
 

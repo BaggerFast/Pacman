@@ -37,7 +37,7 @@ class Game:
             else:
                 self.pacman = SoundController(game, sound=pg.mixer.Sound(Sounds.DEAD[0]))
                 self.seed = SoundController(game, channel=4, sound=pg.mixer.Sound(Sounds.SEED))
-                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0] if not game.skins.current == game.skins.pokeball else Sounds.POC_INTRO))
+                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0] if not game.skins.current.name == "pokeball" else Sounds.POC_INTRO))
                 self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
 
         def reload_sounds(self, game):
@@ -51,7 +51,7 @@ class Game:
             else:
                 self.pacman = SoundController(game, sound=pg.mixer.Sound(Sounds.DEAD[0]))
                 self.seed = SoundController(game, channel=4, sound=pg.mixer.Sound(Sounds.SEED))
-                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0] if not game.skins.current == game.skins.pokeball else Sounds.POC_INTRO))
+                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0] if not game.skins.current.name == "pokeball" else Sounds.POC_INTRO))
                 self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
 
     class Scenes:
@@ -146,10 +146,9 @@ class Game:
         self.time_out = 125
         self.animate_timer = 0
         self.skins = Skins(self)
-        self.score = Score()
+        self.score = Score(self)
 
         self.read_from_storage()
-        self.settings = self.Settings(self.__storage)
 
         self.sounds = self.Music(self)
 
@@ -160,6 +159,7 @@ class Game:
 
     def read_from_storage(self):
         self.__storage = Storage(self)
+        self.settings = self.Settings(self.__storage)
         self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
         self.maps.cur_id = int(self.__storage.last_level_id) if int(
             self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
@@ -181,6 +181,10 @@ class Game:
             self.__storage.unlocked_skins = self.unlocked_skins
         self.__storage.highscores = self.highscores
         self.__storage.save()
+
+    @property
+    def difficulty(self):
+        return self.settings.DIFFICULTY + 1
 
     @property
     def current_scene(self):
@@ -211,7 +215,6 @@ class Game:
             self.scenes.current.process_event(event)
 
     def __process_all_logic(self) -> None:
-        self.__FPS = 60 if self.skins.current.name != "edge" else 30
         self.scenes.current.process_logic()
 
     def __process_all_draw(self) -> None:
