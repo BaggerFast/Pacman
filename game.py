@@ -7,7 +7,7 @@ from misc import Sounds
 from misc.sound_controller import SoundController
 from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path, UNLOCK_SKINS, FRUITS_COUNT, \
     LevelLoader, Skins, Storage, DEBUG
-from objects import Map
+from objects import Map, Text
 from scenes import *
 
 
@@ -54,15 +54,15 @@ class Game:
                 self.intro = SoundController(game, channel=1, path=Sounds.INTRO[0] if not game.skins.current == game.skins.pokeball else Sounds.POC_INTRO)
                 self.gameover = SoundController(game, channel=2, path=Sounds.GAMEOVER[0])
                 if game.skins.current.name == "pokeball":
-                    self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.POC_INTRO))
+                    self.intro = SoundController(game, channel=1, path=Sounds.POC_INTRO)
                 elif game.skins.current.name == "half_life":
-                    self.siren = SoundController(game, channel=3, sound=pg.mixer.Sound(choice(Sounds.SIREN_HL)))
-                    self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.VALVE_INTRO))
-                    self.seed = SoundController(game, channel=4, sound=pg.mixer.Sound(Sounds.SEED_HL))
-                    self.pacman = SoundController(game, sound=pg.mixer.Sound(Sounds.DEAD[3]))
-                    self.ghost = SoundController(game, channel=4, sound=Sounds.GHOST_HL)
-                    self.pellet = SoundController(game, channel=6, sound=Sounds.PELLET_HL)
-                    self.fruit = SoundController(game, channel=4, sound=Sounds.FRUIT_HL)
+                    self.siren = SoundController(game, channel=3, path=choice(Sounds.SIREN_HL))
+                    self.intro = SoundController(game, channel=1, path=Sounds.VALVE_INTRO)
+                    self.seed = SoundController(game, channel=4, path=Sounds.SEED_HL)
+                    self.pacman = SoundController(game, path=Sounds.DEAD[3])
+                    self.ghost = SoundController(game, channel=4, path=Sounds.GHOST_HL)
+                    self.pellet = SoundController(game, channel=6, path=Sounds.PELLET_HL)
+                    self.fruit = SoundController(game, channel=4, path=Sounds.FRUIT_HL)
 
     class Scenes:
         def __init__(self, game):
@@ -220,6 +220,7 @@ class Game:
         self.load_img.move_center(self.width // 2, self.height // 2)
 
     def draw_load_img(self):
+        self.screen.fill(Color.BLACK)
         self.load_img.process_draw()
         pg.display.flip()
 
