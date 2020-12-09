@@ -135,7 +135,7 @@ class Scene(base.Scene):
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 40),
                 text='BACK',
-                scene=(self.prev_scene, False),
+                scene=(self.prev_scene, False, False),
                 center=(self.game.width // 2, 250),
                 text_size=Font.BUTTON_TEXT_SIZE
             )

@@ -113,8 +113,7 @@ class Button(BaseButton):
         return surfaces
 
     def prepare_surface(self, state_index: int) -> pg.Surface:
-        surface = pg.Surface(self.rect.size)
-        surface = surface.convert_alpha()
+        surface = pg.Surface(self.rect.size).convert_alpha()
         zero_rect = surface.get_rect()
 
         text_surface = self.font.render(self.text, False, self.__colors[state_index].text)

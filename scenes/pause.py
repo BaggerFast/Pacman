@@ -7,10 +7,10 @@ from misc import Font, LIGHT_BUTTON_COLORS
 class Scene(base.Scene):
     def create_buttons(self) -> None:
         names = {
-            0: ("CONTINUE", self.game.scenes.MAIN, False),
-            1: ("SETTINGS", self.game.scenes.SETTINGS, True),
-            2: ("RESTART", self.game.scenes.MAIN, True),
-            3: ("MENU", self.game.scenes.MENU, False),
+            0: ("CONTINUE", self.game.scenes.MAIN, False, False),
+            1: ("SETTINGS", self.game.scenes.SETTINGS, True, False),
+            2: ("RESTART", self.game.scenes.MAIN, True, True),
+            3: ("MENU", self.game.scenes.MENU, False, False),
         }
         buttons = []
         for i in range(len(names)):
@@ -18,7 +18,7 @@ class Scene(base.Scene):
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 40),
                 text=names[i][0],
-                scene=(names[i][1], names[i][2]),
+                scene=names[i][1:],
                 center=(self.game.width // 2, 100+45*i),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=LIGHT_BUTTON_COLORS

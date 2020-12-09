@@ -12,7 +12,7 @@ class Scene:
             if callable(self.scene[0]):
                 self.scene[0]()
             else:
-                self.game.scenes.set(self.scene[0], reset=self.scene[1])
+                self.game.scenes.set(self.scene[0], reset=self.scene[1], loading=self.scene[2])
 
     def __init__(self, game) -> None:
         self.game = game

@@ -72,14 +72,16 @@ class Game:
         def current(self):
             return self.__current
 
-        def set(self, scene: base.Scene, reset: bool = False, surface: bool = False) -> None:
+        def set(self, scene: base.Scene, reset: bool = False, surface: bool = False, loading: bool = False) -> None:
             """
             :param scene: NEXT scene (contains in game.scenes.*)
             :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
             :param surface: if surface == True background of new scene equal CURRENT scene with BLUR
+            :param loading: displays "Loading..." until scene will be loaded
             IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
             """
-            self.__game.draw_load_img()
+            if loading:
+                self.__game.draw_load_img()
             scene.prev_scene = self.__current
             if self.__current is not None and not surface:
                 self.__current.on_deactivate()
@@ -140,8 +142,9 @@ class Game:
 
     def __init__(self) -> None:
         self.maps = self.Maps(self)
-        self.init_load_img()
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
+        self.init_load_img()
+        self.draw_load_img()
         self.__clock = pg.time.Clock()
         self.__game_over = False
         self.timer = pg.time.get_ticks() / 1000
@@ -157,7 +160,7 @@ class Game:
         self.skins.current = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
         self.records = HighScore(self)
         self.scenes = self.Scenes(self)
-        self.scenes.set(self.scenes.MENU)
+        self.scenes.set(self.scenes.MENU, loading=True)
 
     def read_from_storage(self):
         self.__storage = Storage(self)
@@ -205,11 +208,17 @@ class Game:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
 
     def init_load_img(self):
-        self.load_img = Text(self, text="Loading", size=30)
-        self.load_img.move_center(self.width // 2, self.height // 2)
+        self.load_img_text = Text(self, text="Loading", size=20)
+        self.load_img_text.move_center(self.width // 2, self.height // 2)
+        self.load_img = pg.Surface((self.load_img_text.rect.size[0] * 2, self.load_img_text.rect.size[1] * 2)).convert_alpha()
+        self.load_img.fill(pg.Color("black"))
+        self.load_img.set_alpha(150)
 
     def draw_load_img(self):
-        self.load_img.process_draw()
+        rect = self.load_img.get_rect()
+        rect.center = self.load_img_text.rect.center
+        self.screen.blit(self.load_img, rect)
+        self.load_img_text.process_draw()
         pg.display.flip()
 
     def __process_exit_events(self, event: pg.event.Event) -> None:
