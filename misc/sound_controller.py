@@ -19,13 +19,14 @@ class SoundController:
         self.sound.set_volume(self.volume)
 
     def play(self):
-        self.sound.set_volume(self.volume)
+        self.update()
         self.channel.play(self.sound)
 
     def pause(self):
         self.channel.pause()
 
     def unpause(self):
+        self.update()
         self.channel.unpause()
 
     def stop(self):

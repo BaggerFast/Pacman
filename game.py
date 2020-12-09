@@ -53,6 +53,16 @@ class Game:
                 self.seed = SoundController(game, channel=4, path=Sounds.SEED)
                 self.intro = SoundController(game, channel=1, path=Sounds.INTRO[0] if not game.skins.current == game.skins.pokeball else Sounds.POC_INTRO)
                 self.gameover = SoundController(game, channel=2, path=Sounds.GAMEOVER[0])
+                if game.skins.current.name == "pokeball":
+                    self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.POC_INTRO))
+                elif game.skins.current.name == "half_life":
+                    self.siren = SoundController(game, channel=3, sound=pg.mixer.Sound(choice(Sounds.SIREN_HL)))
+                    self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.VALVE_INTRO))
+                    self.seed = SoundController(game, channel=4, sound=pg.mixer.Sound(Sounds.SEED_HL))
+                    self.pacman = SoundController(game, sound=pg.mixer.Sound(Sounds.DEAD[3]))
+                    self.ghost = SoundController(game, channel=4, sound=Sounds.GHOST_HL)
+                    self.pellet = SoundController(game, channel=6, sound=Sounds.PELLET_HL)
+                    self.fruit = SoundController(game, channel=4, sound=Sounds.FRUIT_HL)
 
     class Scenes:
         def __init__(self, game):
@@ -66,6 +76,7 @@ class Game:
             self.ENDGAME = endgame.Scene(game)
             self.SKINS = skins.Scene(game)
             self.SETTINGS = settings.Scene(game)
+            self.__game = game
             self.__current = None
 
         @property
@@ -79,6 +90,7 @@ class Game:
             :param surface: if surface == True background of new scene equal CURRENT scene with BLUR
             IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
             """
+            self.__game.draw_load_img()
             scene.prev_scene = self.__current
             if self.__current is not None and not surface:
                 self.__current.on_deactivate()
@@ -130,7 +142,7 @@ class Game:
             return images
 
     __size = width, height = 224, 285
-    __icon = pg.transform.scale(pg.image.load(get_path('ico', 'png', 'images',)), (256, 256))
+    __icon = pg.transform.scale(pg.image.load(get_path('ico', 'png', 'images', )), (256, 256))
     __FPS = 60
     __def_level_id = 0
     __def_skin = "default"
@@ -139,6 +151,7 @@ class Game:
 
     def __init__(self) -> None:
         self.maps = self.Maps(self)
+        self.init_load_img()
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.__clock = pg.time.Clock()
         self.__game_over = False
@@ -146,10 +159,9 @@ class Game:
         self.time_out = 125
         self.animate_timer = 0
         self.skins = Skins(self)
-        self.score = Score()
+        self.score = Score(self)
 
         self.read_from_storage()
-        self.settings = self.Settings(self.__storage)
 
         self.sounds = self.Music(self)
 
@@ -160,6 +172,7 @@ class Game:
 
     def read_from_storage(self):
         self.__storage = Storage(self)
+        self.settings = self.Settings(self.__storage)
         self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
         self.maps.cur_id = int(self.__storage.last_level_id) if int(
             self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
@@ -183,6 +196,10 @@ class Game:
         self.__storage.save()
 
     @property
+    def difficulty(self):
+        return self.settings.DIFFICULTY + 1
+
+    @property
     def current_scene(self):
         return self.scenes.current
 
@@ -198,6 +215,14 @@ class Game:
     def __exit_hotkey_pressed(event: pg.event.Event) -> bool:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
 
+    def init_load_img(self):
+        self.load_img = Text(self, text="Loading", size=30)
+        self.load_img.move_center(self.width // 2, self.height // 2)
+
+    def draw_load_img(self):
+        self.load_img.process_draw()
+        pg.display.flip()
+
     def __process_exit_events(self, event: pg.event.Event) -> None:
         if Game.__exit_button_pressed(event) or Game.__exit_hotkey_pressed(event):
             self.exit_game()
@@ -211,7 +236,6 @@ class Game:
             self.scenes.current.process_event(event)
 
     def __process_all_logic(self) -> None:
-        self.__FPS = 60 if self.skins.current.name != "edge" else 30
         self.scenes.current.process_logic()
 
     def __process_all_draw(self) -> None:

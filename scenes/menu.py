@@ -1,11 +1,9 @@
-from random import randint
-
 import pygame as pg
 from PIL import ImageFilter, Image
 from objects.map import rand_color
 from objects import ButtonController, Text, ImageObject
 from scenes import base
-from misc import Font, BUTTON_TRANSPERENT_COLORS, Color, BUTTON_MENU
+from misc import Font, BUTTON_DEFAULT_COLORS, Color, LIGHT_BUTTON_COLORS
 
 
 class Scene(base.Scene):
@@ -64,8 +62,7 @@ class Scene(base.Scene):
                     text=names[i][0],
                     scene=(names[i][1], names[i][2]),
                     center=(self.game.width // 2, 95 + i * 28),
-                    text_size=Font.BUTTON_TEXT_SIZE,
-                    colors=BUTTON_MENU
+                    text_size=Font.BUTTON_TEXT_SIZE
                 )
             )
         self.objects.append(ButtonController(self.game, buttons))

@@ -2,7 +2,8 @@ from misc import Points
 
 
 class Score:
-    def __init__(self) -> None:
+    def __init__(self, game) -> None:
+        self.game = game
         self.__score = 0
         self.fear_mode = False
         self.fear_count = 0
@@ -28,13 +29,13 @@ class Score:
         return self + value
 
     def eat_seed(self) -> None:
-        self + Points.POINT_PER_SEED
+        self + Points.POINT_PER_SEED * self.game.difficulty
 
     def eat_energizer(self) -> None:
-        self + Points.POINT_PER_ENERGIZER
+        self + Points.POINT_PER_ENERGIZER * self.game.difficulty
 
     def eat_fruit(self, bonus) -> None:
-        self + bonus
+        self + bonus * self.game.difficulty
 
     def activate_fear_mode(self) -> None:
         self.fear_mode = True
@@ -45,5 +46,5 @@ class Score:
         self.fear_count = 0
 
     def eat_ghost(self) -> None:
-        self + (200 * 2 ** self.fear_count)
+        self + ((200 * self.game.difficulty ** 2) * 2 ** self.fear_count)
         self.fear_count += 1
