@@ -1,5 +1,3 @@
-from random import randint
-
 import pygame as pg
 from PIL import ImageFilter, Image
 from objects.map import rand_color

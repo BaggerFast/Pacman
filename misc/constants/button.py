@@ -68,19 +68,19 @@ BUTTON_DEFAULT_COLORS = ButtonColor(
 )
 
 BUTTON_TRANSPERENT_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Color.WHITE, background=Color.TRANSPERENT),
+    static=ButtonStateColor(text=Color.GRAY, background=Color.TRANSPERENT),
     hover=ButtonStateColor(text=Color.WHITE, background=Color.HALF_TRANSPERENT),
     click=ButtonStateColor(text=Color.WHITE, background=Color.JET)
 )
 
 BUTTON_GREEN_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Color.WHITE, background=Color.DARK_GREEN),
+    static=ButtonStateColor(text=Color.GRAY, background=Color.DARK_GREEN),
     hover=ButtonStateColor(text=Color.WHITE, background=Color.GREEN),
     click=ButtonStateColor(text=Color.WHITE, background=Color.DARK_GREEN)
 )
 
 BUTTON_RED_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Color.WHITE, background=Color.DARK_RED),
+    static=ButtonStateColor(text=Color.GRAY, background=Color.DARK_RED),
     hover=ButtonStateColor(text=Color.WHITE, background=Color.RED),
     click=ButtonStateColor(text=Color.WHITE, background=Color.DARK_RED)
 )
