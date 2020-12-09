@@ -7,7 +7,7 @@ from misc import Sounds
 from misc.sound_controller import SoundController
 from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path, UNLOCK_SKINS, FRUITS_COUNT, \
     LevelLoader, Skins, Storage, DEBUG
-from objects import Map
+from objects import Map, Text
 from scenes import *
 
 
@@ -65,6 +65,7 @@ class Game:
             self.ENDGAME = endgame.Scene(game)
             self.SKINS = skins.Scene(game)
             self.SETTINGS = settings.Scene(game)
+            self.__game = game
             self.__current = None
 
         @property
@@ -78,6 +79,7 @@ class Game:
             :param surface: if surface == True background of new scene equal CURRENT scene with BLUR
             IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
             """
+            self.__game.draw_load_img()
             scene.prev_scene = self.__current
             if self.__current is not None and not surface:
                 self.__current.on_deactivate()
@@ -138,6 +140,7 @@ class Game:
 
     def __init__(self) -> None:
         self.maps = self.Maps(self)
+        self.init_load_img()
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.__clock = pg.time.Clock()
         self.__game_over = False
@@ -200,6 +203,14 @@ class Game:
     @staticmethod
     def __exit_hotkey_pressed(event: pg.event.Event) -> bool:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
+
+    def init_load_img(self):
+        self.load_img = Text(self, text="Loading", size=30)
+        self.load_img.move_center(self.width // 2, self.height // 2)
+
+    def draw_load_img(self):
+        self.load_img.process_draw()
+        pg.display.flip()
 
     def __process_exit_events(self, event: pg.event.Event) -> None:
         if Game.__exit_button_pressed(event) or Game.__exit_hotkey_pressed(event):

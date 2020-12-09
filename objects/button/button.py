@@ -1,4 +1,3 @@
-from datetime import time, datetime
 from typing import List, Union, Callable, Tuple
 import pygame as pg
 from misc import Color, Font, ButtonColor, BUTTON_DEFAULT_COLORS
@@ -114,7 +113,7 @@ class Button(BaseButton):
         return surfaces
 
     def prepare_surface(self, state_index: int) -> pg.Surface:
-        surface = pg.surface.Surface(self.rect.size)
+        surface = pg.Surface(self.rect.size)
         surface = surface.convert_alpha()
         zero_rect = surface.get_rect()
 
