@@ -3,7 +3,7 @@ from PIL import ImageFilter, Image
 from objects.map import rand_color
 from objects import ButtonController, Text, ImageObject
 from scenes import base
-from misc import Font, BUTTON_TRANSPERENT_COLORS, Color, LIGHT_BUTTON_COLORS
+from misc import Font, BUTTON_DEFAULT_COLORS, Color, LIGHT_BUTTON_COLORS
 
 
 class Scene(base.Scene):

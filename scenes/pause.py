@@ -1,7 +1,7 @@
 import pygame as pg
 from objects import ButtonController, Text
 from scenes import base
-from misc import Font, BUTTON_TRANSPERENT_COLORS
+from misc import Font, LIGHT_BUTTON_COLORS
 
 
 class Scene(base.Scene):
@@ -21,7 +21,7 @@ class Scene(base.Scene):
                 scene=(names[i][1], names[i][2]),
                 center=(self.game.width // 2, 100+45*i),
                 text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_TRANSPERENT_COLORS
+                colors=LIGHT_BUTTON_COLORS
             ))
         self.objects.append(ButtonController(self.game, buttons))
 

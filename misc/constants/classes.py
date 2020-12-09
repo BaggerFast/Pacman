@@ -14,18 +14,23 @@ class Sounds:
     pg.mixer.init()
     CLICK = Tuple(pg.mixer.Sound(get_path('navigation', 'mp3', 'sounds'))).mixer
     SEED = Tuple(pg.mixer.Sound(get_path('munch', 'mp3', 'sounds'))).mixer
+    SEED_HL = Tuple(pg.mixer.Sound(get_path('munch_hl', 'mp3', 'sounds'))).mixer
     SEED_FUN = Tuple(pg.mixer.Sound(get_path('leader', 'mp3', 'sounds'))).mixer
     FRUIT = Tuple(pg.mixer.Sound(get_path('eat_fruit', 'mp3', 'sounds'))).mixer
+    FRUIT_HL = Tuple(pg.mixer.Sound(get_path('eat_fruit_hl', 'mp3', 'sounds'))).mixer
     GHOST = Tuple(pg.mixer.Sound(get_path('eat_ghost', 'mp3', 'sounds'))).mixer
+    GHOST_HL = Tuple(pg.mixer.Sound(get_path('eat_ghost_hl', 'mp3', 'sounds'))).mixer
     POC_INTRO = Tuple(pg.mixer.Sound(get_path("pocemon_intro", 'mp3', 'sounds'))).mixer
+    VALVE_INTRO = Tuple(pg.mixer.Sound(get_path("valve_intro", 'mp3', 'sounds'))).mixer
     INTERMISSION = Tuple(pg.mixer.Sound(get_path('intermission', 'mp3', 'sounds'))).mixer
     PELLET = Tuple(pg.mixer.Sound(get_path('power_pellet', 'mp3', 'sounds'))).mixer
+    PELLET_HL = Tuple(pg.mixer.Sound(get_path('power_pellet_hl', 'mp3', 'sounds'))).mixer
     DEAD = TupleList(get_list_path('mp3', 'sounds', 'death')).list
     GAMEOVER = TupleList(get_list_path('mp3', 'sounds', 'gameover')).list
     INTRO = TupleList(get_list_path('mp3', 'Sounds', 'intro')).list
     SIREN = TupleList(get_list_path('mp3', 'sounds', 'siren')).list
+    SIREN_HL = TupleList(get_list_path('mp3', 'sounds', 'siren_hl')).list
     CREDITS = TupleList(get_list_path('mp3', 'sounds', 'credits')).list
-
 
 
 class Color(NamedTuple):
