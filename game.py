@@ -1,15 +1,9 @@
 from random import choice
 import pygame as pg
-
 from PIL import Image, ImageFilter
 from misc import Sounds, ControlCheats
 from misc.sound_controller import SoundController
-from misc import Color, HighScore, get_path, Score, List, get_list_path, FRUITS_COUNT, LevelLoader, Skins, Storage, DEBUG
-from misc import Color, HighScore, get_path, Score,\
-    UNLOCK_LEVELS, List, get_list_path,\
-    UNLOCK_SKINS, FRUITS_COUNT, \
-    LevelLoader, Skins, Storage,\
-    DEBUG
+from misc import Color, HighScore, get_path, Score, List, get_list_path,LevelLoader, Skins, Storage
 from objects import Map, Text
 from misc.constants.variables import *
 from scenes import*
@@ -77,7 +71,7 @@ class Game:
                     self.ghost = SoundController(game, channel=4, path=Sounds.VALVE_SOUNDS[3])
                     self.pellet = SoundController(game, channel=6, path=Sounds.VALVE_SOUNDS[4])
                     self.fruit = SoundController(game, channel=4, path=Sounds.VALVE_SOUNDS[5])
-                    self.pacman = SoundController(game, path=Sounds.VALVE_SOUNDS[5])
+                    self.pacman = SoundController(game, path=Sounds.VALVE_SOUNDS[6])
 
     class Scenes:
         def __init__(self, game):
