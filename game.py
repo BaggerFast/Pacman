@@ -29,7 +29,7 @@ class Game:
 
     class Settings:
         def __init__(self, storage):
-            self.MUTE = storage.settings.MUTE
+            self.SOUND = storage.settings.SOUND
             self.FUN = storage.settings.FUN
             self.VOLUME = storage.settings.VOLUME
             self.DIFFICULTY = storage.settings.DIFFICULTY
@@ -201,7 +201,7 @@ class Game:
         self.highscores = self.storage.highscores
 
     def save_to_storage(self):
-        self.storage.settings.MUTE = self.settings.MUTE
+        self.storage.settings.SOUND = self.settings.SOUND
         self.storage.settings.FUN = self.settings.FUN
         self.storage.settings.VOLUME = self.settings.VOLUME
         self.storage.settings.DIFFICULTY = self.settings.DIFFICULTY
