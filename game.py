@@ -5,6 +5,11 @@ from PIL import Image, ImageFilter
 from misc import Sounds, ControlCheats
 from misc.sound_controller import SoundController
 from misc import Color, HighScore, get_path, Score, List, get_list_path, FRUITS_COUNT, LevelLoader, Skins, Storage, DEBUG
+from misc import Color, HighScore, get_path, Score,\
+    UNLOCK_LEVELS, List, get_list_path,\
+    UNLOCK_SKINS, FRUITS_COUNT, \
+    LevelLoader, Skins, Storage,\
+    DEBUG
 from objects import Map, Text
 from misc.constants.variables import *
 from scenes import*
