@@ -201,7 +201,7 @@ class Game:
         self.highscores = self.storage.highscores
 
     def save_to_storage(self):
-        self.storage.settings.SOUND = self.settings.SOUND
+        self.storage.settings.MUTE = self.settings.SOUND
         self.storage.settings.FUN = self.settings.FUN
         self.storage.settings.VOLUME = self.settings.VOLUME
         self.storage.settings.DIFFICULTY = self.settings.DIFFICULTY
