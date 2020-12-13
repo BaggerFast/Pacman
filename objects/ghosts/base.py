@@ -194,11 +194,8 @@ class Base(Character):
                             min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
                             self.shift_x, self.shift_y, self.rotate = self.direction2[i]
             else:
-                while True:
-                    rand = random.randrange(4)
-                    if cell[rand]:
-                        break
-                self.shift_x, self.shift_y, self.rotate = self.direction2[rand]
+                self.shift_x, self.shift_y, self.rotate = \
+                    self.direction2[random.choice([i for i, v in enumerate(cell)if v])]
 
         if self.mode == 'Frightened':
             if pg.time.get_ticks() - self.ai_timer >= self.frightened_time-2000:

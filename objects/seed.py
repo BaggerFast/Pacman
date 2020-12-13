@@ -67,6 +67,8 @@ class SeedContainer(DrawableObject):
                         self.__seeds[row][col] = None
                         if not self.game.sounds.seed.get_busy():
                             self.game.sounds.seed.play()
+                        else:
+                            self.game.sounds.seed.unpause()
                         self.game.score.eat_seed()
                         self.__seeds_on_field -= 1
                         return 1

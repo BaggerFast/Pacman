@@ -6,8 +6,9 @@ def update(object):
 
 
 class SoundController:
-    def __init__(self, game, sound, channel: int = 0, volume: int = 1):
-        self.sound = sound
+    def __init__(self, game, path: str = '', channel: int = 0, volume: int = 1):
+        self.path = path
+        self.sound = pg.mixer.Sound(path)
         self.game = game
         self.volume = volume
         self.channel = pg.mixer.Channel(channel)
