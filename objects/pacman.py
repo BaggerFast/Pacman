@@ -1,5 +1,4 @@
 import pygame as pg
-from misc import INFINITY_LIVES
 from misc.path import get_path
 from objects.character_base import Character
 
@@ -45,7 +44,7 @@ class Pacman(Character):
             super().process_logic()
 
     def death(self) -> None:
-        if not INFINITY_LIVES:
+        if not self.game.cheats_var.INFINITY_LIVES:
             self.game.current_scene.hp -= 1
         self.animator = self.__dead_anim
         self.game.sounds.siren.pause()

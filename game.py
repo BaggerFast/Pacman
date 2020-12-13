@@ -1,17 +1,32 @@
 from random import choice
-
 import pygame as pg
-from PIL import Image, ImageFilter
 
-from misc import Sounds
+from PIL import Image, ImageFilter
+from misc import Sounds, ControlCheats
 from misc.sound_controller import SoundController
-from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path, UNLOCK_SKINS, FRUITS_COUNT, \
-    LevelLoader, Skins, Storage, DEBUG
+from misc import Color, HighScore, get_path, Score, List, get_list_path, FRUITS_COUNT, LevelLoader, Skins, Storage, DEBUG
 from objects import Map, Text
-from scenes import *
+from misc.constants.variables import *
+from scenes import*
 
 
 class Game:
+    class Cheats:
+        def __init__(self, game):
+            self.UNLOCK_SKINS = UNLOCK_SKINS
+            self.UNLOCK_LEVELS = UNLOCK_LEVELS
+            self.INFINITY_LIVES = INFINITY_LIVES
+            self.GHOSTS_COLLISION = GHOSTS_COLLISION
+            self.dict = self.__dict__
+            self.game = game
+
+        def update(self, key):
+            self.dict[key] = True
+            if key == "UNLOCK_SKINS":
+                self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.UNLOCK_SKINS else self.game.storage.unlocked_skins
+            elif key == "UNLOCK_LEVELS":
+                self.game.unlocked_levels = self.game.maps.keys() if self.game.cheats_var.UNLOCK_LEVELS else self.game.storage.unlocked_levels
+
     class Settings:
         def __init__(self, storage):
             self.MUTE = storage.settings.MUTE
@@ -22,36 +37,41 @@ class Game:
     class Music:
         def __init__(self, game):
             self.reload_sounds(game)
-
         def reload_sounds(self, game):
             self.click = SoundController(game, path=Sounds.CLICK)
             self.menu = SoundController(game, channel=4, path=Sounds.INTERMISSION)
             self.credits = SoundController(game, channel=5, path=choice(Sounds.CREDITS))
-            self.siren = SoundController(game, channel=3, path = choice(Sounds.SIREN))
-            self.intro = SoundController(game, channel=1, path= Sounds.INTRO[0])
+            self.siren = SoundController(game, channel=3, path=choice(Sounds.SIREN))
+            self.intro = SoundController(game, channel=1, path=Sounds.INTRO[0])
             self.seed = SoundController(game, channel=4, path=Sounds.SEED)
             self.pellet = SoundController(game, channel=6, path=Sounds.PELLET)
-            self.ghost = SoundController(game, channel=4, sound=Sounds.GHOST)
-            self.gameover = SoundController(game, channel=2, sound=Sounds.GAMEOVER[0])
-            self.fruit = SoundController(game, channel=4, sound=Sounds.FRUIT)
+            self.ghost = SoundController(game, channel=4, path=Sounds.GHOST)
+            self.gameover = SoundController(game, channel=2, path=Sounds.GAMEOVER[0])
+            self.fruit = SoundController(game, channel=4, path=Sounds.FRUIT)
             self.pacman = SoundController(game, path=Sounds.DEAD[0])
-
             if game.settings.FUN:
-                self.pacman = SoundController(game,path=choice([path for path in Sounds.DEAD if path != self.pacman.path]))
+                self.pacman = SoundController(game, path=choice([path for path in Sounds.DEAD if path != self.pacman.path]))
                 self.seed = SoundController(game, channel=4, path=Sounds.SEED_FUN)
-                self.intro = SoundController(game, channel=1,path=choice([path for path in Sounds.INTRO if path != self.intro.path]))
+                self.intro = SoundController(game, channel=1, path=choice([path for path in Sounds.INTRO if path != self.intro.path]))
                 self.gameover = SoundController(game, channel=2, path=choice([path for path in Sounds.GAMEOVER if path != self.gameover.path]))
             else:
                 if game.skins.current.name == "pokeball":
                     self.intro = SoundController(game, channel=1, path=Sounds.POC_INTRO)
+                if game.skins.current.name == "windows":
+                    self.intro = SoundController(game, channel=1, path=Sounds.WINDOWS_SOUNDS[0])
+                    self.pacman = SoundController(game, path=Sounds.WINDOWS_SOUNDS[1])
+                    self.seed = SoundController(game, channel=4, path=Sounds.WINDOWS_SOUNDS[2])
+                    self.gameover = SoundController(game, channel=2, path=Sounds.WINDOWS_SOUNDS[3])
+                    self.ghost = SoundController(game, channel=4, path=Sounds.WINDOWS_SOUNDS[4])
+                    self.fruit = SoundController(game, channel=4, path=Sounds.WINDOWS_SOUNDS[5])
                 elif game.skins.current.name == "half_life":
-                    self.siren = SoundController(game, channel=3, path=choice(Sounds.SIREN_HL))
-                    self.intro = SoundController(game, channel=1, path=Sounds.VALVE_INTRO)
-                    self.seed = SoundController(game, channel=4, path=Sounds.SEED_HL)
-                    self.pacman = SoundController(game, path=Sounds.DEAD[3])
-                    self.ghost = SoundController(game, channel=4, path=Sounds.GHOST_HL)
-                    self.pellet = SoundController(game, channel=6, path=Sounds.PELLET_HL)
-                    self.fruit = SoundController(game, channel=4, path=Sounds.FRUIT_HL)
+                    self.siren = SoundController(game, channel=3, path=Sounds.VALVE_SOUNDS[0])
+                    self.intro = SoundController(game, channel=1, path=Sounds.VALVE_SOUNDS[1])
+                    self.seed = SoundController(game, channel=4, path=Sounds.VALVE_SOUNDS[2])
+                    self.ghost = SoundController(game, channel=4, path=Sounds.VALVE_SOUNDS[3])
+                    self.pellet = SoundController(game, channel=6, path=Sounds.VALVE_SOUNDS[4])
+                    self.fruit = SoundController(game, channel=4, path=Sounds.VALVE_SOUNDS[5])
+                    self.pacman = SoundController(game, path=Sounds.VALVE_SOUNDS[5])
 
     class Scenes:
         def __init__(self, game):
@@ -144,48 +164,55 @@ class Game:
         self.maps = self.Maps(self)
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.init_load_img()
-        self.draw_load_img()
         self.__clock = pg.time.Clock()
         self.__game_over = False
+        self.draw_load_img()
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
         self.skins = Skins(self)
         self.score = Score(self)
 
+        self.cheats_var = self.Cheats(self)
+
         self.read_from_storage()
 
-        self.sounds = self.Music(self)
+        self.cheats = ControlCheats([['skins', lambda: self.cheats_var.update("UNLOCK_SKINS")],
+                                     ['maps', lambda: self.cheats_var.update("UNLOCK_LEVELS")],
+                                     ['lives', lambda: self.cheats_var.update("INFINITY_LIVES")],
+                                     ['collision', lambda: self.cheats_var.update("GHOSTS_COLLISION")]])
 
-        self.skins.current = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
+        self.sounds = self.Music(self)
+        self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else self.__def_skin
         self.records = HighScore(self)
         self.scenes = self.Scenes(self)
         self.scenes.set(self.scenes.MENU, loading=True)
 
+
     def read_from_storage(self):
-        self.__storage = Storage(self)
-        self.settings = self.Settings(self.__storage)
-        self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
-        self.maps.cur_id = int(self.__storage.last_level_id) if int(
-            self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
-        self.unlocked_skins = self.skins.all_skins if UNLOCK_SKINS else self.__storage.unlocked_skins
-        self.eaten_fruits = self.__storage.eaten_fruits
-        self.highscores = self.__storage.highscores
+        self.storage = Storage(self)
+        self.settings = self.Settings(self.storage)
+        self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
+        self.maps.cur_id = int(self.storage.last_level_id) if int(
+            self.storage.last_level_id) in self.unlocked_levels else self.__def_level_id
+        self.unlocked_skins = self.skins.all_skins if self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
+        self.eaten_fruits = self.storage.eaten_fruits
+        self.highscores = self.storage.highscores
 
     def save_to_storage(self):
-        self.__storage.settings.MUTE = self.settings.MUTE
-        self.__storage.settings.FUN = self.settings.FUN
-        self.__storage.settings.VOLUME = self.settings.VOLUME
-        self.__storage.settings.DIFFICULTY = self.settings.DIFFICULTY
-        self.__storage.last_level_id = self.maps.cur_id
-        self.__storage.last_skin = self.skins.current.name
-        self.__storage.eaten_fruits = self.eaten_fruits
-        if not UNLOCK_LEVELS:
-            self.__storage.unlocked_levels = self.unlocked_levels
-        if not UNLOCK_SKINS:
-            self.__storage.unlocked_skins = self.unlocked_skins
-        self.__storage.highscores = self.highscores
-        self.__storage.save()
+        self.storage.settings.MUTE = self.settings.MUTE
+        self.storage.settings.FUN = self.settings.FUN
+        self.storage.settings.VOLUME = self.settings.VOLUME
+        self.storage.settings.DIFFICULTY = self.settings.DIFFICULTY
+        self.storage.last_level_id = self.maps.cur_id
+        self.storage.last_skin = self.skins.current.name
+        self.storage.eaten_fruits = self.eaten_fruits
+        if not self.cheats_var.UNLOCK_LEVELS:
+            self.storage.unlocked_levels = self.unlocked_levels
+        if not self.cheats_var.UNLOCK_SKINS:
+            self.storage.unlocked_skins = self.unlocked_skins
+        self.storage.highscores = self.highscores
+        self.storage.save()
 
     @property
     def difficulty(self):
@@ -229,11 +256,12 @@ class Game:
         for event in pg.event.get():
             if DEBUG and event.type != pg.MOUSEMOTION:
                 print(event)
-
+            self.cheats.process_event(event)
             self.__process_exit_events(event)
             self.scenes.current.process_event(event)
 
     def __process_all_logic(self) -> None:
+        self.cheats.process_logic()
         self.scenes.current.process_logic()
 
     def __process_all_draw(self) -> None:
@@ -272,7 +300,7 @@ class Game:
         :param level_id: level id
         """
         if level_id in self.maps.keys():
-            if not UNLOCK_LEVELS and level_id not in self.unlocked_levels:
+            if not self.cheats_var.UNLOCK_LEVELS and level_id not in self.unlocked_levels:
                 self.unlocked_levels.append(level_id)
         else:
             raise Exception(f"id error. Map id: {level_id} doesn't exist")
@@ -282,7 +310,7 @@ class Game:
         :param skin_name: skin name
         """
         if skin_name in self.skins.all_skins:
-            if not UNLOCK_SKINS and skin_name not in self.unlocked_skins:
+            if not self.cheats_var.UNLOCK_SKINS and skin_name not in self.unlocked_skins:
                 self.unlocked_skins.append(skin_name)
         else:
             raise Exception(f"Name error. Skin name: {skin_name} doesn't exist")

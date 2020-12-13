@@ -85,8 +85,10 @@ class Scene(base.Scene):
     def create_objects(self) -> None:
         self.objects = []
         self.game.sounds.siren.unpause()
-        self.cheats = ControlCheats([['aezakmi', self.add_hp]])
-        self.objects.append(self.cheats)
+
+        self.hp_cheat = ControlCheats([['aezakmi', self.add_hp]])
+        self.objects.append(self.hp_cheat)
+
         self.text[len(self.text) - 1].surface.set_alpha(0)
         self.__create_map()
         self.objects.append(self.fruit)

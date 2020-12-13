@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Animator, get_list_path, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION, Font, get_path
+from misc import Animator, get_list_path, get_path, GHOSTS_MOVING
 from objects import Character, Pacman, Text
 from typing import Tuple
 import random
@@ -139,7 +139,7 @@ class Base(Character):
 
     def collision_check(self, pacman: Pacman):
         return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 3 and
-                self.collision and not DISABLE_GHOSTS_COLLISION,
+                self.collision and not self.game.cheats_var.GHOSTS_COLLISION,
                 self.mode != 'Frightened' and self.mode != 'Eaten')
 
     def counter(self) -> None:
@@ -232,7 +232,7 @@ class Base(Character):
                 self.tmp_flag2 = False
 
     def step(self) -> None:
-        if not DISABLE_GHOSTS_MOVING:
+        if not GHOSTS_MOVING:
             super().step()
 
     def toggle_mode_to_frightened(self):

@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import CELL_SIZE, Color, HIGH_CALORIE_SEEDS, get_path
+from misc import CELL_SIZE, Color, get_path, HIGH_CALORIE_SEEDS
 from objects import DrawableObject
 
 

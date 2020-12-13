@@ -32,7 +32,6 @@ class Scene(base.Scene):
         "Тимченко Савелий",
         "Щеников Иван",
         "Хаяо Миядзаки",
-        "Джонатан Джостар",
         "Тору Иватани",
         "Фил Спенсер",
         "☭",
@@ -121,7 +120,7 @@ class Scene(base.Scene):
             self.__students2 = self.__data.copy()
         elif len(self.__students) == len(self.__students2) and not self.__on_screen:
             self.__students.clear()
-        elif pg.time.get_ticks() % 190 == 0 and not len(self.__students) == len(self.__students2):
+        elif pg.time.get_ticks() // 2 % 100 == 0 and not len(self.__students) == len(self.__students2):
             self.__create_student()
         if not self.game.sounds.credits.get_busy():
             self.game.sounds.reload_sounds(self.game)
