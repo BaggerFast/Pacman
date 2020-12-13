@@ -14,7 +14,7 @@ from scenes import *
 class Game:
     class Settings:
         def __init__(self, storage):
-            self.MUTE = storage.settings.MUTE
+            self.SOUND = storage.settings.SOUND
             self.FUN = storage.settings.FUN
             self.VOLUME = storage.settings.VOLUME
             self.DIFFICULTY = storage.settings.DIFFICULTY
@@ -173,7 +173,7 @@ class Game:
         self.highscores = self.__storage.highscores
 
     def save_to_storage(self):
-        self.__storage.settings.MUTE = self.settings.MUTE
+        self.__storage.settings.SOUND = self.settings.SOUND
         self.__storage.settings.FUN = self.settings.FUN
         self.__storage.settings.VOLUME = self.settings.VOLUME
         self.__storage.settings.DIFFICULTY = self.settings.DIFFICULTY
