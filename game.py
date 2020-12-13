@@ -77,7 +77,7 @@ class Game:
                     self.ghost = SoundController(game, channel=4, path=Sounds.VALVE_SOUNDS[3])
                     self.pellet = SoundController(game, channel=6, path=Sounds.VALVE_SOUNDS[4])
                     self.fruit = SoundController(game, channel=4, path=Sounds.VALVE_SOUNDS[5])
-                    self.pacman = SoundController(game, path=Sounds.VALVE_SOUNDS[5])
+                    self.pacman = SoundController(game, path=Sounds.VALVE_SOUNDS[6])
 
     class Scenes:
         def __init__(self, game):
