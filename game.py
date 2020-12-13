@@ -5,8 +5,11 @@ from PIL import Image, ImageFilter
 
 from misc import Sounds
 from misc.sound_controller import SoundController
-from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path, UNLOCK_SKINS, FRUITS_COUNT, \
-    LevelLoader, Skins, Storage, DEBUG
+from misc import Color, HighScore, get_path, Score,\
+    UNLOCK_LEVELS, List, get_list_path,\
+    UNLOCK_SKINS, FRUITS_COUNT, \
+    LevelLoader, Skins, Storage,\
+    DEBUG
 from objects import Map, Text
 from scenes import *
 
@@ -124,7 +127,7 @@ class Game:
             self.levels = get_list_path("json", "maps")
             self.count = len(self.levels)
 
-        def prerender_surfaces(self) -> List[pg.Surface]:
+        def prerender_surfaces(self):
             images = []
             for level_id in range(self.count):
                 self.__load_from_map(level_id)

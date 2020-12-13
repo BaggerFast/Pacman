@@ -1,7 +1,5 @@
 import pygame as pg
 
-import misc
-
 
 class Cheat:
     def __init__(self, cheat) -> None:
@@ -9,6 +7,7 @@ class Cheat:
         self.function = cheat[1]
 
     def run(self) -> None:
+        print(self.cheat_code)
         self.function()
 
     def check_enter_code(self, enter_code) -> bool:
@@ -46,5 +45,6 @@ class ControlCheats:
 
     def process_event(self, event) -> None:
         if event.type == pg.KEYDOWN:
+            print(event.key)
             if event.key in range(pg.K_a, pg.K_z + 1):
-                self.enter_code += event.unicode
+                self.enter_code += chr(event.key)
