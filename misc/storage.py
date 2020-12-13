@@ -30,7 +30,7 @@ class Field:
 class Storage(Field):
     class __Settings(Field):
         def __init__(self):
-            self.MUTE = False
+            self.SOUND = True
             self.FUN = False
             self.VOLUME = 100
             self.DIFFICULTY = 0

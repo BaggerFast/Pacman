@@ -37,6 +37,7 @@ class Game:
     class Music:
         def __init__(self, game):
             self.reload_sounds(game)
+
         def reload_sounds(self, game):
             self.click = SoundController(game, path=Sounds.CLICK)
             self.menu = SoundController(game, channel=4, path=Sounds.INTERMISSION)

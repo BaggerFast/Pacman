@@ -37,6 +37,7 @@ class Scene(base.Scene):
             super().__init__(**args)
 
         def click(self) -> None:
+            self.select()
             self.game.settings.VOLUME += self.value
             self.game.settings.VOLUME = max(self.game.settings.VOLUME, 0)
             self.game.settings.VOLUME = min(self.game.settings.VOLUME, 100)
@@ -59,12 +60,14 @@ class Scene(base.Scene):
             self.var = var
 
         def update(self, var):
-            if var == "MUTE" or var == "FUN":
+            if var == "SOUND" or var == "FUN":
                 sounds = self.game.sounds.__dict__
                 for sound in sounds.keys():
                     sounds[sound].update()
 
         def click(self):
+            self.update(self.var)
+            self.select()
             flag_var = not getattr(self.game.settings, self.var)
             setattr(self.game.settings, self.var, flag_var)
             if flag_var:
@@ -73,7 +76,6 @@ class Scene(base.Scene):
             else:
                 self.text = self.name + " OFF"
                 self.colors = BUTTON_RED_COLORS
-            self.update(self.var)
 
     __volume_position = 150
     __difficulty_pos = 210
@@ -97,7 +99,7 @@ class Scene(base.Scene):
 
     def create_buttons(self) -> None:
         names = [
-            ("SOUND", "MUTE"),
+            ("SOUND", "SOUND"),
             ("FUN", "FUN"),
         ]
         self.buttons = []
