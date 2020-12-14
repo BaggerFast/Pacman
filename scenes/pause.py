@@ -2,6 +2,7 @@ import pygame as pg
 from objects import ButtonController, Text
 from scenes import base
 from misc import Font, LIGHT_BUTTON_COLORS
+from scenes.menu import rand_color
 
 
 class Scene(base.Scene):
@@ -33,3 +34,6 @@ class Scene(base.Scene):
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.game.scenes.MAIN)
+
+    def on_deactivate(self) -> None:
+        self.game.map_color = rand_color()

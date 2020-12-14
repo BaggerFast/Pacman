@@ -1,9 +1,31 @@
+from random import randint
+
 import pygame as pg
 from PIL import ImageFilter, Image
-from objects.map import rand_color
 from objects import ButtonController, Text, ImageObject
 from scenes import base
-from misc import Font, BUTTON_DEFAULT_COLORS, Color, LIGHT_BUTTON_COLORS
+from misc import Font, Color
+
+
+def rand_color():
+    max_states = 7
+    min_val = 200
+    max_val = 230
+    state = randint(0, max_states)
+    if state == max_states:
+        color = (255, 255, 255)
+    elif state == max_states - 1:
+        color = (randint(min_val, max_val), 0, 0)
+    elif state == max_states - 2:
+        color = (0, randint(min_val, max_val), 0)
+    elif state == max_states - 3:
+        color = (0, 0, randint(min_val, max_val))
+    else:
+        excluded_color = randint(0, 2)
+        color = (randint(min_val, max_val) if excluded_color != 0 else 0,
+                 randint(min_val, max_val) if excluded_color != 1 else 0,
+                 randint(min_val, max_val) if excluded_color != 2 else 0)
+    return color
 
 
 class Scene(base.Scene):
@@ -11,6 +33,7 @@ class Scene(base.Scene):
         self.objects = []
         self.preview = self.game.maps.full_surface
         self.color = rand_color()
+        self.game.map_color = self.color
         self.change_color()
         self.blur()
         self.image = ImageObject(self.game, self.preview, (0, 0))

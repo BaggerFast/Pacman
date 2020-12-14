@@ -71,4 +71,6 @@ class Scene:
         pass
 
     def recreate(self) -> None:
-        self.__init__(self.game)
+        self.objects = []
+        self.static_objects = []
+        self.create_static_objects()

@@ -10,6 +10,8 @@ from scenes import*
 
 
 class Game:
+    map_color = (0, 0, 0)
+
     class Cheats:
         def __init__(self, game):
             self.UNLOCK_SKINS = UNLOCK_SKINS
@@ -113,7 +115,7 @@ class Game:
             if loading:
                 self.__game.draw_load_img()
             scene.prev_scene = self.__current
-            if self.__current is not None and not surface:
+            if self.__current:
                 self.__current.on_deactivate()
             self.__current = scene
             if reset:

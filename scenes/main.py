@@ -1,5 +1,4 @@
 import pygame as pg
-
 from misc import ControlCheats
 from misc import LevelLoader, Font, get_path, Health
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
@@ -9,7 +8,6 @@ from scenes import base
 
 
 class Scene(base.Scene):
-
     def create_static_objects(self):
         self.__load_from_map()
         self.__create_sounds()
