@@ -17,14 +17,15 @@ class Sounds:
     SEED_FUN = Tuple(pg.mixer.Sound(get_path('leader', 'ogg', 'sounds'))).mixer
     FRUIT = Tuple(pg.mixer.Sound(get_path('eat_fruit', 'ogg', 'sounds'))).mixer
     GHOST = Tuple(pg.mixer.Sound(get_path('eat_ghost', 'ogg', 'sounds'))).mixer
-    POC_INTRO = Tuple(pg.mixer.Sound(get_path("pocemon_intro", 'ogg', 'sounds'))).mixer
+    POC_INTRO = Tuple(pg.mixer.Sound(get_path("pokemon_intro", 'ogg', 'sounds'))).mixer
     INTERMISSION = Tuple(pg.mixer.Sound(get_path('intermission', 'ogg', 'sounds'))).mixer
     PELLET = Tuple(pg.mixer.Sound(get_path('power_pellet', 'ogg', 'sounds'))).mixer
     DEAD = TupleList(get_list_path('ogg', 'sounds', 'death')).list
     GAMEOVER = TupleList(get_list_path('ogg', 'sounds', 'gameover')).list
-    INTRO = TupleList(get_list_path('ogg', 'Sounds', 'intro')).list
+    INTRO = TupleList(get_list_path('ogg', 'sounds', 'intro')).list
     SIREN = TupleList(get_list_path('ogg', 'sounds', 'siren')).list
     CREDITS = TupleList(get_list_path('ogg', 'sounds', 'credits')).list
+    CHEAT = Tuple(pg.mixer.Sound(get_path('cheat', 'ogg', 'sounds'))).mixer
     #valve
     VALVE_SOUNDS = TupleList(get_list_path('ogg', 'sounds', 'valve_skin')).list
     #windows

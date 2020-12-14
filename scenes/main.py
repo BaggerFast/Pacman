@@ -86,7 +86,7 @@ class Scene(base.Scene):
         self.objects = []
         self.game.sounds.siren.unpause()
 
-        self.hp_cheat = ControlCheats([['aezakmi', self.add_hp]])
+        self.hp_cheat = ControlCheats(self.game, [['aezakmi', self.add_hp]])
         self.objects.append(self.hp_cheat)
 
         self.text[len(self.text) - 1].surface.set_alpha(0)
