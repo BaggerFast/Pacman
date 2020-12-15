@@ -1,6 +1,7 @@
 import os.path
+from typing import List
 
-from misc import HIGHSCORES_COUNT, List
+from misc import HIGHSCORES_COUNT
 
 
 class HighScore:

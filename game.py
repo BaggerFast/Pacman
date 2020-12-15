@@ -182,10 +182,11 @@ class Game:
     def __init__(self) -> None:
         self.maps = self.Maps(self)
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
-        self.init_load_img()
         self.__clock = pg.time.Clock()
         self.__game_over = False
+        self.init_load_img()
         self.draw_load_img()
+        Sounds.load_sounds()
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
