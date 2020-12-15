@@ -71,6 +71,7 @@ class Sounds:
 
     @staticmethod
     def loading():
+        pg.event.get()
         Sounds.__counter += 1
         Sounds.__loading_text = f"Loading {int((Sounds.__counter / Sounds.__count) * 100)}%"
         Sounds.__game.screen.fill(Color.BLACK)
