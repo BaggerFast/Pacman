@@ -44,8 +44,7 @@ class Scene(base.Scene):
         self.objects.append(self.image)
         self.create_buttons()
         self.__create_indicator()
-        if self.first_run:
-            self.animation_launch()
+        self.animation_launch()
 
     def change_color(self) -> None:
         for x in range(self.preview.get_width()):
@@ -63,7 +62,6 @@ class Scene(base.Scene):
         self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
     def animation_launch(self):
-        self.template = self.screen.copy()
         self.game.timer = pg.time.get_ticks() / 1000
 
     def create_title(self) -> None:
