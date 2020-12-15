@@ -35,6 +35,8 @@ class Scene:
         self.additional_logic()
 
     def process_draw(self, blur_count: int = 0) -> None:
+
+        self.screen.fill((0,0,0))
         for item in self.objects:
             item.process_draw()
         self.additional_draw()

@@ -187,7 +187,7 @@ class Game:
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
-
+        self.pred = None
         self.skins = Skins(self)
         self.score = Score(self)
 
@@ -307,7 +307,7 @@ class Game:
                 piler.tobytes(), piler.size, piler.mode).convert()
             self.screen.blit(surface, (0, 0))
             blur_count = 0
-        elif self.scenes.current in animations:
+        elif self.scenes.current in animations and not self.pred:
             blur_count = 10
             self.screen.fill(Color.BLACK)
             coef = (self.timer - current_time) * 2 + blur_count / 3
