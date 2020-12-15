@@ -62,6 +62,7 @@ class Scene(base.Scene):
 
     def __save_record(self) -> None:
         self.game.records.add_new_record(int(self.game.score))
+        self.game.records.update_records()
 
     def __unlock_level(self):
         if self.__is_last_level():
