@@ -310,7 +310,6 @@ class Game:
             blur_count = max(coef, 0)
             if blur_count == 0:
                 self.scenes.MENU.first_run = False
-
         self.scenes.current.process_draw(blur_count)
 
         pg.display.flip()
