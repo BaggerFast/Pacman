@@ -296,34 +296,53 @@ class Game:
         animations = [self.scenes.MAIN]
         exceptions = [self.scenes.PAUSE, self.scenes.GAMEOVER, self.scenes.ENDGAME]
 
-        if self.scenes.current not in exceptions and self.scenes.current not in animations and self.scenes.current != self.scenes.MENU:
+        blur_count = self.__additional_draw(animations, blur_count, current_time, exceptions)
+
+        if self.scenes.current in animations:
             self.screen.fill(Color.BLACK)
-        elif self.scenes.current in exceptions:
-            blur_count = 10
-            current_time = pg.time.get_ticks() / 1000
-            surify = pg.image.tostring(self.scenes.MAIN.template, 'RGBA')
-            impil = Image.frombytes('RGBA', self.__size, surify)
-            piler = impil.filter(
-                ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count)))
-            surface = pg.image.fromstring(
-                piler.tobytes(), piler.size, piler.mode).convert()
-            self.screen.blit(surface, (0, 0))
-            blur_count = 0
-        elif self.scenes.current in animations and not self.pred:
-            blur_count = 10
-            self.screen.fill(Color.BLACK)
-            coef = (self.timer - current_time) * 2 + blur_count / 3
-            blur_count = max(coef, 0)
-        elif self.scenes.current == self.scenes.MENU and self.scenes.MENU.first_run:
-            blur_count = 10
-            self.screen.fill(Color.BLACK)
-            coef = (self.timer - current_time) * 2 + blur_count / 3
-            blur_count = max(coef, 0)
-            if blur_count == 0:
-                self.scenes.MENU.first_run = False
+
         self.scenes.current.process_draw(blur_count)
 
         pg.display.flip()
+
+    def __additional_draw(self, animations, blur_count, current_time, exceptions):
+        if self.scenes.current not in exceptions and self.scenes.current not in animations and self.scenes.current != self.scenes.MENU:
+            self.screen.fill(Color.BLACK)
+        elif self.scenes.current in exceptions:
+            blur_count = self.__exceptions_draw()
+        elif self.scenes.current in animations and not self.pred:
+            blur_count = self.__animations_draw(current_time)
+        elif self.scenes.current == self.scenes.MENU and self.scenes.MENU.first_run:
+            blur_count = self.__predraw_draw(current_time)
+        return blur_count
+
+    def __animations_draw(self, current_time):
+        blur_count = 10
+        coef = (self.timer - current_time) * 2 + blur_count / 3
+        blur_count = max(coef, 0)
+        return blur_count
+
+    def __predraw_draw(self, current_time):
+        blur_count = 10
+        self.screen.fill(Color.BLACK)
+        coef = (self.timer - current_time) * 2 + blur_count / 3
+        blur_count = max(coef, 0)
+        if blur_count == 0:
+            self.scenes.MENU.first_run = False
+        return blur_count
+
+    def __exceptions_draw(self):
+        blur_count = 10
+        current_time = pg.time.get_ticks() / 1000
+        surify = pg.image.tostring(self.scenes.MAIN.template, 'RGBA')
+        impil = Image.frombytes('RGBA', self.__size, surify)
+        piler = impil.filter(
+            ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count)))
+        surface = pg.image.fromstring(
+            piler.tobytes(), piler.size, piler.mode).convert()
+        self.screen.blit(surface, (0, 0))
+        blur_count = 0
+        return blur_count
 
     def main_loop(self) -> None:
         while not self.__game_over:
