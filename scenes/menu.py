@@ -4,7 +4,7 @@ import pygame as pg
 from PIL import ImageFilter, Image
 from objects import ButtonController, Text, ImageObject
 from scenes import base
-from misc import Font, Color
+from misc import Font, Color, VERSION
 
 
 def rand_color():
@@ -45,6 +45,9 @@ class Scene(base.Scene):
         self.create_buttons()
         self.__create_indicator()
         self.animation_launch()
+        ver = Text(self.game, VERSION, 8, font=Font.TITLE)
+        ver.move(self.game.width - 50, 270)
+        self.objects.append(ver)
 
     def change_color(self) -> None:
         for x in range(self.preview.get_width()):

@@ -310,7 +310,6 @@ class Game:
         elif self.scenes.current == self.scenes.MENU and self.scenes.MENU.first_run:
             blur_count = 10
             self.screen.fill(Color.BLACK)
-
             coef = (self.timer - current_time) * 2 + blur_count / 6
             blur_count = max(coef, 0)
             if blur_count == 0:
