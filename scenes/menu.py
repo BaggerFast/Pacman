@@ -29,25 +29,31 @@ def rand_color():
 
 
 class Scene(base.Scene):
+    def __init__(self, game):
+        self.first_run = True
+        super(Scene, self).__init__(game)
+
     def create_objects(self) -> None:
         self.objects = []
         self.preview = self.game.maps.full_surface
         self.color = rand_color()
         self.game.map_color = self.color
         self.change_color()
-        self.blur()
+        self.blur_preview()
         self.image = ImageObject(self.game, self.preview, (0, 0))
         self.objects.append(self.image)
         self.create_buttons()
         self.__create_indicator()
+        if self.first_run:
+            self.animation_launch()
 
-    def change_color(self):
+    def change_color(self) -> None:
         for x in range(self.preview.get_width()):
             for y in range(self.preview.get_height()):
                 if self.preview.get_at((x, y)) == Color.MAIN_MAP:
                     self.preview.set_at((x, y), self.color)  # Set the color of the pixel
 
-    def blur(self):
+    def blur_preview(self) -> None:
         blur_count = 5
         rect = self.preview.get_rect()
         surify = pg.image.tostring(self.preview, 'RGBA')
@@ -55,6 +61,10 @@ class Scene(base.Scene):
         piler = impil.resize(self.game.size).\
             filter(ImageFilter.GaussianBlur(radius=blur_count))
         self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
+
+    def animation_launch(self):
+        self.template = self.screen.copy()
+        self.game.timer = pg.time.get_ticks() / 1000
 
     def create_title(self) -> None:
         title = Text(self.game, 'PACMAN', 36, font=Font.TITLE)

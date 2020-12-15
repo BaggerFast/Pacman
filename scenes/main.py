@@ -157,7 +157,7 @@ class Scene(base.Scene):
             pg.mixer.pause()
             self.template = self.screen.copy()
             self.game.timer = pg.time.get_ticks() / 1000
-            self.game.scenes.set(self.game.scenes.PAUSE, surface=True)
+            self.game.scenes.set(self.game.scenes.PAUSE)
 
     def __change_prefered_ghost(self) -> None:
         self.__count_prefered_ghost += 1

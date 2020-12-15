@@ -110,11 +110,10 @@ class Game:
         def current(self):
             return self.__current
 
-        def set(self, scene: base.Scene, reset: bool = False, surface: bool = False, loading: bool = False) -> None:
+        def set(self, scene: base.Scene, reset: bool = False, loading: bool = False) -> None:
             """
             :param scene: NEXT scene (contains in game.scenes.*)
             :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
-            :param surface: if surface == True background of new scene equal CURRENT scene with BLUR
             :param loading: displays "Loading..." until scene will be loaded
             IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
             """
@@ -280,10 +279,12 @@ class Game:
         self.scenes.current.process_logic()
 
     def __process_all_draw(self) -> None:
+        blur_count = 0
+        animations = [self.scenes.MENU]
         exceptions = [self.scenes.PAUSE, self.scenes.GAMEOVER, self.scenes.ENDGAME]
-        if self.scenes.current not in exceptions:
+        if self.scenes.current not in exceptions and self.scenes.current not in animations:
             self.screen.fill(Color.BLACK)
-        else:
+        elif self.scenes.current in exceptions:
             blur_count = 10
             current_time = pg.time.get_ticks() / 1000
             surify = pg.image.tostring(self.scenes.MAIN.template, 'RGBA')
@@ -293,8 +294,13 @@ class Game:
             surface = pg.image.fromstring(
                 piler.tobytes(), piler.size, piler.mode).convert()
             self.screen.blit(surface, (0, 0))
+            blur_count = 0
+        elif self.scenes.current in animations:
+            blur_count = 10
+            current_time = pg.time.get_ticks() / 1000
+            blur_count = max((self.timer - current_time * 2) + blur_count / 2, 0)
 
-        self.scenes.current.process_draw()
+        self.scenes.current.process_draw(blur_count)
 
         pg.display.flip()
 
