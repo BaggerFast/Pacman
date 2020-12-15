@@ -43,11 +43,10 @@ class Game:
         class Ch:
             pacman = 0
             intro = 1
-            gameover = 2
+            gameover = menu = 2
             siren = 3
             seed = ghost = fruit = 4
-            menu = 5
-            pellet = 6
+            pellet = 5
 
         def __init__(self, game):
             self.reload_sounds(game)
@@ -189,18 +188,17 @@ class Game:
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
+
         self.skins = Skins(self)
         self.score = Score(self)
 
         self.cheats_var = self.Cheats(self)
-
         self.read_from_storage()
 
         self.cheats = ControlCheats(self, [['skins', lambda: self.cheats_var.update("UNLOCK_SKINS")],
                                            ['maps', lambda: self.cheats_var.update("UNLOCK_LEVELS")],
                                            ['lives', lambda: self.cheats_var.update("INFINITY_LIVES")],
                                            ['collision', lambda: self.cheats_var.update("GHOSTS_COLLISION")]])
-
         self.sounds = self.Music(self)
         self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else self.__def_skin
         self.records = HighScore(self)
