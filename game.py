@@ -25,8 +25,12 @@ class Game:
             self.dict[key] = not self.dict[key]
             if key == "UNLOCK_SKINS":
                 self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.UNLOCK_SKINS else self.game.storage.unlocked_skins
+                if self.game.scenes.current == self.game.scenes.SKINS:
+                    self.game.scenes.current.create_objects()
             elif key == "UNLOCK_LEVELS":
                 self.game.unlocked_levels = self.game.maps.keys() if self.game.cheats_var.UNLOCK_LEVELS else self.game.storage.unlocked_levels
+                if self.game.scenes.current == self.game.scenes.LEVELS:
+                    self.game.scenes.current.create_objects()
 
     class Settings:
         def __init__(self, storage):
@@ -213,7 +217,7 @@ class Game:
         self.highscores = self.storage.highscores
 
     def save_to_storage(self):
-        self.storage.settings.MUTE = self.settings.SOUND
+        self.storage.settings.SOUND = self.settings.SOUND
         self.storage.settings.FUN = self.settings.FUN
         self.storage.settings.VOLUME = self.settings.VOLUME
         self.storage.settings.DIFFICULTY = self.settings.DIFFICULTY
