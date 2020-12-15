@@ -49,6 +49,10 @@ class Scene(base.Scene):
         ver.move(self.game.width - 50, 270)
         self.objects.append(ver)
 
+    def on_activate(self) -> None:
+        self.game.pred = False
+        super(Scene, self).on_activate()
+
     def change_color(self) -> None:
         for x in range(self.preview.get_width()):
             for y in range(self.preview.get_height()):

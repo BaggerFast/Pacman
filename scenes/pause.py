@@ -36,4 +36,5 @@ class Scene(base.Scene):
             self.game.scenes.set(self.game.scenes.MAIN)
 
     def on_deactivate(self) -> None:
+        self.game.pred = True
         self.game.map_color = rand_color()
