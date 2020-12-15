@@ -117,6 +117,8 @@ class Game:
             :param loading: displays "Loading..." until scene will be loaded
             IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
             """
+            if scene != self.MENU:
+                self.__game.scenes.MENU.first_run = False
             if loading:
                 self.__game.draw_load_img()
             scene.prev_scene = self.__current
