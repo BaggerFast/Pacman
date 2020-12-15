@@ -44,7 +44,7 @@ class Pacman(Character):
             super().process_logic()
 
     def death(self) -> None:
-        if not self.game.cheats_var.INFINITY_LIVES:
+        if not self.game.cheats_var.infinity_lives:
             self.game.current_scene.hp -= 1
         self.animator = self.__dead_anim
         self.game.sounds.siren.pause()

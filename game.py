@@ -14,9 +14,9 @@ class Game:
 
     class Cheats:
         def __init__(self, game):
-            self.UNLOCK_SKINS = UNLOCK_SKINS
-            self.UNLOCK_LEVELS = UNLOCK_LEVELS
-            self.INFINITY_LIVES = INFINITY_LIVES
+            self.unlock_skins = UNLOCK_SKINS
+            self.unlock_levels = UNLOCK_LEVELS
+            self.infinity_lives = INFINITY_LIVES
             self.GHOSTS_COLLISION = GHOSTS_COLLISION
             self.dict = self.__dict__
             self.game = game
@@ -24,11 +24,11 @@ class Game:
         def update(self, key):
             self.dict[key] = not self.dict[key]
             if key == "UNLOCK_SKINS":
-                self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.UNLOCK_SKINS else self.game.storage.unlocked_skins
+                self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.unlock_skins else self.game.storage.unlocked_skins
                 if self.game.scenes.current == self.game.scenes.SKINS:
                     self.game.scenes.current.create_objects()
             elif key == "UNLOCK_LEVELS":
-                self.game.unlocked_levels = self.game.maps.keys() if self.game.cheats_var.UNLOCK_LEVELS else self.game.storage.unlocked_levels
+                self.game.unlocked_levels = self.game.maps.keys() if self.game.cheats_var.unlock_levels else self.game.storage.unlocked_levels
                 if self.game.scenes.current == self.game.scenes.LEVELS:
                     self.game.scenes.current.create_objects()
 
@@ -204,13 +204,14 @@ class Game:
         self.scenes = self.Scenes(self)
         self.scenes.set(self.scenes.MENU)
 
+
     def read_from_storage(self):
         self.storage = Storage(self)
         self.settings = self.Settings(self.storage)
-        self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
+        self.unlocked_levels = self.maps.keys() if self.cheats_var.unlock_levels else self.storage.unlocked_levels
         self.maps.cur_id = int(self.storage.last_level_id) if int(
             self.storage.last_level_id) in self.unlocked_levels else self.__def_level_id
-        self.unlocked_skins = self.skins.all_skins if self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
+        self.unlocked_skins = self.skins.all_skins if self.cheats_var.unlock_skins else self.storage.unlocked_skins
         self.eaten_fruits = self.storage.eaten_fruits
         self.highscores = self.storage.highscores
 
@@ -222,9 +223,9 @@ class Game:
         self.storage.last_level_id = self.maps.cur_id
         self.storage.last_skin = self.skins.current.name
         self.storage.eaten_fruits = self.eaten_fruits
-        if not self.cheats_var.UNLOCK_LEVELS:
+        if not self.cheats_var.unlock_levels:
             self.storage.unlocked_levels = self.unlocked_levels
-        if not self.cheats_var.UNLOCK_SKINS:
+        if not self.cheats_var.unlock_skins:
             self.storage.unlocked_skins = self.unlocked_skins
         self.storage.highscores = self.highscores
         self.storage.save()
@@ -277,6 +278,14 @@ class Game:
     def __process_all_logic(self) -> None:
         self.cheats.process_logic()
         self.scenes.current.process_logic()
+        if self.current_scene != self.scenes.MAIN:
+            for ghost in self.scenes.MAIN.ghosts:
+                ghost.timer = pg.time.get_ticks() - (pg.time.get_ticks() - ghost.old_timer)
+                ghost.ai_timer = pg.time.get_ticks() - (pg.time.get_ticks() - ghost.old_ai_timer)
+        else:
+            for ghost in self.scenes.MAIN.ghosts:
+                ghost.old_timer = pg.time.get_ticks()
+                ghost.old_ai_timer = pg.time.get_ticks()
 
     def __process_all_draw(self) -> None:
         blur_count = 0
@@ -331,7 +340,7 @@ class Game:
         :param level_id: level id
         """
         if level_id in self.maps.keys():
-            if not self.cheats_var.UNLOCK_LEVELS and level_id not in self.unlocked_levels:
+            if not self.cheats_var.unlock_levels and level_id not in self.unlocked_levels:
                 self.unlocked_levels.append(level_id)
         else:
             raise Exception(f"id error. Map id: {level_id} doesn't exist")
@@ -341,7 +350,7 @@ class Game:
         :param skin_name: skin name
         """
         if skin_name in self.skins.all_skins:
-            if not self.cheats_var.UNLOCK_SKINS and skin_name not in self.unlocked_skins:
+            if not self.cheats_var.unlock_skins and skin_name not in self.unlocked_skins:
                 self.unlocked_skins.append(skin_name)
         else:
             raise Exception(f"Name error. Skin name: {skin_name} doesn't exist")
