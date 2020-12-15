@@ -300,6 +300,7 @@ class Scene(base.Scene):
 
     def on_activate(self) -> None:
         self.game.sounds.intro.unpause()
+        self.template = self.screen
         if self.pacman.animator != self.pacman.dead_anim:
             self.game.sounds.siren.unpause()
         for ghost in self.__ghosts:
@@ -312,8 +313,8 @@ class Scene(base.Scene):
 
     def on_reset(self) -> None:
         pg.mixer.stop()
+        self.game.timer = pg.time.get_ticks() // 1000
         self.game.sounds.reload_sounds(self.game)
         self.game.score.reset()
         self.game.scenes.MAIN.recreate()
-        self.timer = pg.time.get_ticks() / 1000
         self.game.sounds.intro.play()

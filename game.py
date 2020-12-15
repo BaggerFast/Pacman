@@ -280,9 +280,12 @@ class Game:
 
     def __process_all_draw(self) -> None:
         blur_count = 0
-        animations = [self.scenes.MENU]
+        current_time = pg.time.get_ticks() / 1000
+
+        animations = [self.scenes.MAIN]
         exceptions = [self.scenes.PAUSE, self.scenes.GAMEOVER, self.scenes.ENDGAME]
-        if self.scenes.current not in exceptions and self.scenes.current not in animations:
+
+        if self.scenes.current not in exceptions and self.scenes.current not in animations and self.scenes.current != self.scenes.MENU:
             self.screen.fill(Color.BLACK)
         elif self.scenes.current in exceptions:
             blur_count = 10
@@ -297,8 +300,17 @@ class Game:
             blur_count = 0
         elif self.scenes.current in animations:
             blur_count = 10
-            current_time = pg.time.get_ticks() / 1000
-            blur_count = max((self.timer - current_time * 2) + blur_count / 2, 0)
+            self.screen.fill(Color.BLACK)
+            coef = (self.timer - current_time) * 2 + blur_count / 3
+            blur_count = max(coef, 0)
+        elif self.scenes.current == self.scenes.MENU and self.scenes.MENU.first_run:
+            blur_count = 10
+            self.screen.fill(Color.BLACK)
+
+            coef = (self.timer - current_time) * 2 + blur_count / 6
+            blur_count = max(coef, 0)
+            if blur_count == 0:
+                self.scenes.MENU.first_run = False
 
         self.scenes.current.process_draw(blur_count)
 
