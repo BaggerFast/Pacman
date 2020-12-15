@@ -72,10 +72,10 @@ class Scene(base.Scene):
     def create_objects(self) -> None:
         self.skins = {
             0: ('PACMAN', self.game.skins.default),
-            1: ('HALF-LIFE', self.game.skins.half_life),
-            2: ('WINDOWS', self.game.skins.windows),
-            3: ('POKEBALL', self.game.skins.pokeball),
-            4: ('EDGE', self.game.skins.edge),
+            1: ('EDGE', self.game.skins.edge),
+            2: ('POKEBALL', self.game.skins.pokeball),
+            3: ('HALF-LIFE', self.game.skins.half_life),
+            4: ('WINDOWS', self.game.skins.windows),
             5: ('CHROME', self.game.skins.chrome),
         }
         self.objects = []

@@ -2,7 +2,7 @@ import pygame as pg
 from random import randint
 from typing import Tuple
 
-from misc.constants import Points, CELL_SIZE, Sounds
+from misc.constants import CELL_SIZE
 from misc.path import get_list_path, get_path
 from misc.animator import Animator
 from objects.base import DrawableObject
