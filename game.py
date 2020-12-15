@@ -184,9 +184,8 @@ class Game:
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.__clock = pg.time.Clock()
         self.__game_over = False
-        self.init_load_img()
         self.draw_load_img()
-        Sounds.load_sounds()
+        Sounds.load_sounds(self.load_img_text, self)
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
@@ -206,7 +205,7 @@ class Game:
         self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else self.__def_skin
         self.records = HighScore(self)
         self.scenes = self.Scenes(self)
-        self.scenes.set(self.scenes.MENU, loading=True)
+        self.scenes.set(self.scenes.MENU)
 
     def read_from_storage(self):
         self.storage = Storage(self)
@@ -253,15 +252,13 @@ class Game:
     def __exit_hotkey_pressed(event: pg.event.Event) -> bool:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
 
-    def init_load_img(self):
-        self.load_img_text = Text(self, text="Loading", size=20)
+    def draw_load_img(self, text=None):
+        self.load_img_text = Text(self, text="Loading" if text is None else text, size=20)
         self.load_img_text.move_center(self.width // 2, self.height // 2)
         self.load_img = pg.Surface(
             (self.load_img_text.rect.size[0] * 2, self.load_img_text.rect.size[1] * 2)).convert_alpha()
         self.load_img.fill(pg.Color("black"))
         self.load_img.set_alpha(150)
-
-    def draw_load_img(self):
         rect = self.load_img.get_rect()
         rect.center = self.load_img_text.rect.center
         self.screen.blit(self.load_img, rect)
