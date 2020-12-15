@@ -27,6 +27,7 @@ class Scene(base.Scene):
         self.fruit = Fruit(self.game, self.__fruit_position)
         self.ghost_text_timer = pg.time.get_ticks()
         self.ghost_text_flag = False
+        self.is_active = False
 
     def __create_health(self):
         self.hp = Health(3, 4)
@@ -119,18 +120,18 @@ class Scene(base.Scene):
             self.inky = Inky(self.game, self.__ghost_positions[0], 2000, 80000, 1000)
             self.clyde = Clyde(self.game, self.__ghost_positions[2], 2000, 0, 0)
 
-        self.__ghosts = [
+        self.ghosts = [
             self.blinky,
             self.pinky,
             self.inky,
             self.clyde
         ]
 
-        self.__not_prefered_ghosts = self.__ghosts.copy()
+        self.__not_prefered_ghosts = self.ghosts.copy()
         self.__prefered_ghost = self.pinky
         self.__count_prefered_ghost = 0
 
-        for ghost in self.__ghosts:
+        for ghost in self.ghosts:
             self.objects.append(ghost)
             self.objects.append(ghost.gg_text)
 
@@ -163,7 +164,7 @@ class Scene(base.Scene):
         self.__count_prefered_ghost += 1
         self.__not_prefered_ghosts.pop(0)
         if self.__count_prefered_ghost < 4:
-            self.__prefered_ghost = self.__ghosts[self.__count_prefered_ghost]
+            self.__prefered_ghost = self.ghosts[self.__count_prefered_ghost]
         else:
             self.__prefered_ghost = None
             self.__count_prefered_ghost = 0
@@ -171,14 +172,14 @@ class Scene(base.Scene):
     def __process_collision(self) -> None:
         self.fruit.process_collision(self.pacman)
         seed_eaten = self.__seeds.process_collision(self.pacman)
-        for ghost in self.__ghosts:
+        for ghost in self.ghosts:
             if ghost.collision_check(self.pacman)[0]:
                 if ghost.collision_check(self.pacman)[1]:
                     self.__timer_reset_pacman = pg.time.get_ticks()
                     if not self.pacman.dead:
                         self.pacman.death()
                         self.__prepare_lives_meter()
-                    for ghost2 in self.__ghosts:
+                    for ghost2 in self.ghosts:
                         ghost2.invisible()
                 else:
                     if ghost.mode == 'Frightened':
@@ -198,7 +199,7 @@ class Scene(base.Scene):
                 self.__prefered_ghost.update_timer()
         elif seed_eaten == 2:
             self.game.score.activate_fear_mode()
-            for ghost in self.__ghosts:
+            for ghost in self.ghosts:
                 ghost.toggle_mode_to_frightened()
 
     def __start_label(self) -> None:
@@ -223,7 +224,7 @@ class Scene(base.Scene):
 
     def __check_ghosts(self):
         flag = False
-        for ghost in self.__ghosts:
+        for ghost in self.ghosts:
             if ghost.mode == 'Frightened':
                 flag = True
         if flag:
@@ -255,7 +256,7 @@ class Scene(base.Scene):
                 self.__seeds_eaten = 0
                 self.__work_ghost_counters = False
                 self.__max_seeds_eaten_to_prefered_ghost = 7
-                for ghost in self.__ghosts:
+                for ghost in self.ghosts:
                     ghost.work_counter = False
             if self.__seeds_eaten == self.__max_seeds_eaten_to_prefered_ghost and self.__prefered_ghost is not None:
                 self.__prefered_ghost.is_can_leave_home = True
@@ -269,7 +270,7 @@ class Scene(base.Scene):
                 self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
         else:
             self.__start_label()
-            for ghost in self.__ghosts:
+            for ghost in self.ghosts:
                 ghost.update_ai_timer()
                 ghost.update_timer()
         if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
@@ -281,7 +282,7 @@ class Scene(base.Scene):
                 ghost.update_timer()
         if self.ghost_text_flag:
             if pg.time.get_ticks() - self.ghost_text_timer >= 1000:
-                for ghost in self.__ghosts:
+                for ghost in self.ghosts:
                     ghost.visible()
                     ghost.gg_text.text = ' '
                 self.ghost_text_flag = False
@@ -299,17 +300,21 @@ class Scene(base.Scene):
         self.__prepare_lives_meter()
 
     def on_activate(self) -> None:
+        self.is_active = True
         self.game.sounds.intro.unpause()
         self.template = self.screen
         if self.pacman.animator != self.pacman.dead_anim:
             self.game.sounds.siren.unpause()
-        for ghost in self.__ghosts:
+        for ghost in self.ghosts:
             if ghost.mode == "Frightened":
                 if self.game.sounds.pellet.get_busy():
                     self.game.sounds.pellet.play()
                     break
         if self.pacman.animator == self.pacman.dead_anim:
             self.game.sounds.pacman.unpause()
+
+    def on_deactivate(self) -> None:
+        self.is_active = False
 
     def on_reset(self) -> None:
         pg.mixer.stop()

@@ -24,7 +24,6 @@ class Base(Character):
         self.frightened_time = frightened_time
         self.chase_time = chase_time
         self.scatter_time = scatter_time
-
         # Обычные Анимация
         self.left_walk_anim = Animator(
             get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'left'), is_rotation=False
@@ -111,6 +110,9 @@ class Base(Character):
         #Временное решение
         self.tmp_flag1 = False
         self.tmp_flag2 = False
+
+        self.old_timer = pg.time.get_ticks()
+        self.old_ai_timer = pg.time.get_ticks()
 
     def process_logic(self) -> None:
         self.deceleration_multiplier_with_rect = 1
