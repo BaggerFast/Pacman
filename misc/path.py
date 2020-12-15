@@ -1,4 +1,5 @@
 import os
+from typing import List
 
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 
@@ -24,7 +25,7 @@ def get_files_count(path: str) -> int:
     return count
 
 
-def get_list_path(extension: str, *folder: str) -> list:
+def get_list_path(extension: str, *folder: str) -> List[str]:
     """
     :param folder: указать папки через пробел слева на право без имени файла без image
     :param extension: указать расширение файла

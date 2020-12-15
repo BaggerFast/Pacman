@@ -43,11 +43,10 @@ class Game:
         class Ch:
             pacman = 0
             intro = 1
-            gameover = 2
+            gameover = menu = 2
             siren = 3
             seed = ghost = fruit = 4
-            menu = 5
-            pellet = 6
+            pellet = 5
 
         def __init__(self, game):
             self.reload_sounds(game)
@@ -111,11 +110,10 @@ class Game:
         def current(self):
             return self.__current
 
-        def set(self, scene: base.Scene, reset: bool = False, surface: bool = False, loading: bool = False) -> None:
+        def set(self, scene: base.Scene, reset: bool = False, loading: bool = False) -> None:
             """
             :param scene: NEXT scene (contains in game.scenes.*)
             :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
-            :param surface: if surface == True background of new scene equal CURRENT scene with BLUR
             :param loading: displays "Loading..." until scene will be loaded
             IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
             """
@@ -182,30 +180,29 @@ class Game:
     def __init__(self) -> None:
         self.maps = self.Maps(self)
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
-        self.init_load_img()
         self.__clock = pg.time.Clock()
         self.__game_over = False
         self.draw_load_img()
+        Sounds.load_sounds(self.load_img_text, self)
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
+
         self.skins = Skins(self)
         self.score = Score(self)
 
         self.cheats_var = self.Cheats(self)
-
         self.read_from_storage()
 
         self.cheats = ControlCheats(self, [['skins', lambda: self.cheats_var.update("UNLOCK_SKINS")],
                                            ['maps', lambda: self.cheats_var.update("UNLOCK_LEVELS")],
                                            ['lives', lambda: self.cheats_var.update("INFINITY_LIVES")],
                                            ['collision', lambda: self.cheats_var.update("GHOSTS_COLLISION")]])
-
         self.sounds = self.Music(self)
         self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else self.__def_skin
         self.records = HighScore(self)
         self.scenes = self.Scenes(self)
-        self.scenes.set(self.scenes.MENU, loading=True)
+        self.scenes.set(self.scenes.MENU)
 
     def read_from_storage(self):
         self.storage = Storage(self)
@@ -252,15 +249,13 @@ class Game:
     def __exit_hotkey_pressed(event: pg.event.Event) -> bool:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
 
-    def init_load_img(self):
-        self.load_img_text = Text(self, text="Loading", size=20)
+    def draw_load_img(self, text=None):
+        self.load_img_text = Text(self, text="Loading" if text is None else text, size=20)
         self.load_img_text.move_center(self.width // 2, self.height // 2)
         self.load_img = pg.Surface(
             (self.load_img_text.rect.size[0] * 2, self.load_img_text.rect.size[1] * 2)).convert_alpha()
         self.load_img.fill(pg.Color("black"))
         self.load_img.set_alpha(150)
-
-    def draw_load_img(self):
         rect = self.load_img.get_rect()
         rect.center = self.load_img_text.rect.center
         self.screen.blit(self.load_img, rect)
@@ -284,10 +279,15 @@ class Game:
         self.scenes.current.process_logic()
 
     def __process_all_draw(self) -> None:
+        blur_count = 0
+        current_time = pg.time.get_ticks() / 1000
+
+        animations = [self.scenes.MAIN]
         exceptions = [self.scenes.PAUSE, self.scenes.GAMEOVER, self.scenes.ENDGAME]
-        if self.scenes.current not in exceptions:
+
+        if self.scenes.current not in exceptions and self.scenes.current not in animations and self.scenes.current != self.scenes.MENU:
             self.screen.fill(Color.BLACK)
-        else:
+        elif self.scenes.current in exceptions:
             blur_count = 10
             current_time = pg.time.get_ticks() / 1000
             surify = pg.image.tostring(self.scenes.MAIN.template, 'RGBA')
@@ -297,8 +297,22 @@ class Game:
             surface = pg.image.fromstring(
                 piler.tobytes(), piler.size, piler.mode).convert()
             self.screen.blit(surface, (0, 0))
+            blur_count = 0
+        elif self.scenes.current in animations:
+            blur_count = 10
+            self.screen.fill(Color.BLACK)
+            coef = (self.timer - current_time) * 2 + blur_count / 3
+            blur_count = max(coef, 0)
+        elif self.scenes.current == self.scenes.MENU and self.scenes.MENU.first_run:
+            blur_count = 10
+            self.screen.fill(Color.BLACK)
 
-        self.scenes.current.process_draw()
+            coef = (self.timer - current_time) * 2 + blur_count / 6
+            blur_count = max(coef, 0)
+            if blur_count == 0:
+                self.scenes.MENU.first_run = False
+
+        self.scenes.current.process_draw(blur_count)
 
         pg.display.flip()
 

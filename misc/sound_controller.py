@@ -1,3 +1,5 @@
+from typing import Union
+
 import pygame as pg
 
 
@@ -6,7 +8,7 @@ def update(object):
 
 
 class SoundController:
-    def __init__(self, game, channel: int = 0, path: str = '', volume: int = 1):
+    def __init__(self, game, channel: int = 0, path: Union[str, pg.mixer.Sound] = '', volume: int = 1):
         self.path = path
         self.sound = pg.mixer.Sound(path)
         self.game = game

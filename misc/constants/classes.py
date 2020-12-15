@@ -1,35 +1,80 @@
 import pygame as pg
-from typing import NamedTuple, Union, List
+from typing import NamedTuple, List
 
 from misc.path import get_path, get_list_path
 
 
 class Sounds:
-    class Tuple(NamedTuple):
-        mixer: pg.mixer.Sound
-
-    class TupleList(NamedTuple):
-        list: list
-
     pg.mixer.init()
-    CLICK = Tuple(pg.mixer.Sound(get_path('navigation', 'ogg', 'sounds'))).mixer
-    SEED = Tuple(pg.mixer.Sound(get_path('munch', 'ogg', 'sounds'))).mixer
-    SEED_FUN = Tuple(pg.mixer.Sound(get_path('leader', 'ogg', 'sounds'))).mixer
-    FRUIT = Tuple(pg.mixer.Sound(get_path('eat_fruit', 'ogg', 'sounds'))).mixer
-    GHOST = Tuple(pg.mixer.Sound(get_path('eat_ghost', 'ogg', 'sounds'))).mixer
-    POC_INTRO = Tuple(pg.mixer.Sound(get_path("pokemon_intro", 'ogg', 'sounds'))).mixer
-    INTERMISSION = Tuple(pg.mixer.Sound(get_path('intermission', 'ogg', 'sounds'))).mixer
-    PELLET = Tuple(pg.mixer.Sound(get_path('power_pellet', 'ogg', 'sounds'))).mixer
-    DEAD = TupleList(get_list_path('ogg', 'sounds', 'death')).list
-    GAMEOVER = TupleList(get_list_path('ogg', 'sounds', 'gameover')).list
-    INTRO = TupleList(get_list_path('ogg', 'sounds', 'intro')).list
-    SIREN = TupleList(get_list_path('ogg', 'sounds', 'siren')).list
-    CREDITS = TupleList(get_list_path('ogg', 'sounds', 'credits')).list
-    CHEAT = Tuple(pg.mixer.Sound(get_path('cheat', 'ogg', 'sounds'))).mixer
-    #valve
-    VALVE_SOUNDS = TupleList(get_list_path('ogg', 'sounds', 'valve_skin')).list
-    #windows
-    WINDOWS_SOUNDS = TupleList(get_list_path('ogg', 'sounds', 'windows_skin')).list
+    __loading_text: str = ''
+    __game = None
+    __counter = 0
+    __count = 32
+    CLICK: pg.mixer.Sound = None
+    SEED: pg.mixer.Sound = None
+    SEED_FUN: pg.mixer.Sound = None
+    FRUIT: pg.mixer.Sound = None
+    GHOST: pg.mixer.Sound = None
+    POC_INTRO: pg.mixer.Sound = None
+    INTERMISSION: pg.mixer.Sound = None
+    PELLET: pg.mixer.Sound = None
+    CHEAT: pg.mixer.Sound = None
+    DEAD: List[pg.mixer.Sound] = []
+    GAMEOVER: List[pg.mixer.Sound] = []
+    INTRO: List[pg.mixer.Sound] = []
+    SIREN: List[pg.mixer.Sound] = []
+    CREDITS: List[pg.mixer.Sound] = []
+    # valve
+    VALVE_SOUNDS: List[pg.mixer.Sound] = []
+    # windows
+    WINDOWS_SOUNDS: List[pg.mixer.Sound] = []
+
+    @staticmethod
+    def load_sounds(loading_text, game):
+        Sounds.__game = game
+        Sounds.__loading_text = loading_text
+        Sounds.CLICK = pg.mixer.Sound(get_path('navigation', 'ogg', 'sounds'))
+        Sounds.loading()
+        Sounds.SEED = pg.mixer.Sound(get_path('munch', 'ogg', 'sounds'))
+        Sounds.loading()
+        Sounds.SEED_FUN = pg.mixer.Sound(get_path('leader', 'ogg', 'sounds'))
+        Sounds.loading()
+        Sounds.FRUIT = pg.mixer.Sound(get_path('eat_fruit', 'ogg', 'sounds'))
+        Sounds.loading()
+        Sounds.GHOST = pg.mixer.Sound(get_path('eat_ghost', 'ogg', 'sounds'))
+        Sounds.loading()
+        Sounds.POC_INTRO = pg.mixer.Sound(get_path("pokemon_intro", 'ogg', 'sounds'))
+        Sounds.loading()
+        Sounds.INTERMISSION = pg.mixer.Sound(get_path('intermission', 'ogg', 'sounds'))
+        Sounds.loading()
+        Sounds.PELLET = pg.mixer.Sound(get_path('power_pellet', 'ogg', 'sounds'))
+        Sounds.loading()
+        Sounds.CHEAT = pg.mixer.Sound(get_path('cheat', 'ogg', 'sounds'))
+        Sounds.loading()
+        Sounds.DEAD = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'death')]
+        Sounds.loading()
+        Sounds.GAMEOVER = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'gameover')]
+        Sounds.loading()
+        Sounds.INTRO = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'intro')]
+        Sounds.loading()
+        Sounds.SIREN = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'siren')]
+        Sounds.loading()
+        for path in get_list_path('ogg', 'sounds', 'credits'):
+            Sounds.loading()
+            Sounds.CREDITS.append(pg.mixer.Sound(path))
+        Sounds.loading()
+        # valve
+        Sounds.VALVE_SOUNDS = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'valve_skin')]
+        Sounds.loading()
+        # windows
+        Sounds.WINDOWS_SOUNDS = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'windows_skin')]
+
+    @staticmethod
+    def loading():
+        Sounds.__counter += 1
+        Sounds.__loading_text = f"Loading {int((Sounds.__counter / Sounds.__count) * 100)}%"
+        Sounds.__game.screen.fill(Color.BLACK)
+        Sounds.__game.draw_load_img(Sounds.__loading_text)
 
 
 class Color(NamedTuple):

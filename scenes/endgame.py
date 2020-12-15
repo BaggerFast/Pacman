@@ -55,12 +55,14 @@ class Scene(base.Scene):
         self.objects.append(self.__text_score)
 
     def __create_highscore_text(self) -> None:
-        self.__text_highscore = Text(self.game, f'High score: {self.game.records.data[-1]}', 20)
+        self.__text_highscore = Text(self.game, f'High score: {self.game.records.data[-1]}'
+                                     if int(self.game.score) <= self.game.records.data[-1] else f'New record: {self.game.score}', 20)
         self.__text_highscore.move_center(self.game.width // 2, 165)
         self.objects.append(self.__text_highscore)
 
     def __save_record(self) -> None:
         self.game.records.add_new_record(int(self.game.score))
+        self.game.records.update_records()
 
     def __unlock_level(self):
         if self.__is_last_level():
