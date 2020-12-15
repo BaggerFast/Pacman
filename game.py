@@ -122,7 +122,7 @@ class Game:
             if loading:
                 self.__game.draw_load_img()
             scene.prev_scene = self.__current
-            if self.__current:
+            if self.__current is not None:
                 self.__current.on_deactivate()
             self.__current = scene
             if reset:
