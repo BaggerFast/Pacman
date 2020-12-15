@@ -68,7 +68,6 @@ class SeedContainer(DrawableObject):
                         if not self.game.sounds.seed.get_busy():
                             self.game.sounds.seed.play()
                         self.game.score.eat_seed()
-                        print(123)
                         self.__seeds_on_field -= 1
                         return 1
         for energizer in self.__energizers:
