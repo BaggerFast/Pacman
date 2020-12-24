@@ -82,15 +82,15 @@ class Scene(base.Scene):
         self.objects.append(self.__indicator)
 
     def create_buttons(self) -> None:
-        names = {
-            0: ("PLAY", self.game.scenes.MAIN, True, True),
-            1: ("LEVELS", self.game.scenes.LEVELS),
-            2: ("SKINS", self.game.scenes.SKINS),
-            3: ("RECORDS", self.game.scenes.RECORDS),
-            4: ("SETTINGS", self.game.scenes.SETTINGS),
-            5: ("CREDITS", self.game.scenes.CREDITS),
-            6: ("EXIT", self.game.exit_game)
-        }
+        names = [
+            ("PLAY", self.game.scenes.MAIN),
+            ("LEVELS", self.game.scenes.LEVELS),
+            ("SKINS", self.game.scenes.SKINS),
+            ("RECORDS", self.game.scenes.RECORDS),
+            ("SETTINGS", self.game.scenes.SETTINGS),
+            ("CREDITS", self.game.scenes.CREDITS),
+            ("EXIT", self.game.exit_game)
+        ]
         buttons = []
         for i in range(len(names)):
             buttons.append(
@@ -98,7 +98,7 @@ class Scene(base.Scene):
                     game=self.game,
                     geometry=pg.Rect(0, 0, 180, 26),
                     text=names[i][0],
-                    scene=names[i][1:],
+                    scene=names[i][1],
                     center=(self.game.width // 2, 95 + i * 28),
                     text_size=Font.BUTTON_TEXT_SIZE
                 )

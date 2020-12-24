@@ -158,7 +158,7 @@ class Scene(base.Scene):
             pg.mixer.pause()
             self.template = self.screen.copy()
             self.game.timer = pg.time.get_ticks() / 1000
-            self.game.scenes.set(self.game.scenes.PAUSE)
+            self.game.scenes.PAUSE()
 
     def __change_prefered_ghost(self) -> None:
         self.__count_prefered_ghost += 1
@@ -267,7 +267,7 @@ class Scene(base.Scene):
             if self.__seeds.is_field_empty():
                 self.template = self.screen.copy()
                 self.game.timer = pg.time.get_ticks() / 1000
-                self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
+                self.game.scenes.ENDGAME()
         else:
             self.__start_label()
             for ghost in self.ghosts:
@@ -323,3 +323,9 @@ class Scene(base.Scene):
         self.game.score.reset()
         self.game.scenes.MAIN.recreate()
         self.game.sounds.intro.play()
+
+    def Continue(self):
+        self.game.scenes.set(self)
+
+    def __call__(self, *args, **kwargs):
+        self.game.scenes.set(self,reset=True,loading=True)

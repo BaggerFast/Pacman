@@ -9,7 +9,7 @@ from misc import Font, get_list_path, BUTTON_SKIN_BUY
 
 class Scene(base.Scene):
     class SkinButton(Button):
-        def __init__(self, **args) -> object:
+        def __init__(self, **args):
             self.value = args.pop("value")
             super().__init__(**args)
 
@@ -31,7 +31,7 @@ class Scene(base.Scene):
             super().select()
 
     class BuyButton(Button):
-        def __init__(self, **args) -> object:
+        def __init__(self, **args):
             self.value = args.pop("value")
             super().__init__(**args)
 

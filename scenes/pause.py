@@ -7,19 +7,19 @@ from scenes.menu import rand_color
 
 class Scene(base.Scene):
     def create_buttons(self) -> None:
-        names = {
-            0: ("CONTINUE", self.game.scenes.MAIN),
-            1: ("SETTINGS", self.game.scenes.SETTINGS, True),
-            2: ("RESTART", self.game.scenes.MAIN, True, True),
-            3: ("MENU", self.game.scenes.MENU),
-        }
+        names = [
+            ("CONTINUE", self.game.scenes.MAIN.Continue),
+            ("SETTINGS", self.game.scenes.SETTINGS),
+            ("RESTART", self.game.scenes.MAIN),
+            ("MENU", self.game.scenes.MENU),
+        ]
         buttons = []
         for i in range(len(names)):
             buttons.append(self.SceneButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 40),
                 text=names[i][0],
-                scene=names[i][1:],
+                scene=names[i][1],
                 center=(self.game.width // 2, 100+45*i),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=LIGHT_BUTTON_COLORS

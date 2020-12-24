@@ -19,17 +19,17 @@ class Scene(base.Scene):
             self.static_objects.append(text[i])
 
     def create_buttons(self) -> None:
-        names = {
-            0: ("RESTART", self.game.scenes.MAIN, True, True),
-            1: ("MENU", self.game.scenes.MENU),
-        }
+        names = [
+            ("RESTART", self.game.scenes.MAIN),
+            ("MENU", self.game.scenes.MENU),
+        ]
         buttons = []
-        for i in range(len(names)):
+        for i, f in enumerate(names):
             buttons.append(self.SceneButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 35),
-                text=names[i][0],
-                scene=names[i][1:],
+                text=f[0],
+                scene=f[1],
                 center=(self.game.width // 2, 210+40*i),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS

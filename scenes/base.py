@@ -7,16 +7,8 @@ from objects.button import Button
 class Scene:
     class SceneButton(Button):
         def __init__(self, **args):
-            self.scene = args.pop("scene")
+            args["function"] = args.pop("scene")
             super(Scene.SceneButton, self).__init__(**args)
-
-        def click(self) -> None:
-            if callable(self.scene[0]):
-                self.scene[0]()
-            elif type(self.scene)==tuple:
-                self.game.scenes.set(*self.scene)
-            else:
-                self.game.scenes.set(self.scene)
 
     def __init__(self, game):
         self.game = game
@@ -88,3 +80,6 @@ class Scene:
         self.objects = []
         self.static_objects = []
         self.create_static_objects()
+
+    def __call__(self, *args, **kwargs):
+        self.game.scenes.set(self)

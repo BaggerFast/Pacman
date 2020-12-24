@@ -85,3 +85,6 @@ class Scene(base.Scene):
 
     def on_deactivate(self) -> None:
         self.game.sounds.gameover.stop()
+
+    def __call__(self, *args, **kwargs):
+        self.game.scenes.set(self,reset=True)
