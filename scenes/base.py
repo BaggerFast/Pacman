@@ -13,10 +13,12 @@ class Scene:
         def click(self) -> None:
             if callable(self.scene[0]):
                 self.scene[0]()
+            elif type(self.scene)==tuple:
+                self.game.scenes.set(*self.scene)
             else:
-                self.game.scenes.set(self.scene[0], reset=self.scene[1], loading=self.scene[2])
+                self.game.scenes.set(self.scene)
 
-    def __init__(self, game) -> None:
+    def __init__(self, game):
         self.game = game
         self.prev_scene = None
         self.screen: pg.Surface = self.game.screen

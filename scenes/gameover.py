@@ -21,7 +21,7 @@ class Scene(base.Scene):
     def create_buttons(self) -> None:
         names = {
             0: ("RESTART", self.game.scenes.MAIN, True, True),
-            1: ("MENU", self.game.scenes.MENU, False, False),
+            1: ("MENU", self.game.scenes.MENU),
         }
         buttons = []
         for i in range(len(names)):

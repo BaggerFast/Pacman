@@ -32,7 +32,7 @@ class Scene(base.Scene):
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 35),
                 text='EXIT',
-                scene=(self.game.scenes.MENU, False, False),
+                scene=self.game.scenes.MENU,
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS
@@ -41,7 +41,7 @@ class Scene(base.Scene):
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 35),
                 text='MENU',
-                scene=(self.game.scenes.MENU, False, False),
+                scene=self.game.scenes.MENU,
                 center=(self.game.width // 2, 250),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS

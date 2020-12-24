@@ -84,12 +84,12 @@ class Scene(base.Scene):
     def create_buttons(self) -> None:
         names = {
             0: ("PLAY", self.game.scenes.MAIN, True, True),
-            1: ("LEVELS", self.game.scenes.LEVELS, False, False),
-            2: ("SKINS", self.game.scenes.SKINS, False, False),
-            3: ("RECORDS", self.game.scenes.RECORDS, False, False),
-            4: ("SETTINGS", self.game.scenes.SETTINGS, False, False),
-            5: ("CREDITS", self.game.scenes.CREDITS, False, False),
-            6: ("EXIT", self.game.exit_game, None, False)
+            1: ("LEVELS", self.game.scenes.LEVELS),
+            2: ("SKINS", self.game.scenes.SKINS),
+            3: ("RECORDS", self.game.scenes.RECORDS),
+            4: ("SETTINGS", self.game.scenes.SETTINGS),
+            5: ("CREDITS", self.game.scenes.CREDITS),
+            6: ("EXIT", self.game.exit_game)
         }
         buttons = []
         for i in range(len(names)):

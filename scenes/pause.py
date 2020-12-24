@@ -8,10 +8,10 @@ from scenes.menu import rand_color
 class Scene(base.Scene):
     def create_buttons(self) -> None:
         names = {
-            0: ("CONTINUE", self.game.scenes.MAIN, False, False),
-            1: ("SETTINGS", self.game.scenes.SETTINGS, True, False),
+            0: ("CONTINUE", self.game.scenes.MAIN),
+            1: ("SETTINGS", self.game.scenes.SETTINGS, True),
             2: ("RESTART", self.game.scenes.MAIN, True, True),
-            3: ("MENU", self.game.scenes.MENU, False, False),
+            3: ("MENU", self.game.scenes.MENU),
         }
         buttons = []
         for i in range(len(names)):
