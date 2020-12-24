@@ -51,7 +51,6 @@ class Scene(base.Scene):
 
     def create_buttons(self) -> None:
         buttons = []
-        counter = 0
         for i in range(self.__scroll, self.__scroll + self.__buttons_on_scene):
             buttons.append(
                 self.LvlButton(
@@ -59,11 +58,10 @@ class Scene(base.Scene):
                     geometry=pg.Rect(0, 0, 100, 40),
                     value=(i, self.game.maps.images[i]),
                     text='LEVEL' + str(i + 1),
-                    center=(self.game.width // 2 - 55, (85 + 40 * counter)),
+                    center=(self.game.width // 2 - 55, (85 + 40 * (i-self.__scroll))),
                     text_size=Font.BUTTON_TEXT_SIZE-4,
                     active=i in self.game.unlocked_levels)
             )
-            counter += 1
         buttons.append(self.SceneButton(
             game=self.game,
             geometry=pg.Rect(0, 0, 180, 40),
@@ -71,11 +69,10 @@ class Scene(base.Scene):
             scene=self.game.scenes.MENU,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE))
-
-        for index in range(len(buttons)):
-            if hasattr(buttons[index], "value"):
-                if self.game.maps.cur_id == buttons[index].value[0]:
-                    buttons[index].text = '-' + buttons[index].text + '-'
+        for button in buttons:
+            if hasattr(button, "value"):
+                if self.game.maps.cur_id == button.value[0]:
+                    button.text = '-' + button.text + '-'
 
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
