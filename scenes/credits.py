@@ -54,7 +54,7 @@ class Scene(base.Scene):
         buttons.append(self.SceneButton(
             game=self.game,
             geometry=pg.Rect(0, 0, 100, 35),
-            scene=(self.game.scenes.MENU, False, False),
+            scene=self.game.scenes.MENU,
             text="MENU",
             center=(self.game.width // 4, 250),
             text_size=Font.BUTTON_TEXT_SIZE))

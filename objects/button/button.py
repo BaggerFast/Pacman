@@ -5,7 +5,7 @@ from objects.base import DrawableObject
 
 
 class BaseButton(DrawableObject):
-    def __init__(self, game, geometry: pg.Rect, function: Callable[[], None]) -> None:
+    def __init__(self, game, geometry: pg.Rect, function: Callable[[], None]):
         super().__init__(game)
         self.rect = geometry
         self.function = function
@@ -71,7 +71,6 @@ class Button(BaseButton):
             self.left_button_pressed = True
         if self.mouse_hover(event.pos):
             self.activate()
-            self.game.sounds.click.play()
 
     def process_mouse_button_up(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONUP or event.type == pg.MOUSEWHEEL:
@@ -86,7 +85,10 @@ class Button(BaseButton):
             self.process_mouse_motion(event)
             self.process_mouse_button_down(event)
             self.process_mouse_button_up(event)
-            super().process_event(event)
+            if event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
+                if self.rect.collidepoint(event.pos):
+                    self.click()
+                    self.game.sounds.click.play()
 
     @property
     def colors(self):

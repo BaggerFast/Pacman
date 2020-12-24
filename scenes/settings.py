@@ -9,11 +9,11 @@ from scenes import base
 class Scene(base.Scene):
     class DifficultyButton(Button):
 
-        __dificulties = {
-            0: "easy",
-            1: "medium",
-            2: "hard"
-        }
+        __dificulties = [
+            "easy",
+            "medium",
+            "hard"
+        ]
 
         def __init__(self, **args):
             super().__init__(**args)
@@ -154,7 +154,7 @@ class Scene(base.Scene):
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 40),
                 text='BACK',
-                scene=(self.prev_scene, False, False),
+                scene=self.prev_scene,
                 center=(self.game.width // 2, 250),
                 text_size=Font.BUTTON_TEXT_SIZE
             )
@@ -165,3 +165,6 @@ class Scene(base.Scene):
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.prev_scene)
+
+    def __call__(self, *args, **kwargs):
+        self.game.scenes.set(self,True)

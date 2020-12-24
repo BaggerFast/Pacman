@@ -68,7 +68,7 @@ class Scene(base.Scene):
             game=self.game,
             geometry=pg.Rect(0, 0, 180, 40),
             text='MENU',
-            scene=(self.game.scenes.MENU, False, False),
+            scene=self.game.scenes.MENU,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE))
 

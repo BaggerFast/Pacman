@@ -163,7 +163,7 @@ class Game:
             self.levels = get_list_path("json", "maps")
             self.count = len(self.levels)
 
-        def prerender_surfaces(self) -> List[pg.Surface]:
+        def prerender_surfaces(self):
             images = []
             for level_id in range(self.count):
                 self.__load_from_map(level_id)

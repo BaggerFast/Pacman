@@ -7,16 +7,10 @@ from objects.button import Button
 class Scene:
     class SceneButton(Button):
         def __init__(self, **args):
-            self.scene = args.pop("scene")
+            args["function"] = args.pop("scene")
             super(Scene.SceneButton, self).__init__(**args)
 
-        def click(self) -> None:
-            if callable(self.scene[0]):
-                self.scene[0]()
-            else:
-                self.game.scenes.set(self.scene[0], reset=self.scene[1], loading=self.scene[2])
-
-    def __init__(self, game) -> None:
+    def __init__(self, game):
         self.game = game
         self.prev_scene = None
         self.screen: pg.Surface = self.game.screen
@@ -84,3 +78,6 @@ class Scene:
         self.objects = []
         self.static_objects = []
         self.create_static_objects()
+
+    def __call__(self, *args, **kwargs):
+        self.game.scenes.set(self)

@@ -9,7 +9,7 @@ from misc import Font, get_list_path, BUTTON_SKIN_BUY
 
 class Scene(base.Scene):
     class SkinButton(Button):
-        def __init__(self, **args) -> object:
+        def __init__(self, **args):
             self.value = args.pop("value")
             super().__init__(**args)
 
@@ -31,7 +31,7 @@ class Scene(base.Scene):
             super().select()
 
     class BuyButton(Button):
-        def __init__(self, **args) -> object:
+        def __init__(self, **args):
             self.value = args.pop("value")
             super().__init__(**args)
 
@@ -148,7 +148,7 @@ class Scene(base.Scene):
             game=self.game,
             geometry=pg.Rect(0, 0, 180, 40),
             text='MENU',
-            scene=(self.game.scenes.MENU, False, False),
+            scene=self.game.scenes.MENU,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE))
 
