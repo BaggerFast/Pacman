@@ -1,4 +1,4 @@
-VERSION = 'RTX 1.0.2'
+VERSION = 'RTX 1.0.3'
 
 CELL_SIZE: int = 8
 FRUITS_COUNT: int = 8
