@@ -12,24 +12,24 @@ class Scene(base.Scene):
         self.__create_highscore_text()
 
     def create_title(self) -> None:
-        text = ['GAME', 'OVER']
-        for i in range(2):
-            text[i] = Text(self.game, text[i], 40, font=Font.TITLE)
-            text[i].move_center(self.game.width // 2, 30 + i * 40)
-            self.static_objects.append(text[i])
+        texts = ['GAME', 'OVER']
+        for i, text in enumerate(texts, 0):
+            text = Text(self.game, text, 40, font=Font.TITLE)
+            text.move_center(self.game.width // 2, 30 + i * 40)
+            self.static_objects.append(text)
 
     def create_buttons(self) -> None:
-        names = [
-            ("RESTART", self.game.scenes.MAIN),
-            ("MENU", self.game.scenes.MENU),
-        ]
+        names = {
+            "RESTART": self.game.scenes.MAIN,
+            "MENU": self.game.scenes.MENU,
+        }
         buttons = []
-        for i, f in enumerate(names):
+        for i, (name, scene) in enumerate(names.items()):
             buttons.append(self.SceneButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 35),
-                text=f[0],
-                scene=f[1],
+                text=name,
+                scene=scene,
                 center=(self.game.width // 2, 210+40*i),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS

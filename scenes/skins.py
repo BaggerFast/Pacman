@@ -2,6 +2,7 @@ from copy import copy
 
 import pygame as pg
 
+from misc.constants.skin_names import SkinsNames
 from objects import ButtonController, Text, Button, ImageObject
 from scenes import base
 from misc import Font, get_list_path, BUTTON_SKIN_BUY
@@ -33,19 +34,20 @@ class Scene(base.Scene):
     class BuyButton(Button):
         def __init__(self, **args):
             self.value = args.pop("value")
+            print(self.value)
             super().__init__(**args)
 
         def click(self) -> None:
             flag = True
-            for key in self.value[1].skin_cost.keys():
-                if self.game.eaten_fruits[key] < self.value[1].skin_cost[key]:
+            for key in self.value.skin_cost.keys():
+                if self.game.eaten_fruits[key] < self.value.skin_cost[key]:
                     flag = False
 
             self.select()
             if flag:
-                for key in self.value[1].skin_cost.keys():
-                    self.game.store_fruit(key, -self.value[1].skin_cost[key])
-                self.game.unlock_skin(self.value[1].name)
+                for key in self.value.skin_cost.keys():
+                    self.game.store_fruit(key, -self.value.skin_cost[key])
+                self.game.unlock_skin(self.value.name)
                 self.game.scenes.current.create_objects()
 
         def deselect(self) -> None:
@@ -57,7 +59,7 @@ class Scene(base.Scene):
         def select(self) -> None:
             scene = self.game.scenes.current
             scene.is_current = True
-            scene.preview.image = self.value[1].image.image
+            scene.preview.image = self.value.image.image
             super().select()
 
     def process_event(self, event: pg.event.Event) -> None:
@@ -71,12 +73,12 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         self.skins = {
-            0: ('PACMAN', self.game.skins.default),
-            1: ('EDGE', self.game.skins.edge),
-            2: ('POKEBALL', self.game.skins.pokeball),
-            3: ('HALF-LIFE', self.game.skins.half_life),
-            4: ('WINDOWS', self.game.skins.windows),
-            5: ('CHROME', self.game.skins.chrome),
+            SkinsNames.default: self.game.skins.default,
+            SkinsNames.edge: self.game.skins.edge,
+            SkinsNames.pokeball: self.game.skins.pokeball,
+            SkinsNames.half_life: self.game.skins.half_life,
+            SkinsNames.windows: self.game.skins.windows,
+            SkinsNames.chrome: self.game.skins.chrome,
         }
         self.objects = []
         self.preview = copy(self.game.skins.current.image)
@@ -98,14 +100,14 @@ class Scene(base.Scene):
         index_pos_x = 20
         pos_regarding_buttons_x = self.button_pos_x + 45
         pos_regarding_buttons_y = self.button_pos_y - 6
-        for index in self.skins:
+        for index, (skin_name, skin) in enumerate(self.skins.items(), start=0):
             multiply_x = 0
-            if not self.skins[index][1].is_unlocked:
-                for i in self.skins[index][1].skin_cost:
+            if not skin.is_unlocked:
+                for i in skin.skin_cost:
                     fruit = ImageObject(self.game, self.fruit_images[i], (
                         pos_regarding_buttons_x + index_pos_x * multiply_x,
                         pos_regarding_buttons_y + index_pos_y * index))
-                    text = Text(self.game, str(self.skins[index][1].skin_cost[i]), 10)
+                    text = Text(self.game, str(skin.skin_cost[i]), 10)
                     text.move_center(pos_regarding_buttons_x + index_pos_x * multiply_x,
                                      pos_regarding_buttons_y + index_pos_y * index)
                     self.objects.append(fruit)
@@ -119,26 +121,26 @@ class Scene(base.Scene):
 
     def create_buttons(self) -> None:
         buttons = []
-
         self.button_pos_x = self.game.width // 2 - 65
         self.button_pos_y = 90
         self.button_pos_multiply_y = 25
-        for i in range(len(self.skins)):
-            if self.skins[i][1].is_unlocked:
+        for i, (skin_name, skin) in enumerate(self.skins.items(), start=0):
+            if skin.is_unlocked:
                 buttons.append(self.SkinButton(
                     game=self.game,
                     geometry=pg.Rect(0, 0, 90, 25),
-                    text=self.skins[i][0],
-                    value=self.skins[i][1],
+                    text=skin_name,
+                    value=skin,
+                    # todo i
                     center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
                     text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                    active=self.skins[i][1].name in self.game.unlocked_skins))
+                    active=skin.name in self.game.unlocked_skins))
             else:
                 buttons.append(self.BuyButton(
                     game=self.game,
                     geometry=pg.Rect(0, 0, 90, 25),
-                    text=self.skins[i][0],
-                    value=self.skins[i],
+                    text=skin_name,
+                    value=skin,
                     center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
                     text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
                     colors=BUTTON_SKIN_BUY

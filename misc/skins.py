@@ -3,12 +3,13 @@ from typing import Union, Dict
 import pygame as pg
 
 from misc import Animator, get_list_path, get_path
+from misc.constants.skin_names import SkinsNames
 from objects import ImageObject
 
 
 class Skins:
     class Skin:
-        def __init__(self, game, skin_name: str = "default"):
+        def __init__(self, game, skin_name: str = SkinsNames.default):
             self.name = skin_name
             self.skin_cost = {}
             self.__game = game
@@ -32,7 +33,7 @@ class Skins:
         def image(self):
             return self.__image
 
-        def prerender_surface(self) -> pg.Surface:
+        def prerender_surface(self) -> ImageObject:
             image = ImageObject(self.__game, pg.image.load(get_path('1', 'png', 'images', 'pacman', self.name, 'walk')),
                                 (145, 125))
             image.scale(70, 70)
@@ -42,12 +43,13 @@ class Skins:
         """
         param must be named like folder with skin
         """
-        self.__skins_cost = {"default": {0: 0, 1: 0},
-                             "edge": {1: 14, 2: 10},
-                             "pokeball": {2: 12, 3: 8},
-                             "half_life": {3: 10, 4: 7},
-                             "windows": {4: 7, 5: 6},
-                             "chrome": {6: 5, 7: 4}}
+
+        self.__skins_cost = {SkinsNames.default: {0: 0, 1: 0},
+                             SkinsNames.edge: {1: 14, 2: 10},
+                             SkinsNames.pokeball: {2: 12, 3: 8},
+                             SkinsNames.half_life: {3: 10, 4: 7},
+                             SkinsNames.windows: {4: 7, 5: 6},
+                             SkinsNames.chrome: {6: 5, 7: 4}}
         self.__game = game
         self.default = self.Skin(self.__game)
         self.half_life = None

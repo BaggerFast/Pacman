@@ -4,7 +4,7 @@ CELL_SIZE: int = 8
 FRUITS_COUNT: int = 8
 HIGHSCORES_COUNT: int = 5
 
-DEBUG: bool = False
+DEBUG: bool = True
 HIGH_CALORIE_SEEDS: bool = False
 
 UNLOCK_SKINS: bool = False

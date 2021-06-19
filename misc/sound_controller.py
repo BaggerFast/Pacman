@@ -16,23 +16,23 @@ class SoundController:
         self.channel = pg.mixer.Channel(channel)
         self.update()
 
-    def update(self):
-        self.volume = 0 if not self.game.settings.SOUND else self.game.settings.VOLUME / 100
+    def update(self) -> None:
+        self.volume = 0 if not self.game.settings.SOUND else self.game.settings.VOLUME // 100
         self.sound.set_volume(self.volume)
 
-    def play(self):
+    def play(self) -> None:
         self.update()
         self.channel.play(self.sound)
 
-    def pause(self):
+    def pause(self) -> None:
         self.channel.pause()
 
-    def unpause(self):
+    def unpause(self) -> None:
         self.update()
         self.channel.unpause()
 
-    def stop(self):
+    def stop(self) -> None:
         self.channel.stop()
 
-    def get_busy(self):
+    def get_busy(self) -> bool:
         return self.channel.get_busy()

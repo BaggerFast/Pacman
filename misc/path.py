@@ -9,7 +9,7 @@ def get_path(filename: str, extension: str, *folder: str) -> str:
     :param filename: имя файла с расширением или без
     :param folder: указать папки через пробел слева на право без image
     :param extension: указать расширение файла
-    :return: возращает полный путь файла строкой
+    :return: возвращает полный путь файла строкой
     """
     folder = [i.lower() for i in folder]
     extension = '.' + extension.lower()

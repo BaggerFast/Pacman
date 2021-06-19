@@ -1,5 +1,4 @@
 import pygame as pg
-
 from misc import Font, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from objects import ButtonController, Text
 from objects.button import Button
@@ -62,12 +61,8 @@ class Scene(base.Scene):
             self.select()
             flag_var = not getattr(self.game.settings, self.var)
             setattr(self.game.settings, self.var, flag_var)
-            if flag_var:
-                self.text = self.name + " ON"
-                self.colors = BUTTON_GREEN_COLORS
-            else:
-                self.text = self.name + " OFF"
-                self.colors = BUTTON_RED_COLORS
+            self.text = self.name + (" ON" if flag_var else " OFF")
+            self.colors = BUTTON_GREEN_COLORS if flag_var else BUTTON_RED_COLORS
 
     __volume_position = 150
     __difficulty_pos = 210

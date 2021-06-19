@@ -22,27 +22,6 @@ class ButtonColor(NamedTuple):
     def init_section(self, name: str, data: dict) -> None:
         section = self.__getattribute__(name)
         default_section = BUTTON_DEFAULT_COLORS.__getattribute__(name)
-        """
-                                     ▄              ▄
-                                    ▌▒█           ▄▀▒▌
-                                    ▌▒▒█        ▄▀▒▒▒▐
-                                   ▐▄█▒▒▀▀▀▀▄▄▄▀▒▒▒▒▒▐
-                                 ▄▄▀▒▒▒▒▒▒▒▒▒▒▒█▒▒▄█▒▐
-        METAPROGRAMMING IS     ▄▀▒▒▒░░░▒▒▒░░░▒▒▒▀██▀▒▌
-        A SUCH WOW THING =)   ▐▒▒▒▄▄▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▀▄▒▌
-                              ▌░░▌█▀▒▒▒▒▒▄▀█▄▒▒▒▒▒▒▒█▒▐
-                             ▐░░░▒▒▒▒▒▒▒▒▌██▀▒▒░░░▒▒▒▀▄▌
-                             ▌░▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░▒▒▒▒▌
-                            ▌▒▒▒▄██▄▒▒▒▒▒▒▒▒░░░░░░░░▒▒▒▐
-                            ▐▒▒▐▄█▄█▌▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▒▒▌
-                            ▐▒▒▐▀▐▀▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▐
-                             ▌▒▒▀▄▄▄▄▄▄▀▒▒▒▒▒▒▒░▒░▒░▒▒▒▌
-                             ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒▒▄▒▒▐
-                              ▀▄▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒▄▒▒▒▒▌
-                                ▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀
-                                  ▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀
-                                     ▀▀▀▀▀▀▀▀▀▀▀▀
-        """
         if name in data.keys():
             for item in [ButtonStateColor.get_members_list()]:
                 if item in data[name].keys():

@@ -1,7 +1,5 @@
 from copy import copy
-
 import pygame as pg
-
 from misc import Font
 from objects import ButtonController, Text
 from objects.button import Button
@@ -57,7 +55,7 @@ class Scene(base.Scene):
                     game=self.game,
                     geometry=pg.Rect(0, 0, 100, 40),
                     value=(i, self.game.maps.images[i]),
-                    text='LEVEL' + str(i + 1),
+                    text=f'LEVEL {i + 1}',
                     center=(self.game.width // 2 - 55, (85 + 40 * (i-self.__scroll))),
                     text_size=Font.BUTTON_TEXT_SIZE-4,
                     active=i in self.game.unlocked_levels)

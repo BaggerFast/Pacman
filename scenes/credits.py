@@ -14,23 +14,14 @@ class Scene(base.Scene):
         "Смирнов Андрей",
         "Грачев Егор",
         "Aleksandrov Daniil",
-        "Егоров Александр",
         "Сергеев Сергей",
-        "Бурдонов Арсений",
         "Игнатов Иван",
         "Лещенко Вячеcлав",
-        "Полиехов Андрей",
-        "Акимов Денис",
         "Богомолов Алексей",
         "Вартанян Владимир",
         "Дмитрий Пашков",
-        "Киселева Алиса",
         "Николайчев Павел",
-        "Плоцкий Богдан",
         "Татаринов Игорь",
-        "Терпунов Артём",
-        "Тимченко Савелий",
-        "Щеников Иван",
         "Хаяо Миядзаки",
         "Тору Иватани",
         "Фил Спенсер",
@@ -123,7 +114,7 @@ class Scene(base.Scene):
         elif pg.time.get_ticks() // 2 % 100 == 0 and not len(self.__students) == len(self.__students2):
             self.__create_student()
         if not self.game.sounds.credits.get_busy():
-            self.game.sounds.reload_sounds(self.game)
+            self.game.sounds.reload_sounds()
             self.game.sounds.credits.play()
         self.__process_students()
 

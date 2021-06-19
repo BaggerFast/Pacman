@@ -9,13 +9,13 @@ class Animator:
         self.__animate_timer = 0
         self.__time_out = time_out
         self.__add_image(path_to_images)
-        self.__current_image_index = 0
+        self.__current_image_index: int = 0
         self.__current_image = self.__images[self.__current_image_index]
         self.__current_aura = pg.image.load(aura) if aura else aura
-        self.rotate = 0
+        self.rotate: int = 0
         self.__repeat = repeat
-        self.anim_finished = False
-        self.run = False
+        self.anim_finished: bool = False
+        self.run: bool = False
 
     @property
     def current_image(self):

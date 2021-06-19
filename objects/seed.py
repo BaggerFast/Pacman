@@ -1,5 +1,6 @@
 import pygame as pg
 from misc import CELL_SIZE, Color, get_path, HIGH_CALORIE_SEEDS
+from misc.constants.skin_names import SkinsNames
 from objects import DrawableObject
 
 
@@ -35,7 +36,7 @@ class SeedContainer(DrawableObject):
         for row in range(len(self.__seeds)):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col]:
-                    if self.game.skins.current.name == "chrome":
+                    if self.game.skins.current.name == SkinsNames.chrome:
                         self.game.screen.blit(self.__ram_img, (self.x + col * CELL_SIZE + CELL_SIZE // 2 - 6,
                                                                self.y + row * CELL_SIZE + CELL_SIZE // 2 - 6))
                     else:

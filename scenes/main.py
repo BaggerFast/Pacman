@@ -319,7 +319,7 @@ class Scene(base.Scene):
     def on_reset(self) -> None:
         pg.mixer.stop()
         self.game.timer = pg.time.get_ticks() // 1000
-        self.game.sounds.reload_sounds(self.game)
+        self.game.sounds.reload_sounds()
         self.game.score.reset()
         self.game.scenes.MAIN.recreate()
         self.game.sounds.intro.play()

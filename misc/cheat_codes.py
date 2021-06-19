@@ -14,8 +14,7 @@ class Cheat:
         if enter_code == self.cheat_code:
             self.game.sounds.cheat.play()
             self.run()
-            return True
-        return False
+        return enter_code == self.cheat_code
 
 
 class ControlCheats:
