@@ -4,8 +4,8 @@ import pygame as pg
 class DrawableObject:
     def __init__(self, game, is_hidden=False) -> None:
         self.game = game
-        self.is_hidden = is_hidden
-        self.rect = pg.rect.Rect(0, 0, 0, 0)
+        self.is_hidden: bool = is_hidden
+        self.rect: pg.rect.Rect = pg.rect.Rect(0, 0, 0, 0)
 
     def move(self, x, y) -> None:
         self.rect.x = x
@@ -23,6 +23,6 @@ class DrawableObject:
 
     def process_draw(self) -> None:
         """
-        Use self.game.screen for drawing, padawan
+        Use self.game.screen for drawing
         """
         pass

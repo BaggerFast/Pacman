@@ -74,7 +74,7 @@ class Scene(base.Scene):
 
     def __create_start_anim(self):
         self.text = ['READY', 'GO!']
-        for i in range(2):
+        for i in range(len(self.text)):
             self.text[i] = Text(self.game, self.text[i], 30, font=Font.TITLE, rect=pg.Rect(20, 0, 20, 20))
             self.text[i].move_center(self.game.width // 2, self.game.height // 2)
             self.text[i].surface.set_alpha(0)
@@ -103,30 +103,34 @@ class Scene(base.Scene):
         self.objects.append(self.__map)
         self.objects.append(self.__seeds)
 
+    def set_difficult_easy(self):
+        self.blinky = Blinky(self.game, self.__ghost_positions[3], 8000, 20000, 7000)
+        self.pinky = Pinky(self.game, self.__ghost_positions[1], 8000, 20000, 7000)
+        self.inky = Inky(self.game, self.__ghost_positions[0], 8000, 20000, 5000)
+        self.clyde = Clyde(self.game, self.__ghost_positions[2], 8000, 0, 0)
+
+    def set_difficult_medium(self):
+        self.blinky = Blinky(self.game, self.__ghost_positions[3], 4000, 40000, 5000)
+        self.pinky = Pinky(self.game, self.__ghost_positions[1], 4000, 40000, 5000)
+        self.inky = Inky(self.game, self.__ghost_positions[0], 4000, 40000, 3000)
+        self.clyde = Clyde(self.game, self.__ghost_positions[2], 4000, 0, 0)
+
+    def set_difficult_hard(self):
+        self.blinky = Blinky(self.game, self.__ghost_positions[3], 2000, 80000, 3000)
+        self.pinky = Pinky(self.game, self.__ghost_positions[1], 2000, 80000, 3000)
+        self.inky = Inky(self.game, self.__ghost_positions[0], 2000, 80000, 1000)
+        self.clyde = Clyde(self.game, self.__ghost_positions[2], 2000, 0, 0)
+
     def __create_ghost(self):
-        if self.game.settings.DIFFICULTY == 0:
-            self.blinky = Blinky(self.game, self.__ghost_positions[3], 8000, 20000, 7000)
-            self.pinky = Pinky(self.game, self.__ghost_positions[1], 8000, 20000, 7000)
-            self.inky = Inky(self.game, self.__ghost_positions[0], 8000, 20000, 5000)
-            self.clyde = Clyde(self.game, self.__ghost_positions[2], 8000, 0, 0)
-        elif self.game.settings.DIFFICULTY == 1:
-            self.blinky = Blinky(self.game, self.__ghost_positions[3], 4000, 40000, 5000)
-            self.pinky = Pinky(self.game, self.__ghost_positions[1], 4000, 40000, 5000)
-            self.inky = Inky(self.game, self.__ghost_positions[0], 4000, 40000, 3000)
-            self.clyde = Clyde(self.game, self.__ghost_positions[2], 4000, 0, 0)
-        elif self.game.settings.DIFFICULTY == 2:
-            self.blinky = Blinky(self.game, self.__ghost_positions[3], 2000, 80000, 3000)
-            self.pinky = Pinky(self.game, self.__ghost_positions[1], 2000, 80000, 3000)
-            self.inky = Inky(self.game, self.__ghost_positions[0], 2000, 80000, 1000)
-            self.clyde = Clyde(self.game, self.__ghost_positions[2], 2000, 0, 0)
+        data = {
+            0: lambda: self.set_difficult_easy(),
+            1: lambda: self.set_difficult_easy(),
+            2: lambda: self.set_difficult_easy(),
+        }
+        if self.game.settings.DIFFICULTY in data:
+            data[self.game.settings.DIFFICULTY]()
 
-        self.ghosts = [
-            self.blinky,
-            self.pinky,
-            self.inky,
-            self.clyde
-        ]
-
+        self.ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
         self.__not_prefered_ghosts = self.ghosts.copy()
         self.__prefered_ghost = self.pinky
         self.__count_prefered_ghost = 0
@@ -173,22 +177,23 @@ class Scene(base.Scene):
         self.fruit.process_collision(self.pacman)
         seed_eaten = self.__seeds.process_collision(self.pacman)
         for ghost in self.ghosts:
-            if ghost.collision_check(self.pacman)[0]:
-                if ghost.collision_check(self.pacman)[1]:
-                    self.__timer_reset_pacman = pg.time.get_ticks()
-                    if not self.pacman.dead:
-                        self.pacman.death()
-                        self.__prepare_lives_meter()
-                    for ghost2 in self.ghosts:
-                        ghost2.invisible()
-                else:
-                    if ghost.mode == 'Frightened':
-                        ghost.gg_text.text = str((200 * self.game.difficulty ** 2) * 2 ** self.game.score.fear_count)
-                        ghost.invisible()
-                        self.game.score.eat_ghost()
-                        self.ghost_text_flag = True
-                        self.ghost_text_timer = pg.time.get_ticks()
-                    ghost.toggle_mode_to_eaten()
+            if not ghost.collision_check(self.pacman)[0]:
+                continue
+            if ghost.collision_check(self.pacman)[1]:
+                self.__timer_reset_pacman = pg.time.get_ticks()
+                if not self.pacman.dead:
+                    self.pacman.death()
+                    self.__prepare_lives_meter()
+                for ghost2 in self.ghosts:
+                    ghost2.invisible()
+            else:
+                if ghost.mode == 'Frightened':
+                    ghost.gg_text.text = str((200 * self.game.difficulty ** 2) * 2 ** self.game.score.fear_count)
+                    ghost.invisible()
+                    self.game.score.eat_ghost()
+                    self.ghost_text_flag = True
+                    self.ghost_text_timer = pg.time.get_ticks()
+                ghost.toggle_mode_to_eaten()
 
         if seed_eaten == 1:
             if self.__prefered_ghost is not None and self.__work_ghost_counters:
@@ -223,17 +228,16 @@ class Scene(base.Scene):
             self.game.sounds.siren.play()
 
     def __check_ghosts(self):
-        flag = False
         for ghost in self.ghosts:
             if ghost.mode == 'Frightened':
-                flag = True
-        if flag:
+                break
+        else:
             self.game.sounds.siren.pause()
             if not self.game.sounds.pellet.get_busy():
                 self.game.sounds.pellet.play()
-        else:
-            self.game.sounds.siren.unpause()
-            self.game.sounds.pellet.stop()
+            return
+        self.game.sounds.siren.unpause()
+        self.game.sounds.pellet.stop()
 
     def process_logic(self) -> None:
         if not self.game.sounds.intro.get_busy():
@@ -280,12 +284,13 @@ class Scene(base.Scene):
         for ghost in self.__not_prefered_ghosts:
             if ghost != self.__prefered_ghost:
                 ghost.update_timer()
-        if self.ghost_text_flag:
-            if pg.time.get_ticks() - self.ghost_text_timer >= 1000:
-                for ghost in self.ghosts:
-                    ghost.visible()
-                    ghost.gg_text.text = ' '
-                self.ghost_text_flag = False
+        if not self.ghost_text_flag:
+            return
+        if pg.time.get_ticks() - self.ghost_text_timer >= 1000:
+            for ghost in self.ghosts:
+                ghost.visible()
+                ghost.gg_text.text = ' '
+            self.ghost_text_flag = False
 
     def additional_draw(self) -> None:
         super().additional_draw()
@@ -306,10 +311,11 @@ class Scene(base.Scene):
         if self.pacman.animator != self.pacman.dead_anim:
             self.game.sounds.siren.unpause()
         for ghost in self.ghosts:
-            if ghost.mode == "Frightened":
-                if self.game.sounds.pellet.get_busy():
-                    self.game.sounds.pellet.play()
-                    break
+            if ghost.mode != "Frightened":
+                continue
+            if self.game.sounds.pellet.get_busy():
+                self.game.sounds.pellet.play()
+                break
         if self.pacman.animator == self.pacman.dead_anim:
             self.game.sounds.pacman.unpause()
 
@@ -328,4 +334,4 @@ class Scene(base.Scene):
         self.game.scenes.set(self)
 
     def __call__(self, *args, **kwargs):
-        self.game.scenes.set(self,reset=True,loading=True)
+        self.game.scenes.set(self, reset=True, loading=True)

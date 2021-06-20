@@ -12,8 +12,7 @@ class Scene(base.Scene):
         self.__create_highscore_text()
 
     def create_title(self) -> None:
-        texts = ['GAME', 'OVER']
-        for i, text in enumerate(texts, 0):
+        for i, text in enumerate(['GAME', 'OVER'], 0):
             text = Text(self.game, text, 40, font=Font.TITLE)
             text.move_center(self.game.width // 2, 30 + i * 40)
             self.static_objects.append(text)

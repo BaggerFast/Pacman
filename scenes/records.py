@@ -38,15 +38,16 @@ class Scene(base.Scene):
         self.medals_text = []
         text_colors = [Color.GOLD, Color.SILVER, Color.BRONZE, Color.WHITE, Color.WHITE]
         y = 4
-        for i in range(5):
-            self.medals_text.append(Text(self.game, str(self.game.records.data[y]), 30, pg.Rect(60, 55+35*i, 0, 0), text_colors[i]))
+        for i, text_color in enumerate(text_colors):
+            self.medals_text.append(Text(self.game, str(self.game.records.data[y]), 30, pg.Rect(60, 55+35*i, 0, 0),
+                                         text_color))
             y -= 1
 
     def __create_medals(self) -> None:
         self.__medals = []
         for i in range(5):
             self.__medals.append(ImageObject(self.game, get_path(str(i), 'png', 'images', 'medal'), (16, 55+35*i)))
-            self.__medals[i].scale(35, 35)
+            self.__medals[-1].scale(35, 35)
 
     def additional_draw(self) -> None:
         super().additional_draw()

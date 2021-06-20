@@ -40,7 +40,7 @@ class Scene(base.Scene):
             self.game.settings.VOLUME += self.value
             self.game.settings.VOLUME = max(self.game.settings.VOLUME, 0)
             self.game.settings.VOLUME = min(self.game.settings.VOLUME, 100)
-            self.game.scenes.current.volume_value.text = str(self.game.settings.VOLUME) + "%"
+            self.game.scenes.current.volume_value.text = f"{self.game.settings.VOLUME} %"
             # for sound in self.game.sounds.__dict__.keys():
             #     print(type(self.game.sounds.__dict__[sound]))
             #     self.game.sounds.__dict__[sound].update()
@@ -62,7 +62,7 @@ class Scene(base.Scene):
             self.select()
             flag_var = not getattr(self.game.settings, self.var)
             setattr(self.game.settings, self.var, flag_var)
-            self.text = self.name + (" ON" if flag_var else " OFF")
+            self.text = f"{self.name} {'ON' if flag_var else 'OFF'}"
             self.colors = BUTTON_GREEN_COLORS if flag_var else BUTTON_RED_COLORS
 
     __volume_position = 150
@@ -79,29 +79,23 @@ class Scene(base.Scene):
         self.create_title()
 
     def create_title(self) -> None:
-        text = ["SETTINGS"]
-        for i in range(len(text)):
-            text[i] = Text(self.game, text[i], 30, font=Font.TITLE)
-            text[i].move_center(self.game.width // 2, 30 + i * 40)
-            self.static_objects.append(text[i])
+        for i, text in enumerate(["SETTINGS"]):
+            text = Text(self.game, text, 30, font=Font.TITLE)
+            text.move_center(self.game.width // 2, 30 + i * 40)
+            self.static_objects.append(text)
 
     def create_buttons(self) -> None:
-
-        names = {
-            "SOUND": "SOUND",
-            "FUN": "FUN"
-        }
         self.buttons = []
 
         self.buttons.append(
             self.SettingButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 35),
-                text=names["SOUND"] + (" ON" if self.game.settings.SOUND else " OFF"),
+                text=f"SOUND {'ON' if self.game.settings.SOUND else 'OFF'}",
                 center=(self.game.width // 2, 75),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_GREEN_COLORS if self.game.settings.SOUND else BUTTON_RED_COLORS,
-                var=names["SOUND"],
+                var="SOUND",
                 name="SOUND"
             )
         )
@@ -109,11 +103,11 @@ class Scene(base.Scene):
             self.SettingButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 35),
-                text=names["FUN"] + (" ON" if self.game.settings.FUN else " OFF"),
+                text=f"FUN {'ON' if self.game.settings.FUN else 'OFF'}",
                 center=(self.game.width // 2, 75 + 40),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_GREEN_COLORS if self.game.settings.FUN else BUTTON_RED_COLORS,
-                var=names["FUN"],
+                var="FUN",
                 name="FUN",
                 active=self.prev_scene == self.game.scenes.MENU
             )

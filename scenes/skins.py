@@ -67,8 +67,8 @@ class Scene(base.Scene):
         super().process_event(event)
 
     def create_static_objects(self) -> None:
-        self.is_current = False
-        self.fruit_images = get_list_path('png', 'images', 'fruit')
+        self.is_current: bool = False
+        self.fruit_images: list = get_list_path('png', 'images', 'fruit')
         self.__create_title()
 
     def create_objects(self) -> None:
@@ -88,31 +88,30 @@ class Scene(base.Scene):
         self.create_fruits_and_text_for_skins()
 
     def create_fruits_and_text_we_have(self) -> None:
-        for index in range(len(self.fruit_images)):
-            fruit = ImageObject(self.game, self.fruit_images[index], (self.game.width // 8 - 9 + index * 25, 60))
-            self.objects.append(fruit)
-            text = Text(self.game, str(self.game.eaten_fruits[index]), 10)
-            text.move_center(self.game.width // 8 - 10 + index * 25, 60)
-            self.objects.append(text)
+        for i, fruit_img in enumerate(self.fruit_images):
+            fruit = ImageObject(self.game, fruit_img, (self.game.width // 8 - 9 + i * 25, 60))
+            text = Text(self.game, str(self.game.eaten_fruits[i]), 10)
+            text.move_center(self.game.width // 8 - 10 + i * 25, 60)
+            self.objects += [text, fruit]
 
     def create_fruits_and_text_for_skins(self) -> None:
         index_pos_y = self.button_pos_multiply_y
         index_pos_x = 20
         pos_regarding_buttons_x = self.button_pos_x + 45
         pos_regarding_buttons_y = self.button_pos_y - 6
-        for index, (skin_name, skin) in enumerate(self.skins.items(), start=0):
+        for index, (skin_name, skin) in enumerate(self.skins.items()):
             multiply_x = 0
-            if not skin.is_unlocked:
-                for i in skin.skin_cost:
-                    fruit = ImageObject(self.game, self.fruit_images[i], (
-                        pos_regarding_buttons_x + index_pos_x * multiply_x,
-                        pos_regarding_buttons_y + index_pos_y * index))
-                    text = Text(self.game, str(skin.skin_cost[i]), 10)
-                    text.move_center(pos_regarding_buttons_x + index_pos_x * multiply_x,
-                                     pos_regarding_buttons_y + index_pos_y * index)
-                    self.objects.append(fruit)
-                    self.objects.append(text)
-                    multiply_x += 1
+            if skin.is_unlocked:
+                continue
+            for i in skin.skin_cost:
+                fruit = ImageObject(self.game, self.fruit_images[i], (
+                    pos_regarding_buttons_x + index_pos_x * multiply_x,
+                    pos_regarding_buttons_y + index_pos_y * index))
+                text = Text(self.game, str(skin.skin_cost[i]), 10)
+                text.move_center(pos_regarding_buttons_x + index_pos_x * multiply_x,
+                                 pos_regarding_buttons_y + index_pos_y * index)
+                self.objects += [fruit, text]
+                multiply_x += 1
 
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT SKIN', 25, font=Font.TITLE)
@@ -159,11 +158,10 @@ class Scene(base.Scene):
         self.update_button_text()
 
     def update_button_text(self):
-        buttons = self.__button_controller.buttons
-        for index in range(len(buttons)):
-            if hasattr(buttons[index], "value") and hasattr(buttons[index].value, "name"):
-                if self.game.skins.current.name == buttons[index].value.name:
-                    if not (buttons[index].text.startswith("-") or buttons[index].text.endswith("-")):
-                        buttons[index].text = '-' + buttons[index].text + '-'
+        for button in self.__button_controller.buttons:
+            if hasattr(button, "value") and hasattr(button.value, "name"):
+                if self.game.skins.current.name == button.value.name:
+                    if not (button.text.startswith("-") or button.text.endswith("-")):
+                        button.text = '-' + button.text + '-'
                 else:
-                    buttons[index].text = buttons[index].text.strip('-')
+                    button.text = button.text.strip('-')

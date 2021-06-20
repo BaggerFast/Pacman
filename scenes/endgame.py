@@ -1,6 +1,6 @@
 import pygame as pg
 from objects import ButtonController, Button, Text
-from scenes import base, levels
+from scenes import base
 from misc import BUTTON_DEFAULT_COLORS, Font
 
 
@@ -13,10 +13,9 @@ class Scene(base.Scene):
         self.__unlock_level()
 
     def create_title(self) -> None:
-        texts = []
         for i, text in enumerate(["YOU", "WON"]):
-            texts.append(Text(self.game, text, 40, font=Font.TITLE))
-            texts[-1].move_center(self.game.width // 2, 30 + i * 40)
+            text = Text(self.game, text, 40, font=Font.TITLE)
+            text.move_center(self.game.width // 2, 30 + i * 40)
             self.static_objects.append(text)
 
     def create_buttons(self) -> None:
@@ -69,7 +68,7 @@ class Scene(base.Scene):
             next_level = self.game.maps.cur_id + 1
             self.game.unlock_level(next_level)
 
-    def __next_level(self):
+    def __next_level(self) -> None:
         next_level = self.game.maps.cur_id + 1
         self.game.maps.cur_id = next_level
         self.game.records.update_records()

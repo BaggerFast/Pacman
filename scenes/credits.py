@@ -10,22 +10,17 @@ from scenes import base
 
 class Scene(base.Scene):
     __data = [
-        "Архипов Евгений",
         "Смирнов Андрей",
-        "Грачев Егор",
         "Aleksandrov Daniil",
         "Сергеев Сергей",
         "Игнатов Иван",
         "Лещенко Вячеcлав",
-        "Богомолов Алексей",
         "Вартанян Владимир",
         "Дмитрий Пашков",
         "Николайчев Павел",
-        "Татаринов Игорь",
         "Хаяо Миядзаки",
         "Тору Иватани",
         "Фил Спенсер",
-        "☭",
         "MSHP LOVE",
         "Хирохико Араки"
     ]
@@ -122,7 +117,7 @@ class Scene(base.Scene):
         self.game.sounds.credits.stop()
 
     def __skip_sound(self):
-        self.game.sounds.reload_sounds(self.game)
+        self.game.sounds.reload_sounds()
         self.game.sounds.credits.play()
 
     def additional_event_check(self, event: pg.event.Event) -> None:

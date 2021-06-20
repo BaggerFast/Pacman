@@ -12,7 +12,7 @@ from scenes import *
 
 
 class Game:
-    map_color = (0, 0, 0)
+    map_color = Color.BLACK
 
     class Cheats:
         def __init__(self, game):

@@ -1,5 +1,4 @@
 import pygame as pg
-
 from misc import CELL_SIZE, Animator
 from objects import DrawableObject
 from typing import Tuple, List
@@ -17,20 +16,20 @@ class Character(DrawableObject):
     def __init__(self, game, animator: Animator, start_pos: Tuple[int, int], aura: str = None) -> None:
         super().__init__(game)
         self.__aura = pg.image.load(aura) if aura else aura
-        self.animator = animator
-        self.rect = self.animator.current_image.get_rect()
+        self.animator: Animator = animator
+        self.rect: pg.Rect = self.animator.current_image.get_rect()
         self.shift_x, self.shift_y = self.direction["right"][:2]
-        self.start_pos = self.pos_from_cell(start_pos)
+        self.start_pos: tuple = self.pos_from_cell(start_pos)
         self.move_center(*self.start_pos)
-        self.speed = 0
-        self.rotate = 0
+        self.speed: int = 0
+        self.rotate: int = 0
 
     def step(self) -> None:
         self.rect.centerx = (self.rect.centerx + self.shift_x * self.speed + self.game.width) % self.game.width
         self.rect.centery = (self.rect.centery + self.shift_y * self.speed + self.game.height) % self.game.height
 
     def go(self) -> None:
-        if self.speed != 0:
+        if self.speed:
             self.animator.start()
         self.speed = 1
 
@@ -39,13 +38,15 @@ class Character(DrawableObject):
         self.speed = 0
 
     def set_direction(self, new_direction='none') -> None:
-        if new_direction:
-            self.shift_x, self.shift_y, rotate = self.direction[new_direction]
-            if self.rotate != rotate:
-                self.rotate = rotate
-                self.animator.rotate = rotate
-                if self.animator.is_rotation:
-                    self.animator.change_rotation()
+        if not new_direction:
+            return
+        self.shift_x, self.shift_y, rotate = self.direction[new_direction]
+        if self.rotate == rotate:
+            return
+        self.rotate = rotate
+        self.animator.rotate = rotate
+        if self.animator.is_rotation:
+            self.animator.change_rotation()
 
     def process_logic(self) -> None:
         self.step()
@@ -76,8 +77,7 @@ class Character(DrawableObject):
         return self.rect.centerx // CELL_SIZE, (self.rect.centery - 20) // CELL_SIZE
 
     def in_rect(self, rect: List[int]) -> bool:
-        return rect[0] <= self.get_cell()[0] <= rect[2] \
-               and rect[1] <= self.get_cell()[1] <= rect[3]
+        return rect[0] <= self.get_cell()[0] <= rect[2] and rect[1] <= self.get_cell()[1] <= rect[3]
 
     @staticmethod
     def two_cells_dis(cell1: Tuple[int, int], cell2: Tuple[int, int]) -> float:
