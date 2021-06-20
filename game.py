@@ -75,10 +75,13 @@ class Game:
 
         def preset_for_fun(self):
             if self.fun:
-                self.pacman = SoundController(self.game, self.Ch.pacman,  choice([path for path in Sounds.DEAD if path != self.pacman.path]))
+                self.pacman = SoundController(self.game, self.Ch.pacman,
+                                              choice([path for path in Sounds.DEAD[1:]]))
                 self.seed = SoundController(self.game, self.Ch.seed, Sounds.SEED_FUN)
-                self.intro = SoundController(self.game, self.Ch.intro, choice([path for path in Sounds.INTRO if path != self.intro.path]))
-                self.gameover = SoundController(self.game, self.Ch.game_over, choice([path for path in Sounds.GAMEOVER if path != self.gameover.path]))
+                self.intro = SoundController(self.game, self.Ch.intro,
+                                             choice([path for path in Sounds.INTRO[1:]]))
+                self.gameover = SoundController(self.game, self.Ch.game_over,
+                                                choice([path for path in Sounds.GAMEOVER[1:]]))
             else:
                 self.pacman = SoundController(self.game, self.Ch.pacman, Sounds.DEAD[0])
                 self.gameover = SoundController(self.game, self.Ch.game_over, Sounds.GAMEOVER[0])
@@ -226,7 +229,6 @@ class Game:
         self.records = HighScore(self)
         self.scenes = self.Scenes(self)
         self.scenes.set(self.scenes.MENU)
-
 
     def read_from_storage(self):
         self.storage = Storage(self)

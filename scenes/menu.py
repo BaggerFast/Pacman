@@ -1,5 +1,4 @@
-from random import randint
-
+from random import choice, randint
 import pygame as pg
 from PIL import ImageFilter, Image
 from objects import ButtonController, Text, ImageObject
@@ -12,20 +11,16 @@ def rand_color():
     min_val = 200
     max_val = 230
     state = randint(0, max_states)
-    if state == max_states:
-        color = (255, 255, 255)
-    elif state == max_states - 1:
-        color = (randint(min_val, max_val), 0, 0)
-    elif state == max_states - 2:
-        color = (0, randint(min_val, max_val), 0)
-    elif state == max_states - 3:
-        color = (0, 0, randint(min_val, max_val))
-    else:
-        excluded_color = randint(0, 2)
-        color = (randint(min_val, max_val) if excluded_color != 0 else 0,
-                 randint(min_val, max_val) if excluded_color != 1 else 0,
-                 randint(min_val, max_val) if excluded_color != 2 else 0)
-    return color
+    data = [
+        (255, 255, 255),
+        (randint(min_val, max_val), 0, 0),
+        (0, randint(min_val, max_val), 0),
+        (0, 0, randint(min_val, max_val))
+    ]
+    for i, new_color in enumerate(data):
+        if state == max_states-i:
+            return new_color
+    return [randint(min_val, max_val) if choice([0, 1]) != i else 0 for i in range(3)]
 
 
 class Scene(base.Scene):
@@ -34,7 +29,7 @@ class Scene(base.Scene):
         super(Scene, self).__init__(game)
 
     def create_objects(self) -> None:
-        self.objects = []
+        self.objects: list
         self.preview = self.game.maps.full_surface
         self.color = rand_color()
         self.game.map_color = self.color
@@ -82,23 +77,23 @@ class Scene(base.Scene):
         self.objects.append(self.__indicator)
 
     def create_buttons(self) -> None:
-        names = [
-            ("PLAY", self.game.scenes.MAIN),
-            ("LEVELS", self.game.scenes.LEVELS),
-            ("SKINS", self.game.scenes.SKINS),
-            ("RECORDS", self.game.scenes.RECORDS),
-            ("SETTINGS", self.game.scenes.SETTINGS),
-            ("CREDITS", self.game.scenes.CREDITS),
-            ("EXIT", self.game.exit_game)
-        ]
+        names = {
+            "PLAY": self.game.scenes.MAIN,
+            "LEVELS": self.game.scenes.LEVELS,
+            "SKINS": self.game.scenes.SKINS,
+            "RECORDS": self.game.scenes.RECORDS,
+            "SETTINGS": self.game.scenes.SETTINGS,
+            "CREDITS": self.game.scenes.CREDITS,
+            "EXIT": self.game.exit_game,
+        }
         buttons = []
-        for i in range(len(names)):
+        for i, (name, func) in enumerate(names.items()):
             buttons.append(
                 self.SceneButton(
                     game=self.game,
                     geometry=pg.Rect(0, 0, 180, 26),
-                    text=names[i][0],
-                    scene=names[i][1],
+                    text=name,
+                    scene=func,
                     center=(self.game.width // 2, 95 + i * 28),
                     text_size=Font.BUTTON_TEXT_SIZE
                 )

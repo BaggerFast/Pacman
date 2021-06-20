@@ -4,7 +4,8 @@ import pygame as pg
 class Animator:
     __time_out = 50
 
-    def __init__(self, path_to_images: list, time_out: int = 50, is_rotation: bool = True, repeat: bool = False, aura: str = None):
+    def __init__(self, path_to_images: list, time_out: int = 50, is_rotation: bool = True, repeat: bool = False,
+                 aura: str = None):
         self.is_rotation = is_rotation
         self.__animate_timer = 0
         self.__time_out = time_out
@@ -32,17 +33,9 @@ class Animator:
     def __add_image(self, path_to_images: list) -> None:
         self.__pathes = []
         self.__images = []
-        for i in range(len(path_to_images)):
-            self.__pathes.append(path_to_images[i])
-            self.__images.append(pg.image.load(path_to_images[i]))
-
-    def recolor(self, game):
-        if game:
-            for i in range(len(self.__images)):
-                for x in range(self.__images[i].get_width()):
-                    for y in range(self.__images[i].get_height()):
-                        if self.__images[i].get_at((x, y)) == (255, 255, 0):
-                            self.__images[i].set_at((x, y), game.pacman_color)  # Set the color of the pixel.
+        for path_image in path_to_images:
+            self.__pathes.append(path_image)
+            self.__images.append(pg.image.load(path_image))
 
     def get_len_anim(self) -> int:
         return len(self.__images)
@@ -81,10 +74,11 @@ class Animator:
             self.change_rotation()
 
     def change_rotation(self) -> None:
-        if self.rotate == 2:
+        right = 2
+        if self.rotate == right:
             self.mirror_x()
-        else:
-            self.__current_image = pg.transform.rotate(self.current_image, -90 * self.rotate)
+            return
+        self.__current_image = pg.transform.rotate(self.current_image, -90 * self.rotate)
 
     def mirror_x(self) -> None:
         self.__current_image = pg.transform.flip(self.current_image, True, False)

@@ -13,11 +13,11 @@ class Scene(base.Scene):
         self.__unlock_level()
 
     def create_title(self) -> None:
-        text = ["YOU", "WON"]
-        for i in range(len(text)):
-            text[i] = Text(self.game, text[i], 40, font=Font.TITLE)
-            text[i].move_center(self.game.width // 2, 30 + i * 40)
-            self.static_objects.append(text[i])
+        texts = []
+        for i, text in enumerate(["YOU", "WON"]):
+            texts.append(Text(self.game, text, 40, font=Font.TITLE))
+            texts[-1].move_center(self.game.width // 2, 30 + i * 40)
+            self.static_objects.append(text)
 
     def create_buttons(self) -> None:
         buttons = [
@@ -64,7 +64,7 @@ class Scene(base.Scene):
         self.game.records.add_new_record(int(self.game.score))
         self.game.records.update_records()
 
-    def __unlock_level(self):
+    def __unlock_level(self) -> None:
         if self.__is_last_level():
             next_level = self.game.maps.cur_id + 1
             self.game.unlock_level(next_level)
@@ -75,7 +75,7 @@ class Scene(base.Scene):
         self.game.records.update_records()
         self.game.scenes.set(self.game.scenes.MAIN, reset=True)
 
-    def __is_last_level(self):
+    def __is_last_level(self) -> bool:
         return (self.game.maps.cur_id + 1) < self.game.maps.count
 
     def on_activate(self) -> None:
@@ -87,4 +87,4 @@ class Scene(base.Scene):
         self.game.sounds.gameover.stop()
 
     def __call__(self, *args, **kwargs):
-        self.game.scenes.set(self,reset=True)
+        self.game.scenes.set(self, reset=True)

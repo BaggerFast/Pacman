@@ -41,8 +41,9 @@ class Scene(base.Scene):
             self.game.settings.VOLUME = max(self.game.settings.VOLUME, 0)
             self.game.settings.VOLUME = min(self.game.settings.VOLUME, 100)
             self.game.scenes.current.volume_value.text = str(self.game.settings.VOLUME) + "%"
-            for sound in self.game.sounds.__dict__.keys():
-                self.game.sounds.__dict__[sound].update()
+            # for sound in self.game.sounds.__dict__.keys():
+            #     print(type(self.game.sounds.__dict__[sound]))
+            #     self.game.sounds.__dict__[sound].update()
 
     class SettingButton(Button):
         def __init__(self, **args):
@@ -162,4 +163,4 @@ class Scene(base.Scene):
             self.game.scenes.set(self.prev_scene)
 
     def __call__(self, *args, **kwargs):
-        self.game.scenes.set(self,True)
+        self.game.scenes.set(self, True)

@@ -37,9 +37,7 @@ class Scene(base.Scene):
 
     def create_static_objects(self):
         self.is_current = False
-        self.__scroll = self.game.maps.cur_id
-        self.__scroll = min(self.__scroll, self.game.maps.count - self.__buttons_on_scene)
-        self.__scroll = max(self.__scroll, 0)
+        self.__scroll = max(min(self.game.maps.cur_id, self.game.maps.count - self.__buttons_on_scene), 0)
         self.__create_title()
 
     def __create_title(self) -> None:

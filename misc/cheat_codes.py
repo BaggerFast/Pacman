@@ -19,9 +19,7 @@ class Cheat:
 
 class ControlCheats:
     def __init__(self, game, cheat_codes) -> None:
-        self.cheats = []
-        for cheat in cheat_codes:
-            self.cheats.append(Cheat(game, cheat))
+        self.cheats = [Cheat(game, cheat) for cheat in cheat_codes]
         self.timer = pg.time.get_ticks()
         self.enter_code = ''
         self.old_enter_code = ''
