@@ -1,7 +1,4 @@
-# Проект "DEFINE ME"
-
-### Цель
-DEFINE ME
+# Проект "Pacman RTX"
 
 ### Технологический стек:
 - python 3.6+
