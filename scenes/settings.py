@@ -8,7 +8,7 @@ from scenes import base
 class Scene(base.Scene):
     class DifficultyButton(Button):
 
-        __dificulties = [
+        __difficulties = [
             "easy",
             "medium",
             "hard"
@@ -20,15 +20,13 @@ class Scene(base.Scene):
             self.update_text()
 
         def click(self) -> None:
-            self.value += 1
-            if self.value > 2:
-                self.value = 0
+            self.value = 0 if self.value > len(self.__difficulties)-1 else self.value
             self.update_text()
             self.select()
             self.game.settings.DIFFICULTY = self.value
 
         def update_text(self):
-            self.text = self.__dificulties[self.value]
+            self.text = self.__difficulties[self.value]
 
     class SelectButton(Button):
         def __init__(self, **args):
@@ -41,9 +39,6 @@ class Scene(base.Scene):
             self.game.settings.VOLUME = max(self.game.settings.VOLUME, 0)
             self.game.settings.VOLUME = min(self.game.settings.VOLUME, 100)
             self.game.scenes.current.volume_value.text = f"{self.game.settings.VOLUME} %"
-            # for sound in self.game.sounds.__dict__.keys():
-            #     print(type(self.game.sounds.__dict__[sound]))
-            #     self.game.sounds.__dict__[sound].update()
 
     class SettingButton(Button):
         def __init__(self, **args):
@@ -53,9 +48,7 @@ class Scene(base.Scene):
 
         def update(self, var):
             if var == "SOUND" or var == "FUN":
-                sounds = self.game.sounds.__dict__
-                for sound in sounds.keys():
-                    sounds[sound].update()
+                self.game.sounds.reload_sounds()
 
         def click(self):
             self.update(self.var)
@@ -73,7 +66,7 @@ class Scene(base.Scene):
         self.volume_text.move_center(self.game.width // 2, self.__volume_position)
         self.static_objects.append(self.volume_text)
 
-        self.volume_value = Text(self.game, str(self.game.settings.VOLUME) + "%", 20)
+        self.volume_value = Text(self.game, f"{self.game.settings.VOLUME} %", 20)
         self.volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
         self.static_objects.append(self.volume_value)
         self.create_title()
@@ -86,7 +79,6 @@ class Scene(base.Scene):
 
     def create_buttons(self) -> None:
         self.buttons = []
-
         self.buttons.append(
             self.SettingButton(
                 game=self.game,

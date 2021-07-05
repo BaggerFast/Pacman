@@ -1,6 +1,7 @@
 import pygame as pg
 from misc import ControlCheats
 from misc import LevelLoader, Font, get_path, Health
+from misc.constants.skin_names import SkinsNames
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.fruits import Fruit
 from objects.ghosts import *
@@ -36,7 +37,8 @@ class Scene(base.Scene):
 
     def __create_static_text(self):
         self.__scores_label_text = Text(
-            self.game, 'MEMORY' if self.game.skins.current.name == "chrome" else 'SCORE', Font.MAIN_SCENE_SIZE,
+            self.game, f'{"MEMORY" if self.game.skins.current.name == SkinsNames.chrome else "SCORE"}',
+            Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(10, 0, 20, 20)
         )
 
@@ -148,7 +150,7 @@ class Scene(base.Scene):
 
         self.__scores_value_text = Text(
             self.game,
-            str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(self.game.score),
+            f'{self.game.score} {"Mb" if self.game.skins.current.name == SkinsNames.chrome else self.game.score}',
             Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(10, 8, 20, 20))
         self.static_objects.append(self.__scores_value_text)
@@ -188,24 +190,32 @@ class Scene(base.Scene):
                     ghost2.invisible()
             else:
                 if ghost.mode == 'Frightened':
-                    ghost.gg_text.text = str((200 * self.game.difficulty ** 2) * 2 ** self.game.score.fear_count)
+                    ghost.gg_text.text = f'{200 * self.game.difficulty ** 2 * 2 ** self.game.score.fear_count}'
                     ghost.invisible()
                     self.game.score.eat_ghost()
                     self.ghost_text_flag = True
                     self.ghost_text_timer = pg.time.get_ticks()
                 ghost.toggle_mode_to_eaten()
 
-        if seed_eaten == 1:
-            if self.__prefered_ghost is not None and self.__work_ghost_counters:
-                self.__prefered_ghost.counter()
-                self.__prefered_ghost.update_timer()
-            elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
-                self.__seeds_eaten += 1
-                self.__prefered_ghost.update_timer()
-        elif seed_eaten == 2:
-            self.game.score.activate_fear_mode()
-            for ghost in self.ghosts:
-                ghost.toggle_mode_to_frightened()
+        data = {
+            1: lambda: self.eat_seed(),
+            2: lambda: self.eat_super_seed(),
+        }
+        if seed_eaten in data:
+            data[seed_eaten]()
+
+    def eat_seed(self):
+        if self.__prefered_ghost is not None and self.__work_ghost_counters:
+            self.__prefered_ghost.counter()
+            self.__prefered_ghost.update_timer()
+        elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
+            self.__seeds_eaten += 1
+            self.__prefered_ghost.update_timer()
+
+    def eat_super_seed(self):
+        self.game.score.activate_fear_mode()
+        for ghost in self.ghosts:
+            ghost.toggle_mode_to_frightened()
 
     def __start_label(self) -> None:
         current_time = pg.time.get_ticks() / 1000
@@ -335,3 +345,4 @@ class Scene(base.Scene):
 
     def __call__(self, *args, **kwargs):
         self.game.scenes.set(self, reset=True, loading=True)
+

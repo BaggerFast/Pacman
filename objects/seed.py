@@ -37,6 +37,7 @@ class SeedContainer(DrawableObject):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col]:
                     if self.game.skins.current.name == SkinsNames.chrome:
+                        # todo universal skins of seed
                         self.game.screen.blit(self.__ram_img, (self.x + col * CELL_SIZE + CELL_SIZE // 2 - 6,
                                                                self.y + row * CELL_SIZE + CELL_SIZE // 2 - 6))
                     else:
@@ -79,6 +80,4 @@ class SeedContainer(DrawableObject):
                     return 2
 
     def is_field_empty(self) -> bool:
-        if self.__seeds_on_field == (self.__max_seeds - 10 if HIGH_CALORIE_SEEDS else 0):
-            return True
-        return False
+        return self.__seeds_on_field == (self.__max_seeds - 10 if HIGH_CALORIE_SEEDS else 0)

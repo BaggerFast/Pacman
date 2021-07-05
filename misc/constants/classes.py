@@ -1,7 +1,9 @@
+from threading import Thread
+
 import pygame as pg
 from typing import NamedTuple, List
-
 from misc.path import get_path, get_list_path
+import time as tm
 
 
 class Sounds:
@@ -30,44 +32,73 @@ class Sounds:
     WINDOWS_SOUNDS: List[pg.mixer.Sound] = []
 
     @staticmethod
+    def load(key, attr):
+        if hasattr(Sounds, key):
+            setattr(Sounds, key, attr())
+            Sounds.loading()
+
+    @staticmethod
     def load_sounds(loading_text, game):
+        func = {
+            'CLICK': lambda: pg.mixer.Sound(get_path('navigation', 'ogg', 'sounds')),
+            "SEED": lambda: pg.mixer.Sound(get_path('munch', 'ogg', 'sounds')),
+            "SEED_FUN": lambda: pg.mixer.Sound(get_path('leader', 'ogg', 'sounds')),
+            "FRUIT": lambda: pg.mixer.Sound(get_path('eat_fruit', 'ogg', 'sounds')),
+            "GHOST": lambda: pg.mixer.Sound(get_path('eat_ghost', 'ogg', 'sounds')),
+            "POC_INTRO": lambda: pg.mixer.Sound(get_path("pokemon_intro", 'ogg', 'sounds')),
+            "INTERMISSION": lambda: pg.mixer.Sound(get_path('intermission', 'ogg', 'sounds')),
+            "PELLET": lambda: pg.mixer.Sound(get_path('power_pellet', 'ogg', 'sounds')),
+            "CHEAT": lambda: pg.mixer.Sound(get_path('cheat', 'ogg', 'sounds')),
+            "DEAD": lambda: [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'death')],
+            "GAMEOVER": lambda: [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'gameover')],
+            "INTRO": lambda: [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'intro')],
+            "SIREN": lambda: [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'siren')],
+            "VALVE_SOUNDS": lambda: [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'valve_skin')],
+            "WINDOWS_SOUNDS": lambda: [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'windows_skin')],
+        }
         Sounds.__game = game
         Sounds.__loading_text = loading_text
-        Sounds.CLICK = pg.mixer.Sound(get_path('navigation', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.SEED = pg.mixer.Sound(get_path('munch', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.SEED_FUN = pg.mixer.Sound(get_path('leader', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.FRUIT = pg.mixer.Sound(get_path('eat_fruit', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.GHOST = pg.mixer.Sound(get_path('eat_ghost', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.POC_INTRO = pg.mixer.Sound(get_path("pokemon_intro", 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.INTERMISSION = pg.mixer.Sound(get_path('intermission', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.PELLET = pg.mixer.Sound(get_path('power_pellet', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.CHEAT = pg.mixer.Sound(get_path('cheat', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.DEAD = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'death')]
-        Sounds.loading()
-        Sounds.GAMEOVER = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'gameover')]
-        Sounds.loading()
-        Sounds.INTRO = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'intro')]
-        Sounds.loading()
-        Sounds.SIREN = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'siren')]
-        Sounds.loading()
+        threads = [Thread(target=Sounds.load, args=(key, attr)) for key, attr in func.items()]
+        [thread.start() for thread in threads]
+        [thread.join() for thread in threads]
+
         for path in get_list_path('ogg', 'sounds', 'credits'):
             Sounds.loading()
             Sounds.CREDITS.append(pg.mixer.Sound(path))
-        Sounds.loading()
-        # valve
-        Sounds.VALVE_SOUNDS = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'valve_skin')]
-        Sounds.loading()
-        # windows
-        Sounds.WINDOWS_SOUNDS = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'windows_skin')]
+
+        # Sounds.CLICK = pg.mixer.Sound(get_path('navigation', 'ogg', 'sounds'))
+        #
+        # Sounds.SEED = pg.mixer.Sound(get_path('munch', 'ogg', 'sounds'))
+        # Sounds.loading()
+        # Sounds.SEED_FUN = pg.mixer.Sound(get_path('leader', 'ogg', 'sounds'))
+        # Sounds.loading()
+        # Sounds.FRUIT = pg.mixer.Sound(get_path('eat_fruit', 'ogg', 'sounds'))
+        # Sounds.loading()
+        # Sounds.GHOST = pg.mixer.Sound(get_path('eat_ghost', 'ogg', 'sounds'))
+        # Sounds.loading()
+        # Sounds.POC_INTRO = pg.mixer.Sound(get_path("pokemon_intro", 'ogg', 'sounds'))
+        # Sounds.loading()
+        # Sounds.INTERMISSION = pg.mixer.Sound(get_path('intermission', 'ogg', 'sounds'))
+        # Sounds.loading()
+        # Sounds.PELLET = pg.mixer.Sound(get_path('power_pellet', 'ogg', 'sounds'))
+        # Sounds.loading()
+        # Sounds.CHEAT = pg.mixer.Sound(get_path('cheat', 'ogg', 'sounds'))
+        # Sounds.loading()
+        # Sounds.DEAD = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'death')]
+        # Sounds.loading()
+        # Sounds.GAMEOVER = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'gameover')]
+        # Sounds.loading()
+        # Sounds.INTRO = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'intro')]
+        # Sounds.loading()
+        # Sounds.SIREN = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'siren')]
+        # Sounds.loading()
+
+        # Sounds.loading()
+        # # valve
+        # Sounds.VALVE_SOUNDS = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'valve_skin')]
+        # Sounds.loading()
+        # # windows
+        # Sounds.WINDOWS_SOUNDS = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'windows_skin')]
 
     @staticmethod
     def loading():
@@ -124,3 +155,7 @@ class Font:
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     BUTTON_FOR_SKINS_TEXT_SIZE = Tuple(size=16).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size
+
+
+def if_else(priority, secondary):
+    return priority if priority else secondary

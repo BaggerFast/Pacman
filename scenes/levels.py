@@ -69,9 +69,7 @@ class Scene(base.Scene):
             if hasattr(button, "value"):
                 if self.game.maps.cur_id == button.value[0]:
                     button.text = '-' + button.text + '-'
-
-        self.__button_controller = ButtonController(self.game, buttons)
-        self.objects.append(self.__button_controller)
+        self.objects.append(ButtonController(self.game, buttons))
 
     def unlocked(self) -> int:
         return len(self.game.unlocked_levels)
@@ -94,7 +92,7 @@ class Scene(base.Scene):
             self.scroll_threshold()
             self.create_objects()
         elif event.type == pg.KEYDOWN:
-            if event.key == pg.K_e or event.key == pg.K_q:
+            if event.key in [pg.K_e, pg.K_q]:
                 if event.key == pg.K_e:
                     self.__scroll += 1
                 elif event.key == pg.K_q:

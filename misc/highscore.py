@@ -5,14 +5,10 @@ from misc import HIGHSCORES_COUNT
 
 
 class HighScore:
-    __json_filename = os.path.join('saves', 'records.json')
-
     def __init__(self, game) -> None:
         self.game = game
         self.__level_id = self.game.maps.cur_id
-        for _ in range(len(self.highscores), self.game.maps.count):
-            self.highscores.append([0 for _ in range(HIGHSCORES_COUNT)])
-
+        [self.highscores.append([0]*HIGHSCORES_COUNT) for _ in range(self.game.maps.count)]
         self.__data = sorted(self.highscores[self.__level_id])
 
     @property

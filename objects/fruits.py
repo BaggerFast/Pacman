@@ -1,7 +1,6 @@
 import pygame as pg
 from random import randint
 from typing import Tuple
-
 from misc.constants import CELL_SIZE
 from misc.path import get_list_path, get_path
 from misc.animator import Animator
@@ -49,10 +48,8 @@ class Fruit(DrawableObject):
             return True
         return False
 
-    def __check_last_score(self):
-        if int(self.game.score) >= self.__score_to_eat + self.__score_tolerance:
-            return True
-        return False
+    def __check_last_score(self) -> bool:
+        return int(self.game.score) >= self.__score_to_eat + self.__score_tolerance
 
     def __check_time(self):
         if pg.time.get_ticks() - self.__start_time >= 9000:  # 9000

@@ -64,6 +64,7 @@ class Game:
             self.reload_sounds()
 
         def base_preset(self):
+            # todo improve sounds loading
             self.click = SoundController(self.game, self.Ch.menu, Sounds.CLICK)
             self.menu = SoundController(self.game, self.Ch.menu, Sounds.INTERMISSION)
             self.credits = SoundController(self.game, self.Ch.menu, choice(Sounds.CREDITS))
@@ -198,23 +199,28 @@ class Game:
 
     __size = width, height = 224, 285
     __icon = pg.transform.scale(pg.image.load(get_path('ico', 'png', 'images', )), (256, 256))
-    __FPS = 60
+    __FPS: int = 60
     __def_level_id = 0
     pg.display.set_caption('PACMAN')
     pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
+
         self.maps = self.Maps(self)
+
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.__clock = pg.time.Clock()
-        self.__game_over = False
+        self.__game_over: bool = False
+
         self.draw_load_img()
         Sounds.load_sounds(self.load_img_text, self)
         self.timer = pg.time.get_ticks() / 1000
-        self.time_out = 125
-        self.animate_timer = 0
-        self.pred = None
+        self.time_out: int = 125
+        self.animate_timer: int = 0
+        self.pred: bool
+
         self.skins = Skins(self)
+
         self.score = Score(self)
 
         self.cheats_var = self.Cheats(self)
@@ -224,6 +230,7 @@ class Game:
                                            ['maps', lambda: self.cheats_var.update("UNLOCK_LEVELS")],
                                            ['lives', lambda: self.cheats_var.update("INFINITY_LIVES")],
                                            ['collision', lambda: self.cheats_var.update("GHOSTS_COLLISION")]])
+
         self.sounds = self.Music(self)
         self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else SkinsNames.default
         self.records = HighScore(self)
@@ -234,11 +241,11 @@ class Game:
         self.storage = Storage(self)
         self.settings = self.Settings(self.storage)
         self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
-        self.maps.cur_id = int(self.storage.last_level_id) if int(
-            self.storage.last_level_id) in self.unlocked_levels else self.__def_level_id
+        self.maps.cur_id = int(self.storage.last_level_id) if int(self.storage.last_level_id) in self.unlocked_levels else self.__def_level_id
         self.unlocked_skins = self.skins.all_skins if self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
         self.eaten_fruits = self.storage.eaten_fruits
         self.highscores = self.storage.highscores
+
 
     def save_to_storage(self):
         self.storage.settings.SOUND = self.settings.SOUND
@@ -248,10 +255,10 @@ class Game:
         self.storage.last_level_id = self.maps.cur_id
         self.storage.last_skin = self.skins.current.name
         self.storage.eaten_fruits = self.eaten_fruits
-        if not self.cheats_var.UNLOCK_LEVELS:
-            self.storage.unlocked_levels = self.unlocked_levels
-        if not self.cheats_var.UNLOCK_SKINS:
-            self.storage.unlocked_skins = self.unlocked_skins
+
+        self.storage.unlocked_levels = self.unlocked_levels if not self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
+        self.storage.unlocked_skins = self.unlocked_skins if not self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
+
         self.storage.highscores = self.highscores
         self.storage.save()
 
@@ -294,8 +301,6 @@ class Game:
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
-            if DEBUG and event.type != pg.MOUSEMOTION:
-                print(event)
             self.cheats.process_event(event)
             self.__process_exit_events(event)
             self.scenes.current.process_event(event)

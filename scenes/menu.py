@@ -18,7 +18,7 @@ def rand_color():
         (0, 0, randint(min_val, max_val))
     ]
     for i, new_color in enumerate(data):
-        if state == max_states-i:
+        if state == max_states - i:
             return new_color
     return [randint(min_val, max_val) if choice([0, 1]) != i else 0 for i in range(3)]
 
@@ -52,14 +52,14 @@ class Scene(base.Scene):
         for x in range(self.preview.get_width()):
             for y in range(self.preview.get_height()):
                 if self.preview.get_at((x, y)) == Color.MAIN_MAP:
-                    self.preview.set_at((x, y), self.color)  # Set the color of the pixel
+                    self.preview.set_at((x, y), self.color)
 
     def blur_preview(self) -> None:
         blur_count = 5
         rect = self.preview.get_rect()
         surify = pg.image.tostring(self.preview, 'RGBA')
         impil = Image.frombytes('RGBA', (rect.width, rect.height), surify)
-        piler = impil.resize(self.game.size).\
+        piler = impil.resize(self.game.size). \
             filter(ImageFilter.GaussianBlur(radius=blur_count))
         self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
@@ -72,11 +72,12 @@ class Scene(base.Scene):
         self.static_objects.append(title)
 
     def __create_indicator(self) -> None:
-        self.__indicator = Text(self.game, self.game.maps.level_name(self.game.maps.cur_id).replace('_', ' '), 15, font=Font.TITLE)
+        self.__indicator = Text(self.game, self.game.maps.level_name(self.game.maps.cur_id).replace('_', ' '), 15,
+                                font=Font.TITLE)
         self.__indicator.move_center(self.game.width // 2, 60)
         self.objects.append(self.__indicator)
 
-    def create_buttons(self) -> None:
+    def button_init(self):
         names = {
             "PLAY": self.game.scenes.MAIN,
             "LEVELS": self.game.scenes.LEVELS,
@@ -86,16 +87,15 @@ class Scene(base.Scene):
             "CREDITS": self.game.scenes.CREDITS,
             "EXIT": self.game.exit_game,
         }
-        buttons = []
         for i, (name, func) in enumerate(names.items()):
-            buttons.append(
-                self.SceneButton(
-                    game=self.game,
-                    geometry=pg.Rect(0, 0, 180, 26),
-                    text=name,
-                    scene=func,
-                    center=(self.game.width // 2, 95 + i * 28),
-                    text_size=Font.BUTTON_TEXT_SIZE
-                )
+            yield self.SceneButton(
+                game=self.game,
+                geometry=pg.Rect(0, 0, 180, 26),
+                text=name,
+                scene=func,
+                center=(self.game.width // 2, 95 + i * 28),
+                text_size=Font.BUTTON_TEXT_SIZE
             )
-        self.objects.append(ButtonController(self.game, buttons))
+
+    def create_buttons(self) -> None:
+        self.objects.append(ButtonController(self.game, list(self.button_init())))
