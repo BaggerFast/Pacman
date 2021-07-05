@@ -18,16 +18,16 @@ class Scene(base.Scene):
             text.move_center(self.game.width // 2, 30 + i * 40)
             self.static_objects.append(text)
 
-    def create_buttons(self) -> None:
-        buttons = [
-            Button(
-                self.game, pg.Rect(0, 0, 180, 35),
-                self.__next_level, 'NEXT LEVEL',
-                center=(self.game.width // 2, 210),
-                text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_DEFAULT_COLORS
-            )
-            if self.__is_last_level() else self.SceneButton(
+    def button_init(self) -> None:
+        yield Button(
+            self.game, pg.Rect(0, 0, 180, 35),
+            self.__next_level, 'NEXT LEVEL',
+            center=(self.game.width // 2, 210),
+            text_size=Font.BUTTON_TEXT_SIZE,
+            colors=BUTTON_DEFAULT_COLORS
+        )
+        if not self.__is_last_level():
+            yield self.SceneButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 35),
                 text='EXIT',
@@ -35,18 +35,16 @@ class Scene(base.Scene):
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS
-            ),
-            self.SceneButton(
-                game=self.game,
-                geometry=pg.Rect(0, 0, 180, 35),
-                text='MENU',
-                scene=self.game.scenes.MENU,
-                center=(self.game.width // 2, 250),
-                text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_DEFAULT_COLORS
             )
-        ]
-        self.objects.append(ButtonController(self.game, buttons))
+        yield self.SceneButton(
+            game=self.game,
+            geometry=pg.Rect(0, 0, 180, 35),
+            text='MENU',
+            scene=self.game.scenes.MENU,
+            center=(self.game.width // 2, 250),
+            text_size=Font.BUTTON_TEXT_SIZE,
+            colors=BUTTON_DEFAULT_COLORS
+        )
 
     def __create_score_text(self) -> None:
         self.__text_score = Text(self.game, f'Score: {self.game.score}', 20)
@@ -55,7 +53,7 @@ class Scene(base.Scene):
 
     def __create_highscore_text(self) -> None:
         self.__text_highscore = Text(self.game, f'High score: {self.game.records.data[-1]}'
-                                     if int(self.game.score) <= self.game.records.data[-1] else f'New record: {self.game.score}', 20)
+        if int(self.game.score) <= self.game.records.data[-1] else f'New record: {self.game.score}', 20)
         self.__text_highscore.move_center(self.game.width // 2, 165)
         self.objects.append(self.__text_highscore)
 

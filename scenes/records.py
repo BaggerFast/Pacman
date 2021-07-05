@@ -14,15 +14,14 @@ class Scene(base.Scene):
         super().create_objects()
         self.__create_text_labels()
 
-    def create_buttons(self) -> None:
-        back_button = self.SceneButton(
+    def button_init(self) -> None:
+        yield self.SceneButton(
             game=self.game,
             geometry=pg.Rect(0, 0, 180, 40),
             text='MENU',
             scene=self.game.scenes.MENU,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
-        self.objects.append(ButtonController(self.game, [back_button]))
 
     def __create_title(self) -> None:
         title = Text(self.game, 'RECORDS', 32, font=Font.TITLE)

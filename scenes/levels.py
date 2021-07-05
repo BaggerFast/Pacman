@@ -65,10 +65,12 @@ class Scene(base.Scene):
             scene=self.game.scenes.MENU,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE))
+
         for button in buttons:
             if hasattr(button, "value"):
                 if self.game.maps.cur_id == button.value[0]:
                     button.text = '-' + button.text + '-'
+
         self.objects.append(ButtonController(self.game, buttons))
 
     def unlocked(self) -> int:

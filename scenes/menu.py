@@ -96,6 +96,3 @@ class Scene(base.Scene):
                 center=(self.game.width // 2, 95 + i * 28),
                 text_size=Font.BUTTON_TEXT_SIZE
             )
-
-    def create_buttons(self) -> None:
-        self.objects.append(ButtonController(self.game, list(self.button_init())))
