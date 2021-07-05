@@ -9,3 +9,4 @@ from .cheat_codes import ControlCheats
 from .storage import Storage
 from .skins import Skins
 from .rotation import Rotation
+from .tile_pos import TilePos
