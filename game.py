@@ -155,7 +155,6 @@ class Game:
                 self.__current.on_reset()
             self.__current.on_activate()
 
-
     class Maps:
         def __init__(self, game):
             self.game = game
@@ -163,7 +162,7 @@ class Game:
             self.count = 0
             self.cur_id = 0
             self.read_levels()
-            self.__images = self.prerender_surfaces()
+            self.__images = list(self.prerender_surfaces())
 
         @property
         def images(self):
@@ -176,7 +175,7 @@ class Game:
 
         @staticmethod
         def level_name(level_id: int = 0):
-            return f"level_{level_id + 1}"
+            return f'level_{level_id + 1}'
 
         def __load_from_map(self, level_id: int = 0) -> None:
             self.__loader = LevelLoader(self.levels[level_id])
@@ -191,12 +190,9 @@ class Game:
             self.count = len(self.levels)
 
         def prerender_surfaces(self):
-            images = []
             for level_id in range(self.count):
                 self.__load_from_map(level_id)
-                image = self.__map.prerender_map_image_scaled()
-                images.append(image)
-            return images
+                yield self.__map.prerender_map_image_scaled()
 
     __size = width, height = 224, 285
     __icon = pg.transform.scale(pg.image.load(get_path('ico', 'png', 'images', )), (256, 256))
@@ -206,9 +202,7 @@ class Game:
     pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
-
         self.maps = self.Maps(self)
-
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.__clock = pg.time.Clock()
         self.__game_over: bool = False
@@ -218,7 +212,7 @@ class Game:
         self.timer = pg.time.get_ticks() / 1000
         self.time_out: int = 125
         self.animate_timer: int = 0
-        self.pred: bool
+        self.pred: bool = False
 
         self.skins = Skins(self)
 
@@ -227,10 +221,12 @@ class Game:
         self.cheats_var = self.Cheats(self)
         self.read_from_storage()
 
-        self.cheats = ControlCheats(self, [['skins', lambda: self.cheats_var.update("UNLOCK_SKINS")],
-                                           ['maps', lambda: self.cheats_var.update("UNLOCK_LEVELS")],
-                                           ['lives', lambda: self.cheats_var.update("INFINITY_LIVES")],
-                                           ['collision', lambda: self.cheats_var.update("GHOSTS_COLLISION")]])
+        self.cheats = ControlCheats(self, [
+            ['skins', lambda: self.cheats_var.update("UNLOCK_SKINS")],
+            ['maps', lambda: self.cheats_var.update("UNLOCK_LEVELS")],
+            ['lives', lambda: self.cheats_var.update("INFINITY_LIVES")],
+            ['collision', lambda: self.cheats_var.update("GHOSTS_COLLISION")]
+            ])
 
         self.sounds = self.Music(self)
         self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else SkinsNames.default
@@ -246,7 +242,6 @@ class Game:
         self.unlocked_skins = self.skins.all_skins if self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
         self.eaten_fruits = self.storage.eaten_fruits
         self.highscores = self.storage.highscores
-
 
     def save_to_storage(self):
         self.storage.settings.SOUND = self.settings.SOUND
@@ -286,8 +281,7 @@ class Game:
     def draw_load_img(self, text=None):
         self.load_img_text = Text(self, text="Loading" if text is None else text, size=20)
         self.load_img_text.move_center(self.width // 2, self.height // 2)
-        self.load_img = pg.Surface(
-            (self.load_img_text.rect.size[0] * 2, self.load_img_text.rect.size[1] * 2)).convert_alpha()
+        self.load_img = pg.Surface((self.load_img_text.rect.size[0] * 2, self.load_img_text.rect.size[1] * 2)).convert_alpha()
         self.load_img.fill(Color.BLACK)
         self.load_img.set_alpha(150)
         rect = self.load_img.get_rect()

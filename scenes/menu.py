@@ -1,7 +1,7 @@
 from random import choice, randint
 import pygame as pg
 from PIL import ImageFilter, Image
-from objects import ButtonController, Text, ImageObject
+from objects import Text, ImageObject
 from scenes import base
 from misc import Font, Color, VERSION
 
@@ -29,7 +29,7 @@ class Scene(base.Scene):
         super(Scene, self).__init__(game)
 
     def create_objects(self) -> None:
-        self.objects: list
+        self.objects: list = []
         self.preview = self.game.maps.full_surface
         self.color = rand_color()
         self.game.map_color = self.color
