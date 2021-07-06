@@ -3,11 +3,12 @@ from .rotation import Rotation
 
 class TilePos:
     def __init__(self, x: int, y: int): self.x, self.y = int(x), int(y)
-    def __repr__(self): str((self.x, self.y))
+    def __repr__(self): return str((self.x, self.y))
 
     def __add__(self, other):
         if isinstance(other, (type(self), tuple, list)):
             return type(self)(self.x+other[0], self.x+other[1])
+        raise TypeError
 
     __iadd__, __radd__ = __add__, __add__
 
@@ -41,8 +42,8 @@ class TilePos:
             else:
                 self.y = value
 
-    def offset(self, rotation: object, n: int = 1):
-        return self+(self.x + rotation.get_offset_x() * n, self.y + rotation.get_offset_y() * n)
+    def offset(self, rotation: Rotation, n: int = 1):
+        return self+(self.x + rotation.x_offset * n, self.y + rotation.y_offset * n)
 
     def up(self, n: int = 1): return self.offset(Rotation.up, n)
     def left(self, n: int = 1): return self.offset(Rotation.left, n)
@@ -53,4 +54,3 @@ class TilePos:
         for y in range(min(self[1], other[1]), max(self[1], other[1])+1):
             for x in range(min(self[0], other[0]), max(self[0], other[0])+1):
                 yield type(self)(x, y)
-
