@@ -126,10 +126,10 @@ class Scene(base.Scene):
                         geometry=pg.Rect(0, 0, 90, 25),
                         text=skin_name,
                         value=skin,
-                        # todo i
                         center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
                         text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                        active=skin.name in self.game.unlocked_skins)
+                        active=skin.name in self.game.unlocked_skins
+                )
             else:
                 yield self.BuyButton(
                     game=self.game,
@@ -147,14 +147,15 @@ class Scene(base.Scene):
             text='MENU',
             scene=self.game.scenes.MENU,
             center=(self.game.width // 2, 250),
-            text_size=Font.BUTTON_TEXT_SIZE)
+            text_size=Font.BUTTON_TEXT_SIZE
+        )
 
     def create_buttons(self) -> None:
         self.button_pos_x = self.game.width // 2 - 65
         self.button_pos_y = 90
         self.button_pos_multiply_y = 25
-        super().create_buttons()
         self.__button_controller = ButtonController(self.game, list(self.button_init()))
+        self.objects.append(self.__button_controller)
         self.update_button_text()
 
     def update_button_text(self):

@@ -1,6 +1,5 @@
 import pygame as pg
 from PIL import ImageFilter, Image
-
 from objects import ButtonController
 from objects.button import Button
 

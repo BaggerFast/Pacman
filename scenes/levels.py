@@ -92,10 +92,11 @@ class Scene(base.Scene):
             self.scroll_threshold()
             self.create_objects()
         elif event.type == pg.KEYDOWN:
-            if event.key in [pg.K_e, pg.K_q]:
-                if event.key == pg.K_e:
-                    self.__scroll += 1
-                elif event.key == pg.K_q:
-                    self.__scroll -= 1
-                self.scroll_threshold()
-                self.create_objects()
+            if not event.key in [pg.K_e, pg.K_q]:
+                return
+            if event.key == pg.K_e:
+                self.__scroll += 1
+            elif event.key == pg.K_q:
+                self.__scroll -= 1
+            self.scroll_threshold()
+            self.create_objects()

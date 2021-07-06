@@ -155,6 +155,7 @@ class Game:
                 self.__current.on_reset()
             self.__current.on_activate()
 
+
     class Maps:
         def __init__(self, game):
             self.game = game

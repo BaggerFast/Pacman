@@ -138,4 +138,4 @@ class Scene(base.Scene):
             self.game.scenes.set(self.prev_scene)
 
     def __call__(self, *args, **kwargs):
-        self.game.scenes.set(self, True)
+        self.game.scenes.set(self, reset=True)
