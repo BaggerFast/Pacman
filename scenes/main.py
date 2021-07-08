@@ -32,7 +32,6 @@ class Scene(base.Scene):
 
     def __create_health(self):
         self.hp = Health(3, 4)
-        self.__hp_hud = []
         self.__prepare_lives_meter()
 
     def __create_static_text(self):

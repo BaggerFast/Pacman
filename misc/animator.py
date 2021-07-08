@@ -4,17 +4,17 @@ import pygame as pg
 class Animator:
     __time_out = 50
 
-    def __init__(self, path_to_images: list, time_out: int = 50, is_rotation: bool = True, repeat: bool = False,
+    def __init__(self, path_to_images: list[str], time_out: int = 50, is_rotation: bool = True, repeat: bool = False,
                  aura: str = None):
         self.is_rotation = is_rotation
         self.__animate_timer = 0
         self.__time_out = time_out
-        self.__add_image(path_to_images)
+        self.__images: list[pg.image] = self.__add_image(path_to_images)
         self.__current_image_index: int = 0
         self.__current_image = self.__images[self.__current_image_index]
         self.__current_aura = pg.image.load(aura) if aura else aura
         self.rotate: int = 0
-        self.__repeat = repeat
+        self.__repeat: bool = repeat
         self.anim_finished: bool = False
         self.run: bool = False
 
@@ -26,16 +26,8 @@ class Animator:
     def current_aura(self):
         return self.__current_aura
 
-    @property
-    def current_path(self):
-        return self.__pathes[self.__current_image_index]
-
-    def __add_image(self, path_to_images: list) -> None:
-        self.__pathes = []
-        self.__images = []
-        for path_image in path_to_images:
-            self.__pathes.append(path_image)
-            self.__images.append(pg.image.load(path_image))
+    def __add_image(self, path_to_images: list) -> list[pg.image]:
+        return [pg.image.load(path_image) for path_image in path_to_images]
 
     def get_len_anim(self) -> int:
         return len(self.__images)
@@ -67,8 +59,8 @@ class Animator:
             self.__current_image_index = 0
             if self.__repeat:
                 self.stop()
-                self.change_cur_image(len(self.__images) - 1)
                 self.anim_finished = True
+                return
         self.__current_image = self.__images[self.__current_image_index]
         if self.is_rotation:
             self.change_rotation()

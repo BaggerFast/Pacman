@@ -52,7 +52,7 @@ class Scene(base.Scene):
     def additional_draw(self) -> None:
         super().additional_draw()
 
-        if not (any(self.game.records.data)):
+        if not sum(self.game.records.data):
             self.__error_text.process_draw()
             return
 

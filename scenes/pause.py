@@ -1,5 +1,5 @@
 import pygame as pg
-from objects import ButtonController, Text
+from objects import Text
 from scenes import base
 from misc import Font, LIGHT_BUTTON_COLORS
 from scenes.menu import rand_color
