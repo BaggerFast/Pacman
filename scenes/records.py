@@ -1,10 +1,12 @@
 import pygame as pg
 from misc import Color, Font, get_path
-from objects import ButtonController, ImageObject, Text
+from objects import ImageObject, Text
 from scenes import base
 
 
 class Scene(base.Scene):
+    medal_count = 5
+
     def create_static_objects(self):
         self.__create_medals()
         self.__create_title()
@@ -14,15 +16,14 @@ class Scene(base.Scene):
         super().create_objects()
         self.__create_text_labels()
 
-    def create_buttons(self) -> None:
-        back_button = self.SceneButton(
+    def button_init(self) -> None:
+        yield self.SceneButton(
             game=self.game,
             geometry=pg.Rect(0, 0, 180, 40),
             text='MENU',
             scene=self.game.scenes.MENU,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
-        self.objects.append(ButtonController(self.game, [back_button]))
 
     def __create_title(self) -> None:
         title = Text(self.game, 'RECORDS', 32, font=Font.TITLE)
@@ -37,28 +38,28 @@ class Scene(base.Scene):
         self.game.records.update_records()
         self.medals_text = []
         text_colors = [Color.GOLD, Color.SILVER, Color.BRONZE, Color.WHITE, Color.WHITE]
-        y = 4
         for i, text_color in enumerate(text_colors):
-            self.medals_text.append(Text(self.game, str(self.game.records.data[y]), 30, pg.Rect(60, 55+35*i, 0, 0),
+            self.medals_text.append(Text(self.game, str(self.game.records.data[self.medal_count-i-1]),
+                                         30, pg.Rect(60, 55+35*i, 0, 0),
                                          text_color))
-            y -= 1
 
     def __create_medals(self) -> None:
         self.__medals = []
-        for i in range(5):
+        for i in range(self.medal_count):
             self.__medals.append(ImageObject(self.game, get_path(str(i), 'png', 'images', 'medal'), (16, 55+35*i)))
-            self.__medals[-1].scale(35, 35)
+            self.__medals[i].scale(35, 35)
 
     def additional_draw(self) -> None:
         super().additional_draw()
-        if self.game.records.data[4] == 0:
+
+        if not (any(self.game.records.data)):
             self.__error_text.process_draw()
-        y = 4
-        for i in range(5):
-            if self.game.records.data[y] != 0:
+            return
+
+        for y, i in enumerate(reversed(range(self.medal_count)), 0):
+            if self.game.records.data[y]:
                 self.medals_text[i].process_draw()
                 self.__medals[i].process_draw()
-            y -= 1
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:

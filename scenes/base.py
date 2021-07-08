@@ -1,6 +1,6 @@
 import pygame as pg
 from PIL import ImageFilter, Image
-
+from objects import ButtonController
 from objects.button import Button
 
 
@@ -68,9 +68,6 @@ class Scene:
     def on_reset(self) -> None:
         pass
 
-    def create_buttons(self) -> None:
-        pass
-
     def create_title(self) -> None:
         pass
 
@@ -81,3 +78,9 @@ class Scene:
 
     def __call__(self, *args, **kwargs):
         self.game.scenes.set(self)
+
+    def button_init(self):
+        pass
+
+    def create_buttons(self):
+        self.objects.append(ButtonController(self.game, list(self.button_init())))

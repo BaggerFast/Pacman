@@ -6,16 +6,15 @@ from scenes.menu import rand_color
 
 
 class Scene(base.Scene):
-    def create_buttons(self) -> None:
+    def button_init(self) -> None:
         names = {
             "CONTINUE": self.game.scenes.MAIN.Continue,
             "SETTINGS": self.game.scenes.SETTINGS,
             "RESTART": self.game.scenes.MAIN,
             "MENU": self.game.scenes.MENU,
         }
-        buttons = []
         for i, (name, scene) in enumerate(names.items()):
-            buttons.append(self.SceneButton(
+            yield self.SceneButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 40),
                 text=name,
@@ -23,8 +22,7 @@ class Scene(base.Scene):
                 center=(self.game.width // 2, 100+45*i),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=LIGHT_BUTTON_COLORS
-            ))
-        self.objects.append(ButtonController(self.game, buttons))
+            )
 
     def create_title(self) -> None:
         self.__main_text = Text(self.game, 'PAUSE', 40, font=Font.TITLE)

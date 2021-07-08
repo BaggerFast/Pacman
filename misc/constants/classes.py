@@ -1,14 +1,11 @@
 from threading import Thread
-
 import pygame as pg
 from typing import NamedTuple, List
 from misc.path import get_path, get_list_path
-import time as tm
 
 
 class Sounds:
-    pg.mixer.init()
-    __loading_text: str = ''
+    __loading_text: str
     __game = None
     __counter = 0
     __count = 32
@@ -66,40 +63,6 @@ class Sounds:
             Sounds.loading()
             Sounds.CREDITS.append(pg.mixer.Sound(path))
 
-        # Sounds.CLICK = pg.mixer.Sound(get_path('navigation', 'ogg', 'sounds'))
-        #
-        # Sounds.SEED = pg.mixer.Sound(get_path('munch', 'ogg', 'sounds'))
-        # Sounds.loading()
-        # Sounds.SEED_FUN = pg.mixer.Sound(get_path('leader', 'ogg', 'sounds'))
-        # Sounds.loading()
-        # Sounds.FRUIT = pg.mixer.Sound(get_path('eat_fruit', 'ogg', 'sounds'))
-        # Sounds.loading()
-        # Sounds.GHOST = pg.mixer.Sound(get_path('eat_ghost', 'ogg', 'sounds'))
-        # Sounds.loading()
-        # Sounds.POC_INTRO = pg.mixer.Sound(get_path("pokemon_intro", 'ogg', 'sounds'))
-        # Sounds.loading()
-        # Sounds.INTERMISSION = pg.mixer.Sound(get_path('intermission', 'ogg', 'sounds'))
-        # Sounds.loading()
-        # Sounds.PELLET = pg.mixer.Sound(get_path('power_pellet', 'ogg', 'sounds'))
-        # Sounds.loading()
-        # Sounds.CHEAT = pg.mixer.Sound(get_path('cheat', 'ogg', 'sounds'))
-        # Sounds.loading()
-        # Sounds.DEAD = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'death')]
-        # Sounds.loading()
-        # Sounds.GAMEOVER = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'gameover')]
-        # Sounds.loading()
-        # Sounds.INTRO = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'intro')]
-        # Sounds.loading()
-        # Sounds.SIREN = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'siren')]
-        # Sounds.loading()
-
-        # Sounds.loading()
-        # # valve
-        # Sounds.VALVE_SOUNDS = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'valve_skin')]
-        # Sounds.loading()
-        # # windows
-        # Sounds.WINDOWS_SOUNDS = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'windows_skin')]
-
     @staticmethod
     def loading():
         pg.event.get()
@@ -155,7 +118,3 @@ class Font:
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     BUTTON_FOR_SKINS_TEXT_SIZE = Tuple(size=16).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size
-
-
-def if_else(priority, secondary):
-    return priority if priority else secondary

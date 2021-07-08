@@ -1,6 +1,6 @@
 import pygame as pg
 from misc import Font, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
-from objects import ButtonController, Text
+from objects import Text
 from objects.button import Button
 from scenes import base
 
@@ -20,7 +20,7 @@ class Scene(base.Scene):
             self.update_text()
 
         def click(self) -> None:
-            self.value = 0 if self.value > len(self.__difficulties)-1 else self.value
+            self.value = 0 if self.value > len(self.__difficulties) - 1 else self.value
             self.update_text()
             self.select()
             self.game.settings.DIFFICULTY = self.value
@@ -77,76 +77,65 @@ class Scene(base.Scene):
             text.move_center(self.game.width // 2, 30 + i * 40)
             self.static_objects.append(text)
 
-    def create_buttons(self) -> None:
-        self.buttons = []
-        self.buttons.append(
-            self.SettingButton(
-                game=self.game,
-                geometry=pg.Rect(0, 0, 180, 35),
-                text=f"SOUND {'ON' if self.game.settings.SOUND else 'OFF'}",
-                center=(self.game.width // 2, 75),
-                text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_GREEN_COLORS if self.game.settings.SOUND else BUTTON_RED_COLORS,
-                var="SOUND",
-                name="SOUND"
-            )
-        )
-        self.buttons.append(
-            self.SettingButton(
-                game=self.game,
-                geometry=pg.Rect(0, 0, 180, 35),
-                text=f"FUN {'ON' if self.game.settings.FUN else 'OFF'}",
-                center=(self.game.width // 2, 75 + 40),
-                text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_GREEN_COLORS if self.game.settings.FUN else BUTTON_RED_COLORS,
-                var="FUN",
-                name="FUN",
-                active=self.prev_scene == self.game.scenes.MENU
-            )
-        )
-        self.buttons.append(
-            self.SelectButton(
-                game=self.game,
-                geometry=pg.Rect(0, 0, 40, 35),
-                text='-',
-                center=(self.game.width // 2 - 60, self.__volume_position + 30),
-                value=-5
-            )
-        )
-        self.buttons.append(
-            self.SelectButton(
-                game=self.game,
-                geometry=pg.Rect(0, 0, 40, 35),
-                text='+',
-                center=(self.game.width // 2 + 65, self.__volume_position + 30),
-                value=5
-            )
-        )
-        self.buttons.append(
-            self.DifficultyButton(
-                game=self.game,
-                geometry=pg.Rect(0, 0, 120, 35),
-                center=(self.game.width // 2, self.__difficulty_pos),
-                text_size=Font.BUTTON_TEXT_SIZE,
-                active=self.prev_scene == self.game.scenes.MENU
-            )
-        )
-        self.buttons.append(
-            self.SceneButton(
-                game=self.game,
-                geometry=pg.Rect(0, 0, 180, 40),
-                text='BACK',
-                scene=self.prev_scene,
-                center=(self.game.width // 2, 250),
-                text_size=Font.BUTTON_TEXT_SIZE
-            )
+    def button_init(self) -> None:
+        yield self.SettingButton(
+            game=self.game,
+            geometry=pg.Rect(0, 0, 180, 35),
+            text=f"SOUND {'ON' if self.game.settings.SOUND else 'OFF'}",
+            center=(self.game.width // 2, 75),
+            text_size=Font.BUTTON_TEXT_SIZE,
+            colors=BUTTON_GREEN_COLORS if self.game.settings.SOUND else BUTTON_RED_COLORS,
+            var="SOUND",
+            name="SOUND")
+
+        yield self.SettingButton(
+            game=self.game,
+            geometry=pg.Rect(0, 0, 180, 35),
+            text=f"FUN {'ON' if self.game.settings.FUN else 'OFF'}",
+            center=(self.game.width // 2, 75 + 40),
+            text_size=Font.BUTTON_TEXT_SIZE,
+            colors=BUTTON_GREEN_COLORS if self.game.settings.FUN else BUTTON_RED_COLORS,
+            var="FUN",
+            name="FUN",
+            active=self.prev_scene == self.game.scenes.MENU
         )
 
-        self.objects.append(ButtonController(self.game, self.buttons))
+        yield self.SelectButton(
+            game=self.game,
+            geometry=pg.Rect(0, 0, 40, 35),
+            text='-',
+            center=(self.game.width // 2 - 60, self.__volume_position + 30),
+            value=-5
+        )
+
+        yield self.SelectButton(
+            game=self.game,
+            geometry=pg.Rect(0, 0, 40, 35),
+            text='+',
+            center=(self.game.width // 2 + 65, self.__volume_position + 30),
+            value=5
+        )
+
+        yield self.DifficultyButton(
+            game=self.game,
+            geometry=pg.Rect(0, 0, 120, 35),
+            center=(self.game.width // 2, self.__difficulty_pos),
+            text_size=Font.BUTTON_TEXT_SIZE,
+            active=self.prev_scene == self.game.scenes.MENU
+        )
+
+        yield self.SceneButton(
+            game=self.game,
+            geometry=pg.Rect(0, 0, 180, 40),
+            text='BACK',
+            scene=self.prev_scene,
+            center=(self.game.width // 2, 250),
+            text_size=Font.BUTTON_TEXT_SIZE
+        )
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.game.scenes.set(self.prev_scene)
 
     def __call__(self, *args, **kwargs):
-        self.game.scenes.set(self, True)
+        self.game.scenes.set(self, reset=True)

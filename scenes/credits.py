@@ -34,23 +34,21 @@ class Scene(base.Scene):
         self.__students = []
         self.__students2 = self.__data.copy()
 
-    def create_buttons(self) -> None:
-        self.objects = []
-        buttons = []
-        buttons.append(self.SceneButton(
+    def button_init(self) -> None:
+        yield self.SceneButton(
             game=self.game,
             geometry=pg.Rect(0, 0, 100, 35),
             scene=self.game.scenes.MENU,
             text="MENU",
             center=(self.game.width // 4, 250),
-            text_size=Font.BUTTON_TEXT_SIZE))
-        buttons.append(Button(game=self.game,
+            text_size=Font.BUTTON_TEXT_SIZE)
+
+        yield Button(game=self.game,
             geometry=pg.Rect(0, 0, 100, 35),
             text="SKIP",
             function=self.__skip_sound,
             center=(self.game.width // 4 + 110, 250),
-            text_size=Font.BUTTON_TEXT_SIZE))
-        self.objects.append(ButtonController(self.game, buttons))
+            text_size=Font.BUTTON_TEXT_SIZE)
 
     def __get_random_student_y(self) -> int:
         return randint(25, self.game.height - 75)

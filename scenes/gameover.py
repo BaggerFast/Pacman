@@ -1,5 +1,5 @@
 import pygame as pg
-from objects import ButtonController, Text
+from objects import Text
 from scenes import base
 from misc import Font, BUTTON_DEFAULT_COLORS
 
@@ -17,14 +17,13 @@ class Scene(base.Scene):
             text.move_center(self.game.width // 2, 30 + i * 40)
             self.static_objects.append(text)
 
-    def create_buttons(self) -> None:
+    def button_init(self) -> None:
         names = {
             "RESTART": self.game.scenes.MAIN,
             "MENU": self.game.scenes.MENU,
         }
-        buttons = []
         for i, (name, scene) in enumerate(names.items()):
-            buttons.append(self.SceneButton(
+            yield self.SceneButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 35),
                 text=name,
@@ -32,8 +31,7 @@ class Scene(base.Scene):
                 center=(self.game.width // 2, 210+40*i),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS
-            ))
-        self.objects.append(ButtonController(self.game, buttons))
+            )
 
     def __create_score_text(self) -> None:
         self.__text_score = Text(self.game, f'Score: {self.game.score}', 20)

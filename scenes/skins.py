@@ -1,7 +1,6 @@
-from copy import copy
-
 import pygame as pg
 
+from copy import copy
 from misc.constants.skin_names import SkinsNames
 from objects import ButtonController, Text, Button, ImageObject
 from scenes import base
@@ -39,35 +38,18 @@ class Scene(base.Scene):
 
         def click(self) -> None:
             flag = True
-            for key in self.value.skin_cost.keys():
-                if self.game.eaten_fruits[key] < self.value.skin_cost[key]:
-                    flag = False
-
             self.select()
-            if flag:
-                for key in self.value.skin_cost.keys():
-                    self.game.store_fruit(key, -self.value.skin_cost[key])
-                self.game.unlock_skin(self.value.name)
-                self.game.scenes.current.create_objects()
-
-        def deselect(self) -> None:
-            scene = self.game.scenes.current
-            if not scene.is_current:
-                scene.preview.image = self.game.skins.current.image.image
-            super().deselect()
-
-        def select(self) -> None:
-            scene = self.game.scenes.current
-            scene.is_current = True
-            scene.preview.image = self.value.image.image
-            super().select()
-
-    def process_event(self, event: pg.event.Event) -> None:
-        self.is_current = False
-        super().process_event(event)
+            for key in self.value.skin_cost.keys():
+                flag = self.game.eaten_fruits[key] > self.value.skin_cost[key]
+            if not flag:
+                return
+            for key in self.value.skin_cost.keys():
+                self.game.store_fruit(key, -self.value.skin_cost[key])
+            self.game.unlock_skin(self.value.name)
+            self.game.scenes.current.create_objects()
 
     def create_static_objects(self) -> None:
-        self.is_current: bool = False
+        self.is_current = False
         self.fruit_images: list = get_list_path('png', 'images', 'fruit')
         self.__create_title()
 
@@ -118,24 +100,20 @@ class Scene(base.Scene):
         title.move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
 
-    def create_buttons(self) -> None:
-        buttons = []
-        self.button_pos_x = self.game.width // 2 - 65
-        self.button_pos_y = 90
-        self.button_pos_multiply_y = 25
-        for i, (skin_name, skin) in enumerate(self.skins.items(), start=0):
+    def button_init(self):
+        for i, (skin_name, skin) in enumerate(self.skins.items()):
             if skin.is_unlocked:
-                buttons.append(self.SkinButton(
-                    game=self.game,
-                    geometry=pg.Rect(0, 0, 90, 25),
-                    text=skin_name,
-                    value=skin,
-                    # todo i
-                    center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
-                    text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                    active=skin.name in self.game.unlocked_skins))
+                yield self.SkinButton(
+                        game=self.game,
+                        geometry=pg.Rect(0, 0, 90, 25),
+                        text=skin_name,
+                        value=skin,
+                        center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
+                        text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
+                        active=skin.name in self.game.unlocked_skins
+                )
             else:
-                buttons.append(self.BuyButton(
+                yield self.BuyButton(
                     game=self.game,
                     geometry=pg.Rect(0, 0, 90, 25),
                     text=skin_name,
@@ -143,25 +121,31 @@ class Scene(base.Scene):
                     center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
                     text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
                     colors=BUTTON_SKIN_BUY
-                ))
+                )
 
-        buttons.append(self.SceneButton(
+        yield self.SceneButton(
             game=self.game,
             geometry=pg.Rect(0, 0, 180, 40),
             text='MENU',
             scene=self.game.scenes.MENU,
             center=(self.game.width // 2, 250),
-            text_size=Font.BUTTON_TEXT_SIZE))
+            text_size=Font.BUTTON_TEXT_SIZE
+        )
 
-        self.__button_controller = ButtonController(self.game, buttons)
+    def create_buttons(self) -> None:
+        self.button_pos_x = self.game.width // 2 - 65
+        self.button_pos_y = 90
+        self.button_pos_multiply_y = 25
+        self.__button_controller = ButtonController(self.game, list(self.button_init()))
         self.objects.append(self.__button_controller)
         self.update_button_text()
 
     def update_button_text(self):
         for button in self.__button_controller.buttons:
-            if hasattr(button, "value") and hasattr(button.value, "name"):
-                if self.game.skins.current.name == button.value.name:
-                    if not (button.text.startswith("-") or button.text.endswith("-")):
-                        button.text = '-' + button.text + '-'
-                else:
-                    button.text = button.text.strip('-')
+            if not (hasattr(button, "value") and hasattr(button.value, "name")):
+                continue
+            if self.game.skins.current.name == button.value.name:
+                if not (button.text.startswith("-") or button.text.endswith("-")):
+                    button.text = f'-{button.text}-'
+            else:
+                button.text = button.text.strip('-')
