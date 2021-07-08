@@ -62,20 +62,19 @@ class Scene(base.Scene):
     __difficulty_pos = 210
 
     def create_static_objects(self):
+
         self.volume_text = Text(self.game, "VOLUME", 20)
         self.volume_text.move_center(self.game.width // 2, self.__volume_position)
-        self.static_objects.append(self.volume_text)
 
         self.volume_value = Text(self.game, f"{self.game.settings.VOLUME} %", 20)
         self.volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
-        self.static_objects.append(self.volume_value)
-        self.create_title()
 
-    def create_title(self) -> None:
-        for i, text in enumerate(["SETTINGS"]):
-            text = Text(self.game, text, 30, font=Font.TITLE)
-            text.move_center(self.game.width // 2, 30 + i * 40)
-            self.static_objects.append(text)
+        self.static_objects += [self.volume_text, self.volume_value, self.create_title()]
+
+    def create_title(self) -> Text:
+        text = Text(self.game, "SETTINGS", 30, font=Font.TITLE)
+        text.move_center(self.game.width // 2, 30)
+        return text
 
     def button_init(self) -> None:
         yield self.SettingButton(

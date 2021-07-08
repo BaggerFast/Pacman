@@ -19,7 +19,7 @@ class HighScore:
 
     @property
     def data(self):
-        return self.__data
+        return sorted(self.__data, reverse=True)
 
     @property
     def level_id(self):

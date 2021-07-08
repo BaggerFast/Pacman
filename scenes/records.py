@@ -35,31 +35,31 @@ class Scene(base.Scene):
         self.__error_text.move_center(self.game.width // 2, 100)
 
     def __create_text_labels(self) -> None:
+        def creator():
+            text_colors = [Color.GOLD, Color.SILVER, Color.BRONZE, Color.WHITE, Color.WHITE]
+            for i, text_color in enumerate(text_colors):
+                yield Text(self.game, str(self.game.records.data[i]), 30, pg.Rect(60, 55 + 35 * i, 0, 0), text_color)
+
         self.game.records.update_records()
-        self.medals_text = []
-        text_colors = [Color.GOLD, Color.SILVER, Color.BRONZE, Color.WHITE, Color.WHITE]
-        for i, text_color in enumerate(text_colors):
-            self.medals_text.append(Text(self.game, str(self.game.records.data[self.medal_count-i-1]),
-                                         30, pg.Rect(60, 55+35*i, 0, 0),
-                                         text_color))
+        self.medals_text = list(creator())
 
     def __create_medals(self) -> None:
-        self.__medals = []
-        for i in range(self.medal_count):
-            self.__medals.append(ImageObject(self.game, get_path(str(i), 'png', 'images', 'medal'), (16, 55+35*i)))
-            self.__medals[i].scale(35, 35)
+        def creator():
+            for i in range(self.medal_count):
+                image = ImageObject(self.game, get_path(str(i), 'png', 'images', 'medal'), (16, 55 + 35 * i))
+                image.scale(35, 35)
+                yield image
+        self.__medals = list(creator())
 
     def additional_draw(self) -> None:
         super().additional_draw()
-
-        if not sum(self.game.records.data):
+        if sum(self.game.records.data) == 0:
             self.__error_text.process_draw()
-            return
-
-        for y, i in enumerate(reversed(range(self.medal_count)), 0):
-            if self.game.records.data[y]:
-                self.medals_text[i].process_draw()
-                self.__medals[i].process_draw()
+        else:
+            for i in range(self.medal_count):
+                if self.game.records.data[i] != 0:
+                    self.medals_text[i].process_draw()
+                    self.__medals[i].process_draw()
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:

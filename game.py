@@ -20,7 +20,6 @@ class Game:
             self.UNLOCK_LEVELS = UNLOCK_LEVELS
             self.INFINITY_LIVES = INFINITY_LIVES
             self.GHOSTS_COLLISION = GHOSTS_COLLISION
-            self.dict = self.__dict__
             self.game: Game = game
             self.cheat_storage = {
                 'UNLOCK_SKINS': lambda: self.unlock_skins(),
@@ -38,7 +37,8 @@ class Game:
                 self.game.scenes.current.create_objects()
 
         def update(self, key_code):
-            self.dict[key_code] = not self.dict[key_code]
+            if hasattr(self, key_code):
+                setattr(self, key_code, not getattr(self, key_code))
             if key_code in self.cheat_storage:
                 self.cheat_storage[key_code]()
 
@@ -281,12 +281,6 @@ class Game:
     def draw_load_img(self, text=None):
         self.load_img_text = Text(self, text="Loading" if text is None else text, size=20)
         self.load_img_text.move_center(self.width // 2, self.height // 2)
-        self.load_img = pg.Surface((self.load_img_text.rect.size[0] * 2, self.load_img_text.rect.size[1] * 2)).convert_alpha()
-        self.load_img.fill(Color.BLACK)
-        self.load_img.set_alpha(150)
-        rect = self.load_img.get_rect()
-        rect.center = self.load_img_text.rect.center
-        self.screen.blit(self.load_img, rect)
         self.load_img_text.process_draw()
         pg.display.flip()
 
