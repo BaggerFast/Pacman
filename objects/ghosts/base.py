@@ -1,7 +1,7 @@
 import pygame as pg
-from misc import Animator, get_list_path, get_path, GHOSTS_MOVING
+from misc import Animator, get_list_path, get_path, GHOSTS_MOVING, TilePos, Rotation
 from objects import Character, Pacman, Text
-from typing import Tuple
+from typing import Tuple, Union
 import random
 
 
@@ -15,7 +15,7 @@ class Base(Character):
         3: (0, -1, 3)
     }
 
-    def __init__(self, game, start_pos: Tuple[int, int], frightened_time, chase_time, scatter_time) -> None:
+    def __init__(self, game, start_pos: Union[Tuple[int, int], TilePos], frightened_time, chase_time, scatter_time):
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
         self.acceleration_multiplier = 1
@@ -60,21 +60,21 @@ class Base(Character):
             get_list_path('png', 'images', 'ghost', 'eaten', 'bottom'), is_rotation=False
         )
 
-        self.normal_animations = [
+        self.normal_animations = (
             self.right_walk_anim,
             self.bottom_walk_anim,
             self.left_walk_anim,
-            self.top_walk_anim,
-        ]
+            self.top_walk_anim
+        )
 
-        self.eaten_animations = [
+        self.eaten_animations = (
             self.eaten_right_walk_anim,
             self.eaten_bottom_walk_anim,
             self.eaten_left_walk_anim,
-            self.eaten_top_walk_anim,
-        ]
+            self.eaten_top_walk_anim
+        )
 
-        self.animations = self.normal_animations
+        self.animations: tuple = self.normal_animations
 
         super().__init__(
             game,
@@ -90,11 +90,11 @@ class Base(Character):
         self.invisible_anim = Animator(
             get_list_path('png', 'images', 'ghost', 'invisible'), is_rotation=False
         )
-        self.love_cell = (0, 0)
+        self.love_cell = TilePos(0, 0)
         self.is_invisible = False
         self.is_in_home = True
         self.work_counter = True
-        self.set_direction("left")
+        self.set_direction(Rotation.left)
         '''
             'Chase',
             'Scatter',
@@ -107,7 +107,7 @@ class Base(Character):
             10, pg.Rect(0, 0, 0, 0),
         )
 
-        #Временное решение
+        # Временное решение
         self.tmp_flag1 = False
         self.tmp_flag2 = False
 
@@ -123,13 +123,13 @@ class Base(Character):
         if self.is_in_home and not self.can_leave_home():
             self.go()
             if self.rect.centery >= self.start_pos[1] + 5:
-                self.set_direction('up')
+                self.set_direction(Rotation.up)
             elif self.rect.centery <= self.start_pos[1] - 5:
-                self.set_direction('down')
+                self.set_direction(Rotation.down)
         if self.mode != 'Eaten':
             self.gg_text.rect = pg.Rect(self.rect.x, self.rect.y, 0, 0)
         if self.rotate is None:
-            self.rotate = 0
+            self.rotate = Rotation.right
         if not self.is_invisible and self.mode != 'Frightened':
             self.animator = self.animations[self.rotate]
         if not self.process_logic_iterator % self.deceleration_multiplier_with_rect:
@@ -176,28 +176,20 @@ class Base(Character):
             for rect in self.game.current_scene.cant_up_ghost_rect:
                 if self.in_rect(rect):
                     cell[3] = False
-            '''
-            rotate
-
-            0:
-            1:
-            2:
-            3:
-            '''
-            if self.mode != 'Frightened':
+            if True in cell:
                 min_dis = 10000000000000
-                for i in range(4):
-                    if cell[i]:
-                        tmp_cell = (
-                            self.get_cell()[0] + self.direction2[i][0],
-                            self.get_cell()[1] + self.direction2[i][1]
-                        )
-                        if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
-                            min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
-                            self.shift_x, self.shift_y, self.rotate = self.direction2[i]
+                if self.mode != 'Frightened':
+                    for r in Rotation:
+                        if cell[r]:
+                            tmp_cell = self.cell.offset(r)
+                            if min_dis > tmp_cell.length_to(self.love_cell):
+                                min_dis = tmp_cell.length_to(self.love_cell)
+                                self.rotate = r
+                else:
+                    self.rotate = Rotation(random.choice([i for i, v in enumerate(cell)if v]))
             else:
-                self.shift_x, self.shift_y, self.rotate = \
-                    self.direction2[random.choice([i for i, v in enumerate(cell)if v])]
+                print(self.cell)
+                self.rotate = self.rotate.reverse()
 
         if self.mode == 'Frightened':
             if pg.time.get_ticks() - self.ai_timer >= self.frightened_time-2000:
@@ -212,21 +204,21 @@ class Base(Character):
 
         if self.mode == 'Eaten':
             self.deceleration_multiplier = 1
-            self.love_cell = (self.game.current_scene.blinky.start_pos[0] // 8,
-                              (self.game.current_scene.blinky.start_pos[1]-20) // 8)
+            self.love_cell = (self.game.current_scene.blinky.start_pos[0]/8,
+                              (self.game.current_scene.blinky.start_pos[1]-20)/8)
             if not self.tmp_flag1 and self.rect.center == self.game.current_scene.blinky.start_pos:
                 self.collision = False
-                self.set_direction('down')
+                self.set_direction(Rotation.down)
                 self.tmp_flag1 = True
             if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.game.current_scene.pinky.start_pos[1]:
                 self.animations = self.normal_animations
                 self.acceleration_multiplier = 1
                 self.deceleration_multiplier = 2
-                self.set_direction('up')
+                self.set_direction(Rotation.up)
                 self.tmp_flag2 = True
             if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
                 self.deceleration_multiplier = 1
-                self.set_direction('left')
+                self.set_direction(Rotation.left)
                 self.mode = 'Scatter'
                 self.collision = True
                 self.update_ai_timer()
