@@ -14,3 +14,19 @@ class Rotation(IntEnum):
         obj.y_offset = y_offset
         return obj
 
+    def __add__(self, other):
+        index = self.__index__() + other.__index__()
+        length = len(self.__class__)
+        index += length * (round(abs(index) / length) + 1)
+        index %= length
+        return self.__class__(index)
+
+    def __sub__(self, other):
+        index = self.__index__() - other.__index__()
+        length = len(self.__class__)
+        index += length * (round(abs(index) / length) + 1)
+        index %= length
+        return self.__class__(index)
+
+    __iadd__ = __add__
+    __isub__ = __sub__
