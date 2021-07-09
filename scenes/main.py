@@ -123,8 +123,8 @@ class Scene(base.Scene):
     def __create_ghost(self):
         data = {
             0: lambda: self.set_difficult_easy(),
-            1: lambda: self.set_difficult_easy(),
-            2: lambda: self.set_difficult_easy(),
+            1: lambda: self.set_difficult_medium(),
+            2: lambda: self.set_difficult_hard(),
         }
         if self.game.settings.DIFFICULTY in data:
             data[self.game.settings.DIFFICULTY]()

@@ -1,3 +1,5 @@
+from collections import Generator
+
 import pygame as pg
 from PIL import ImageFilter, Image
 from objects import ButtonController
@@ -15,7 +17,7 @@ class Scene:
         self.prev_scene = None
         self.screen: pg.Surface = self.game.screen
         self.objects: list = []
-        self.static_objects = []
+        self.static_objects: list = []
         self.create_static_objects()
 
     def process_event(self, event: pg.event.Event) -> None:
@@ -79,8 +81,8 @@ class Scene:
     def __call__(self, *args, **kwargs):
         self.game.scenes.set(self)
 
-    def button_init(self):
-        pass
+    def button_init(self) -> Generator:
+        ...
 
     def create_buttons(self):
         self.objects.append(ButtonController(self.game, list(self.button_init())))

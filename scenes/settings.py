@@ -16,17 +16,15 @@ class Scene(base.Scene):
 
         def __init__(self, **args):
             super().__init__(**args)
-            self.value = self.game.settings.DIFFICULTY
             self.update_text()
 
         def click(self) -> None:
-            self.value = 0 if self.value > len(self.__difficulties) - 1 else self.value
+            self.game.settings.DIFFICULTY = (self.game.settings.DIFFICULTY + 1) % len(self.__difficulties)
             self.update_text()
             self.select()
-            self.game.settings.DIFFICULTY = self.value
 
-        def update_text(self):
-            self.text = self.__difficulties[self.value]
+        def update_text(self) -> None:
+            self.text = self.__difficulties[self.game.settings.DIFFICULTY]
 
     class SelectButton(Button):
         def __init__(self, **args):
@@ -35,41 +33,40 @@ class Scene(base.Scene):
 
         def click(self) -> None:
             self.select()
-            self.game.settings.VOLUME += self.value
-            self.game.settings.VOLUME = max(self.game.settings.VOLUME, 0)
-            self.game.settings.VOLUME = min(self.game.settings.VOLUME, 100)
+            self.game.settings.change_volume(self.value)
             self.game.scenes.current.volume_value.text = f"{self.game.settings.VOLUME} %"
 
     class SettingButton(Button):
         def __init__(self, **args):
-            self.name = args.pop("name")
-            self.var = args.pop("var")
+            self.name, self.var = args.pop("name"), args.pop("var")
             super().__init__(**args)
 
-        def update(self, var):
-            if var == "SOUND" or var == "FUN":
+        def update(self, var: str) -> None:
+            if var in ["SOUND", "FUN"]:
                 self.game.sounds.reload_sounds()
 
-        def click(self):
-            self.update(self.var)
+        def click(self) -> None:
             self.select()
+            if not hasattr(self.game.settings, self.var):
+                return
             flag_var = not getattr(self.game.settings, self.var)
             setattr(self.game.settings, self.var, flag_var)
+            self.update(self.var)
             self.text = f"{self.name} {'ON' if flag_var else 'OFF'}"
             self.colors = BUTTON_GREEN_COLORS if flag_var else BUTTON_RED_COLORS
 
     __volume_position = 150
     __difficulty_pos = 210
 
-    def create_static_objects(self):
+    def create_static_objects(self) -> None:
 
-        self.volume_text = Text(self.game, "VOLUME", 20)
-        self.volume_text.move_center(self.game.width // 2, self.__volume_position)
+        volume_text = Text(self.game, "VOLUME", 20)
+        volume_text.move_center(self.game.width // 2, self.__volume_position)
 
         self.volume_value = Text(self.game, f"{self.game.settings.VOLUME} %", 20)
         self.volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
 
-        self.static_objects += [self.volume_text, self.volume_value, self.create_title()]
+        self.static_objects += [volume_text, self.volume_value, self.create_title()]
 
     def create_title(self) -> Text:
         text = Text(self.game, "SETTINGS", 30, font=Font.TITLE)

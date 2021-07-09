@@ -49,6 +49,10 @@ class Game:
             self.VOLUME = storage.settings.VOLUME
             self.DIFFICULTY = storage.settings.DIFFICULTY
 
+        def change_volume(self, num: int):
+            self.VOLUME = max(self.VOLUME + num, 0)
+            self.VOLUME = min(self.VOLUME, 100)
+
     class Music:
         class Ch:
             pacman: int = 0
@@ -60,7 +64,6 @@ class Game:
 
         def __init__(self, game):
             self.game = game
-            self.fun = self.game.settings.FUN
             self.reload_sounds()
 
         def base_preset(self):
@@ -107,8 +110,9 @@ class Game:
             self.pacman = SoundController(self.game, self.Ch.pacman, Sounds.VALVE_SOUNDS[6])
 
         def reload_sounds(self):
-            self.base_preset()
+            self.fun = self.game.settings.FUN
             self.preset_for_fun()
+            self.base_preset()
             storage = {
                 SkinsNames.pokeball: lambda: SoundController(self.game, self.Ch.intro, Sounds.POC_INTRO),
                 SkinsNames.windows: lambda: self.preset_for_windows(),
