@@ -49,11 +49,11 @@ class Scene(base.Scene):
             self.select()
             if not hasattr(self.game.settings, self.var):
                 return
-            flag_var = not getattr(self.game.settings, self.var)
-            setattr(self.game.settings, self.var, flag_var)
+            active_mode = not getattr(self.game.settings, self.var)
+            setattr(self.game.settings, self.var, active_mode)
             self.update(self.var)
-            self.text = f"{self.name} {'ON' if flag_var else 'OFF'}"
-            self.colors = BUTTON_GREEN_COLORS if flag_var else BUTTON_RED_COLORS
+            self.text = f"{self.name} {'ON' if active_mode else 'OFF'}"
+            self.colors = BUTTON_GREEN_COLORS if active_mode else BUTTON_RED_COLORS
 
     __volume_position = 150
     __difficulty_pos = 210
@@ -103,13 +103,12 @@ class Scene(base.Scene):
             center=(self.game.width // 2 - 60, self.__volume_position + 30),
             value=-5
         )
-
         yield self.SelectButton(
             game=self.game,
             geometry=pg.Rect(0, 0, 40, 35),
             text='+',
             center=(self.game.width // 2 + 65, self.__volume_position + 30),
-            value=5
+            value=5,
         )
 
         yield self.DifficultyButton(

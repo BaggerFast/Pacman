@@ -24,7 +24,6 @@ class Scene(base.Scene):
         self.__seeds_eaten = 0
         self.__max_seeds_eaten_to_prefered_ghost = 7
         self.__work_ghost_counters = True
-        self.__first_run_ghost = True
         self.fruit = Fruit(self.game, self.__fruit_position)
         self.ghost_text_timer = pg.time.get_ticks()
         self.ghost_text_flag = False
@@ -88,12 +87,12 @@ class Scene(base.Scene):
     def create_objects(self) -> None:
         self.objects = []
         self.game.sounds.siren.unpause()
-        self.hp_cheat = ControlCheats(self.game, [['aezakmi', self.add_hp]])
+        hp_cheat = ControlCheats(self.game, [['aezakmi', self.add_hp]])
         self.text[-1].surface.set_alpha(0)
         self.__create_map()
         self.__create_ghost()
         self.pacman = Pacman(self.game, self.__player_position)
-        self.objects += [self.hp_cheat, self.fruit, self.pacman]
+        self.objects += [hp_cheat, self.fruit, self.pacman]
 
     def add_hp(self):
         self.hp += 1
@@ -243,8 +242,7 @@ class Scene(base.Scene):
 
     def process_logic(self) -> None:
         if not self.game.sounds.intro.get_busy():
-            self.text[0].surface.set_alpha(0)
-            self.text[1].surface.set_alpha(0)
+            [tx.surface.set_alpha(0) for tx in self.text]
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1 \
                 and not self.game.sounds.pacman.get_busy():
                 self.template = self.screen.copy()
@@ -255,8 +253,7 @@ class Scene(base.Scene):
             self.__process_collision()
             if self.pacman.animator != self.pacman.dead_anim:
                 self.__check_ghosts()
-            self.text[0].surface.set_alpha(0)
-            self.text[1].surface.set_alpha(0)
+            [tx.surface.set_alpha(0) for tx in self.text]
             if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
                 self.create_objects()
                 self.__seeds_eaten = 0
