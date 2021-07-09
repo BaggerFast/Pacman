@@ -188,7 +188,7 @@ class Base(Character):
                 else:
                     self.rotate = Rotation(random.choice([i for i, v in enumerate(cell)if v]))
             else:
-                print(self.cell)
+                # print("Тупик", self.cell)
                 self.rotate = self.rotate.reverse()
 
         if self.mode == 'Frightened':

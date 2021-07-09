@@ -77,8 +77,8 @@ class Scene(base.Scene):
     def create_objects(self) -> None:
         self.objects = []
         self.preview = copy(self.game.maps.images[self.game.maps.cur_id])
-        self.objects.append(self.preview)
         self.create_buttons()
+        self.objects.append(self.preview)
 
     def scroll_threshold(self) -> None:
         self.__scroll = min(self.__scroll, self.game.maps.count - self.__buttons_on_scene)

@@ -12,7 +12,7 @@ from scenes import *
 
 
 class Game:
-    map_color = Color.BLACK
+    map_color = Color.WHITE
 
     class Cheats:
         def __init__(self, game):
@@ -171,19 +171,16 @@ class Game:
         @property
         def full_surface(self):
             self.__load_from_map(self.cur_id)
-            return self.__map.prerender_map_surface()
+            return self.__map.surface
 
         @staticmethod
         def level_name(level_id: int = 0):
             return f'level_{level_id + 1}'
 
         def __load_from_map(self, level_id: int = 0) -> None:
-            self.__loader = LevelLoader(self.levels[level_id])
-            self.__map_data = self.__loader.get_map_data()
-            self.__map = Map(self.game, self.__map_data)
+            self.__map = Map(self.game, LevelLoader(self.levels[level_id]).data)
 
-        def keys(self) -> List[int]:
-            return [i for i in range(self.count)]
+        def keys(self) -> List[int]: return list(range(self.count))
 
         def read_levels(self) -> None:
             self.levels = get_list_path("json", "maps")
@@ -192,7 +189,9 @@ class Game:
         def prerender_surfaces(self):
             for level_id in range(self.count):
                 self.__load_from_map(level_id)
-                yield self.__map.prerender_map_image_scaled()
+                image = self.__map.prerender_map_image_scaled()
+                image.move(110, 96)
+                yield image
 
     __size = width, height = 224, 285
     __icon = pg.transform.scale(pg.image.load(get_path('ico', 'png', 'images', )), (256, 256))

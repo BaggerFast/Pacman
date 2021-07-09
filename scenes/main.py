@@ -49,17 +49,16 @@ class Scene(base.Scene):
         self.static_objects.append(self.__high_scores_label_text)
 
     def __load_from_map(self):
-        self.__loader = LevelLoader(self.game.maps.levels[self.game.maps.cur_id])
-        self.__map_data = self.__loader.get_map_data()
+        self.__loader = LevelLoader(self.game.maps.levels[self.game.maps.cur_id]).data
         self.__seed_data = self.__loader.get_seed_data()
-        self.__energizer_data = self.__loader.get_energizer_data()
+        self.__energizer_data = self.__loader.get_energizer_positions()
         self.__movements_data = self.__loader.get_movements_data()
         self.__player_position = self.__loader.get_player_position()
-        self.__ghost_positions = self.__loader.get_ghost_positions()
+        self.__ghost_positions = self.__loader.get_ghosts_positions()
         self.__fruit_position = self.__loader.get_fruit_position()
         self.slow_ghost_rect = self.__loader.get_slow_ghost_rect()
         self.cant_up_ghost_rect = self.__loader.get_cant_up_ghost_rect()
-        self.__map = Map(self.game, self.__map_data)
+        self.__map = Map(self.game, self.__loader)
 
     def __prepare_lives_meter(self) -> None:
         self.__hp_hud = []

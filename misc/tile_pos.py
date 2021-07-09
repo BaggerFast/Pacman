@@ -2,7 +2,7 @@ from .rotation import Rotation
 
 
 class TilePos:
-    def __init__(self, x: int, y: int): self.x, self.y = int(x), int(y)
+    def __init__(self, x: int, y: int): self.x, self.y = x, y
     def __repr__(self): return str((self.x, self.y))
     def __eq__(self, other): return self[0] == other[0] and self[1] == other[1]
 
@@ -50,6 +50,6 @@ class TilePos:
     def right(self, n: int = 1): return self.offset(Rotation.right, n)
 
     def iterator_to(self, other):
-        for y in range(min(self[1], other[1]), max(self[1], other[1]) + 1):
-            for x in range(min(self[0], other[0]), max(self[0], other[0]) + 1):
+        for y in range(min(self[1], other[1]), max(self[1], other[1])):
+            for x in range(min(self[0], other[0]), max(self[0], other[0])):
                 yield type(self)(x, y)

@@ -50,3 +50,7 @@ def create_file_if_not_exist(filepath: str, data: str = "") -> None:
         file = open(filepath, 'w')
         file.write(data)
         file.close()
+
+
+def get_type_from_name(filepath: str) -> str:
+    return filepath.rsplit(".", maxsplit=1)[1]

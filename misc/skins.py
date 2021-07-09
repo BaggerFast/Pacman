@@ -13,20 +13,20 @@ class Skins:
             self.name = skin_name
             self.skin_cost = {}
             self.__game = game
-            self.__walk = Animator(get_list_path('png', 'images', 'pacman', self.name, 'walk'))
-            self.__dead = Animator(get_list_path('png', 'images', 'pacman', self.name, 'dead'), 100, False, True)
-            self.__image = self.prerender_surface()
+            self.__walk: Animator = Animator(get_list_path('png', 'images', 'pacman', self.name, 'walk'))
+            self.__dead: Animator = Animator(get_list_path('png', 'images', 'pacman', self.name, 'dead'), 100, False, True)
+            self.__image: ImageObject = self.prerender_surface()
 
         @property
         def is_unlocked(self):
             return self.name in self.__game.unlocked_skins
 
         @property
-        def walk(self):
+        def walk(self) -> Animator:
             return copy(self.__walk)
 
         @property
-        def dead(self):
+        def dead(self) -> Animator:
             return copy(self.__dead)
 
         @property
@@ -59,7 +59,7 @@ class Skins:
         self.windows = None
         self.load_skins()
 
-        self.__current = self.default
+        self.__current: Skins.Skin = self.default
         self.__prerenders = self.prerender_surfaces()
 
     @property
@@ -88,7 +88,7 @@ class Skins:
         return [key for key in self.__dict__.keys() if not key.startswith("_")]
 
     @property
-    def current(self):
+    def current(self) -> Skin:
         return self.__current
 
     @current.setter

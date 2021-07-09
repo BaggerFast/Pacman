@@ -1,6 +1,7 @@
 import pygame as pg
 from PIL import ImageFilter, Image
-from objects import ButtonController
+from typing import List
+from objects import ButtonController, DrawableObject
 from objects.button import Button
 
 
@@ -14,7 +15,7 @@ class Scene:
         self.game = game
         self.prev_scene = None
         self.screen: pg.Surface = self.game.screen
-        self.objects: list = []
+        self.objects: List[DrawableObject] = []
         self.static_objects = []
         self.create_static_objects()
 
