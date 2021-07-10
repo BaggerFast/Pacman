@@ -8,6 +8,7 @@ from misc.sound_controller import SoundController
 from misc import Color, HighScore, get_path, Score, List, get_list_path, LevelLoader, Skins, Storage
 from objects import Map, Text
 from misc.constants.variables import *
+import os
 from scenes import *
 
 
@@ -183,7 +184,7 @@ class Game:
         def keys(self) -> List[int]: return list(range(self.count))
 
         def read_levels(self) -> None:
-            self.levels = get_list_path("json", "maps")
+            self.levels = os.listdir("maps")
             self.count = len(self.levels)
 
         def prerender_surfaces(self):

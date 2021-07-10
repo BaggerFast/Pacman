@@ -23,7 +23,10 @@ class BaseFromFileLoader:
         self.fruit_pos: TilePos = TilePos(0, 0)
         self.surface: pg.Surface = pg.Surface((self.size[0] * CELL_SIZE, self.size[1] * CELL_SIZE))
 
-    def __load(self): pass  # вот тут все и загружается
+        self.load()
+        self.clear_memory()
+
+    def load(self): raise NotImplementedError  # вот тут все и загружается
 
     def get_file_name(self) -> str: return self.filename
     def get_movements_data(self) -> List[List[int]]: return self.movements_data
@@ -35,4 +38,4 @@ class BaseFromFileLoader:
     def get_slow_ghost_rect(self) -> List[Tuple[int, int, int, int]]: return self.slow_ghost_rect
     def get_cant_up_ghost_rect(self) -> List[Tuple[int, int, int, int]]: return self.cant_up_ghost_rect
 
-    def __clear_memory(self): pass  # удаление лишних переменых, закрытие файлов
+    def clear_memory(self): pass  # удаление лишних переменых, закрытие файлов

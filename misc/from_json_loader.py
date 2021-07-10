@@ -24,16 +24,14 @@ class FromJsonLoader(BaseFromFileLoader):
         tiles.append(pg.image.load(get_path(name, 'png', 'images', 'map')))
 
     def __init__(self, filename: str):
-        super().__init__(filename)
         self.json: dict = {}
         self.map_data: List[List[Tuple[int, int]]] = \
             [[(0, 0) for _ in range(self.size[0])]for _ in range(self.size[1])]
         self.tile_data: List[pg.Surface] = []
         self.not_dots_rect: List[Tuple[int, int, int, int]] = []
-        self.__load()
-        self.__clear_memory()
+        super().__init__(filename)
 
-    def __load(self):
+    def load(self):
         self.__load_json()
         self.__load_player_position()
         self.__load_ghosts_position()
@@ -46,7 +44,6 @@ class FromJsonLoader(BaseFromFileLoader):
         self.__load_map_data()
         self.__create_seed_map()
         self.__render_map_surface()
-        self.__clear_memory()
 
     def __load_json(self):
         with open(os.path.join('maps', self.filename)) as f:
@@ -111,7 +108,7 @@ class FromJsonLoader(BaseFromFileLoader):
         for x, y in TilePos(0, 0).iterator_to(self.size):
             self.__draw_cell(x, y)
 
-    def __clear_memory(self):
+    def clear_memory(self):
         self.json = None
         self.map_data = None
         self.not_dots_rect = None
