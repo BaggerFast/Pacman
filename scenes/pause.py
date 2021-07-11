@@ -1,5 +1,5 @@
 import pygame as pg
-from objects import ButtonController, Text
+from objects import Text
 from scenes import base
 from misc import Font, LIGHT_BUTTON_COLORS
 from scenes.menu import rand_color
@@ -25,9 +25,9 @@ class Scene(base.Scene):
             )
 
     def create_title(self) -> None:
-        self.__main_text = Text(self.game, 'PAUSE', 40, font=Font.TITLE)
-        self.__main_text.move_center(self.game.width // 2, 35)
-        self.static_objects.append(self.__main_text)
+        main_text = Text(self.game, 'PAUSE', 40, font=Font.TITLE)
+        main_text.move_center(self.game.width // 2, 35)
+        self.static_objects.append(main_text)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:

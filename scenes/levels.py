@@ -20,19 +20,16 @@ class Scene(base.Scene):
         def select(self) -> None:
             self.game.scenes.current.is_current = True
             self.game.scenes.current.preview.image = self.value[1].image
-
             super().select()
 
         def deselect(self) -> None:
             if not self.game.scenes.current.is_current:
                 self.game.scenes.current.preview.image = self.game.maps.images[self.game.maps.cur_id].image
-
             super().deselect()
 
     __buttons_on_scene = 4
 
     def process_event(self, event: pg.event.Event) -> None:
-        self.is_current = False
         super().process_event(event)
 
     def create_static_objects(self):
@@ -48,13 +45,13 @@ class Scene(base.Scene):
     def button_init(self):
         for i in range(self.__scroll, self.__scroll + self.__buttons_on_scene):
             yield self.LvlButton(
-                    game=self.game,
-                    geometry=pg.Rect(0, 0, 100, 40),
-                    value=(i, self.game.maps.images[i]),
-                    text=f'LEVEL {i + 1}',
-                    center=(self.game.width // 2 - 55, (85 + 40 * (i - self.__scroll))),
-                    text_size=Font.BUTTON_TEXT_SIZE - 4,
-                    active=i in self.game.unlocked_levels)
+                game=self.game,
+                geometry=pg.Rect(0, 0, 100, 40),
+                value=(i, self.game.maps.images[i]),
+                text=f'LEVEL {i + 1}',
+                center=(self.game.width // 2 - 55, (85 + 40 * (i - self.__scroll))),
+                text_size=Font.BUTTON_TEXT_SIZE - 4,
+                active=i in self.game.unlocked_levels)
         yield self.SceneButton(
             game=self.game,
             geometry=pg.Rect(0, 0, 180, 40),
@@ -92,7 +89,7 @@ class Scene(base.Scene):
             self.scroll_threshold()
             self.create_objects()
         elif event.type == pg.KEYDOWN:
-            if not event.key in [pg.K_e, pg.K_q]:
+            if not (event.key in [pg.K_e, pg.K_q]):
                 return
             if event.key == pg.K_e:
                 self.__scroll += 1

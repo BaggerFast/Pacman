@@ -19,10 +19,10 @@ class Cheat:
 
 class ControlCheats:
     def __init__(self, game, cheat_codes) -> None:
-        self.cheats = [Cheat(game, cheat) for cheat in cheat_codes]
+        self.cheats: list[Cheat] = [Cheat(game, cheat) for cheat in cheat_codes]
         self.timer = pg.time.get_ticks()
-        self.enter_code = ''
-        self.old_enter_code = ''
+        self.enter_code: str = ''
+        self.old_enter_code: str = ''
 
     def update_timer(self) -> None:
         self.timer = pg.time.get_ticks()
@@ -42,6 +42,5 @@ class ControlCheats:
         pass
 
     def process_event(self, event) -> None:
-        if event.type == pg.KEYDOWN:
-            if event.key in range(pg.K_a, pg.K_z + 1):
-                self.enter_code += chr(event.key)
+        if event.type == pg.KEYDOWN and event.key in range(pg.K_a, pg.K_z + 1):
+            self.enter_code += chr(event.key)

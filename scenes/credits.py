@@ -44,11 +44,11 @@ class Scene(base.Scene):
             text_size=Font.BUTTON_TEXT_SIZE)
 
         yield Button(game=self.game,
-            geometry=pg.Rect(0, 0, 100, 35),
-            text="SKIP",
-            function=self.__skip_sound,
-            center=(self.game.width // 4 + 110, 250),
-            text_size=Font.BUTTON_TEXT_SIZE)
+                     geometry=pg.Rect(0, 0, 100, 35),
+                     text="SKIP",
+                     function=self.__skip_sound,
+                     center=(self.game.width // 4 + 110, 250),
+                     text_size=Font.BUTTON_TEXT_SIZE)
 
     def __get_random_student_y(self) -> int:
         return randint(25, self.game.height - 75)
@@ -65,8 +65,7 @@ class Scene(base.Scene):
             student.move_center(self.start_pos, randint(25, self.game.height - 75))
             is_student_y_correct = True
             for student2 in self.__students:
-                if abs(student.rect.centery - student2.rect.centery) <= \
-                    (student.rect.height + student2.rect.height) / 2:
+                if abs(student.rect.centery - student2.rect.centery) <= (student.rect.height + student2.rect.height)/2:
                     is_student_y_correct = False
                     break
             tries += 1

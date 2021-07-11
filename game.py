@@ -21,7 +21,6 @@ class Game:
             self.UNLOCK_LEVELS = UNLOCK_LEVELS
             self.INFINITY_LIVES = INFINITY_LIVES
             self.GHOSTS_COLLISION = GHOSTS_COLLISION
-            self.dict = self.__dict__
             self.game: Game = game
             self.cheat_storage = {
                 'UNLOCK_SKINS': lambda: self.unlock_skins(),
@@ -39,7 +38,8 @@ class Game:
                 self.game.scenes.current.create_objects()
 
         def update(self, key_code):
-            self.dict[key_code] = not self.dict[key_code]
+            if hasattr(self, key_code):
+                setattr(self, key_code, not getattr(self, key_code))
             if key_code in self.cheat_storage:
                 self.cheat_storage[key_code]()
 
@@ -49,6 +49,10 @@ class Game:
             self.FUN = storage.settings.FUN
             self.VOLUME = storage.settings.VOLUME
             self.DIFFICULTY = storage.settings.DIFFICULTY
+
+        def change_volume(self, num: int):
+            self.VOLUME = max(self.VOLUME + num, 0)
+            self.VOLUME = min(self.VOLUME, 100)
 
     class Music:
         class Ch:
@@ -61,7 +65,6 @@ class Game:
 
         def __init__(self, game):
             self.game = game
-            self.fun = self.game.settings.FUN
             self.reload_sounds()
 
         def base_preset(self):
@@ -108,8 +111,9 @@ class Game:
             self.pacman = SoundController(self.game, self.Ch.pacman, Sounds.VALVE_SOUNDS[6])
 
         def reload_sounds(self):
-            self.base_preset()
+            self.fun = self.game.settings.FUN
             self.preset_for_fun()
+            self.base_preset()
             storage = {
                 SkinsNames.pokeball: lambda: SoundController(self.game, self.Ch.intro, Sounds.POC_INTRO),
                 SkinsNames.windows: lambda: self.preset_for_windows(),
@@ -281,12 +285,6 @@ class Game:
     def draw_load_img(self, text=None):
         self.load_img_text = Text(self, text="Loading" if text is None else text, size=20)
         self.load_img_text.move_center(self.width // 2, self.height // 2)
-        self.load_img = pg.Surface((self.load_img_text.rect.size[0] * 2, self.load_img_text.rect.size[1] * 2)).convert_alpha()
-        self.load_img.fill(Color.BLACK)
-        self.load_img.set_alpha(150)
-        rect = self.load_img.get_rect()
-        rect.center = self.load_img_text.rect.center
-        self.screen.blit(self.load_img, rect)
         self.load_img_text.process_draw()
         pg.display.flip()
 

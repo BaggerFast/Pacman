@@ -24,7 +24,6 @@ class Scene(base.Scene):
         self.__seeds_eaten = 0
         self.__max_seeds_eaten_to_prefered_ghost = 7
         self.__work_ghost_counters = True
-        self.__first_run_ghost = True
         self.fruit = Fruit(self.game, self.__fruit_position)
         self.ghost_text_timer = pg.time.get_ticks()
         self.ghost_text_flag = False
@@ -32,7 +31,6 @@ class Scene(base.Scene):
 
     def __create_health(self):
         self.hp = Health(3, 4)
-        self.__hp_hud = []
         self.__prepare_lives_meter()
 
     def __create_static_text(self):
@@ -42,11 +40,10 @@ class Scene(base.Scene):
             rect=pg.Rect(10, 0, 20, 20)
         )
 
-        self.__high_scores_label_text = Text(
+        __high_scores_label_text = Text(
             self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)
         )
-        self.static_objects.append(self.__scores_label_text)
-        self.static_objects.append(self.__high_scores_label_text)
+        self.static_objects += [self.__scores_label_text, __high_scores_label_text]
 
     def __load_from_map(self):
         self.__loader = LevelLoader(self.game.maps.levels[self.game.maps.cur_id]).data
@@ -61,48 +58,47 @@ class Scene(base.Scene):
         self.__map = Map(self.game, self.__loader)
 
     def __prepare_lives_meter(self) -> None:
-        self.__hp_hud = []
-        for i in range(int(self.hp) - 1):
-            hp_image = ImageObject(self.game,
-                                   get_path('1', 'png', 'images', 'pacman', self.game.skins.current.name, 'walk'),
-                                   (5 + i * 20, 270))
-            hp_image.image = pg.transform.flip(hp_image.image, True, False)
-            self.__hp_hud.append(hp_image)
+        def creator():
+            for i in range(int(self.hp) - 1):
+                hp_image = ImageObject(self.game,
+                                       get_path('1', 'png', 'images', 'pacman', self.game.skins.current.name, 'walk'),
+                                       (5 + i * 20, 270))
+                hp_image.image = pg.transform.flip(hp_image.image, True, False)
+                yield hp_image
+
+        self.__hp_hud = list(creator())
 
     def __create_sounds(self):
         self.timer = 0
         self.intro_sound = self.game.sounds.intro
 
     def __create_start_anim(self):
-        self.text = ['READY', 'GO!']
-        for i in range(len(self.text)):
-            self.text[i] = Text(self.game, self.text[i], 30, font=Font.TITLE, rect=pg.Rect(20, 0, 20, 20))
-            self.text[i].move_center(self.game.width // 2, self.game.height // 2)
-            self.text[i].surface.set_alpha(0)
-            self.static_objects.append(self.text[i])
+        def creator():
+            for i in ['READY', 'GO!']:
+                text = Text(self.game, i, 30, font=Font.TITLE, rect=pg.Rect(20, 0, 20, 20))
+                text.move_center(self.game.width // 2, self.game.height // 2)
+                text.surface.set_alpha(0)
+                self.static_objects.append(text)
+                yield text
+        self.text = list(creator())
         self.state_text = 1
 
     def create_objects(self) -> None:
         self.objects = []
         self.game.sounds.siren.unpause()
-
-        self.hp_cheat = ControlCheats(self.game, [['aezakmi', self.add_hp]])
-        self.objects.append(self.hp_cheat)
-
-        self.text[len(self.text) - 1].surface.set_alpha(0)
+        hp_cheat = ControlCheats(self.game, [['aezakmi', self.add_hp]])
+        self.text[-1].surface.set_alpha(0)
         self.__create_map()
-        self.objects.append(self.fruit)
         self.__create_ghost()
         self.pacman = Pacman(self.game, self.__player_position)
-        self.objects.append(self.pacman)
+        self.objects += [hp_cheat, self.fruit, self.pacman]
 
     def add_hp(self):
         self.hp += 1
 
     def __create_map(self):
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
-        self.objects.append(self.__map)
-        self.objects.append(self.__seeds)
+        self.objects += [self.__map, self.__seeds]
 
     def set_difficult_easy(self):
         self.blinky = Blinky(self.game, self.__ghost_positions[3], 8000, 20000, 7000)
@@ -125,8 +121,8 @@ class Scene(base.Scene):
     def __create_ghost(self):
         data = {
             0: lambda: self.set_difficult_easy(),
-            1: lambda: self.set_difficult_easy(),
-            2: lambda: self.set_difficult_easy(),
+            1: lambda: self.set_difficult_medium(),
+            2: lambda: self.set_difficult_hard(),
         }
         if self.game.settings.DIFFICULTY in data:
             data[self.game.settings.DIFFICULTY]()
@@ -137,22 +133,17 @@ class Scene(base.Scene):
         self.__count_prefered_ghost = 0
 
         for ghost in self.ghosts:
-            self.objects.append(ghost)
-            self.objects.append(ghost.gg_text)
+            self.objects += [ghost, ghost.gg_text]
 
     def __create_hud(self):
-        self.__high_scores_value_text = Text(self.game,
-                                             str(self.game.records.data[-1]),
-                                             Font.MAIN_SCENE_SIZE,
+        __high_scores_value_text = Text(self.game, str(self.game.records.data[0]), Font.MAIN_SCENE_SIZE,
                                              rect=pg.Rect(130, 8, 20, 20))
-        self.static_objects.append(self.__high_scores_value_text)
-
         self.__scores_value_text = Text(
             self.game,
             f'{self.game.score} {"Mb" if self.game.skins.current.name == SkinsNames.chrome else self.game.score}',
-            Font.MAIN_SCENE_SIZE,
-            rect=pg.Rect(10, 8, 20, 20))
-        self.static_objects.append(self.__scores_value_text)
+            Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
+
+        self.static_objects += [self.__scores_value_text, __high_scores_value_text]
 
     @property
     def movements_data(self):
@@ -250,8 +241,7 @@ class Scene(base.Scene):
 
     def process_logic(self) -> None:
         if not self.game.sounds.intro.get_busy():
-            self.text[0].surface.set_alpha(0)
-            self.text[1].surface.set_alpha(0)
+            [tx.surface.set_alpha(0) for tx in self.text]
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1 \
                 and not self.game.sounds.pacman.get_busy():
                 self.template = self.screen.copy()
@@ -262,8 +252,7 @@ class Scene(base.Scene):
             self.__process_collision()
             if self.pacman.animator != self.pacman.dead_anim:
                 self.__check_ghosts()
-            self.text[0].surface.set_alpha(0)
-            self.text[1].surface.set_alpha(0)
+            [tx.surface.set_alpha(0) for tx in self.text]
             if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
                 self.create_objects()
                 self.__seeds_eaten = 0

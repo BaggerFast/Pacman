@@ -1,7 +1,6 @@
 import json
 import os
 from json import JSONDecodeError
-
 from misc import ROOT_DIR, create_file_if_not_exist, FRUITS_COUNT, HIGHSCORES_COUNT
 from misc.constants.skin_names import SkinsNames
 
@@ -45,7 +44,7 @@ class Storage(Field):
         self.unlocked_skins = [SkinsNames.default]
         self.settings = self.__Settings()
         self.eaten_fruits = [0]*FRUITS_COUNT
-        self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)]*game.maps.count]
+        self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(game.maps.count)]
         self.load()
 
     def save(self) -> None:

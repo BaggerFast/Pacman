@@ -12,7 +12,7 @@ class Scene(base.Scene):
         self.__create_highscore_text()
 
     def create_title(self) -> None:
-        for i, text in enumerate(['GAME', 'OVER'], 0):
+        for i, text in enumerate(['GAME', 'OVER']):
             text = Text(self.game, text, 40, font=Font.TITLE)
             text.move_center(self.game.width // 2, 30 + i * 40)
             self.static_objects.append(text)
@@ -34,15 +34,14 @@ class Scene(base.Scene):
             )
 
     def __create_score_text(self) -> None:
-        self.__text_score = Text(self.game, f'Score: {self.game.score}', 20)
-        self.__text_score.move_center(self.game.width // 2, 135)
-        self.objects.append(self.__text_score)
+        text_score = Text(self.game, f'Score: {self.game.score}', 20)
+        text_score.move_center(self.game.width // 2, 135)
+        self.objects.append(text_score)
 
     def __create_highscore_text(self) -> None:
-        self.__text_highscore = Text(self.game, f'High score: {self.game.records.data[-1]}'
-                                     if int(self.game.score) <= self.game.records.data[-1] else f'New record: {self.game.score}', 20)
-        self.__text_highscore.move_center(self.game.width // 2, 165)
-        self.objects.append(self.__text_highscore)
+        text_highscore = Text(self.game, f'High score: {self.game.records.data[0]}' if int(self.game.score) <= self.game.records.data[0] else f'New record: {self.game.score}', 20)
+        text_highscore.move_center(self.game.width // 2, 165)
+        self.objects.append(text_highscore)
 
     def __save_record(self) -> None:
         self.game.records.add_new_record(int(self.game.score))

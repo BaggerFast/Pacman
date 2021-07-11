@@ -1,6 +1,4 @@
-import os.path
 from typing import List
-
 from misc import HIGHSCORES_COUNT
 
 
@@ -21,7 +19,7 @@ class HighScore:
 
     @property
     def data(self):
-        return self.__data
+        return sorted(self.__data, reverse=True)
 
     @property
     def level_id(self):

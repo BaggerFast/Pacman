@@ -54,14 +54,6 @@ class Scene(base.Scene):
         self.__create_title()
 
     def create_objects(self) -> None:
-        self.skins = {
-            SkinsNames.default: self.game.skins.default,
-            SkinsNames.edge: self.game.skins.edge,
-            SkinsNames.pokeball: self.game.skins.pokeball,
-            SkinsNames.half_life: self.game.skins.half_life,
-            SkinsNames.windows: self.game.skins.windows,
-            SkinsNames.chrome: self.game.skins.chrome,
-        }
         self.objects = []
         self.preview = copy(self.game.skins.current.image)
         self.objects.append(self.preview)
@@ -70,30 +62,44 @@ class Scene(base.Scene):
         self.create_fruits_and_text_for_skins()
 
     def create_fruits_and_text_we_have(self) -> None:
-        for i, fruit_img in enumerate(self.fruit_images):
-            fruit = ImageObject(self.game, fruit_img, (self.game.width // 8 - 9 + i * 25, 60))
-            text = Text(self.game, str(self.game.eaten_fruits[i]), 10)
-            text.move_center(self.game.width // 8 - 10 + i * 25, 60)
-            self.objects += [text, fruit]
+        def creator():
+            for i, fruit_img in enumerate(self.fruit_images):
+                yield ImageObject(self.game, fruit_img, (self.game.width // 8 - 9 + i * 25, 60))
+                text = Text(self.game, str(self.game.eaten_fruits[i]), 10)
+                text.move_center(self.game.width // 8 - 10 + i * 25, 60)
+                yield text
+        self.objects += list(creator())
 
     def create_fruits_and_text_for_skins(self) -> None:
+        skins = {
+            SkinsNames.default: self.game.skins.default,
+            SkinsNames.edge: self.game.skins.edge,
+            SkinsNames.pokeball: self.game.skins.pokeball,
+            SkinsNames.half_life: self.game.skins.half_life,
+            SkinsNames.windows: self.game.skins.windows,
+            SkinsNames.chrome: self.game.skins.chrome,
+        }
+
+        def creator():
+            for index, (skin_name, skin) in enumerate(skins.items()):
+                multiply_x = 0
+                if skin.is_unlocked:
+                    continue
+                for i in skin.skin_cost:
+                    yield ImageObject(self.game, self.fruit_images[i], (
+                        pos_regarding_buttons_x + index_pos_x * multiply_x,
+                        pos_regarding_buttons_y + index_pos_y * index))
+                    text = Text(self.game, str(skin.skin_cost[i]), 10)
+                    text.move_center(pos_regarding_buttons_x + index_pos_x * multiply_x,
+                                     pos_regarding_buttons_y + index_pos_y * index)
+                    yield text
+                    multiply_x += 1
+
         index_pos_y = self.button_pos_multiply_y
         index_pos_x = 20
         pos_regarding_buttons_x = self.button_pos_x + 45
         pos_regarding_buttons_y = self.button_pos_y - 6
-        for index, (skin_name, skin) in enumerate(self.skins.items()):
-            multiply_x = 0
-            if skin.is_unlocked:
-                continue
-            for i in skin.skin_cost:
-                fruit = ImageObject(self.game, self.fruit_images[i], (
-                    pos_regarding_buttons_x + index_pos_x * multiply_x,
-                    pos_regarding_buttons_y + index_pos_y * index))
-                text = Text(self.game, str(skin.skin_cost[i]), 10)
-                text.move_center(pos_regarding_buttons_x + index_pos_x * multiply_x,
-                                 pos_regarding_buttons_y + index_pos_y * index)
-                self.objects += [fruit, text]
-                multiply_x += 1
+        self.objects += list(creator())
 
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT SKIN', 25, font=Font.TITLE)
