@@ -9,6 +9,10 @@ import os
 
 
 class FromImageLoader(BaseFromFileLoader):
+    pacman_image: Image.Image = Image.open("images/pacman/default/walk/0.png").convert('RGB')
+    energizer_image: Image.Image = Image.open("images/map/energizer.png").convert('RGB')
+    seed_image: Image.Image = Image.open("images/map/seed.png").convert('RGB')
+    fruit_image: Image.Image = Image.open("images/fruit/0.png").convert('RGB')
 
     def __init__(self, filename: str):
         self.image: Image.Image
@@ -34,10 +38,6 @@ class FromImageLoader(BaseFromFileLoader):
     def __load_images(self):
         self.image = Image.open(os.path.join('maps', self.filename)).convert('RGB')
         self.draw = ImageDraw.ImageDraw(self.image)
-        self.pacman_image = Image.open("images/pacman/default/walk/0.png").convert('RGB')
-        self.energizer_image = Image.open("images/map/energizer.png").convert('RGB')
-        self.seed_image = Image.open("images/map/seed.png").convert('RGB')
-        self.fruit_image = Image.open("images/fruit/0.png").convert('RGB')
 
     def find_pacman(self):
         for x, y in self.__iterator():
@@ -100,7 +100,7 @@ class FromImageLoader(BaseFromFileLoader):
         raise Exception("Призрак не найден")
 
     def clear_memory(self):
-        del self.draw, self.pacman_image, self.energizer_image, self.seed_image
+        del self.draw, self.image
 
     def __iterator(self) -> tuple:  # не придумал имя
         for y in range(0, self.size[1]*CELL_SIZE, CELL_SIZE):
