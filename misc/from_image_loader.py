@@ -2,7 +2,7 @@ from PIL import Image, ImageChops, ImageDraw
 from typing import List, Tuple
 from .base_from_file_loader import BaseFromFileLoader
 from .constants import CELL_SIZE
-from .tile_pos import TilePos
+from .vec import Vec
 from .rotation import Rotation
 import pygame
 import os
@@ -43,7 +43,7 @@ class FromImageLoader(BaseFromFileLoader):
         for x, y in self.__iterator():
             diff = ImageChops.difference(self.image.crop((x + 1, y + 6, x + 13 + 1, y + 13 + 6)), self.pacman_image)
             if len(diff.getcolors()) == 1:
-                self.player_pos = TilePos(x/CELL_SIZE+0.5, y//CELL_SIZE+1)
+                self.player_pos = Vec(x / CELL_SIZE + 0.5, y // CELL_SIZE + 1)
                 self.draw.rectangle((x + 1, y + 6, x + 13 + 1 - 1, y + 13 + 6 - 1), (0, 0, 0))
                 return
         raise Exception("Пакмен не найден")
@@ -55,7 +55,7 @@ class FromImageLoader(BaseFromFileLoader):
                 self.energizer_image
             )
             if len(diff.getcolors()) == 1:
-                self.energizers_pos.append(TilePos(x//CELL_SIZE, y//CELL_SIZE))
+                self.energizers_pos.append(Vec(x // CELL_SIZE, y // CELL_SIZE))
                 self.draw.rectangle((x, y, x + CELL_SIZE-1, y + CELL_SIZE-1), (0, 0, 0))
 
     def find_seeds(self):
@@ -76,11 +76,11 @@ class FromImageLoader(BaseFromFileLoader):
                 # self.draw.rectangle((x, y, x + CELL_SIZE-1, y + CELL_SIZE-1), (0, 255, 0))
 
     def compile_movements_data(self):
-        for pos in TilePos(0, 0).iterator_to(self.size):
+        for pos in Vec(0, 0).iterator_to(self.size):
             tile = 0
             if self.movements_data[pos.y][pos.x]:
                 for rot in reversed(Rotation):
-                    pos2: TilePos = pos.offset(rot)
+                    pos2: Vec = pos.offset(rot)
                     tile *= 2
                     tile += bool(self.movements_data[pos2.y % self.size[1]][pos2.x % self.size[0]])
             self.movements_data[pos.y][pos.x] = tile
@@ -91,12 +91,12 @@ class FromImageLoader(BaseFromFileLoader):
         self.ghosts_pos.append(self.find_ghost(Image.open("images/ghost/clyde/top/0.png").convert('RGB')))
         self.ghosts_pos.append(self.find_ghost(Image.open("images/ghost/blinky/top/0.png").convert('RGB')))
 
-    def find_ghost(self, image) -> TilePos:
+    def find_ghost(self, image) -> Vec:
         for x, y in self.__iterator():
             diff = ImageChops.difference(self.image.crop((x + 1, y + 6, x + 14 + 1, y + 14 + 6)), image)
             if len(diff.getcolors()) == 1:
                 self.draw.rectangle((x + 1, y + 6, x + 14 + 1 - 1, y + 14 + 6 - 1), (0, 0, 0))
-                return TilePos(x//CELL_SIZE+0.5, y//CELL_SIZE+1)
+                return Vec(x // CELL_SIZE + 0.5, y // CELL_SIZE + 1)
         raise Exception("Призрак не найден")
 
     def clear_memory(self):
@@ -114,7 +114,7 @@ class FromImageLoader(BaseFromFileLoader):
         for x, y in self.__iterator():
             diff = ImageChops.difference(self.image.crop((x + 2, y + 6, x + 12 + 2, y + 12 + 6)), self.fruit_image)
             if len(diff.getcolors()) == 1:
-                self.fruit_pos = TilePos(x/CELL_SIZE+0.5, y//CELL_SIZE+1)
+                self.fruit_pos = Vec(x / CELL_SIZE + 0.5, y // CELL_SIZE + 1)
                 self.draw.rectangle((x + 2, y + 6, x + 12 + 2 - 1, y + 12 + 6 - 1), (0, 0, 0))
                 return
         raise Exception("Фрукт не найден")

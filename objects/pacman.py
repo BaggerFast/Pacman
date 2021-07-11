@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import get_path, TilePos, Rotation, Animator
+from misc import get_path, vec, Rotation, Animator
 from .character_base import Character
 
 from typing import Tuple, Union
@@ -13,7 +13,7 @@ class Pacman(Character):
         pg.K_d: Rotation.right
     }
 
-    def __init__(self, game, start_pos: Union[Tuple[int, int], TilePos]) -> None:
+    def __init__(self, game, start_pos: Union[Tuple[int, int], vec]) -> None:
         self.__walk_anim: Animator = game.skins.current.walk
         self.__dead_anim: Animator = game.skins.current.dead
         super().__init__(game, self.__walk_anim, start_pos, get_path('aura', 'png', 'images', 'pacman', game.skins.current.name))

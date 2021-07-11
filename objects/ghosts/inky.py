@@ -1,6 +1,6 @@
 from typing import Tuple
 from .base import Base
-from misc import Rotation, TilePos
+from misc import Rotation, vec
 from objects.character_base import Character
 import pygame as pg
 
@@ -38,7 +38,7 @@ class Inky(Base):
                 self.update_ai_timer()
                 self.mode = 'Chase'
         if self.mode == 'Chase':
-            pinky_love_cell: TilePos = pacman.cell.offset(pacman.rotate, 2)
+            pinky_love_cell: vec = pacman.cell.offset(pacman.rotate, 2)
             self.love_cell = pinky_love_cell - (blinky.cell - pinky_love_cell)
             if pg.time.get_ticks() - self.ai_timer >= self.chase_time:
                 self.update_ai_timer()
