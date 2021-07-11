@@ -2,10 +2,11 @@ from threading import Thread
 import pygame as pg
 from typing import NamedTuple, List
 from misc.path import get_path, get_list_path
+from pygame import mixer
 
 
 class Sounds:
-    __loading_text: str
+    __loading_text: str = ''
     __game = None
     __counter = 0
     __count = 32
@@ -55,9 +56,7 @@ class Sounds:
         }
         Sounds.__game = game
         Sounds.__loading_text = loading_text
-        threads = [Thread(target=Sounds.load, args=(key, attr)) for key, attr in func.items()]
-        [thread.start() for thread in threads]
-        [thread.join() for thread in threads]
+        [Sounds.load(key, attr) for key, attr in func.items()]
 
         for path in get_list_path('ogg', 'sounds', 'credits'):
             Sounds.loading()

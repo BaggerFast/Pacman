@@ -49,6 +49,14 @@ class Scene(base.Scene):
             self.game.scenes.current.create_objects()
 
     def create_static_objects(self) -> None:
+        self.skins = {
+            SkinsNames.default: self.game.skins.default,
+            SkinsNames.edge: self.game.skins.edge,
+            SkinsNames.pokeball: self.game.skins.pokeball,
+            SkinsNames.half_life: self.game.skins.half_life,
+            SkinsNames.windows: self.game.skins.windows,
+            SkinsNames.chrome: self.game.skins.chrome,
+        }
         self.is_current = False
         self.fruit_images: list = get_list_path('png', 'images', 'fruit')
         self.__create_title()
@@ -71,17 +79,9 @@ class Scene(base.Scene):
         self.objects += list(creator())
 
     def create_fruits_and_text_for_skins(self) -> None:
-        skins = {
-            SkinsNames.default: self.game.skins.default,
-            SkinsNames.edge: self.game.skins.edge,
-            SkinsNames.pokeball: self.game.skins.pokeball,
-            SkinsNames.half_life: self.game.skins.half_life,
-            SkinsNames.windows: self.game.skins.windows,
-            SkinsNames.chrome: self.game.skins.chrome,
-        }
 
         def creator():
-            for index, (skin_name, skin) in enumerate(skins.items()):
+            for index, (skin_name, skin) in enumerate(self.skins.items()):
                 multiply_x = 0
                 if skin.is_unlocked:
                     continue

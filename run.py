@@ -6,6 +6,7 @@ from game import Game
 from misc import DEBUG
 
 
+
 def main():
     pg.display.init()
     pg.font.init()
@@ -19,7 +20,6 @@ def main():
         if not DEBUG:
             with open(f"exception-{datetime.now().strftime('%m-%d-%Y-%H-%M-%S')}.log", "w") as file:
                 file.write(traceback.format_exc())
-
 
 
 if __name__ == '__main__':
