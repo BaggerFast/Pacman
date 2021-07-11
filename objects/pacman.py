@@ -1,5 +1,5 @@
 import pygame as pg
-from misc.path import get_path
+from misc import get_path, EvenType
 from objects.character_base import Character
 
 from typing import Tuple
@@ -45,7 +45,7 @@ class Pacman(Character):
 
     def death(self) -> None:
         if not self.game.cheats_var.INFINITY_LIVES:
-            self.game.current_scene.hp -= 1
+            pg.event.post(pg.event.Event(EvenType.HealthInc))
         self.animator = self.__dead_anim
         self.game.sounds.siren.pause()
         self.game.sounds.pellet.stop()

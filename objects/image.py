@@ -15,7 +15,7 @@ class ImageObject(DrawableObject):
             self.image = image
 
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = pos
+        self.rect.topleft = pos
 
     def scale(self, x, y) -> None:
         self.image = pg.transform.scale(self.image, (x, y))
