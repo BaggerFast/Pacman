@@ -9,6 +9,12 @@ from scenes import base
 
 
 class Scene(base.Scene):
+
+    blinky: Blinky
+    pinky: Pinky
+    inky: Inky
+    clyde: Clyde
+
     def create_static_objects(self):
         self.__load_from_map()
         self.__create_sounds()
