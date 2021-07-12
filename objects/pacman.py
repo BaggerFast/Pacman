@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import get_path, EvenType, Animator
+from misc import Animator
 from objects.character_base import Character
 
 from typing import Tuple
@@ -16,7 +16,6 @@ class Pacman(Character):
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
         self.__walk_anim: Animator = game.skins.current.walk
         self.__dead_anim: Animator = game.skins.current.dead
-        self.__dead_anim.end_function = lambda: pg.event.post(pg.event.Event(EvenType.HealthDec))
         super().__init__(game, self.__walk_anim, start_pos)  # , get_path('aura', 'png', 'images', 'pacman', game.skins.current.name))
         self.dead = False
         self.__feature_rotate = "none"
@@ -39,8 +38,7 @@ class Pacman(Character):
                 else:
                     self.stop()
                     self.animator.change_cur_image(0)
-                c = self.direction[self.__feature_rotate][2]
-                if self.move_to(c):
+                if self.move_to(self.direction[self.__feature_rotate][2]):
                     self.set_direction(self.__feature_rotate)
             super().process_logic()
 

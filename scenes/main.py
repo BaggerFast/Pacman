@@ -1,12 +1,11 @@
 import pygame as pg
-import pygame.event
-
 from misc import ControlCheats
 from misc import LevelLoader, Font, EvenType
 from misc.constants.skin_names import SkinsNames
 from objects import SeedContainer, Map, Text, Pacman, Health
 from objects.fruits import Fruit
 from objects.ghosts import *
+from objects.score import Score
 from scenes import base
 
 
@@ -23,6 +22,7 @@ class Scene(base.Scene):
         self.__create_static_text()
         self.__create_start_anim()
         self.hp = Health(self.game, 3)
+        self.score = Score(self.game)
         self.__create_hud()
         self.__pre_init()
         self.create_objects()
@@ -82,13 +82,13 @@ class Scene(base.Scene):
         self.game.sounds.siren.unpause()
         hp_cheat = ControlCheats(
             self.game,
-            [['aezakmi', lambda: pygame.event.post(pygame.event.Event(EvenType.HealthInc))]]
+            [['aezakmi', lambda: pg.event.post(pg.event.Event(EvenType.HealthInc))]]
         )
         self.text[-1].surface.set_alpha(0)
         self.__create_map()
         self.__create_ghost()
         self.pacman = Pacman(self.game, self.__player_position)
-        self.objects += [hp_cheat, self.fruit, self.pacman, self.hp]
+        self.objects += [hp_cheat, self.fruit, self.pacman, self.hp, self.score]
 
     def __create_map(self):
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
@@ -132,12 +132,7 @@ class Scene(base.Scene):
     def __create_hud(self):
         __high_scores_value_text = Text(self.game, str(self.game.records.data[0]), Font.MAIN_SCENE_SIZE,
                                              rect=pg.Rect(130, 8, 20, 20))
-        self.__scores_value_text = Text(
-            self.game,
-            f'{self.game.score} {"Mb" if self.game.skins.current.name == SkinsNames.chrome else self.game.score}',
-            Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
-
-        self.static_objects += [self.__scores_value_text, __high_scores_value_text]
+        self.static_objects += [__high_scores_value_text]
 
     @property
     def movements_data(self):
@@ -169,31 +164,25 @@ class Scene(base.Scene):
 
     def __process_collision(self) -> None:
         self.fruit.process_collision(self.pacman)
-        seed_eaten = self.__seeds.process_collision(self.pacman)
+        self.__seeds.process_collision(self.pacman)
         for ghost in self.ghosts:
             if not ghost.collision_check(self.pacman)[0]:
                 continue
             if ghost.collision_check(self.pacman)[1]:
                 self.__timer_reset_pacman = pg.time.get_ticks()
                 if not self.pacman.dead:
+                    pg.event.post(pg.event.Event(EvenType.HealthDec))
                     self.pacman.death()
                 for ghost2 in self.ghosts:
                     ghost2.invisible()
             else:
                 if ghost.mode == 'Frightened':
-                    ghost.gg_text.text = f'{200 * self.game.difficulty ** 2 * 2 ** self.game.score.fear_count}'
+                    ghost.gg_text.text = f'{200 * self.game.difficulty ** 2 * 2 ** self.score.fear_count}'
                     ghost.invisible()
-                    self.game.score.eat_ghost()
+                    pg.event.post(pg.event.Event(EvenType.EatGhost))
                     self.ghost_text_flag = True
                     self.ghost_text_timer = pg.time.get_ticks()
                 ghost.toggle_mode_to_eaten()
-
-        data = {
-            1: lambda: self.eat_seed(),
-            2: lambda: self.eat_super_seed(),
-        }
-        if seed_eaten in data:
-            data[seed_eaten]()
 
     def eat_seed(self):
         if self.__prefered_ghost is not None and self.__work_ghost_counters:
@@ -204,7 +193,7 @@ class Scene(base.Scene):
             self.__prefered_ghost.update_timer()
 
     def eat_super_seed(self):
-        self.game.score.activate_fear_mode()
+        self.score.activate_fear_mode()
         for ghost in self.ghosts:
             ghost.toggle_mode_to_frightened()
 
@@ -285,9 +274,9 @@ class Scene(base.Scene):
 
     def additional_logic(self) -> None:
         self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"
-        self.__scores_value_text.text = str(
-            self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(
-            self.game.score)
+        # self.__scores_value_text.text = str(
+        #     self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(
+        #     self.game.score)
 
     def on_activate(self) -> None:
         self.is_active = True
@@ -311,7 +300,7 @@ class Scene(base.Scene):
         pg.mixer.stop()
         self.game.timer = pg.time.get_ticks() // 1000
         self.game.sounds.reload_sounds()
-        self.game.score.reset()
+        self.score.reset()
         self.game.scenes.MAIN.recreate()
         self.game.sounds.intro.play()
 

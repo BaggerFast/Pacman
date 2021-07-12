@@ -59,7 +59,7 @@ class SeedContainer(DrawableObject):
         self.__draw_seeds()
         self.__draw_energizers()
 
-    def process_collision(self, obj: DrawableObject) -> int:
+    def process_collision(self, obj: DrawableObject):
         """
         :param obj: any class with pygame.rect
         :return: is objects in collision (bool) and self type (str)
@@ -74,15 +74,14 @@ class SeedContainer(DrawableObject):
                         self.__seeds[row][col] = None
                         if not self.game.sounds.seed.get_busy():
                             self.game.sounds.seed.play()
-                        self.game.score.eat_seed()
                         self.__seeds_on_field -= 1
-                        return 1
+                        pg.event.post(pg.event.Event(EvenType.EatSeed))
+                        return
         for energizer in self.__energizers:
             if energizer[1] * CELL_SIZE + 18 == obj.rect.y:
                 if energizer[0] * CELL_SIZE - 2 == obj.rect.x:
                     self.__energizers.remove(energizer)
-                    self.game.score.eat_energizer()
-                    return 2
+                    pg.event.post(pg.event.Event(EvenType.EatEnergizer))
 
     def is_field_empty(self) -> bool:
         return self.__seeds_on_field == (self.__max_seeds - 10 if HIGH_CALORIE_SEEDS else 0)
