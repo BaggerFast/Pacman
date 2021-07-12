@@ -256,10 +256,7 @@ class Scene(base.Scene):
                     self.__max_seeds_eaten_to_prefered_ghost = 17
                 elif self.__max_seeds_eaten_to_prefered_ghost == 17:
                     self.__max_seeds_eaten_to_prefered_ghost = 32
-            if self.__seeds.is_field_empty():
-                self.template = self.screen.copy()
-                self.game.timer = pg.time.get_ticks() / 1000
-                self.game.scenes.ENDGAME()
+
         else:
             self.__start_label()
             for ghost in self.ghosts:
