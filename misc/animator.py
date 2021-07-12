@@ -1,15 +1,17 @@
+from typing import List
+
 import pygame as pg
 
 
 class Animator:
     __time_out = 50
 
-    def __init__(self, path_to_images: list[str], time_out: int = 50, is_rotation: bool = True, repeat: bool = False,
-                 aura: str = None):
+    def __init__(self, path_to_images: List[str], time_out: int = 50, is_rotation: bool = True, repeat: bool = False,
+                 aura: str = None, end_function=(lambda: None)):
         self.is_rotation = is_rotation
         self.__animate_timer = 0
         self.__time_out = time_out
-        self.__images: list[pg.image] = self.__add_image(path_to_images)
+        self.__images: List[pg.Surface] = self.__add_image(path_to_images)
         self.__current_image_index: int = 0
         self.__current_image = self.__images[self.__current_image_index]
         self.__current_aura = pg.image.load(aura) if aura else aura
@@ -17,6 +19,7 @@ class Animator:
         self.__repeat: bool = repeat
         self.anim_finished: bool = False
         self.run: bool = False
+        self.end_function = end_function
 
     @property
     def current_image(self):
@@ -26,7 +29,7 @@ class Animator:
     def current_aura(self):
         return self.__current_aura
 
-    def __add_image(self, path_to_images: list) -> list[pg.image]:
+    def __add_image(self, path_to_images: list) -> List[pg.Surface]:
         return [pg.image.load(path_image) for path_image in path_to_images]
 
     def get_len_anim(self) -> int:
@@ -60,6 +63,7 @@ class Animator:
             if self.__repeat:
                 self.stop()
                 self.anim_finished = True
+                self.end_function()
                 return
         self.__current_image = self.__images[self.__current_image_index]
         if self.is_rotation:

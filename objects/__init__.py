@@ -7,3 +7,4 @@ from .seed import SeedContainer
 from .text import Text
 from .button import *
 from .ghosts import *
+from .health import Health

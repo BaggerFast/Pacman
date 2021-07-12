@@ -1,5 +1,7 @@
 import pygame as pg
-from misc import CELL_SIZE, Color, get_path, HIGH_CALORIE_SEEDS
+import pygame.event
+
+from misc import CELL_SIZE, Color, get_path, HIGH_CALORIE_SEEDS, EvenType
 from misc.constants.skin_names import SkinsNames
 from objects import DrawableObject
 
@@ -57,15 +59,18 @@ class SeedContainer(DrawableObject):
         self.__draw_seeds()
         self.__draw_energizers()
 
-    def process_collision(self, object) -> int:
+    def process_collision(self, obj: DrawableObject) -> int:
         """
-        :param object: any class with pygame.rect
+        :param obj: any class with pygame.rect
         :return: is objects in collision (bool) and self type (str)
         """
+        if self.is_field_empty():
+            pg.event.post(pg.event.Event(EvenType.Win))
+
         for row in range(len(self.__seeds)):
             for col in range(len(self.__seeds[row])):
-                if self.__seeds[row][col] and row * CELL_SIZE + 18 == object.rect.y:
-                    if col * CELL_SIZE - 2 == object.rect.x:
+                if self.__seeds[row][col] and row * CELL_SIZE + 18 == obj.rect.y:
+                    if col * CELL_SIZE - 2 == obj.rect.x:
                         self.__seeds[row][col] = None
                         if not self.game.sounds.seed.get_busy():
                             self.game.sounds.seed.play()
@@ -73,8 +78,8 @@ class SeedContainer(DrawableObject):
                         self.__seeds_on_field -= 1
                         return 1
         for energizer in self.__energizers:
-            if energizer[1] * CELL_SIZE + 18 == object.rect.y:
-                if energizer[0] * CELL_SIZE - 2 == object.rect.x:
+            if energizer[1] * CELL_SIZE + 18 == obj.rect.y:
+                if energizer[0] * CELL_SIZE - 2 == obj.rect.x:
                     self.__energizers.remove(energizer)
                     self.game.score.eat_energizer()
                     return 2

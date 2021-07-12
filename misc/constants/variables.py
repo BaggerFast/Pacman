@@ -10,5 +10,5 @@ HIGH_CALORIE_SEEDS: bool = False
 UNLOCK_SKINS: bool = False
 UNLOCK_LEVELS: bool = False
 INFINITY_LIVES: bool = False
-GHOSTS_MOVING: bool = False
+GHOSTS_MOVING: bool = True
 GHOSTS_COLLISION: bool = False

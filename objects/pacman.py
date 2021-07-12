@@ -1,5 +1,5 @@
 import pygame as pg
-from misc.path import get_path
+from misc import get_path, EvenType, Animator
 from objects.character_base import Character
 
 from typing import Tuple
@@ -14,9 +14,10 @@ class Pacman(Character):
     }
 
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
-        self.__walk_anim = game.skins.current.walk
-        self.__dead_anim = game.skins.current.dead
-        super().__init__(game, self.__walk_anim, start_pos, get_path('aura', 'png', 'images', 'pacman', game.skins.current.name))
+        self.__walk_anim: Animator = game.skins.current.walk
+        self.__dead_anim: Animator = game.skins.current.dead
+        self.__dead_anim.end_function = lambda: pg.event.post(pg.event.Event(EvenType.HealthDec))
+        super().__init__(game, self.__walk_anim, start_pos)  # , get_path('aura', 'png', 'images', 'pacman', game.skins.current.name))
         self.dead = False
         self.__feature_rotate = "none"
 
@@ -44,8 +45,6 @@ class Pacman(Character):
             super().process_logic()
 
     def death(self) -> None:
-        if not self.game.cheats_var.INFINITY_LIVES:
-            self.game.current_scene.hp -= 1
         self.animator = self.__dead_anim
         self.game.sounds.siren.pause()
         self.game.sounds.pellet.stop()

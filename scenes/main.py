@@ -1,8 +1,10 @@
 import pygame as pg
+import pygame.event
+
 from misc import ControlCheats
-from misc import LevelLoader, Font, get_path, Health
+from misc import LevelLoader, Font, EvenType
 from misc.constants.skin_names import SkinsNames
-from objects import SeedContainer, Map, ImageObject, Text, Pacman
+from objects import SeedContainer, Map, Text, Pacman, Health
 from objects.fruits import Fruit
 from objects.ghosts import *
 from scenes import base
@@ -20,8 +22,8 @@ class Scene(base.Scene):
         self.__create_sounds()
         self.__create_static_text()
         self.__create_start_anim()
+        self.hp = Health(self.game, 3)
         self.__create_hud()
-        self.__create_health()
         self.__pre_init()
         self.create_objects()
 
@@ -34,10 +36,6 @@ class Scene(base.Scene):
         self.ghost_text_timer = pg.time.get_ticks()
         self.ghost_text_flag = False
         self.is_active = False
-
-    def __create_health(self):
-        self.hp = Health(3, 4)
-        self.__prepare_lives_meter()
 
     def __create_static_text(self):
         self.__scores_label_text = Text(
@@ -64,17 +62,6 @@ class Scene(base.Scene):
         self.cant_up_ghost_rect = self.__loader.get_cant_up_ghost_rect()
         self.__map = Map(self.game, self.__map_data)
 
-    def __prepare_lives_meter(self) -> None:
-        def creator():
-            for i in range(int(self.hp) - 1):
-                hp_image = ImageObject(self.game,
-                                       get_path('1', 'png', 'images', 'pacman', self.game.skins.current.name, 'walk'),
-                                       (5 + i * 20, 270))
-                hp_image.image = pg.transform.flip(hp_image.image, True, False)
-                yield hp_image
-
-        self.__hp_hud = list(creator())
-
     def __create_sounds(self):
         self.timer = 0
         self.intro_sound = self.game.sounds.intro
@@ -93,15 +80,15 @@ class Scene(base.Scene):
     def create_objects(self) -> None:
         self.objects = []
         self.game.sounds.siren.unpause()
-        hp_cheat = ControlCheats(self.game, [['aezakmi', self.add_hp]])
+        hp_cheat = ControlCheats(
+            self.game,
+            [['aezakmi', lambda: pygame.event.post(pygame.event.Event(EvenType.HealthInc))]]
+        )
         self.text[-1].surface.set_alpha(0)
         self.__create_map()
         self.__create_ghost()
         self.pacman = Pacman(self.game, self.__player_position)
-        self.objects += [hp_cheat, self.fruit, self.pacman]
-
-    def add_hp(self):
-        self.hp += 1
+        self.objects += [hp_cheat, self.fruit, self.pacman, self.hp]
 
     def __create_map(self):
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
@@ -162,6 +149,14 @@ class Scene(base.Scene):
             self.template = self.screen.copy()
             self.game.timer = pg.time.get_ticks() / 1000
             self.game.scenes.PAUSE()
+        elif event.type == EvenType.GameOver:
+            self.template = self.screen.copy()
+            self.game.timer = pg.time.get_ticks() / 1000
+            self.game.scenes.set(self.game.scenes.GAMEOVER)
+        elif event.type == EvenType.Win:
+            self.template = self.screen.copy()
+            self.game.timer = pg.time.get_ticks() / 1000
+            self.game.scenes.ENDGAME()
 
     def __change_prefered_ghost(self) -> None:
         self.__count_prefered_ghost += 1
@@ -182,7 +177,6 @@ class Scene(base.Scene):
                 self.__timer_reset_pacman = pg.time.get_ticks()
                 if not self.pacman.dead:
                     self.pacman.death()
-                    self.__prepare_lives_meter()
                 for ghost2 in self.ghosts:
                     ghost2.invisible()
             else:
@@ -249,11 +243,6 @@ class Scene(base.Scene):
     def process_logic(self) -> None:
         if not self.game.sounds.intro.get_busy():
             [tx.surface.set_alpha(0) for tx in self.text]
-            if self.pacman.dead_anim.anim_finished and int(self.hp) < 1 \
-                and not self.game.sounds.pacman.get_busy():
-                self.template = self.screen.copy()
-                self.game.timer = pg.time.get_ticks() / 1000
-                self.game.scenes.set(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
             self.__process_collision()
@@ -273,10 +262,7 @@ class Scene(base.Scene):
                     self.__max_seeds_eaten_to_prefered_ghost = 17
                 elif self.__max_seeds_eaten_to_prefered_ghost == 17:
                     self.__max_seeds_eaten_to_prefered_ghost = 32
-            if self.__seeds.is_field_empty():
-                self.template = self.screen.copy()
-                self.game.timer = pg.time.get_ticks() / 1000
-                self.game.scenes.ENDGAME()
+
         else:
             self.__start_label()
             for ghost in self.ghosts:
@@ -297,17 +283,11 @@ class Scene(base.Scene):
                 ghost.gg_text.text = ' '
             self.ghost_text_flag = False
 
-    def additional_draw(self) -> None:
-        super().additional_draw()
-        for hp in self.__hp_hud:
-            hp.process_draw()
-
     def additional_logic(self) -> None:
         self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"
         self.__scores_value_text.text = str(
             self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(
             self.game.score)
-        self.__prepare_lives_meter()
 
     def on_activate(self) -> None:
         self.is_active = True
