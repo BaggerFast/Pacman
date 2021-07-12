@@ -1,7 +1,7 @@
 from typing import List, Tuple
 from .base_from_file_loader import BaseFromFileLoader
 from .constants import CELL_SIZE
-from .tile_pos import vec
+from .vec import Vec
 from .rotation import Rotation
 from .path import get_path
 import json
@@ -49,10 +49,10 @@ class FromJsonLoader(BaseFromFileLoader):
         with open(os.path.join('maps', self.filename)) as f:
             self.json = json.load(f)
 
-    def __load_player_position(self): self.player_pos = vec(*self.json["player_pos"])
-    def __load_ghosts_position(self): self.ghosts_pos = [vec(*pos) for pos in self.json["ghosts_pos"]]
-    def __load_fruit_position(self): self.fruit_pos = vec(*self.json["fruit_pos"])
-    def __load_energizers_position(self): self.energizers_pos = [vec(*pos) for pos in self.json["big_dots_pos"]]
+    def __load_player_position(self): self.player_pos = Vec(*self.json["player_pos"])
+    def __load_ghosts_position(self): self.ghosts_pos = [Vec(*pos) for pos in self.json["ghosts_pos"]]
+    def __load_fruit_position(self): self.fruit_pos = Vec(*self.json["fruit_pos"])
+    def __load_energizers_position(self): self.energizers_pos = [Vec(*pos) for pos in self.json["big_dots_pos"]]
     def __load_not_dots_rect(self): self.not_dots_rect = [tuple(rect) for rect in self.json["not_dots_rect"]]
     def __load_slow_ghost_rect(self): self.slow_ghost_rect = [tuple(rect) for rect in self.json["slow_ghost_rect"]]
 
@@ -75,7 +75,7 @@ class FromJsonLoader(BaseFromFileLoader):
                 self.seed_data[y][x] = False
 
         for rect in self.not_dots_rect:
-            for x, y in (vec(rect[2], rect[3]) + (1, 1)).iterator_to((rect[0], rect[1])):
+            for x, y in (Vec(rect[2], rect[3]) + (1, 1)).iterator_to((rect[0], rect[1])):
                 self.seed_data[y][x] = False
 
         self.seed_data[int(self.player_pos[1])][int(self.player_pos[0])] = False
@@ -105,7 +105,7 @@ class FromJsonLoader(BaseFromFileLoader):
         self.surface.blit(temp_surface, (x * CELL_SIZE, y * CELL_SIZE))
 
     def __render_map_surface(self):
-        for x, y in vec(0, 0).iterator_to(self.size):
+        for x, y in Vec(0, 0).iterator_to(self.size):
             self.__draw_cell(x, y)
 
     def clear_memory(self):

@@ -8,6 +8,6 @@ from .score import Score
 from .cheat_codes import ControlCheats
 from .storage import Storage
 from .rotation import Rotation
-from .tile_pos import vec
+from .vec import Vec
 from .base_from_file_loader import BaseFromFileLoader
 from .skins import Skins

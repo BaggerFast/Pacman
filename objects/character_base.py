@@ -1,11 +1,11 @@
 import pygame as pg
-from misc import CELL_SIZE, Animator, vec, Rotation
+from misc import CELL_SIZE, Animator, Vec, Rotation
 from objects import DrawableObject
 from typing import Tuple, List, Union
 
 
 class Character(DrawableObject):
-    def __init__(self, game, animator: Animator, start_pos: Union[Tuple[int, int], vec], aura: str = None):
+    def __init__(self, game, animator: Animator, start_pos: Union[Tuple[int, int], Vec], aura: str = None):
         super().__init__(game)
         self.__aura = pg.image.load(aura) if aura else aura
         self.animator: Animator = animator
@@ -55,7 +55,7 @@ class Character(DrawableObject):
                 self.game.screen.blit(self.__aura, self.__aura.get_rect(center=self.rect.center))
             self.game.screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
 
-    def movement_cell(self, cell: Union[Tuple[int, int], vec]) -> List:
+    def movement_cell(self, cell: Union[Tuple[int, int], Vec]) -> List:
         scene = self.game.current_scene
         cell = scene.movements_data[cell[1]][cell[0]]
         return [i == '1' for i in "{0:04b}".format(cell)[::-1]]
@@ -66,10 +66,10 @@ class Character(DrawableObject):
         return self.rect.centerx % CELL_SIZE == CELL_SIZE // 2 \
                and (self.rect.centery - 20) % CELL_SIZE == CELL_SIZE // 2
 
-    def get_cell(self) -> vec: return vec(self.rect.centerx // CELL_SIZE, (self.rect.centery - 20) // CELL_SIZE)
+    def get_cell(self) -> Vec: return Vec(self.rect.centerx // CELL_SIZE, (self.rect.centery - 20) // CELL_SIZE)
 
     @property
-    def cell(self) -> vec: return self.get_cell()
+    def cell(self) -> Vec: return self.get_cell()
 
     def in_rect(self, rect: Union[List[int], pg.Rect]) -> bool:
         return rect[0] <= self.get_cell()[0] <= rect[2] and rect[1] <= self.get_cell()[1] <= rect[3]
@@ -79,5 +79,5 @@ class Character(DrawableObject):
         return ((cell1[0] - cell2[0]) ** 2 + (cell1[1] - cell2[1]) ** 2) ** 0.5
 
     @staticmethod
-    def pos_from_cell(cell: Union[Tuple[int, int], vec]) -> Tuple[int, int]:
+    def pos_from_cell(cell: Union[Tuple[int, int], Vec]) -> Tuple[int, int]:
         return int(cell[0] * CELL_SIZE + CELL_SIZE // 2), int(cell[1] * CELL_SIZE + 20 + CELL_SIZE // 2)

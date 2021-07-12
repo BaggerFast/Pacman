@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Animator, get_list_path, get_path, GHOSTS_MOVING, vec, Rotation
+from misc import Animator, get_list_path, get_path, GHOSTS_MOVING, Vec, Rotation
 from objects import Character, Pacman, Text
 from typing import Tuple, Union
 import random
@@ -15,7 +15,7 @@ class Base(Character):
         3: (0, -1, 3)
     }
 
-    def __init__(self, game, start_pos: Union[Tuple[int, int], vec], frightened_time, chase_time, scatter_time):
+    def __init__(self, game, start_pos: Union[Tuple[int, int], Vec], frightened_time, chase_time, scatter_time):
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
         self.acceleration_multiplier = 1
@@ -90,7 +90,7 @@ class Base(Character):
         self.invisible_anim = Animator(
             get_list_path('png', 'images', 'ghost', 'invisible'), is_rotation=False
         )
-        self.love_cell = vec(0, 0)
+        self.love_cell = Vec(0, 0)
         self.is_invisible = False
         self.is_in_home = True
         self.work_counter = True
