@@ -1,12 +1,13 @@
-import pygame as pg
 from typing import List
+
+import pygame as pg
 
 
 class Animator:
     __time_out = 50
 
     def __init__(self, path_to_images: List[str], time_out: int = 50, is_rotation: bool = True, repeat: bool = False,
-                 aura: str = None):
+                 aura: str = None, end_function=(lambda: None)):
         self.is_rotation = is_rotation
         self.__animate_timer = 0
         self.__time_out = time_out
@@ -18,6 +19,7 @@ class Animator:
         self.__repeat: bool = repeat
         self.anim_finished: bool = False
         self.run: bool = False
+        self.end_function = end_function
 
     @property
     def current_image(self):
@@ -61,6 +63,7 @@ class Animator:
             if self.__repeat:
                 self.stop()
                 self.anim_finished = True
+                self.end_function()
                 return
         self.__current_image = self.__images[self.__current_image_index]
         if self.is_rotation:

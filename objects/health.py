@@ -28,7 +28,7 @@ class Health(ImageObject):
     def __isub__(self, value: int) -> "Health": return self - value
     def __index__(self) -> int: return int(self)
     def __int__(self) -> int: return self.__lives
-    def __check_limits(self, value) -> int: return max(0, min(self.max_lives, int(value)))
+    def __check_limits(self, value) -> int: return max(-1, min(self.max_lives, int(value)))
     def add(self, value: int) -> None:  self.__lives = self.__check_limits(self.__lives + value)
 
     def process_draw(self):
@@ -39,3 +39,9 @@ class Health(ImageObject):
             self + 1
         elif event.type == EvenType.HealthDec:
             self - 1
+
+    def process_logic(self):
+        if not self.game.cheats_var.INFINITY_LIVES and int(self) < 0:
+            if(not self.game.sounds.pacman.get_busy()) and (not self.game.sounds.intro.get_busy()):
+                pygame.event.post(pygame.event.Event(EvenType.GameOver))
+

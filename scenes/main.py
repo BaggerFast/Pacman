@@ -143,6 +143,14 @@ class Scene(base.Scene):
             self.template = self.screen.copy()
             self.game.timer = pg.time.get_ticks() / 1000
             self.game.scenes.PAUSE()
+        elif event.type == EvenType.GameOver:
+            self.template = self.screen.copy()
+            self.game.timer = pg.time.get_ticks() / 1000
+            self.game.scenes.set(self.game.scenes.GAMEOVER)
+        elif event.type == EvenType.Win:
+            self.template = self.screen.copy()
+            self.game.timer = pg.time.get_ticks() / 1000
+            self.game.scenes.ENDGAME()
 
     def __change_prefered_ghost(self) -> None:
         self.__count_prefered_ghost += 1
@@ -229,10 +237,6 @@ class Scene(base.Scene):
     def process_logic(self) -> None:
         if not self.game.sounds.intro.get_busy():
             [tx.surface.set_alpha(0) for tx in self.text]
-            if self.pacman.dead_anim.anim_finished and int(self.hp) < 1 and not self.game.sounds.pacman.get_busy():
-                self.template = self.screen.copy()
-                self.game.timer = pg.time.get_ticks() / 1000
-                self.game.scenes.set(self.game.scenes.GAMEOVER)
             super(Scene, self).process_logic()
             self.__play_music()
             self.__process_collision()

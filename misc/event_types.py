@@ -8,3 +8,5 @@ class EvenType(IntEnum):
 
     HealthInc = auto()
     HealthDec = auto()
+    Win = auto()
+    GameOver = auto()
