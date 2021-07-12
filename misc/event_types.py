@@ -8,5 +8,8 @@ class EvenType(IntEnum):
 
     HealthInc = auto()
     HealthDec = auto()
+    EatSeed = auto()
+    EatGhost = auto()
+    EatEnergizer = auto()
     Win = auto()
     GameOver = auto()

@@ -220,8 +220,6 @@ class Game:
 
         self.skins = Skins(self)
 
-        self.score = Score(self)
-
         self.cheats_var = self.Cheats(self)
         self.read_from_storage()
 
