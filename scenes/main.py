@@ -114,9 +114,9 @@ class Scene(base.Scene):
 
     def __create_ghost(self):
         data = {
-            0: lambda: self.set_difficult_easy(),
-            1: lambda: self.set_difficult_medium(),
-            2: lambda: self.set_difficult_hard(),
+            0: self.set_difficult_easy,
+            1: self.set_difficult_medium,
+            2: self.set_difficult_hard,
         }
         if self.game.settings.DIFFICULTY in data:
             data[self.game.settings.DIFFICULTY]()
@@ -139,19 +139,30 @@ class Scene(base.Scene):
         return self.__movements_data
 
     def additional_event_check(self, event: pg.event.Event) -> None:
+        data = {
+            EvenType.GameOver: self.__game_over,
+            EvenType.Win: self.__win_game,
+        }
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             pg.mixer.pause()
             self.template = self.screen.copy()
             self.game.timer = pg.time.get_ticks() / 1000
             self.game.scenes.PAUSE()
-        elif event.type == EvenType.GameOver:
-            self.template = self.screen.copy()
-            self.game.timer = pg.time.get_ticks() / 1000
-            self.game.scenes.set(self.game.scenes.GAMEOVER)
-        elif event.type == EvenType.Win:
-            self.template = self.screen.copy()
-            self.game.timer = pg.time.get_ticks() / 1000
-            self.game.scenes.ENDGAME()
+        elif event.type in data:
+            data[event.type]()
+
+    def __game_over(self):
+        self.template = self.screen.copy()
+        self.game.timer = pg.time.get_ticks() / 1000
+        self.game.scenes.GAMEOVER.score = self.score
+        self.game.scenes.set(self.game.scenes.GAMEOVER)
+
+    def __win_game(self):
+        self.template = self.screen.copy()
+        self.game.timer = pg.time.get_ticks() / 1000
+        self.game.scenes.ENDGAME.score = self.score
+        self.game.scenes.ENDGAME(self.score)
+
 
     def __change_prefered_ghost(self) -> None:
         self.__count_prefered_ghost += 1
@@ -191,11 +202,6 @@ class Scene(base.Scene):
         elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
             self.__seeds_eaten += 1
             self.__prefered_ghost.update_timer()
-
-    def eat_super_seed(self):
-        self.score.activate_fear_mode()
-        for ghost in self.ghosts:
-            ghost.toggle_mode_to_frightened()
 
     def __start_label(self) -> None:
         current_time = pg.time.get_ticks() / 1000
@@ -274,9 +280,6 @@ class Scene(base.Scene):
 
     def additional_logic(self) -> None:
         self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"
-        # self.__scores_value_text.text = str(
-        #     self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(
-        #     self.game.score)
 
     def on_activate(self) -> None:
         self.is_active = True
@@ -300,7 +303,6 @@ class Scene(base.Scene):
         pg.mixer.stop()
         self.game.timer = pg.time.get_ticks() // 1000
         self.game.sounds.reload_sounds()
-        self.score.reset()
         self.game.scenes.MAIN.recreate()
         self.game.sounds.intro.play()
 

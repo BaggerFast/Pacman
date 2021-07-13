@@ -1,6 +1,6 @@
 from .image import ImageObject
 from misc import get_path, EvenType
-import pygame
+import pygame as pg
 
 
 class Health(ImageObject):
@@ -12,7 +12,7 @@ class Health(ImageObject):
                          pos=self.base_pos)
         self.max_lives: int = max_lives
         self.__lives: int = self.__check_limits(lives)
-        self.image = pygame.transform.flip(self.image, True, False)
+        self.image = pg.transform.flip(self.image, True, False)
 
     def __add__(self, value: int) -> "Health":
         self.__lives = self.__check_limits(self.__lives + value)
@@ -40,14 +40,16 @@ class Health(ImageObject):
     def process_draw(self) -> None:
         self.game.screen.blits((self.image, (self.rect.x + i * self.shift, self.rect.y)) for i in range(self))
 
-    def process_event(self, event: pygame.event.Event) -> None:
-        if event.type == EvenType.HealthInc:
-            self + 1
-        elif event.type == EvenType.HealthDec:
-            self - 1
+    def process_event(self, event: pg.event.Event) -> None:
+        data = {
+            EvenType.HealthInc: lambda: self + 1,
+            EvenType.HealthDec: lambda: self - 1,
+        }
+        if event.type in data:
+            data[event.type]()
 
     def process_logic(self) -> None:
         if not self.game.cheats_var.INFINITY_LIVES and int(self) == 0:
             if(not self.game.sounds.pacman.get_busy()) and (not self.game.sounds.intro.get_busy()):
-                pygame.event.post(pygame.event.Event(EvenType.GameOver))
+                pg.event.post(pg.event.Event(EvenType.GameOver))
 

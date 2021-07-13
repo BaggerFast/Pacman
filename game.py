@@ -5,7 +5,7 @@ from PIL import Image, ImageFilter
 from misc import Sounds, ControlCheats
 from misc.constants.skin_names import SkinsNames
 from misc.sound_controller import SoundController
-from misc import Color, HighScore, get_path, Score, List, get_list_path, LevelLoader, Skins, Storage
+from misc import Color, HighScore, get_path, List, get_list_path, LevelLoader, Skins, Storage
 from objects import Map, Text
 from misc.constants.variables import *
 from scenes import *
@@ -126,11 +126,11 @@ class Game:
             self.PAUSE = pause.Scene(game)
             self.MENU = menu.Scene(game)
             self.MAIN = main.Scene(game)
-            self.GAMEOVER = gameover.Scene(game)
+            self.GAMEOVER = gameover.Scene(game, 0)
             self.LEVELS = levels.Scene(game)
             self.RECORDS = records.Scene(game)
             self.CREDITS = credits.Scene(game)
-            self.ENDGAME = endgame.Scene(game)
+            self.ENDGAME = endgame.Scene(game, 0)
             self.SKINS = skins.Scene(game)
             self.SETTINGS = settings.Scene(game)
             self.__game = game

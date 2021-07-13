@@ -13,3 +13,4 @@ class EvenType(IntEnum):
     EatEnergizer = auto()
     Win = auto()
     GameOver = auto()
+    StopFearMode = auto()

@@ -5,6 +5,10 @@ from misc import BUTTON_DEFAULT_COLORS, Font
 
 
 class Scene(base.Scene):
+    def __init__(self, game, score):
+        super().__init__(game)
+        self.score = score
+
     def create_objects(self) -> None:
         super().create_objects()
         self.__save_record()
@@ -47,17 +51,17 @@ class Scene(base.Scene):
         )
 
     def __create_score_text(self) -> None:
-        text_score = Text(self.game, f'Score: {self.game.score}', 20)
+        text_score = Text(self.game, f'Score: {self.score}', 20)
         text_score.move_center(self.game.width // 2, 135)
         self.objects.append(text_score)
 
     def __create_highscore_text(self) -> None:
-        text_highscore = Text(self.game, f'High score: {self.game.records.data[-1]}' if int(self.game.score) <= self.game.records.data[-1] else f'New record: {self.game.score}', 20)
+        text_highscore = Text(self.game, f'High score: {self.game.records.data[-1]}' if int(self.score) <= self.game.records.data[-1] else f'New record: {self.game.score}', 20)
         text_highscore.move_center(self.game.width // 2, 165)
         self.objects.append(text_highscore)
 
     def __save_record(self) -> None:
-        self.game.records.add_new_record(int(self.game.score))
+        self.game.records.add_new_record(int(self.score))
         self.game.records.update_records()
 
     def __unlock_level(self) -> None:

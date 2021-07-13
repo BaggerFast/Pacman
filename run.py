@@ -1,10 +1,8 @@
-import sys
 from datetime import datetime
 import traceback
 import pygame as pg
 from game import Game
 from misc import DEBUG
-
 
 
 def main():

@@ -54,7 +54,7 @@ class Fruit(DrawableObject):
     def __check_time(self):
         if pg.time.get_ticks() - self.__start_time >= 9000:  # 9000
             self.__drawing = True
-            self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index()-1]
+            self.__score_to_eat = int(self.game.current_scene.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index()-1]
         if pg.time.get_ticks() - self.__start_time >= 300:
             self.__eaten = None
 
@@ -73,10 +73,10 @@ class Fruit(DrawableObject):
                 self.__drawing = False
                 self.__start_time = pg.time.get_ticks()
                 self.__eaten = True
-                self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[
+                self.__score_to_eat = int(self.game.current_scene.score) + self.__eat_timer + self.__scores[
                     self.__anim.get_cur_index()]
                 self.game.store_fruit(self.__anim.get_cur_index(), 1 * self.game.difficulty)
-                self.game.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
+                self.game.current_scene.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
                 self.__change_image()
 
     def process_logic(self):
