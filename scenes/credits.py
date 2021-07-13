@@ -4,7 +4,7 @@ import pygame as pg
 
 from misc import Font
 from objects.button import Button
-from objects import Text, ButtonController
+from objects import Text
 from scenes import base
 
 
