@@ -257,7 +257,6 @@ class Scene(base.Scene):
                     self.__max_seeds_eaten_to_prefered_ghost = 17
                 elif self.__max_seeds_eaten_to_prefered_ghost == 17:
                     self.__max_seeds_eaten_to_prefered_ghost = 32
-
         else:
             self.__start_label()
             for ghost in self.ghosts:

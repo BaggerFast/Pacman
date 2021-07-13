@@ -1,6 +1,4 @@
 import pygame as pg
-import pygame.event
-
 from misc import CELL_SIZE, Color, get_path, HIGH_CALORIE_SEEDS, EvenType
 from misc.constants.skin_names import SkinsNames
 from objects import DrawableObject
@@ -39,7 +37,6 @@ class SeedContainer(DrawableObject):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col]:
                     if self.game.skins.current.name == SkinsNames.chrome:
-                        # todo universal skins of seed
                         self.game.screen.blit(self.__ram_img, (self.x + col * CELL_SIZE + CELL_SIZE // 2 - 6,
                                                                self.y + row * CELL_SIZE + CELL_SIZE // 2 - 6))
                     else:

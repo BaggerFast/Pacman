@@ -33,7 +33,6 @@ class Scene(base.Scene):
     class BuyButton(Button):
         def __init__(self, **args):
             self.value = args.pop("value")
-            print(self.value)
             super().__init__(**args)
 
         def click(self) -> None:
