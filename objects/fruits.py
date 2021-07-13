@@ -35,8 +35,7 @@ class Fruit(DrawableObject):
             self.screen.blit(self.__anim.current_image, self.rect)
 
         for i in range(self.__anim.get_cur_index(), 0, -1):
-            ImageObject(self.game, get_path(str(i-1), 'png', 'images', 'fruit'),
-                        (130 + (i-1) * 12, 270)).process_draw()
+            ImageObject(self.game, get_path(str(i-1), 'png', 'images', 'fruit'), (130 + (i-1) * 12, 270)).process_draw()
 
     def __creating_scores(self):
         if len(self.__scores) < self.__anim.get_len_anim():
