@@ -57,7 +57,7 @@ class Scene(base.Scene):
             SkinsNames.chrome: self.game.skins.chrome,
         }
         self.is_current = False
-        self.fruit_images: list = get_list_path('png', 'images', 'fruit')
+        self.fruit_images: list[str] = get_list_path('images/fruit', ext='png')
         self.__create_title()
 
     def create_objects(self) -> None:

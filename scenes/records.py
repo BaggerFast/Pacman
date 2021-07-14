@@ -46,7 +46,7 @@ class Scene(base.Scene):
     def __create_medals(self) -> None:
         def creator():
             for i in range(self.medal_count):
-                image = ImageObject(self.game, get_path(str(i), 'png', 'images', 'medal'), (16, 55 + 35 * i))
+                image = ImageObject(self.game, get_path(f'images/medal/{i}.png'), (16, 55 + 35 * i))
                 image.scale(35, 35)
                 yield image
         self.__medals = list(creator())

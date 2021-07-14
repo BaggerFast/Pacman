@@ -20,10 +20,11 @@ class Score(DrawableObject):
             EvenType.EatGhost: self.__eat_ghost,
             EvenType.StopFearMode: self.__deactivate_fear_mode,
         }
+        self.text = Text(self.game, f'{self.__value}', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
 
     def process_draw(self) -> None:
-        Text(self.game, f'{self.__value} {"Mb" if self.game.skins.current.name == SkinsNames.chrome else ""}',
-             Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20)).process_draw()
+        self.text.text = f'{self.__value} {"Mb" if self.game.skins.current.name == SkinsNames.chrome else ""}'
+        self.text.process_draw()
 
     def process_event(self, event: pg.event.Event) -> None:
         if event.type in self.data:

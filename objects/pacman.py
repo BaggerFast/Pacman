@@ -1,7 +1,6 @@
 import pygame as pg
 from misc import Animator
 from objects.character_base import Character
-
 from typing import Tuple
 
 
@@ -31,16 +30,17 @@ class Pacman(Character):
 
     def process_logic(self) -> None:
         self.animator.timer_check()
-        if not self.dead:
-            if self.in_center():
-                if self.move_to(self.rotate):
-                    self.go()
-                else:
-                    self.stop()
-                    self.animator.change_cur_image(0)
-                if self.move_to(self.direction[self.__feature_rotate][2]):
-                    self.set_direction(self.__feature_rotate)
-            super().process_logic()
+        if self.dead:
+            return
+        if self.in_center():
+            if self.move_to(self.rotate):
+                self.go()
+            else:
+                self.stop()
+                self.animator.change_cur_image(0)
+            if self.move_to(self.direction[self.__feature_rotate][2]):
+                self.set_direction(self.__feature_rotate)
+        super().process_logic()
 
     def death(self) -> None:
         self.animator = self.__dead_anim

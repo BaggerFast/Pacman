@@ -10,7 +10,7 @@ from objects import Text, ImageObject
 class Fruit(DrawableObject):
     def __init__(self, game, pos: tuple) -> None:
         super().__init__(game)
-        self.__anim = Animator(get_list_path('png', 'images', 'fruit'), False, False)
+        self.__anim = Animator(get_list_path('images/fruit', ext='png'), False, False)
         self.rect = self.__anim.current_image.get_rect()
         self.move_center(*self.pos_from_cell(pos))
         self.__scores: list[int] = [100, 300, 500, 700, 1000, 2000, 3000, 5000]
@@ -33,8 +33,7 @@ class Fruit(DrawableObject):
     def __change_image(self) -> None:  # __change_image
         self.__anim.change_cur_image((self.__anim.get_cur_index() + 1) % self.__anim.get_len_anim())
 
-        self.drew_fruits.append(ImageObject(self.game, get_path(str(self.__anim.get_cur_index() - 1), 'png', 'images',
-                                                                'fruit'),
+        self.drew_fruits.append(ImageObject(self.game, get_path(f'images/fruit/{self.__anim.get_cur_index() - 1}.png'),
                                             (130 + self.__anim.get_cur_index() * 12, 270)))
 
     def process_collision(self, obj):

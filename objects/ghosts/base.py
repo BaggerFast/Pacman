@@ -24,40 +24,39 @@ class Base(Character):
         self.frightened_time = frightened_time
         self.chase_time = chase_time
         self.scatter_time = scatter_time
-        # Обычные Анимация
         self.left_walk_anim = Animator(
-            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'left'), is_rotation=False
+            get_list_path(f'images/ghost/{type(self).__name__.lower()}/left', ext='png'), is_rotation=False
         )
         self.right_walk_anim = Animator(
-            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'right'), is_rotation=False
+            get_list_path(f'images/ghost/{type(self).__name__.lower()}/right', ext='png'), is_rotation=False
         )
         self.top_walk_anim = Animator(
-            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'top'), is_rotation=False
+            get_list_path(f'images/ghost/{type(self).__name__.lower()}/top', ext='png'), is_rotation=False
         )
         self.bottom_walk_anim = Animator(
-            get_list_path('png', 'images', 'ghost', type(self).__name__.lower(), 'bottom'), is_rotation=False
+            get_list_path(f'images/ghost/{type(self).__name__.lower()}/bottom', ext='png'), is_rotation=False
         )
 
         # Анимации страха
         self.frightened_walk_anim1 = Animator(
-            get_list_path('png', 'images', 'ghost', 'fear1'), is_rotation=False, aura=get_path('aura_blue', 'png', 'images', 'ghost')
+            get_list_path('images/ghost/fear1', ext='png'), is_rotation=False, aura=get_path('images/ghost/aura_blue.png')
         )
         self.frightened_walk_anim2 = Animator(
-            get_list_path('png', 'images', 'ghost', 'fear2'), is_rotation=False, aura=get_path('aura_white', 'png', 'images', 'ghost')
+            get_list_path('images/ghost/fear2', ext='png'), is_rotation=False, aura=get_path('images/ghost/aura_white.png')
         )
 
         # Анимации съедения
         self.eaten_left_walk_anim = Animator(
-            get_list_path('png', 'images', 'ghost', 'eaten', 'left'), is_rotation=False
+            get_list_path('images/ghost/eaten/left', ext='png'), is_rotation=False
         )
         self.eaten_right_walk_anim = Animator(
-            get_list_path('png', 'images', 'ghost', 'eaten', 'right'), is_rotation=False
+            get_list_path('images/ghost/eaten/right', ext='png'), is_rotation=False
         )
         self.eaten_top_walk_anim = Animator(
-            get_list_path('png', 'images', 'ghost', 'eaten', 'top'), is_rotation=False
+            get_list_path('images/ghost/eaten/top', ext='png'), is_rotation=False
         )
         self.eaten_bottom_walk_anim = Animator(
-            get_list_path('png', 'images', 'ghost', 'eaten', 'bottom'), is_rotation=False
+            get_list_path('images/ghost/eaten/bottom', ext='png'), is_rotation=False
         )
 
         self.normal_animations = [
@@ -80,7 +79,7 @@ class Base(Character):
             game,
             self.top_walk_anim,
             start_pos,
-            get_path('aura', 'png', 'images', 'ghost', type(self).__name__.lower()))
+            get_path(f'images/ghost/{type(self).__name__.lower()}/aura.png'))
 
         self.is_can_leave_home = False
         self.collision = False
@@ -88,7 +87,7 @@ class Base(Character):
         self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
         self.invisible_anim = Animator(
-            get_list_path('png', 'images', 'ghost', 'invisible'), is_rotation=False
+            get_list_path('images/ghost/invisible', ext='png'), is_rotation=False
         )
         self.love_cell = (0, 0)
         self.is_invisible = False

@@ -190,7 +190,7 @@ class Game:
             return [i for i in range(self.count)]
 
         def read_levels(self) -> None:
-            self.levels = get_list_path("json", "maps")
+            self.levels = get_list_path("maps", ext='json')
             self.count = len(self.levels)
 
         def prerender_surfaces(self):
@@ -199,7 +199,7 @@ class Game:
                 yield self.__map.prerender_map_image_scaled()
 
     __size = width, height = 224, 285
-    __icon = pg.transform.scale(pg.image.load(get_path('ico', 'png', 'images', )), (256, 256))
+    __icon = pg.transform.scale(pg.image.load(get_path('images/ico.png')), (256, 256))
     __FPS: int = 60
     __def_level_id = 0
     pg.display.set_caption('PACMAN')

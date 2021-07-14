@@ -38,16 +38,16 @@ class Scene(base.Scene):
         self.is_active = False
 
     def __create_static_text(self):
-        self.__scores_label_text = Text(
+        scores_label_text = Text(
             self.game, f'{"MEMORY" if self.game.skins.current.name == SkinsNames.chrome else "SCORE"}',
             Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(10, 0, 20, 20)
         )
 
-        __high_scores_label_text = Text(
+        high_scores_label_text = Text(
             self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)
         )
-        self.static_objects += [self.__scores_label_text, __high_scores_label_text]
+        self.static_objects += [scores_label_text, high_scores_label_text]
 
     def __load_from_map(self):
         self.__loader = LevelLoader(self.game.maps.levels[self.game.maps.cur_id])
@@ -132,7 +132,7 @@ class Scene(base.Scene):
     def __create_hud(self):
         __high_scores_value_text = Text(self.game, str(self.game.records.data[0]), Font.MAIN_SCENE_SIZE,
                                              rect=pg.Rect(130, 8, 20, 20))
-        self.static_objects += [__high_scores_value_text]
+        self.static_objects.append(__high_scores_value_text)
 
     @property
     def movements_data(self):
@@ -276,9 +276,6 @@ class Scene(base.Scene):
                 ghost.visible()
                 ghost.gg_text.text = ' '
             self.ghost_text_flag = False
-
-    def additional_logic(self) -> None:
-        self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"
 
     def on_activate(self) -> None:
         self.is_active = True

@@ -7,7 +7,7 @@ from objects import DrawableObject
 class SeedContainer(DrawableObject):
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
         super().__init__(game)
-        self.__ram_img = pg.image.load(get_path("ram", "png", "images"))
+        self.__ram_img = pg.image.load(get_path("images/ram.png"))
         self.__x = x
         self.__y = y
         self.__seeds = seed_data

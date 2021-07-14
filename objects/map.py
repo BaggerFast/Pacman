@@ -28,7 +28,7 @@ class Map(DrawableObject):
     def __load_tiles(self) -> None:
         self.tiles = []
         for i in self.tile_names:
-            tile_path = get_path(i, 'png', 'images', 'map')
+            tile_path = get_path(f'images/map/{i}.png')
             tile = pg.image.load(tile_path)
             self.tiles.append(tile)
 
