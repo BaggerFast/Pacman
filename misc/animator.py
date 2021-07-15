@@ -3,15 +3,28 @@ from typing import List
 import pygame as pg
 
 
+class SpriteSheet:
+    def __init__(self, image_path):
+        self.sprites = pg.image.load(image_path).convert()
+
+    def get_sprite(self):
+        displays = []
+        print(self.sprites.get_width()//13)
+        for i in range((self.sprites.get_width()//13)):
+            print((13*i, 0, 13*i+13, 8))
+            displays.append(self.sprites.subsurface((0, 0, 8, 8)))
+        return displays
+
+
 class Animator:
     __time_out = 50
 
     def __init__(self, path_to_images: List[str], time_out: int = 50, is_rotation: bool = True, repeat: bool = False,
-                 aura: str = None, end_function=(lambda: None)):
+                 aura: str = None):
         self.is_rotation = is_rotation
         self.__animate_timer = 0
         self.__time_out = time_out
-        self.__images: List[pg.Surface] = self.__add_image(path_to_images)
+        self.__images: List[pg.Surface] = SpriteSheet(path_to_images).get_sprite()
         self.__current_image_index: int = 0
         self.__current_image = self.__images[self.__current_image_index]
         self.__current_aura = pg.image.load(aura) if aura else aura
@@ -19,7 +32,6 @@ class Animator:
         self.__repeat: bool = repeat
         self.anim_finished: bool = False
         self.run: bool = False
-        self.end_function = end_function
 
     @property
     def current_image(self):
@@ -63,7 +75,6 @@ class Animator:
             if self.__repeat:
                 self.stop()
                 self.anim_finished = True
-                self.end_function()
                 return
         self.__current_image = self.__images[self.__current_image_index]
         if self.is_rotation:

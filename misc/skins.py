@@ -13,8 +13,8 @@ class Skins:
             self.name = skin_name
             self.skin_cost = {}
             self.__game = game
-            self.__walk = Animator(get_list_path(f'images/pacman/{self.name}/walk', ext='png'))
-            self.__dead = Animator(get_list_path(f'images/pacman/{self.name}/dead', ext='png'), 100, False, True)
+            self.__walk = Animator(get_path(f'images/pacman/{self.name}/walk/walk.png'))
+            self.__dead = Animator(get_path(f'images/pacman/{self.name}/dead/dead.png'), 100, False, True)
             self.__image = self.prerender_surface()
 
         @property
