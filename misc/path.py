@@ -15,7 +15,9 @@ def get_list_path(path, ext) -> List[str]:
     :return: возращает все пути до файлов для анимации автоматически
     """
     path = get_path(path)
-    pathes = sorted(os.listdir(path), key=lambda i: int(i) if i.isdigit() else i)
+    pathes = [f for f in os.listdir(path) if f.endswith(f'.{ext.strip(".")}')]
+    pathes = sorted(pathes, key=lambda x: int(x.split(f'.{ext.strip(".")}')[0] if x.split(f'.{ext.strip(".")}')[0].isdigit() else x))
+
     return [os.path.join(*[path, f]) for f in pathes if f.endswith(f'.{ext.strip(".")}')]
 
 

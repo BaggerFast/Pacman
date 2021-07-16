@@ -3,12 +3,14 @@ import traceback
 import pygame as pg
 from game import Game
 from misc import DEBUG
+from misc.creator_sprites import create
 
 
 def main():
     pg.display.init()
     pg.font.init()
     pg.mixer.init()
+    # create()
     try:
         game: Game = Game()
         game.main_loop()
