@@ -17,10 +17,9 @@ class Scene(base.Scene):
         self.__unlock_level()
 
     def create_title(self) -> None:
-        for i, text in enumerate(["YOU", "WON"]):
-            text = Text(self.game, text, 40, font=Font.TITLE)
-            text.move_center(self.game.width // 2, 30 + i * 40)
-            self.static_objects.append(text)
+        text = Text(self.game, 'VICTORY', 40, font=Font.TITLE)
+        text.move_center(self.game.width // 2, 30)
+        self.static_objects.append(text)
 
     def button_init(self) -> None:
         yield Button(
@@ -56,7 +55,7 @@ class Scene(base.Scene):
         self.objects.append(text_score)
 
     def __create_highscore_text(self) -> None:
-        text_highscore = Text(self.game, f'High score: {self.game.records.data[-1]}' if int(self.score) <= self.game.records.data[-1] else f'New record: {self.score}', 20)
+        text_highscore = Text(self.game, f'High score: {self.game.records.data[0]}' if int(self.score) <= self.game.records.data[0] else f'New record: {self.score}', 20)
         text_highscore.move_center(self.game.width // 2, 165)
         self.objects.append(text_highscore)
 

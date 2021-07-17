@@ -11,7 +11,6 @@ class Scene(base.Scene):
 
     def create_objects(self) -> None:
         super().create_objects()
-        self.__save_record()
         self.__create_score_text()
         self.__create_highscore_text()
 
@@ -43,12 +42,9 @@ class Scene(base.Scene):
         self.objects.append(text_score)
 
     def __create_highscore_text(self) -> None:
-        text_highscore = Text(self.game, f'High score: {self.game.records.data[0]}' if int(self.score) <= self.game.records.data[0] else f'New record: {self.score}', 20)
+        text_highscore = Text(self.game, f'High score: {self.game.records.data[0]}',  20)
         text_highscore.move_center(self.game.width // 2, 165)
         self.objects.append(text_highscore)
-
-    def __save_record(self) -> None:
-        pass
 
     def on_deactivate(self) -> None:
         self.game.sounds.gameover.stop()

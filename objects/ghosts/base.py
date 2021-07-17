@@ -25,24 +25,24 @@ class Base(Character):
         self.chase_time = chase_time
         self.scatter_time = scatter_time
         self.left_walk_anim = Animator(
-            get_list_path(f'images/ghost/{type(self).__name__.lower()}/left', ext='png'), is_rotation=False
+            new_anim=get_path(f'images/ghost/{type(self).__name__.lower()}/left.png'), is_rotation=False, new_anim_size=(14,14)
         )
         self.right_walk_anim = Animator(
-            get_list_path(f'images/ghost/{type(self).__name__.lower()}/right', ext='png'), is_rotation=False
+            new_anim=get_path(f'images/ghost/{type(self).__name__.lower()}/right.png'), is_rotation=False, new_anim_size=(14,14)
         )
         self.top_walk_anim = Animator(
-            get_list_path(f'images/ghost/{type(self).__name__.lower()}/top', ext='png'), is_rotation=False
+            new_anim=get_path(f'images/ghost/{type(self).__name__.lower()}/top.png'), is_rotation=False, new_anim_size=(14,14)
         )
         self.bottom_walk_anim = Animator(
-            get_list_path(f'images/ghost/{type(self).__name__.lower()}/bottom', ext='png'), is_rotation=False
+            new_anim=get_path(f'images/ghost/{type(self).__name__.lower()}/bottom.png'), is_rotation=False, new_anim_size=(14,14)
         )
 
         # Анимации страха
         self.frightened_walk_anim1 = Animator(
-            get_list_path('images/ghost/fear1', ext='png'), is_rotation=False, aura=get_path('images/ghost/aura_blue.png')
+            new_anim=get_path('images/ghost/fear1.png'), is_rotation=False, aura=get_path('images/ghost/aura_blue.png'),new_anim_size=(14,14)
         )
         self.frightened_walk_anim2 = Animator(
-            get_list_path('images/ghost/fear2', ext='png'), is_rotation=False, aura=get_path('images/ghost/aura_white.png')
+            new_anim=get_path('images/ghost/fear2.png'), is_rotation=False, aura=get_path('images/ghost/aura_white.png'),new_anim_size=(14,14)
         )
 
         # Анимации съедения
@@ -87,7 +87,7 @@ class Base(Character):
         self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
         self.invisible_anim = Animator(
-            get_list_path('images/ghost/invisible', ext='png'), is_rotation=False
+            new_anim=get_path('images/ghost/invisible.png'), is_rotation=False, new_anim_size=(13, 13)
         )
         self.love_cell = (0, 0)
         self.is_invisible = False
@@ -106,7 +106,6 @@ class Base(Character):
             10, pg.Rect(0, 0, 0, 0),
         )
 
-        #Временное решение
         self.tmp_flag1 = False
         self.tmp_flag2 = False
 

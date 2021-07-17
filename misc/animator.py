@@ -39,8 +39,7 @@ class Animator:
         return list(creator())
 
     def get_image_from_sprite(self, num):
-        return  self.__sprite_sheet.subsurface((self.__sprite_res[0] * num, 0, self.__sprite_res[0], self.__sprite_res[1]))
-
+        return self.__sprite_sheet.subsurface((self.__sprite_res[0] * num, 0, self.__sprite_res[0], self.__sprite_res[1]))
 
     def __add_image(self, path_to_images: list) -> List[pg.Surface]:
         return [pg.image.load(path_image) for path_image in path_to_images]

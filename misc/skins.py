@@ -2,7 +2,7 @@ from copy import copy
 from typing import Union, Dict
 import pygame as pg
 
-from misc import Animator, get_list_path, get_path
+from misc import Animator, get_path
 from misc.constants.skin_names import SkinsNames
 from objects import ImageObject
 
@@ -15,7 +15,7 @@ class Skins:
             self.__game = game
             self.__walk = Animator(new_anim=get_path(f'images/pacman/{self.name}/walk.png'), new_anim_size=(13, 13))
             self.__dead = Animator(new_anim=get_path(f'images/pacman/{self.name}/dead.png'), new_anim_size=(15, 15),
-                                   is_rotation=False, repeat=True)
+                                   time_out=125, is_rotation=False, repeat=True)
             self.__image = self.prerender_surface()
 
         @property
@@ -35,7 +35,7 @@ class Skins:
             return self.__image
 
         def prerender_surface(self) -> ImageObject:
-            image = ImageObject(self.__game, pg.image.load(get_path(f'images/pacman/{self.name}/walk/1.png')),
+            image = ImageObject(self.__game, pg.image.load(get_path(f'images/pacman/{self.name}/1.png')),
                                 (145, 125))
             image.scale(70, 70)
             return image

@@ -17,9 +17,9 @@ class Fruit(DrawableObject):
         self.__drawing: bool = False
         self.__eaten: bool = False
         self.__start_time = pg.time.get_ticks()
-        self.drew_fruits: list[ImageObject] = []
+        self.fruit_hud: list[ImageObject] = []
 
-    def __draw_fruit_desk(self):
+    def __draw_fruit(self):
         if self.__eaten:
             Text(game=self.game, text=str(self.__scores[self.__anim.get_cur_index() - 1] * self.game.difficulty),
                  size=10, rect=self.rect).process_draw()
@@ -33,7 +33,7 @@ class Fruit(DrawableObject):
     def __change_image(self) -> None:  # __change_image
         self.__anim.change_cur_image((self.__anim.get_cur_index() + 1) % self.__anim.get_len_anim())
 
-        self.drew_fruits.append(ImageObject(self.game, get_path(f'images/fruit/{self.__anim.get_cur_index() - 1}.png'),
+        self.fruit_hud.append(ImageObject(self.game, get_path(f'images/fruit/{self.__anim.get_cur_index() - 1}.png'),
                                             (130 + self.__anim.get_cur_index() * 12, 270)))
 
     def process_collision(self, obj):
@@ -56,8 +56,8 @@ class Fruit(DrawableObject):
         self.__check_time()
 
     def process_draw(self) -> None:
-        self.__draw_fruit_desk()
-        for fruit in self.drew_fruits:
+        self.__draw_fruit()
+        for fruit in self.fruit_hud:
             fruit.process_draw()
 
     @staticmethod
