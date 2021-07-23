@@ -54,7 +54,7 @@ class Map(DrawableObject):
         for x in range(self.surface.get_width()):
             for y in range(self.surface.get_height()):
                 if self.surface.get_at((x, y)) == Color.MAIN_MAP:
-                    self.surface.set_at((x, y), self.color)  # Set the color of the pixel.
+                    self.surface.set_at((x, y), self.color)
 
     def prerender_map_surface(self) -> pg.Surface:
         surface = pg.Surface(self.__size)
@@ -74,11 +74,10 @@ class Map(DrawableObject):
         image = ImageObject(self.game, self.prerender_map_surface(), (110, 96))
         image.smoothscale(100, 100)
 
-        # Threshold
         for x in range(image.image.get_width()):
             for y in range(image.image.get_height()):
                 if image.image.get_at((x, y))[2] > 0:
-                    image.image.set_at((x, y), (0, 0, min(image.image.get_at((x, y))[2] * 5, 255), 255))  # Set the color of the pixel.
+                    image.image.set_at((x, y), (0, 0, min(image.image.get_at((x, y))[2] * 5, 255), 255))
         return image
 
     def process_draw(self) -> None:

@@ -72,7 +72,7 @@ class Scene(base.Scene):
         self.static_objects.append(title)
 
     def __create_indicator(self) -> None:
-        self.__indicator = Text(self.game, self.game.maps.level_name(self.game.maps.cur_id).replace('_', ' '), 15,
+        self.__indicator = Text(self.game, self.game.maps.level_name, 15,
                                 font=Font.TITLE)
         self.__indicator.move_center(self.game.width // 2, 60)
         self.objects.append(self.__indicator)

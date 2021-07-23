@@ -67,7 +67,6 @@ class Game:
             self.reload_sounds()
 
         def base_preset(self):
-            # todo improve sounds loading
             self.click = SoundController(self.game, self.Ch.menu, Sounds.CLICK)
             self.menu = SoundController(self.game, self.Ch.menu, Sounds.INTERMISSION)
             self.credits = SoundController(self.game, self.Ch.menu, choice(Sounds.CREDITS))
@@ -92,6 +91,7 @@ class Game:
                 self.seed = SoundController(self.game, self.Ch.seed, Sounds.SEED)
                 self.intro = SoundController(self.game, self.Ch.intro, Sounds.INTRO[0])
 
+
         def preset_for_windows(self):
             self.intro = SoundController(self.game, self.Ch.intro, Sounds.WINDOWS_SOUNDS[0])
             self.pacman = SoundController(self.game, self.Ch.pacman, Sounds.WINDOWS_SOUNDS[1])
@@ -99,6 +99,9 @@ class Game:
             self.gameover = SoundController(self.game, self.Ch.game_over, Sounds.WINDOWS_SOUNDS[3])
             self.ghost = SoundController(self.game, self.Ch.ghost, Sounds.WINDOWS_SOUNDS[4])
             self.fruit = SoundController(self.game, self.Ch.fruit, Sounds.WINDOWS_SOUNDS[5])
+
+        def preset_for_pokeball(self):
+            self.intro = SoundController(self.game, self.Ch.intro, Sounds.POC_INTRO)
 
         def preset_for_half_life(self):
             self.siren = SoundController(self.game, self.Ch.siren, Sounds.VALVE_SOUNDS[0])
@@ -113,8 +116,10 @@ class Game:
             self.fun = self.game.settings.FUN
             self.preset_for_fun()
             self.base_preset()
+            if self.fun:
+                return
             storage = {
-                SkinsNames.pokeball: lambda: SoundController(self.game, self.Ch.intro, Sounds.POC_INTRO),
+                SkinsNames.pokeball: lambda: self.preset_for_pokeball(),
                 SkinsNames.windows: lambda: self.preset_for_windows(),
                 SkinsNames.half_life: lambda: self.preset_for_half_life()
             }
@@ -177,9 +182,9 @@ class Game:
             self.__load_from_map(self.cur_id)
             return self.__map.prerender_map_surface()
 
-        @staticmethod
-        def level_name(level_id: int = 0):
-            return f'level_{level_id + 1}'
+        @property
+        def level_name(self):
+            return f'level {self.cur_id + 1}'
 
         def __load_from_map(self, level_id: int = 0) -> None:
             self.__loader = LevelLoader(self.levels[level_id])
@@ -198,19 +203,17 @@ class Game:
                 self.__load_from_map(level_id)
                 yield self.__map.prerender_map_image_scaled()
 
-    __size = width, height = 224, 285
-    __icon = pg.transform.scale(pg.image.load(get_path('images/ico.png')), (256, 256))
+    __resolution = width, height = 224, 285
     __FPS: int = 60
     __def_level_id = 0
     pg.display.set_caption('PACMAN')
-    pg.display.set_icon(__icon)
+    pg.display.set_icon(pg.transform.scale(pg.image.load(get_path('images/ico.png')), (256, 256)))
 
     def __init__(self) -> None:
         self.maps = self.Maps(self)
-        self.screen = pg.display.set_mode(self.__size, pg.SCALED)
+        self.screen = pg.display.set_mode(self.__resolution, pg.SCALED)
         self.__clock = pg.time.Clock()
         self.__game_over: bool = False
-
         self.draw_load_img()
         Sounds.load_sounds(self.load_img_text, self)
         self.timer = pg.time.get_ticks() / 1000
@@ -270,7 +273,7 @@ class Game:
 
     @property
     def size(self):
-        return self.__size
+        return self.__resolution
 
     @staticmethod
     def __exit_button_pressed(event: pg.event.Event) -> bool:
@@ -346,7 +349,7 @@ class Game:
         self.screen.fill(Color.BLACK)
         coef = (self.timer - current_time) * 2 + blur_count / 3
         blur_count = max(coef, 0)
-        if blur_count == 0:
+        if not blur_count:
             self.scenes.MENU.first_run = False
         return blur_count
 
@@ -354,9 +357,8 @@ class Game:
         blur_count = 10
         current_time = pg.time.get_ticks() / 1000
         surify = pg.image.tostring(self.scenes.MAIN.template, 'RGBA')
-        impil = Image.frombytes('RGBA', self.__size, surify)
-        piler = impil.filter(
-            ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count)))
+        impil = Image.frombytes('RGBA', self.__resolution, surify)
+        piler = impil.filter(ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count)))
         surface = pg.image.fromstring(
             piler.tobytes(), piler.size, piler.mode).convert()
         self.screen.blit(surface, (0, 0))

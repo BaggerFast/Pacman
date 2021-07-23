@@ -30,7 +30,7 @@ class Fruit(DrawableObject):
         self.__drawing = pg.time.get_ticks() - self.__start_time >= 9000
         self.__eaten = not (pg.time.get_ticks() - self.__start_time >= 300)
 
-    def __change_image(self) -> None:  # __change_image
+    def __change_image(self) -> None:
         self.__anim.change_cur_image((self.__anim.get_cur_index() + 1) % self.__anim.get_len_anim())
 
         self.fruit_hud.append(ImageObject(self.game, get_path(f'images/fruit/{self.__anim.get_cur_index() - 1}.png'),

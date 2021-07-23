@@ -1,8 +1,6 @@
-from threading import Thread
 import pygame as pg
 from typing import NamedTuple, List
 from misc.path import get_path, get_list_path
-from pygame import mixer
 
 
 class Sounds:

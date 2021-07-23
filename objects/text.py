@@ -37,10 +37,9 @@ class Text(DrawableObject):
     def text(self, text: str):
         self.__text = text if text else self.__text
         self.surface = self.font.render(self.__text, False, self.__color)
-        if type(self.rect) != tuple:
-            topleft = self.rect.topleft
-            self.rect = self.surface.get_rect()
-            self.rect.topleft = topleft
+        topleft = self.rect.topleft
+        self.rect = self.surface.get_rect()
+        self.rect.topleft = topleft
 
     @color.setter
     def color(self, color: pg.color):

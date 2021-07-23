@@ -4,88 +4,65 @@ import pygame as pg
 
 from misc import Animator, get_path
 from misc.constants.skin_names import SkinsNames
+from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
 
 
+class Skin:
+    def __init__(self, game, path: str, cost: dict, skin_name: str = SkinsNames.default):
+        self.name: str = skin_name
+        self.skin_cost: dict = cost
+        self.__game = game
+        self.__walk = Animator(SpriteSheet(get_path(f'{path}/walk.png'), (13, 13)))
+        self.__dead = Animator(SpriteSheet(get_path(f'{path}/dead.png'), (15, 15)),
+                               time_out=125, is_rotation=False, repeat=True)
+        self.__image = self.prerender_surface()
+
+    @property
+    def is_unlocked(self):
+        return self.name in self.__game.unlocked_skins
+
+    @property
+    def walk(self):
+        return copy(self.__walk)
+
+    @property
+    def dead(self):
+        return copy(self.__dead)
+
+    @property
+    def image(self):
+        return self.__image
+
+    def prerender_surface(self) -> ImageObject:
+        image = ImageObject(self.__game, pg.image.load(get_path(f'images/pacman/{self.name}/1.png')),
+                            (145, 125))
+        image.scale(70, 70)
+        return image
+
+
 class Skins:
-    class Skin:
-        def __init__(self, game, skin_name: str = SkinsNames.default):
-            self.name = skin_name
-            self.skin_cost = {}
-            self.__game = game
-            self.__walk = Animator(new_anim=get_path(f'images/pacman/{self.name}/walk.png'), new_anim_size=(13, 13))
-            self.__dead = Animator(new_anim=get_path(f'images/pacman/{self.name}/dead.png'), new_anim_size=(15, 15),
-                                   time_out=125, is_rotation=False, repeat=True)
-            self.__image = self.prerender_surface()
-
-        @property
-        def is_unlocked(self):
-            return self.name in self.__game.unlocked_skins
-
-        @property
-        def walk(self):
-            return copy(self.__walk)
-
-        @property
-        def dead(self):
-            return copy(self.__dead)
-
-        @property
-        def image(self):
-            return self.__image
-
-        def prerender_surface(self) -> ImageObject:
-            image = ImageObject(self.__game, pg.image.load(get_path(f'images/pacman/{self.name}/1.png')),
-                                (145, 125))
-            image.scale(70, 70)
-            return image
-
     def __init__(self, game):
         """
         param must be named like folder with skin
         """
-
-        self.__skins_cost = {SkinsNames.default: {0: 0, 1: 0},
-                             SkinsNames.edge: {1: 14, 2: 10},
-                             SkinsNames.pokeball: {2: 12, 3: 8},
-                             SkinsNames.half_life: {3: 10, 4: 7},
-                             SkinsNames.windows: {4: 7, 5: 6},
-                             SkinsNames.chrome: {6: 5, 7: 4}}
         self.__game = game
-        self.default = self.Skin(self.__game)
-        self.half_life = None
-        self.pokeball = None
-        self.edge = None
-        self.chrome = None
-        self.windows = None
-        self.load_skins()
+
+        self.default = Skin(self.__game, f'images/pacman/default', {0: 0, 1: 0}, SkinsNames.default)
+        self.half_life = Skin(self.__game, f'images/pacman/half_life', {1: 14, 2: 10}, SkinsNames.half_life)
+        self.pokeball = Skin(self.__game, f'images/pacman/pokeball', {2: 12, 3: 8}, SkinsNames.pokeball)
+        self.edge = Skin(self.__game, f'images/pacman/edge', {3: 10, 4: 7}, SkinsNames.edge)
+        self.chrome = Skin(self.__game, f'images/pacman/chrome', {4: 7, 5: 6}, SkinsNames.chrome)
+        self.windows = Skin(self.__game, f'images/pacman/windows', {6: 5, 7: 4}, SkinsNames.windows)
 
         self.__current = self.default
         self.__prerenders = self.prerender_surfaces()
 
-    @property
-    def skins_cost(self):
-        return self.__skins_cost
-
     def prerender_surfaces(self) -> Dict[str, pg.Surface]:
         return {key: self.__dict__[key].image for key in self.all_skins}
 
-    def load_skins(self) -> None:
-        for key in self.__dict__.keys():
-            if not key.startswith("_"):
-                self.__dict__[key] = self.Skin(self.__game, key)
-                self.__dict__[key].skin_cost = self.__skins_cost[key]
-
-    @property
-    def prerenders(self):
-        return self.__prerenders
-
     @property
     def all_skins(self):
-        return [key for key in self.__dict__.keys() if not key.startswith("_")]
-
-    @property
-    def names(self):
         return [key for key in self.__dict__.keys() if not key.startswith("_")]
 
     @property
@@ -96,5 +73,5 @@ class Skins:
     def current(self, value: Union[str, Skin]):
         if isinstance(value, str):
             self.__current = self.__dict__[value]
-        elif isinstance(value, self.Skin):
+        elif isinstance(value, Skin):
             self.__current = value

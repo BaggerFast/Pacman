@@ -1,16 +1,18 @@
-from typing import List
+from typing import List, Union
 import pygame as pg
+from misc.sprite_sheet import SpriteSheet
 
 
 class Animator:
-    __time_out = 50
-
-    def __init__(self, path_to_images: List[str] = [], time_out: int = 50, is_rotation: bool = True, repeat: bool = False,
-                 aura: str = None,  new_anim=None, new_anim_size=None):
+    def __init__(self, path_to_images: Union[List[str], SpriteSheet], time_out: int = 50, is_rotation: bool = True, repeat: bool = False,
+                 aura: str = None):
+        self.__time_out = time_out
         self.is_rotation = is_rotation
         self.__animate_timer = 0
-        self.__time_out = time_out
-        self.__images: List[pg.Surface] = self.__sprite_sheet_parser(new_anim, new_anim_size) if new_anim else self.__add_image(path_to_images)
+        if isinstance(path_to_images, list):
+            self.__images: List[pg.Surface] = self.__add_image(path_to_images)
+        elif isinstance(path_to_images, SpriteSheet):
+            self.__images: List[pg.Surface] = path_to_images.all_frames
         self.__current_image_index: int = 0
 
         self.__current_image = self.__images[self.__current_image_index]
@@ -27,19 +29,6 @@ class Animator:
     @property
     def current_aura(self):
         return self.__current_aura
-
-    def __sprite_sheet_parser(self, path, res):
-        def creator():
-            for i in range(self.__sprite_sheet.get_width() // res[0]):
-                yield self.__sprite_sheet.subsurface((res[0] * i, 0, res[0], res[1]))
-
-        self.__sprite_sheet = pg.image.load(path).convert_alpha()
-        self.__sprite_sheet.set_colorkey((0, 0, 0))
-        self.__sprite_res = res
-        return list(creator())
-
-    def get_image_from_sprite(self, num):
-        return self.__sprite_sheet.subsurface((self.__sprite_res[0] * num, 0, self.__sprite_res[0], self.__sprite_res[1]))
 
     def __add_image(self, path_to_images: list) -> List[pg.Surface]:
         return [pg.image.load(path_image) for path_image in path_to_images]

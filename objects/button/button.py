@@ -81,14 +81,15 @@ class Button(BaseButton):
             self.deselect()
 
     def process_event(self, event: pg.event.Event) -> None:
-        if self.active:
-            self.process_mouse_motion(event)
-            self.process_mouse_button_down(event)
-            self.process_mouse_button_up(event)
-            if event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
-                if self.rect.collidepoint(event.pos):
-                    self.click()
-                    self.game.sounds.click.play()
+        if not self.active:
+            return
+        self.process_mouse_motion(event)
+        self.process_mouse_button_down(event)
+        self.process_mouse_button_up(event)
+        if event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
+            if self.rect.collidepoint(event.pos):
+                self.click()
+                self.game.sounds.click.play()
 
     @property
     def colors(self):

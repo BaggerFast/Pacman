@@ -1,5 +1,6 @@
 import pygame as pg
 from misc import Animator, get_list_path, get_path, GHOSTS_MOVING, EvenType
+from misc.sprite_sheet import SpriteSheet
 from objects import Character, Pacman, Text
 from typing import Tuple
 import random
@@ -24,39 +25,40 @@ class Base(Character):
         self.frightened_time = frightened_time
         self.chase_time = chase_time
         self.scatter_time = scatter_time
+
         self.left_walk_anim = Animator(
-            new_anim=get_path(f'images/ghost/{type(self).__name__.lower()}/left.png'), is_rotation=False, new_anim_size=(14,14)
+           SpriteSheet(get_path(f'images/ghost/{type(self).__name__.lower()}/left.png'), (14, 14)), is_rotation=False
         )
         self.right_walk_anim = Animator(
-            new_anim=get_path(f'images/ghost/{type(self).__name__.lower()}/right.png'), is_rotation=False, new_anim_size=(14,14)
+           SpriteSheet(get_path(f'images/ghost/{type(self).__name__.lower()}/right.png'), (14, 14)), is_rotation=False
         )
         self.top_walk_anim = Animator(
-            new_anim=get_path(f'images/ghost/{type(self).__name__.lower()}/top.png'), is_rotation=False, new_anim_size=(14,14)
+           SpriteSheet(get_path(f'images/ghost/{type(self).__name__.lower()}/top.png'), (14, 14)), is_rotation=False
         )
         self.bottom_walk_anim = Animator(
-            new_anim=get_path(f'images/ghost/{type(self).__name__.lower()}/bottom.png'), is_rotation=False, new_anim_size=(14,14)
+           SpriteSheet(get_path(f'images/ghost/{type(self).__name__.lower()}/bottom.png'), (14, 14)), is_rotation=False
         )
 
         # Анимации страха
         self.frightened_walk_anim1 = Animator(
-            new_anim=get_path('images/ghost/fear1.png'), is_rotation=False, aura=get_path('images/ghost/aura_blue.png'),new_anim_size=(14,14)
+           SpriteSheet(get_path('images/ghost/fear1.png'), (14, 14)), is_rotation=False, aura=get_path('images/ghost/aura_blue.png')
         )
         self.frightened_walk_anim2 = Animator(
-            new_anim=get_path('images/ghost/fear2.png'), is_rotation=False, aura=get_path('images/ghost/aura_white.png'),new_anim_size=(14,14)
+           SpriteSheet(get_path('images/ghost/fear2.png'), (14, 14)), is_rotation=False, aura=get_path('images/ghost/aura_white.png')
         )
 
         # Анимации съедения
         self.eaten_left_walk_anim = Animator(
-            get_list_path('images/ghost/eaten/left', ext='png'), is_rotation=False
+           SpriteSheet(get_path('images/ghost/eaten/left/0.png')), is_rotation=False
         )
         self.eaten_right_walk_anim = Animator(
-            get_list_path('images/ghost/eaten/right', ext='png'), is_rotation=False
+            SpriteSheet(get_path('images/ghost/eaten/right/0.png')), is_rotation=False
         )
         self.eaten_top_walk_anim = Animator(
-            get_list_path('images/ghost/eaten/top', ext='png'), is_rotation=False
+            SpriteSheet(get_path('images/ghost/eaten/top/0.png')), is_rotation=False
         )
         self.eaten_bottom_walk_anim = Animator(
-            get_list_path('images/ghost/eaten/bottom', ext='png'), is_rotation=False
+            SpriteSheet(get_path('images/ghost/eaten/bottom/0.png')), is_rotation=False
         )
 
         self.normal_animations = [
@@ -87,7 +89,7 @@ class Base(Character):
         self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
         self.invisible_anim = Animator(
-            new_anim=get_path('images/ghost/invisible.png'), is_rotation=False, new_anim_size=(13, 13)
+            SpriteSheet(get_path('images/ghost/invisible.png'), (13, 13)), is_rotation=False
         )
         self.love_cell = (0, 0)
         self.is_invisible = False
@@ -195,7 +197,7 @@ class Base(Character):
                             self.shift_x, self.shift_y, self.rotate = self.direction2[i]
             else:
                 self.shift_x, self.shift_y, self.rotate = \
-                    self.direction2[random.choice([i for i, v in enumerate(cell)if v])]
+                    self.direction2[random.choice([i for i, v in enumerate(cell) if v])]
 
         if self.mode == 'Frightened':
             if pg.time.get_ticks() - self.ai_timer >= self.frightened_time-2000:

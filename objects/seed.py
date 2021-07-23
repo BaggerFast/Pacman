@@ -12,11 +12,11 @@ class SeedContainer(DrawableObject):
         self.__y = y
         self.__seeds = seed_data
         self.__energizers = energizer_data
+        self.__color_state: bool = False
         self.__color = {
-            -1: Color.WHITE,
-            1: Color.BLACK
+            True: Color.WHITE,
+            False: Color.BLACK
         }
-        self.__index_color = 1
         self.__seeds_on_field = 0
         for row in range(len(self.__seeds)):
             for col in range(len(self.__seeds[row])):
@@ -46,9 +46,9 @@ class SeedContainer(DrawableObject):
     def __draw_energizers(self) -> None:
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.game.animate_timer = pg.time.get_ticks()
-            self.__index_color *= -1
+            self.__color_state = not self.__color_state
         for energizer in self.__energizers:
-            pg.draw.circle(self.game.screen, self.__color[self.__index_color],
+            pg.draw.circle(self.game.screen, self.__color[self.__color_state],
                            (self.x + energizer[0] * CELL_SIZE + CELL_SIZE // 2,
                             self.y + energizer[1] * CELL_SIZE + CELL_SIZE // 2), 4)
 
