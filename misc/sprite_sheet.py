@@ -3,7 +3,7 @@ import pygame as pg
 
 class SpriteSheet:
     def __init__(self, sprite_path: str, sprite_size=(0, 0)):
-        self.__img = pg.image.load(sprite_path).convert_alpha()
+        self.__img = pg.image.load(sprite_path)
         self.__img.set_colorkey((0, 0, 0))
         self.__x, self.__y = sprite_size
         self.__all_frames = list(self.__get_all_frames)

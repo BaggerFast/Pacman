@@ -23,6 +23,7 @@ class Scene(base.Scene):
         self.__create_start_anim()
         self.hp = Health(self.game, 3)
         self.score = Score(self.game)
+        self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
         self.__create_hud()
         self.__pre_init()
         self.create_objects()
@@ -91,7 +92,6 @@ class Scene(base.Scene):
         self.objects += [hp_cheat, self.fruit, self.pacman, self.hp, self.score]
 
     def __create_map(self):
-        self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
         self.objects += [self.__map, self.__seeds]
 
     def set_difficult_easy(self):

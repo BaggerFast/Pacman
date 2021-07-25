@@ -140,7 +140,7 @@ class Base(Character):
         self.process_logic_iterator += 1
 
     def collision_check(self, pacman: Pacman):
-        return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 3 and
+        return (self.rect.collidepoint(pacman.rect.center) and
                 self.collision and not self.game.cheats_var.GHOSTS_COLLISION,
                 self.mode != 'Frightened' and self.mode != 'Eaten')
 

@@ -1,11 +1,13 @@
 import pygame as pg
 from misc import Color, Font, get_path
+from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject, Text
 from scenes import base
 
 
 class Scene(base.Scene):
     medal_count = 5
+    medals = SpriteSheet(sprite_path=get_path('images/medal.png'), sprite_size=(16, 16))
 
     def create_static_objects(self):
         self.__create_medals()
@@ -46,7 +48,7 @@ class Scene(base.Scene):
     def __create_medals(self) -> None:
         def creator():
             for i in range(self.medal_count):
-                image = ImageObject(self.game, get_path(f'images/medal/{i}.png'), (16, 55 + 35 * i))
+                image = ImageObject(self.game, self.medals[i], (16, 55 + 35 * i))
                 image.scale(35, 35)
                 yield image
         self.__medals = list(creator())

@@ -41,9 +41,7 @@ class Fruit(DrawableObject):
         :param obj: any class with pygame.rect
         :return: is objects in collision (bool) and self type (str)
         """
-        if not self.__drawing:
-            return
-        if (self.rect.x == min(obj.rect.left, obj.rect.right)) and (self.rect.y == obj.rect.y):
+        if self.rect.collidepoint(obj.rect.center) and self.__drawing:
             self.game.sounds.fruit.play()
             self.__drawing = False
             self.__eaten = True

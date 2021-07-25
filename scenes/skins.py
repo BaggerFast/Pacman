@@ -127,7 +127,6 @@ class Scene(base.Scene):
                     text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
                     colors=BUTTON_SKIN_BUY
                 )
-
         yield self.SceneButton(
             game=self.game,
             geometry=pg.Rect(0, 0, 180, 40),

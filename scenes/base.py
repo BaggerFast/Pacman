@@ -1,5 +1,4 @@
 from collections import Generator
-
 import pygame as pg
 from PIL import ImageFilter, Image
 from objects import ButtonController
@@ -37,10 +36,8 @@ class Scene:
         if blur_count:
             surify = pg.image.tostring(self.screen, 'RGBA')
             impil = Image.frombytes('RGBA', (224, 285), surify)
-            piler = impil.filter(
-                ImageFilter.GaussianBlur(radius=blur_count))
-            surface = pg.image.fromstring(
-                piler.tobytes(), piler.size, piler.mode).convert()
+            piler = impil.filter(ImageFilter.GaussianBlur(radius=blur_count))
+            surface = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
             self.screen.blit(surface, (0, 0))
 
     def create_static_objects(self) -> None:

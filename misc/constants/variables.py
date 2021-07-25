@@ -5,7 +5,7 @@ FRUITS_COUNT: int = 8
 HIGHSCORES_COUNT: int = 5
 
 DEBUG: bool = True
-HIGH_CALORIE_SEEDS: bool = False
+HIGH_CALORIE_SEEDS: bool = True
 
 UNLOCK_SKINS: bool = False
 UNLOCK_LEVELS: bool = False

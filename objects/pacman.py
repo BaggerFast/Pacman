@@ -28,6 +28,9 @@ class Pacman(Character):
             self.go()
             self.__feature_rotate = self.action[event.key]
 
+    def get_rect(self):
+        return self.animator.current_image.get_rect()
+
     def process_logic(self) -> None:
         self.animator.timer_check()
         if self.dead:

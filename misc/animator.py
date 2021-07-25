@@ -4,11 +4,12 @@ from misc.sprite_sheet import SpriteSheet
 
 
 class Animator:
-    def __init__(self, path_to_images: Union[List[str], SpriteSheet], time_out: int = 50, is_rotation: bool = True, repeat: bool = False,
-                 aura: str = None):
-        self.__time_out = time_out
-        self.is_rotation = is_rotation
-        self.__animate_timer = 0
+    def __init__(self, path_to_images: Union[List[str], SpriteSheet], time_out: int = 50,
+                 is_rotation: bool = True, repeat: bool = False, aura: str = None):
+        self.__time_out: int = time_out
+        self.is_rotation: bool = is_rotation
+        self.__animate_timer: int = 0
+
         if isinstance(path_to_images, list):
             self.__images: List[pg.Surface] = self.__add_image(path_to_images)
         elif isinstance(path_to_images, SpriteSheet):
