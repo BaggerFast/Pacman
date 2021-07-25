@@ -1,28 +1,12 @@
-from typing import Union
+from copy import copy
 import pygame as pg
-
 from misc import get_path, Color
 from misc.sprite_sheet import SpriteSheet
-from objects import DrawableObject, ImageObject
+from objects import ImageObject
 
 
-class Tile(pg.sprite.Sprite):
-    def __init__(self, image: Union[str, pg.Surface], cords: ()):
-        super().__init__()
-        if isinstance(image, str):
-            self.image = pg.image.load(image)
-        elif isinstance(image, pg.Surface):
-            self.image = image
-        self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = cords
-
-    def process_draw(self, surface):
-        surface.blit(self.image, (self.rect.x, self.rect.y))
-
-
-class Map(DrawableObject):
-    def __init__(self, game, map_data) -> None:
-        super().__init__(game)
+class Map:
+    def __init__(self, game, map_data):
         self.game = game
         self.color = self.game.map_color
         self.map_data = map_data
@@ -30,34 +14,29 @@ class Map(DrawableObject):
         self.sprite_sheet = SpriteSheet(sprite_path=get_path('images/map.png'), sprite_size=(self.tile_size,
                                                                                              self.tile_size))
         self.start_x, self.start_y = 0, 0
-        self.tiles = list(self.load_tiles())
-        self.surface = pg.Surface(self.resolution)
-        self.draw_map()
+        self.surface = self.load_surface()
+        self.surface_for_draw = self.surface_recolor()
 
-    def draw_map(self):
-        for tile in self.tiles:
-            tile.process_draw(self.surface)
+    def surface_recolor(self):
+        srf = copy(self.surface)
+        for x in range(srf.get_width()):
+            for y in range(srf.get_height()):
+                if srf.get_at((x, y)) == Color.MAIN_MAP:
+                    srf.set_at((x, y), self.color)
+        return srf
 
-        for x in range(self.surface.get_width()):
-            for y in range(self.surface.get_height()):
-                if self.surface.get_at((x, y)) == Color.MAIN_MAP:
-                    self.surface.set_at((x, y), self.color)
-
-    def load_tiles(self):
+    def load_surface(self):
+        surface = pg.Surface((len(self.map_data[0]) * self.tile_size, len(self.map_data) * self.tile_size))
         x, y = 0, 0
         for row in self.map_data:
             x = 0
             for tile in row:
-                yield Tile(self.sprite_sheet[tile - 1], cords=(x * self.tile_size, y * self.tile_size))
+                surface.blit(self.sprite_sheet[tile - 1], (x * self.tile_size, y * self.tile_size))
                 x += 1
             y += 1
-        self.resolution = x * self.tile_size, y * self.tile_size
+        return surface
 
     def prerender_map_surface(self) -> pg.Surface:
-        for x in range(self.surface.get_width()):
-            for y in range(self.surface.get_height()):
-                if self.surface.get_at((x, y)) == Color.MAIN_MAP:
-                    self.surface.set_at((x, y), self.color)
         return self.surface
 
     def prerender_map_image_scaled(self) -> ImageObject:
@@ -66,7 +45,7 @@ class Map(DrawableObject):
         return image
 
     def process_draw(self):
-        self.game.screen.blit(self.surface, (0, 20))
+        self.game.screen.blit(self.surface_for_draw, (0, 20))
 
     def process_event(self, event: pg.event.Event) -> None:
         pass

@@ -38,20 +38,12 @@ class SeedContainer(DrawableObject):
         }
         self.seed_bf = list(self.seed_bufer())
 
-    @property
-    def x(self):
-        return self.__x
-
-    @property
-    def y(self):
-        return self.__y
-
     def seed_bufer(self):
         for row in range(len(self.__seeds)):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col]:
                     # if self.game.skins.current.name == SkinsNames.chrome:
-                    yield Seed(self.game, (self.x - 2 + col * CELL_SIZE, self.y - 2 + row * CELL_SIZE), self.__ram_img)
+                    yield Seed(self.game, (self.__x - 2 + col * CELL_SIZE, self.__y - 2 + row * CELL_SIZE), self.__ram_img)
 
     def __draw_seeds(self) -> None:
         for seed in self.seed_bf:
@@ -63,8 +55,8 @@ class SeedContainer(DrawableObject):
             self.__color_state = not self.__color_state
         for energizer in self.__energizers:
             pg.draw.circle(self.game.screen, self.__color[self.__color_state],
-                           (self.x + energizer[0] * CELL_SIZE + 4,
-                            self.y + energizer[1] * CELL_SIZE + 4), 4)
+                           (self.__x + energizer[0] * CELL_SIZE + 4,
+                            self.__y + energizer[1] * CELL_SIZE + 4), 4)
 
     def process_draw(self) -> None:
         self.__draw_seeds()
