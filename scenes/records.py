@@ -59,7 +59,7 @@ class Scene(base.Scene):
             self.__error_text.process_draw()
         else:
             for i in range(self.medal_count):
-                if self.game.records.data[i] != 0:
+                if self.game.records.data[i]:
                     self.medals_text[i].process_draw()
                     self.__medals[i].process_draw()
 

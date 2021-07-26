@@ -1,7 +1,5 @@
 from random import randint
-
 import pygame as pg
-
 from misc import Font
 from objects.button import Button
 from objects import Text
@@ -13,16 +11,11 @@ class Scene(base.Scene):
         "Смирнов Андрей",
         "Aleksandrov Daniil",
         "Сергеев Сергей",
-        "Игнатов Иван",
         "Лещенко Вячеcлав",
         "Вартанян Владимир",
         "Дмитрий Пашков",
         "Николайчев Павел",
-        "Хаяо Миядзаки",
-        "Тору Иватани",
-        "Фил Спенсер",
         "MSHP LOVE",
-        "Хирохико Араки"
     ]
 
     def create_objects(self) -> None:

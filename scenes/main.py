@@ -131,7 +131,7 @@ class Scene(base.Scene):
 
     def __create_hud(self):
         __high_scores_value_text = Text(self.game, str(self.game.records.data[0]), Font.MAIN_SCENE_SIZE,
-                                             rect=pg.Rect(130, 8, 20, 20))
+                                        rect=pg.Rect(130, 8, 20, 20))
         self.static_objects.append(__high_scores_value_text)
 
     @property
