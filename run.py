@@ -10,7 +10,7 @@ def main():
     pg.display.init()
     pg.font.init()
     pg.mixer.init()
-    # create()
+    create()
     try:
         game: Game = Game()
         game.main_loop()

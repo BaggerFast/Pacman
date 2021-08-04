@@ -2,56 +2,62 @@ import pygame as pg
 from typing import Tuple
 from misc.constants import CELL_SIZE
 from misc.path import get_list_path, get_path
-from misc.animator import Animator
 from objects.base import DrawableObject
 from objects import Text, ImageObject
+from typing import List
 
 
 class Fruit(DrawableObject):
     def __init__(self, game, pos: tuple) -> None:
         super().__init__(game)
-        self.__anim = Animator(get_list_path('images/fruit', ext='png'), False, False)
-        self.rect = self.__anim.current_image.get_rect()
+        self.images = [pg.image.load(i) for i in get_list_path('images/fruit', ext='png')]
+        self.cur_index: int = 0
+        self.rect = self.current_image.get_rect()
         self.move_center(*self.pos_from_cell(pos))
-        self.__scores: list[int] = [100, 300, 500, 700, 1000, 2000, 3000, 5000]
+        self.__scores: List[int] = [100, 300, 500, 700, 1000, 2000, 3000, 5000]
         self.__drawing: bool = False
         self.__eaten: bool = False
         self.__start_time = pg.time.get_ticks()
-        self.fruit_hud: list[ImageObject] = []
+        self.fruit_hud: List[ImageObject] = []
+
+    @property
+    def current_image(self): return self.images[self.cur_index]
 
     def __draw_fruit(self):
         if self.__eaten:
-            Text(game=self.game, text=str(self.__scores[self.__anim.get_cur_index() - 1] * self.game.difficulty),
+            Text(game=self.game, text=str(self.__scores[self.cur_index - 1] * self.game.difficulty),
                  size=10, rect=self.rect).process_draw()
         if self.__drawing:
-            self.game.screen.blit(self.__anim.current_image, self.rect)
+            self.game.screen.blit(self.current_image, self.rect)
 
     def __check_time(self):
         self.__drawing = pg.time.get_ticks() - self.__start_time >= 9000
         self.__eaten = not (pg.time.get_ticks() - self.__start_time >= 300)
 
-    def __change_image(self) -> None:
-        self.__anim.change_cur_image((self.__anim.get_cur_index() + 1) % self.__anim.get_len_anim())
+    def __change_image(self):
+        self.cur_index = (self.cur_index + 1) % len(self.images)
+        self.rect = self.current_image.get_rect(center=self.rect.center)
 
-        self.fruit_hud.append(ImageObject(self.game, get_path(f'images/fruit/{self.__anim.get_cur_index() - 1}.png'),
-                                            (130 + self.__anim.get_cur_index() * 12, 270)))
+        self.fruit_hud.append(ImageObject(self.game, get_path(f'images/fruit/{self.cur_index - 1}.png'),
+                                          (130 + self.cur_index * 12, 270)))
 
-    def process_collision(self, obj):
+    def process_collision(self, obj: DrawableObject):
         """
         :param obj: any class with pygame.rect
         :return: is objects in collision (bool) and self type (str)
         """
-        if self.rect.collidepoint(obj.rect.center) and self.__drawing:
+        if not self.__drawing:
+            return
+        if self.rect.collidepoint(obj.rect.center):
             self.game.sounds.fruit.play()
             self.__drawing = False
             self.__eaten = True
             self.__start_time = pg.time.get_ticks()
-            self.game.store_fruit(self.__anim.get_cur_index(), 1 * self.game.difficulty)
-            self.game.current_scene.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
+            self.game.store_fruit(self.cur_index, 1 * self.game.difficulty)
+            self.game.current_scene.score.eat_fruit(self.__scores[self.cur_index])
             self.__change_image()
 
-    def process_logic(self) -> None:
-        self.__check_time()
+    def process_logic(self): self.__check_time()
 
     def process_draw(self) -> None:
         self.__draw_fruit()

@@ -1,15 +1,19 @@
 from PIL import Image
-from misc.path import get_list_path, get_path
+from misc.path import get_path
 
 
 def create():
-    r = 16
-    images = [Image.open(x) for x in get_list_path(path=f'images/medal', ext='png')]
-    res = r * len(images), r
-
+    image = Image.open(get_path("images/pacman/default/walk.png"))
+    width, height = image.size
+    res = width, height * 4
+    r = 13
     new_im = Image.new(mode='RGBA', size=res)
-
-    for img in range(len(images)):
-        new_im.paste(images[img], (img*r, 0))
-
-    new_im.save(get_path(f'images/medal.png'))
+    new_im.paste(image, (0, 0))
+    rotate = [2, 3, 4]
+    for i in range(len(rotate)):
+        data = Image.new(mode='RGBA', size=image.size)
+        for j in range(4):
+            local = image.crop((j*r, j*r, r*(j+1), r*(j+1)))
+            data.paste(local.transpose(rotate[i]), (r*j, 0))
+        new_im.paste(data, (0, r*(1+i)))
+    new_im.save(get_path(f'images/pacman/default/test.png'))
