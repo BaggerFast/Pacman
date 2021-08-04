@@ -1,7 +1,5 @@
 import os
 from typing import List
-import pygame as pg
-
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 
 
