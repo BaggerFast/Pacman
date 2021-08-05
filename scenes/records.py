@@ -7,7 +7,7 @@ from scenes import base
 
 class Scene(base.Scene):
     medal_count = 5
-    medals = SpriteSheet(sprite_path=get_path('images/medal.png'), sprite_size=(16, 16))
+    medals = SpriteSheet(sprite_path=get_path('images/medal.png'), sprite_size=(16, 16))[0]
 
     def create_static_objects(self):
         self.__create_medals()

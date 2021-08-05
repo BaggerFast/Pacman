@@ -31,7 +31,7 @@ class Map:
         for row in self.map_data:
             x = 0
             for tile in row:
-                surface.blit(self.sprite_sheet[tile - 1], (x * self.tile_size, y * self.tile_size))
+                surface.blit(self.sprite_sheet[0][tile - 1], (x * self.tile_size, y * self.tile_size))
                 x += 1
             y += 1
         return surface

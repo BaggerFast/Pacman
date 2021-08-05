@@ -13,7 +13,7 @@ class Animator:
         if isinstance(path_to_images, list):
             self.__images: List[pg.Surface] = self.__add_image(path_to_images)
         elif isinstance(path_to_images, SpriteSheet):
-            self.__images: SpriteSheet = path_to_images
+            self.__images: SpriteSheet = path_to_images[0]
         self.__current_image_index: int = 0
 
         self.__current_image = self.__images[self.__current_image_index]

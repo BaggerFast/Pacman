@@ -6,15 +6,20 @@ class SpriteSheet:
         self.__img = pg.image.load(sprite_path)
         self.__img.set_colorkey((0, 0, 0))
         self.__x, self.__y = sprite_size
-        self.__all_frames = tuple(self.__get_all_frames)
+        self.sprite_size = sprite_size
+        self.__all_frames = self.__get_all_frames
 
     @property
     def __get_all_frames(self):
-        if self.__x and self.__y:
-            for i in range(self.__img.get_width() // self.__x):
-                yield self.__img.subsurface((self.__x * i, 0, self.__x, self.__y))
+        if self.sprite_size[0] > 0 and self.sprite_size[1] > 0:
+            local_x, local_y = self.__img.get_width() // self.sprite_size[0], self.__img.get_height() // self.sprite_size[1] # 4, 4
+            self.frames = [[] for _ in range(local_y)]
+            for y, line in enumerate(self.frames):
+                for x in range(local_x):
+                    line.append(self.__img.subsurface((x * self.__x, y * self.__y, self.__x, self.__y)))
+            return tuple(tuple(i) for i in self.frames)
         else:
-            yield self.__img
+            return [[self.__img]]
 
     def __getitem__(self, item):
         return self.__all_frames[item]
