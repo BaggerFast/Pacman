@@ -12,12 +12,14 @@ class SpriteSheet:
     @property
     def __get_all_frames(self):
         if self.sprite_size[0] > 0 and self.sprite_size[1] > 0:
-            local_x, local_y = self.__img.get_width() // self.sprite_size[0], self.__img.get_height() // self.sprite_size[1] # 4, 4
-            self.frames = [[] for _ in range(local_y)]
-            for y, line in enumerate(self.frames):
+            local_x, local_y = self.__img.get_width() // self.sprite_size[0], self.__img.get_height() // self.sprite_size[1]
+            frames = []
+            for y in range(local_y):
+                local = []
                 for x in range(local_x):
-                    line.append(self.__img.subsurface((x * self.__x, y * self.__y, self.__x, self.__y)))
-            return tuple(tuple(i) for i in self.frames)
+                    local.append(self.__img.subsurface((x * self.__x, y * self.__y, self.__x, self.__y)))
+                frames.append(local)
+            return tuple(tuple(i) for i in frames)
         else:
             return [[self.__img]]
 

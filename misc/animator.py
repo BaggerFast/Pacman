@@ -9,7 +9,6 @@ class Animator:
         self.__time_out: int = time_out
         self.is_rotation: bool = is_rotation
         self.__animate_timer: int = 0
-
         if isinstance(path_to_images, list):
             self.__images: List[pg.Surface] = self.__add_image(path_to_images)
         elif isinstance(path_to_images, SpriteSheet):
