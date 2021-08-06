@@ -3,6 +3,7 @@ from typing import Union, Dict
 import pygame as pg
 
 from misc import Animator, get_path
+from misc.animator import SpriteSheetAnimator
 from misc.constants.skin_names import SkinsNames
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
@@ -13,9 +14,9 @@ class Skin:
         self.name: str = skin_name
         self.skin_cost: dict = cost
         self.__game = game
-        self.__walk = Animator(SpriteSheet(get_path(f'{path}/walk.png'), (13, 13)))
-        self.__dead = Animator(SpriteSheet(get_path(f'{path}/dead.png'), (15, 15)),
-                               time_out=125, is_rotation=False, repeat=True)
+        self.__walk = SpriteSheetAnimator(SpriteSheet(get_path(f'{path}/walk.png'), (13, 13)))
+        self.__dead = Animator(SpriteSheet(get_path(f'{path}/dead.png'), (15, 15))[0],
+                               time_out=125, repeat=True)
         self.__image = self.prerender_surface()
 
     @property

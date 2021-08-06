@@ -1,5 +1,6 @@
 import pygame as pg
-from misc import Animator, get_list_path, get_path, GHOSTS_MOVING, EvenType
+from misc import Animator, get_path, GHOSTS_MOVING, EvenType
+from misc.animator import SpriteSheetAnimator
 from misc.sprite_sheet import SpriteSheet
 from objects import Character, Pacman, Text
 from typing import Tuple
@@ -10,10 +11,10 @@ class Base(Character):
     love_point_in_scatter_mode = (0, 0)
     max_count_eat_seeds_in_home = 0
     direction2 = {
-        0: (1, 0, 0),
-        1: (0, 1, 1),
-        2: (-1, 0, 2),
-        3: (0, -1, 3)
+        0: (1, 0, 0, "right"),
+        1: (0, 1, 1, "down"),
+        2: (-1, 0, 2, "left"),
+        3: (0, -1, 3, "up")
     }
 
     def __init__(self, game, start_pos: Tuple[int, int], frightened_time, chase_time, scatter_time) -> None:
@@ -26,60 +27,24 @@ class Base(Character):
         self.chase_time = chase_time
         self.scatter_time = scatter_time
 
-        self.left_walk_anim = Animator(
-           SpriteSheet(get_path(f'images/ghost/{type(self).__name__.lower()}/left.png'), (14, 14)), is_rotation=False
-        )
-        self.right_walk_anim = Animator(
-           SpriteSheet(get_path(f'images/ghost/{type(self).__name__.lower()}/right.png'), (14, 14)), is_rotation=False
-        )
-        self.top_walk_anim = Animator(
-           SpriteSheet(get_path(f'images/ghost/{type(self).__name__.lower()}/top.png'), (14, 14)), is_rotation=False
-        )
-        self.bottom_walk_anim = Animator(
-           SpriteSheet(get_path(f'images/ghost/{type(self).__name__.lower()}/bottom.png'), (14, 14)), is_rotation=False
+        self.walk_anim = SpriteSheetAnimator(
+           SpriteSheet(get_path(f'images/ghost/{type(self).__name__.lower()}/walk.png'), (14, 14))
         )
 
         # Анимации страха
         self.frightened_walk_anim1 = Animator(
-           SpriteSheet(get_path('images/ghost/fear1.png'), (14, 14)), is_rotation=False, aura=get_path('images/ghost/aura_blue.png')
+           SpriteSheet(get_path('images/ghost/fear1.png'), (14, 14))[0], aura=get_path('images/ghost/aura_blue.png')
         )
         self.frightened_walk_anim2 = Animator(
-           SpriteSheet(get_path('images/ghost/fear2.png'), (14, 14)), is_rotation=False, aura=get_path('images/ghost/aura_white.png')
+           SpriteSheet(get_path('images/ghost/fear2.png'), (14, 14))[0], aura=get_path('images/ghost/aura_white.png')
         )
 
         # Анимации съедения
-        self.eaten_left_walk_anim = Animator(
-           SpriteSheet(get_path('images/ghost/eaten/left/0.png')), is_rotation=False
-        )
-        self.eaten_right_walk_anim = Animator(
-            SpriteSheet(get_path('images/ghost/eaten/right/0.png')), is_rotation=False
-        )
-        self.eaten_top_walk_anim = Animator(
-            SpriteSheet(get_path('images/ghost/eaten/top/0.png')), is_rotation=False
-        )
-        self.eaten_bottom_walk_anim = Animator(
-            SpriteSheet(get_path('images/ghost/eaten/bottom/0.png')), is_rotation=False
-        )
-
-        self.normal_animations = [
-            self.right_walk_anim,
-            self.bottom_walk_anim,
-            self.left_walk_anim,
-            self.top_walk_anim,
-        ]
-
-        self.eaten_animations = [
-            self.eaten_right_walk_anim,
-            self.eaten_bottom_walk_anim,
-            self.eaten_left_walk_anim,
-            self.eaten_top_walk_anim,
-        ]
-
-        self.animations = self.normal_animations
+        self.eaten_walk_anim = SpriteSheetAnimator(SpriteSheet(get_path('images/ghost/walk.png'), (16, 16)))
 
         super().__init__(
             game,
-            self.top_walk_anim,
+            self.walk_anim,
             start_pos,
             get_path(f'images/ghost/{type(self).__name__.lower()}/aura.png'))
 
@@ -88,9 +53,7 @@ class Base(Character):
         self.count_eat_seeds_in_home = 0
         self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
-        self.invisible_anim = Animator(
-            SpriteSheet(get_path('images/ghost/invisible.png'), (13, 13)), is_rotation=False
-        )
+        self.invisible_anim = Animator(SpriteSheet(get_path('images/ghost/invisible.png'))[0])
         self.love_cell = (0, 0)
         self.is_invisible = False
         self.is_in_home = True
@@ -130,8 +93,6 @@ class Base(Character):
             self.gg_text.rect = pg.Rect(self.rect.x, self.rect.y, 0, 0)
         if self.rotate is None:
             self.rotate = 0
-        if not self.is_invisible and self.mode != 'Frightened':
-            self.animator = self.animations[self.rotate]
         if not self.process_logic_iterator % self.deceleration_multiplier_with_rect:
             for i in range(self.acceleration_multiplier):
                 self.ghosts_ai()
@@ -140,7 +101,7 @@ class Base(Character):
         self.process_logic_iterator += 1
 
     def collision_check(self, pacman: Pacman):
-        return (self.rect.collidepoint(pacman.rect.center) and
+        return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 3 and
                 self.collision and not self.game.cheats_var.GHOSTS_COLLISION,
                 self.mode != 'Frightened' and self.mode != 'Eaten')
 
@@ -194,10 +155,9 @@ class Base(Character):
                         )
                         if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
                             min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
-                            self.shift_x, self.shift_y, self.rotate = self.direction2[i]
+                            self.set_direction(self.direction2[i][3])
             else:
-                self.shift_x, self.shift_y, self.rotate = \
-                    self.direction2[random.choice([i for i, v in enumerate(cell) if v])]
+                self.set_direction(self.direction2[random.choice([i for i, v in enumerate(cell) if v])][3])
 
         if self.mode == 'Frightened':
             if pg.time.get_ticks() - self.ai_timer >= self.frightened_time-2000:
@@ -206,7 +166,7 @@ class Base(Character):
                 pg.event.post(pg.event.Event(EvenType.StopFearMode))
                 self.update_ai_timer()
                 self.deceleration_multiplier = 1
-                self.animations = self.normal_animations
+                self.animator = self.walk_anim
                 self.game.sounds.pellet.stop()
                 self.mode = 'Scatter'
 
@@ -219,7 +179,7 @@ class Base(Character):
                 self.set_direction('down')
                 self.tmp_flag1 = True
             if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.game.current_scene.pinky.start_pos[1]:
-                self.animations = self.normal_animations
+                self.animator = self.walk_anim
                 self.acceleration_multiplier = 1
                 self.deceleration_multiplier = 2
                 self.set_direction('up')
@@ -248,5 +208,5 @@ class Base(Character):
         if self.mode != 'Eaten':
             self.game.sounds.ghost.play()
         self.mode = 'Eaten'
-        self.animations = self.eaten_animations
+        self.animator = self.eaten_walk_anim
         self.acceleration_multiplier = 2

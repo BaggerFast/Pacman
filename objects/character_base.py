@@ -1,5 +1,6 @@
 import pygame as pg
 from misc import CELL_SIZE, Animator
+from misc.animator import SpriteSheetAnimator
 from objects import DrawableObject
 from typing import Tuple, List
 
@@ -44,9 +45,8 @@ class Character(DrawableObject):
         if self.rotate == rotate:
             return
         self.rotate = rotate
-        self.animator.rotate = rotate
-        if self.animator.is_rotation:
-            self.animator.change_rotation()
+        if isinstance(self.animator, SpriteSheetAnimator):
+            self.animator.rotate = rotate
 
     def process_logic(self) -> None:
         self.step()
