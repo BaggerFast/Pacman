@@ -2,6 +2,7 @@ import pygame as pg
 from typing import Tuple
 from misc.constants import CELL_SIZE
 from misc.path import get_list_path, get_path
+from misc.sprite_sheet import SpriteSheet
 from objects.base import DrawableObject
 from objects import Text, ImageObject
 from typing import List
@@ -10,7 +11,7 @@ from typing import List
 class Fruit(DrawableObject):
     def __init__(self, game, pos: tuple) -> None:
         super().__init__(game)
-        self.images = [pg.image.load(i) for i in get_list_path('images/fruit', ext='png')]
+        self.images = SpriteSheet('images/fruits.png', (14, 14))[0]
         self.cur_index: int = 0
         self.rect = self.current_image.get_rect()
         self.move_center(*self.pos_from_cell(pos))
@@ -21,7 +22,8 @@ class Fruit(DrawableObject):
         self.fruit_hud: List[ImageObject] = []
 
     @property
-    def current_image(self): return self.images[self.cur_index]
+    def current_image(self):
+        return self.images[self.cur_index]
 
     def __draw_fruit(self):
         if self.__eaten:
@@ -38,8 +40,7 @@ class Fruit(DrawableObject):
         self.cur_index = (self.cur_index + 1) % len(self.images)
         self.rect = self.current_image.get_rect(center=self.rect.center)
 
-        self.fruit_hud.append(ImageObject(self.game, get_path(f'images/fruit/{self.cur_index - 1}.png'),
-                                          (130 + self.cur_index * 12, 270)))
+        self.fruit_hud.append(ImageObject(self.game, self.images[self.cur_index - 1], (130 + self.cur_index * 12, 270)))
 
     def process_collision(self, obj: DrawableObject):
         """

@@ -2,6 +2,7 @@ import pygame as pg
 
 from copy import copy
 from misc.constants.skin_names import SkinsNames
+from misc.sprite_sheet import SpriteSheet
 from objects import ButtonController, Text, Button, ImageObject
 from scenes import base
 from misc import Font, get_list_path, BUTTON_SKIN_BUY
@@ -57,7 +58,7 @@ class Scene(base.Scene):
             SkinsNames.chrome: self.game.skins.chrome,
         }
         self.is_current = False
-        self.fruit_images: list[str] = get_list_path('images/fruit', ext='png')
+        self.fruit_images: list[str] = SpriteSheet('images/fruits.png', (14, 14))[0]
         self.__create_title()
 
     def create_objects(self) -> None:

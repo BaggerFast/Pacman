@@ -54,7 +54,7 @@ class Skins:
         self.pokeball = Skin(self.__game, f'images/pacman/pokeball', {2: 12, 3: 8}, SkinsNames.pokeball)
         self.edge = Skin(self.__game, f'images/pacman/edge', {3: 10, 4: 7}, SkinsNames.edge)
         self.chrome = Skin(self.__game, f'images/pacman/chrome', {4: 7, 5: 6}, SkinsNames.chrome)
-        self.windows = Skin(self.__game, f'images/pacman/windows', {6: 5, 7: 4}, SkinsNames.windows)
+        self.windows = Skin(self.__game, f'images/pacman/windows', {6: 5, 5: 4}, SkinsNames.windows)
 
         self.__current = self.default
         self.__prerenders = self.prerender_surfaces()

@@ -3,14 +3,17 @@ from misc.path import get_path
 
 
 def create():
-    data = ['right', 'bottom', 'left', 'top']
+    # 14*8, 14
     images = []
-    for name in data:
-        images.append(Image.open(get_path(f"images/ghost/eaten/{name}/0.png")))
-    width, height = images[0].size
-    res = width, height * 4
-    r = 12, 14
+    for name in range(7):
+        images.append(Image.open(get_path(f"images/fruit/{name}.png")))
+    res = 14*7, 14
+    r = 14
     new_im = Image.new(mode='RGBA', size=res)
     for i in range(len(images)):
-        new_im.paste(images[i], (0, r[1]*i))
-    new_im.save(get_path(f'images/ghost/eaten.png'))
+        temp = Image.new(mode='RGBA', size=(14, 14))
+        old_size = images[i].size
+        new_size = r, r
+        temp.paste(images[i], (round((new_size[0]-old_size[0])/2), round((new_size[1]-old_size[1])/2)))
+        new_im.paste(images[i], (i*r, 0))
+    new_im.save(get_path(f'images/fruits.png'))

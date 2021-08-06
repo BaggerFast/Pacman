@@ -39,8 +39,6 @@ class Character(DrawableObject):
         self.speed = 0
 
     def set_direction(self, new_direction='none') -> None:
-        if not new_direction:
-            return
         self.shift_x, self.shift_y, rotate = self.direction[new_direction]
         if self.rotate == rotate:
             return
