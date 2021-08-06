@@ -3,19 +3,14 @@ from misc.path import get_path
 
 
 def create():
-    for k in ['blinky', 'inky', 'clyde', 'pinky']:
-        image = Image.open(get_path(f"images/ghost/{k}/right.png"))
-        width, height = image.size
-        res = width, height * 4
-        r = 14
-        new_im = Image.new(mode='RGBA', size=res)
-        new_im.paste(image, (0, 0))
-        rotate = [4, 3, 2]
-        for i in range(len(rotate)):
-            data = Image.new(mode='RGBA', size=image.size)
-            for j in range(4):
-                lc = image
-                local = lc.crop((j*r, 0, r*(j+1), r))
-                data.paste(local.transpose(rotate[i]), (r*j, 0))
-            new_im.paste(data, (0, r*(1+i)))
-        new_im.save(get_path(f'images/ghost/{k}/walk.png'))
+    data = ['right', 'bottom', 'left', 'top']
+    images = []
+    for name in data:
+        images.append(Image.open(get_path(f"images/ghost/eaten/{name}/0.png")))
+    width, height = images[0].size
+    res = width, height * 4
+    r = 12, 14
+    new_im = Image.new(mode='RGBA', size=res)
+    for i in range(len(images)):
+        new_im.paste(images[i], (0, r[1]*i))
+    new_im.save(get_path(f'images/ghost/eaten.png'))

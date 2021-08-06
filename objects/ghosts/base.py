@@ -40,7 +40,7 @@ class Base(Character):
         )
 
         # Анимации съедения
-        self.eaten_walk_anim = SpriteSheetAnimator(SpriteSheet(get_path('images/ghost/walk.png'), (16, 16)))
+        self.eaten_walk_anim = SpriteSheetAnimator(SpriteSheet(get_path('images/ghost/eaten.png'), (12, 14)))
 
         super().__init__(
             game,
