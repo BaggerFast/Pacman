@@ -1,7 +1,6 @@
 from copy import copy
 from typing import Union, Dict
 import pygame as pg
-
 from misc import Animator, get_path
 from misc.animator import SpriteSheetAnimator
 from misc.constants.skin_names import SkinsNames
@@ -15,8 +14,7 @@ class Skin:
         self.skin_cost: dict = cost
         self.__game = game
         self.__walk = SpriteSheetAnimator(SpriteSheet(get_path(f'{path}/walk.png'), (13, 13)))
-        self.__dead = Animator(SpriteSheet(get_path(f'{path}/dead.png'), (15, 15))[0],
-                               time_out=125, repeat=True)
+        self.__dead = Animator(SpriteSheet(get_path(f'{path}/dead.png'), (15, 15))[0], time_out=125, repeat=True)
         self.__image = self.prerender_surface()
 
     @property
@@ -36,8 +34,7 @@ class Skin:
         return self.__image
 
     def prerender_surface(self) -> ImageObject:
-        image = ImageObject(self.__game, pg.image.load(get_path(f'images/pacman/{self.name}/1.png')),
-                            (145, 125))
+        image = ImageObject(self.__game, self.__walk.sheet[0][3], (145, 125))
         image.scale(70, 70)
         return image
 
@@ -67,7 +64,7 @@ class Skins:
         return [key for key in self.__dict__.keys() if not key.startswith("_")]
 
     @property
-    def current(self):
+    def current(self) -> Skin:
         return self.__current
 
     @current.setter

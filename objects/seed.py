@@ -1,6 +1,5 @@
 import pygame as pg
-from misc import CELL_SIZE, Color, get_path, HIGH_CALORIE_SEEDS, EvenType
-from misc.constants.skin_names import SkinsNames
+from misc import CELL_SIZE, Color, get_path, EvenType
 from objects import DrawableObject
 
 

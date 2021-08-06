@@ -8,7 +8,7 @@ class Health(ImageObject):
     shift = 20
 
     def __init__(self, game, lives: int = 3, max_lives: int = 5):
-        super().__init__(game, image=get_path(f'images/pacman/{game.skins.current.name}/1.png'), pos=self.base_pos)
+        super().__init__(game, image=game.skins.current.walk.sheet[0][3], pos=self.base_pos)
         self.max_lives: int = max_lives
         self.__lives: int = self.__check_limits(lives)
         self.image = pg.transform.flip(self.image, True, False)
