@@ -10,7 +10,6 @@ class Animator:
         self.__animate_timer = 0
         self.images: List[pg.Surface] = images
         self.current_index: int = 0
-
         self.current_aura = pg.image.load(aura) if aura else aura
         self.__repeat: bool = repeat
         self.anim_finished: bool = False
@@ -33,7 +32,7 @@ class Animator:
         if pg.time.get_ticks() - self.__animate_timer > self.__time_out and self.__run:
             self.__animate_timer = pg.time.get_ticks()
             self.current_index += 1
-            self.__image_swap()
+            self.image_swap()
 
     def change_cur_image(self, index: int) -> None:
         self.current_index = index
@@ -41,7 +40,7 @@ class Animator:
     def change_cur_aura(self, aura: str = None) -> None:
         self.current_aura = pg.image.load(aura) if aura else aura
 
-    def __image_swap(self) -> None:
+    def image_swap(self) -> None:
         if self.current_index == len(self.images)-1:
             if self.__repeat:
                 self.stop()
