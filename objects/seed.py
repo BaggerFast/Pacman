@@ -5,16 +5,14 @@ from objects import DrawableObject
 
 
 class SeedAnimator(Animator):
-    def __init__(self, images: list[pg.Surface], game, time_out: int = 50, repeat: bool = False,
-                 aura: str = None):
+    def __init__(self, images: list[pg.Surface], game, time_out: int = 50,
+                 repeat: bool = False, aura: str = None):
         self.game = game
         super().__init__(images, time_out, repeat, aura)
 
-    def timer_check(self, flag) -> None:
-        if flag:
-            self.game.animate_timer = pg.time.get_ticks()
-            self.current_index += 1
-            self.image_swap()
+    def timer_check(self) -> None:
+        self.current_index += 1
+        self.image_swap()
 
 
 class Seed(DrawableObject):
@@ -51,19 +49,17 @@ class SeedContainer(DrawableObject):
         self.__ram_img = pg.image.load(get_path("images/ram.png"))
         self.__x = x
         self.__y = y
-        self.__seeds = seed_data
-        self.__energizers = energizer_data
-        self.seed_bf = list(self.seed_bufer())
-        self.big_seed_bf = list(self.big_seed_buffer())
+        self.seed_bf = list(self.seed_bufer(seed_data))
+        self.big_seed_bf = list(self.big_seed_buffer(energizer_data))
 
-    def seed_bufer(self):
-        for row in range(len(self.__seeds)):
-            for col in range(len(self.__seeds[row])):
-                if self.__seeds[row][col]:
+    def seed_bufer(self, data):
+        for row in range(len(data)):
+            for col in range(len(data[row])):
+                if data[row][col]:
                     yield Seed(self.game, (self.__x - 2 + col * CELL_SIZE, self.__y - 2 + row * CELL_SIZE), self.__ram_img)
 
-    def big_seed_buffer(self):
-        for energizer in self.__energizers:
+    def big_seed_buffer(self, data):
+        for energizer in data:
             yield BigSeed(self.game,  (self.__x + energizer[0] * CELL_SIZE, self.__y + energizer[1] * CELL_SIZE))
 
     def __draw_seeds(self) -> None:
@@ -75,7 +71,8 @@ class SeedContainer(DrawableObject):
         if flag:
             self.game.animate_timer = pg.time.get_ticks()
         for seed in self.big_seed_bf:
-            seed.animator.timer_check(flag)
+            if flag:
+                seed.animator.timer_check()
             seed.process_draw()
 
     def process_draw(self) -> None:
@@ -93,14 +90,15 @@ class SeedContainer(DrawableObject):
         for seed in self.seed_bf:
             if seed.check_collision(obj):
                 self.seed_bf.remove(seed)
+                pg.event.post(pg.event.Event(EvenType.EatSeed))
                 if not self.game.sounds.seed.get_busy():
                     self.game.sounds.seed.play()
-                pg.event.post(pg.event.Event(EvenType.EatSeed))
                 return
+
         for seed in self.big_seed_bf:
             if seed.check_collision(obj):
                 self.big_seed_bf.remove(seed)
                 pg.event.post(pg.event.Event(EvenType.EatEnergizer))
 
     def is_field_empty(self) -> bool:
-        return not (any([self.seed_bf, self.__energizers]))
+        return not (any([self.seed_bf, self.big_seed_bf]))
