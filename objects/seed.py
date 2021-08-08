@@ -1,5 +1,6 @@
 import pygame as pg
 from misc import CELL_SIZE, get_path, EvenType, Animator
+from misc.constants.skin_names import SkinsNames
 from misc.sprite_sheet import SpriteSheet
 from objects import DrawableObject
 
@@ -36,7 +37,8 @@ class Seed(DrawableObject):
 
 class BigSeed(Seed):
     def __init__(self, game, rect):
-        self.animator = SeedAnimator(SpriteSheet(get_path('images/big_seed.png'), (9, 9))[0], game)
+        path = 'images/big_seed.png' if game.skins.current.name != SkinsNames.chrome else "images/big_seed_google.png"
+        self.animator = SeedAnimator(SpriteSheet(get_path(path), (9, 9))[0], game)
         super().__init__(game, rect, self.animator.current_image)
 
     def process_draw(self) -> None:
