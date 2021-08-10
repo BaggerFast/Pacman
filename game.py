@@ -340,7 +340,11 @@ class Game:
             self.screen.fill(Color.BLACK)
 
         self.scenes.current.process_draw(blur_count)
-
+        # if self.current_scene == self.scenes.MAIN:
+        #     for i in range((self.width // 8)):
+        #         pg.draw.line(self.screen, (255, 255, 255), (i*8, 0), (i*8, self.height), 1)
+        #     for i in range((self.height // 8)):
+        #         pg.draw.line(self.screen, (255, 255, 255), (0, i*8), (self.width, i*8 ), 1)
         pg.display.flip()
 
     def __additional_draw(self, animations, blur_count, current_time, exceptions):

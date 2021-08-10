@@ -2,6 +2,8 @@ from typing import Tuple
 from .base import Base
 import pygame as pg
 
+from .ghost_states import GhostState
+
 
 class Pinky(Base):
     love_point_in_scatter_mode = (2, -3)
@@ -14,7 +16,7 @@ class Pinky(Base):
     def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()
-            if self.is_in_home and self.can_leave_home():
+            if self.is_in_home and self.can_leave_home:
                 self.set_direction("up")
                 self.go()
                 scene = self.game.current_scene
@@ -27,12 +29,12 @@ class Pinky(Base):
         super().ghosts_ai()
         scene = self.game.current_scene
         pacman = scene.pacman
-        if self.mode == 'Scatter':
+        if self.mode == GhostState.scatter:
             self.love_cell = self.love_point_in_scatter_mode
             if pg.time.get_ticks() - self.ai_timer >= self.scatter_time:
                 self.update_ai_timer()
-                self.mode = 'Chase'
-        if self.mode == 'Chase':
+                self.mode = GhostState.chase
+        if self.mode == GhostState.chase:
             rotate = pacman.rotate
             self.love_cell = (
                 pacman.get_cell()[0]+self.direction2[rotate][0]*2,
@@ -40,4 +42,4 @@ class Pinky(Base):
             )
             if pg.time.get_ticks() - self.ai_timer >= self.chase_time:
                 self.update_ai_timer()
-                self.mode = 'Scatter'
+                self.mode = GhostState.scatter

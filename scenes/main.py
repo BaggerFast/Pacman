@@ -262,9 +262,7 @@ class Scene(base.Scene):
             for ghost in self.ghosts:
                 ghost.update_ai_timer()
                 ghost.update_timer()
-        if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
-            self.__change_prefered_ghost()
-        if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
+        if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home:
             self.__change_prefered_ghost()
         for ghost in self.__not_prefered_ghosts:
             if ghost != self.__prefered_ghost:
