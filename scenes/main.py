@@ -1,3 +1,5 @@
+from pprint import pprint
+
 import pygame as pg
 from misc import ControlCheats
 from misc import LevelLoader, Font, EvenType
@@ -126,8 +128,7 @@ class Scene(base.Scene):
         self.__prefered_ghost = self.pinky
         self.__count_prefered_ghost = 0
 
-        for ghost in self.ghosts:
-            self.objects += [ghost, ghost.gg_text]
+        self.objects += self.ghosts
 
     def __create_hud(self):
         __high_scores_value_text = Text(self.game, str(self.game.records.data[0]), Font.MAIN_SCENE_SIZE,
@@ -188,7 +189,6 @@ class Scene(base.Scene):
                     ghost2.invisible()
             else:
                 if ghost.mode == 'Frightened':
-                    ghost.gg_text.text = f'{200 * self.game.difficulty ** 2 * 2 ** self.score.fear_count}'
                     ghost.invisible()
                     pg.event.post(pg.event.Event(EvenType.EatGhost))
                     self.ghost_text_flag = True

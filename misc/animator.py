@@ -4,7 +4,7 @@ from misc.sprite_sheet import SpriteSheet
 
 
 class Animator:
-    def __init__(self, images: List[pg.Surface], time_out: int = 50, repeat: bool = False,
+    def __init__(self, images: List[pg.Surface], time_out: int = 50, repeat: bool = True,
                  aura: str = None):
         self.__time_out = time_out
         self.__animate_timer = 0
@@ -42,7 +42,7 @@ class Animator:
 
     def image_swap(self) -> None:
         if self.current_index == len(self.images)-1:
-            if self.__repeat:
+            if not self.__repeat:
                 self.stop()
                 self.anim_finished = True
                 return
@@ -50,7 +50,7 @@ class Animator:
 
 
 class SpriteSheetAnimator(Animator):
-    def __init__(self, sheet: SpriteSheet, time_out: int = 50, repeat: bool = False, aura: str = None):
+    def __init__(self, sheet: SpriteSheet, time_out: int = 50, repeat: bool = True, aura: str = None):
         self.sheet: SpriteSheet = sheet
         self.rotate: int = 0
         super().__init__(self.sheet[0], time_out, repeat, aura)

@@ -10,6 +10,7 @@ from objects import Map, Text
 from misc.constants.variables import *
 from scenes import *
 
+
 def rand_color():
     max_states = 7
     min_val = 200
@@ -70,63 +71,34 @@ class Game:
             self.VOLUME = min(self.VOLUME, 100)
 
     class Music:
-        class Ch:
-            pacman: int = 0
-            intro: int = 1
-            game_over = menu = 2
-            siren: int = 3
-            seed = ghost = fruit = 4
-            pellet: int = 5
-
         def __init__(self, game):
             self.game = game
             self.reload_sounds()
 
         def base_preset(self):
-            self.click = SoundController(self.game, self.Ch.menu, Sounds.CLICK)
-            self.menu = SoundController(self.game, self.Ch.menu, Sounds.INTERMISSION)
-            self.credits = SoundController(self.game, self.Ch.menu, choice(Sounds.CREDITS))
-            self.siren = SoundController(self.game, self.Ch.siren, choice(Sounds.SIREN))
-            self.pellet = SoundController(self.game, self.Ch.pellet, Sounds.PELLET)
-            self.ghost = SoundController(self.game, self.Ch.ghost, Sounds.GHOST)
-            self.fruit = SoundController(self.game, self.Ch.fruit, Sounds.FRUIT)
-            self.cheat = SoundController(self.game, self.Ch.menu, Sounds.CHEAT)
+            self.click = SoundController(self.game, Sounds.Ch.menu, Sounds.CLICK)
+            self.menu = SoundController(self.game, Sounds.Ch.menu, Sounds.INTERMISSION)
+            self.credits = SoundController(self.game, Sounds.Ch.menu, choice(Sounds.CREDITS))
+            self.siren = SoundController(self.game, Sounds.Ch.siren, choice(Sounds.SIREN))
+            self.pellet = SoundController(self.game, Sounds.Ch.pellet, Sounds.PELLET)
+            self.ghost = SoundController(self.game, Sounds.Ch.ghost, Sounds.GHOST)
+            self.fruit = SoundController(self.game, Sounds.Ch.fruit, Sounds.FRUIT)
+            self.cheat = SoundController(self.game, Sounds.Ch.menu, Sounds.CHEAT)
 
         def preset_for_fun(self):
             if self.fun:
-                self.pacman = SoundController(self.game, self.Ch.pacman,
+                self.pacman = SoundController(self.game, Sounds.Ch.pacman,
                                               choice([path for path in Sounds.DEAD[1:]]))
-                self.seed = SoundController(self.game, self.Ch.seed, Sounds.SEED_FUN)
-                self.intro = SoundController(self.game, self.Ch.intro,
+                self.seed = SoundController(self.game, Sounds.Ch.seed, Sounds.SEED_FUN)
+                self.intro = SoundController(self.game, Sounds.Ch.intro,
                                              choice([path for path in Sounds.INTRO[1:]]))
-                self.gameover = SoundController(self.game, self.Ch.game_over,
+                self.gameover = SoundController(self.game, Sounds.Ch.game_over,
                                                 choice([path for path in Sounds.GAMEOVER[1:]]))
             else:
-                self.pacman = SoundController(self.game, self.Ch.pacman, Sounds.DEAD[0])
-                self.gameover = SoundController(self.game, self.Ch.game_over, Sounds.GAMEOVER[0])
-                self.seed = SoundController(self.game, self.Ch.seed, Sounds.SEED)
-                self.intro = SoundController(self.game, self.Ch.intro, Sounds.INTRO[0])
-
-
-        def preset_for_windows(self):
-            self.intro = SoundController(self.game, self.Ch.intro, Sounds.WINDOWS_SOUNDS[0])
-            self.pacman = SoundController(self.game, self.Ch.pacman, Sounds.WINDOWS_SOUNDS[1])
-            self.seed = SoundController(self.game, self.Ch.seed, Sounds.WINDOWS_SOUNDS[2])
-            self.gameover = SoundController(self.game, self.Ch.game_over, Sounds.WINDOWS_SOUNDS[3])
-            self.ghost = SoundController(self.game, self.Ch.ghost, Sounds.WINDOWS_SOUNDS[4])
-            self.fruit = SoundController(self.game, self.Ch.fruit, Sounds.WINDOWS_SOUNDS[5])
-
-        def preset_for_pokeball(self):
-            self.intro = SoundController(self.game, self.Ch.intro, Sounds.POC_INTRO)
-
-        def preset_for_half_life(self):
-            self.siren = SoundController(self.game, self.Ch.siren, Sounds.VALVE_SOUNDS[0])
-            self.intro = SoundController(self.game, self.Ch.intro, Sounds.VALVE_SOUNDS[1])
-            self.seed = SoundController(self.game, self.Ch.seed, Sounds.VALVE_SOUNDS[2])
-            self.ghost = SoundController(self.game, self.Ch.ghost, Sounds.VALVE_SOUNDS[3])
-            self.pellet = SoundController(self.game, self.Ch.pellet, Sounds.VALVE_SOUNDS[4])
-            self.fruit = SoundController(self.game, self.Ch.fruit, Sounds.VALVE_SOUNDS[5])
-            self.pacman = SoundController(self.game, self.Ch.pacman, Sounds.VALVE_SOUNDS[6])
+                self.pacman = SoundController(self.game, Sounds.Ch.pacman, Sounds.DEAD[0])
+                self.gameover = SoundController(self.game, Sounds.Ch.game_over, Sounds.GAMEOVER[0])
+                self.seed = SoundController(self.game, Sounds.Ch.seed, Sounds.SEED)
+                self.intro = SoundController(self.game, Sounds.Ch.intro, Sounds.INTRO[0])
 
         def reload_sounds(self):
             self.fun = self.game.settings.FUN
@@ -134,13 +106,7 @@ class Game:
             self.base_preset()
             if self.fun:
                 return
-            storage = {
-                SkinsNames.pokeball: lambda: self.preset_for_pokeball(),
-                SkinsNames.windows: lambda: self.preset_for_windows(),
-                SkinsNames.half_life: lambda: self.preset_for_half_life()
-            }
-            if self.game.skins.current.name in storage:
-                storage[self.game.skins.current.name]()
+            self.game.skins.current.sound_preset()
 
     class Scenes:
         def __init__(self, game):

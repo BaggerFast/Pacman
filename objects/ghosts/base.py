@@ -5,7 +5,6 @@ from misc.sprite_sheet import SpriteSheet
 from objects import Character, Pacman, Text
 from typing import Tuple
 import random
-
 from objects.ghosts.ghost_states import GhostState
 
 
@@ -65,7 +64,7 @@ class Base(Character):
 
         self.mode = GhostState.scatter
         self.gg_text = Text(
-            self.game, ' ',
+            self.game, '100',
             10, pg.Rect(0, 0, 0, 0),
         )
 
@@ -75,22 +74,33 @@ class Base(Character):
         self.old_timer = pg.time.get_ticks()
         self.old_ai_timer = pg.time.get_ticks()
 
-    def process_logic(self) -> None:
-        self.deceleration_multiplier_with_rect = 1
+    def behaviour_in_the_house(self):
+        # если он внутри дома и не может выйти то бегать вверх вниз
+        self.go()
+        if self.rect.centery >= self.start_pos[1] + 5:
+            self.set_direction('up')
+        elif self.rect.centery <= self.start_pos[1] - 5:
+            self.set_direction('down')
+
+    def slow_corridor(self):
         for rect in self.game.current_scene.slow_ghost_rect:
             if self.in_rect(rect):
                 self.deceleration_multiplier_with_rect = 2
+
+    def process_logic(self) -> None:
+        self.deceleration_multiplier_with_rect = 1
+        self.slow_corridor()
         self.deceleration_multiplier_with_rect *= self.deceleration_multiplier
+
         if self.is_in_home and not self.can_leave_home:
-            self.go()
-            if self.rect.centery >= self.start_pos[1] + 5:
-                self.set_direction('up')
-            elif self.rect.centery <= self.start_pos[1] - 5:
-                self.set_direction('down')
+            self.behaviour_in_the_house()
+
         if self.mode != GhostState.eaten:
             self.gg_text.rect = pg.Rect(self.rect.x, self.rect.y, 0, 0)
+
         if self.rotate is None:
             self.rotate = 0
+
         if not self.process_logic_iterator % self.deceleration_multiplier_with_rect:
             for i in range(self.acceleration_multiplier):
                 self.ghosts_ai()
@@ -127,6 +137,40 @@ class Base(Character):
     def update_ai_timer(self):
         self.ai_timer = pg.time.get_ticks()
 
+    def frightened_ai(self):
+        if pg.time.get_ticks() - self.ai_timer >= self.frightened_time - 2000:
+            self.animator = self.frightened_walk_anim2
+        if pg.time.get_ticks() - self.ai_timer >= self.frightened_time:
+            pg.event.post(pg.event.Event(EvenType.StopFearMode))
+            self.update_ai_timer()
+            self.deceleration_multiplier = 1
+            self.animator = self.walk_anim
+            self.game.sounds.pellet.stop()
+            self.mode = GhostState.scatter
+
+    def eaten_ai(self):
+        self.deceleration_multiplier = 1
+        self.love_cell = (self.game.current_scene.blinky.start_pos[0] // 8,
+                          (self.game.current_scene.blinky.start_pos[1] - 20) // 8)
+        if not self.tmp_flag1 and self.rect.center == self.game.current_scene.blinky.start_pos:
+            self.collision = False
+            self.set_direction('down')
+            self.tmp_flag1 = True
+        if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.game.current_scene.pinky.start_pos[1]:
+            self.animator = self.walk_anim
+            self.acceleration_multiplier = 1
+            self.deceleration_multiplier = 2
+            self.set_direction('up')
+            self.tmp_flag2 = True
+        if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
+            self.deceleration_multiplier = 1
+            self.set_direction('left')
+            self.mode = GhostState.scatter
+            self.collision = True
+            self.update_ai_timer()
+            self.tmp_flag1 = False
+            self.tmp_flag2 = False
+
     def ghosts_ai(self) -> None:
         if self.in_center() and self.collision and not self.is_invisible:
             if self.move_to(self.rotate):
@@ -150,39 +194,12 @@ class Base(Character):
             else:
                 self.set_direction(self.direction2[random.choice([i for i, v in enumerate(cell) if v])][2])
 
-        if self.mode == GhostState.frightened:
-            if pg.time.get_ticks() - self.ai_timer >= self.frightened_time-2000:
-                self.animator = self.frightened_walk_anim2
-            if pg.time.get_ticks() - self.ai_timer >= self.frightened_time:
-                pg.event.post(pg.event.Event(EvenType.StopFearMode))
-                self.update_ai_timer()
-                self.deceleration_multiplier = 1
-                self.animator = self.walk_anim
-                self.game.sounds.pellet.stop()
-                self.mode = GhostState.scatter
-
-        if self.mode == GhostState.eaten:
-            self.deceleration_multiplier = 1
-            self.love_cell = (self.game.current_scene.blinky.start_pos[0] // 8,
-                              (self.game.current_scene.blinky.start_pos[1]-20) // 8)
-            if not self.tmp_flag1 and self.rect.center == self.game.current_scene.blinky.start_pos:
-                self.collision = False
-                self.set_direction('down')
-                self.tmp_flag1 = True
-            if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.game.current_scene.pinky.start_pos[1]:
-                self.animator = self.walk_anim
-                self.acceleration_multiplier = 1
-                self.deceleration_multiplier = 2
-                self.set_direction('up')
-                self.tmp_flag2 = True
-            if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
-                self.deceleration_multiplier = 1
-                self.set_direction('left')
-                self.mode = GhostState.scatter
-                self.collision = True
-                self.update_ai_timer()
-                self.tmp_flag1 = False
-                self.tmp_flag2 = False
+        ghost_states = {
+            GhostState.frightened: self.frightened_ai,
+            GhostState.eaten: self.eaten_ai,
+        }
+        if self.mode in ghost_states:
+            ghost_states[self.mode]()
 
     def step(self) -> None:
         if not GHOSTS_MOVING:
@@ -201,3 +218,10 @@ class Base(Character):
         self.mode = GhostState.eaten
         self.animator = self.eaten_walk_anim
         self.acceleration_multiplier = 2
+
+    def process_draw(self) -> None:
+        if self.mode == GhostState.eaten:
+            self.gg_text.text = f'{200 * self.game.difficulty ** 2}' # * 2 ** self.game.score.fear_count2
+            self.gg_text.process_draw()
+        super().process_draw()
+

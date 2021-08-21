@@ -1,7 +1,5 @@
 from typing import Tuple, Union
-
 import pygame as pg
-
 from objects import DrawableObject
 
 

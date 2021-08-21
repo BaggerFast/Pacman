@@ -1,5 +1,5 @@
 from .image import ImageObject
-from misc import get_path, EvenType
+from misc import EvenType
 import pygame as pg
 
 

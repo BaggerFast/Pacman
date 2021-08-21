@@ -1,7 +1,6 @@
 import pygame as pg
 from typing import Tuple
 from misc.constants import CELL_SIZE
-from misc.path import get_list_path, get_path
 from misc.sprite_sheet import SpriteSheet
 from objects.base import DrawableObject
 from objects import Text, ImageObject

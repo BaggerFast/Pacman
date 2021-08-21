@@ -2,7 +2,33 @@ import pygame as pg
 from misc import CELL_SIZE, Animator
 from misc.animator import SpriteSheetAnimator
 from objects import DrawableObject
-from typing import Tuple, List
+from typing import Tuple, List, Union
+
+
+# class Direction:
+#     list = [
+#         (1, 0, "right"),
+#         (0, 1, "down"),
+#         (-1, 0, "left"),
+#         (0, -1, "up")
+#         ]
+#     json = {
+#         "right": (1, 0, 0),
+#         "down": (0, 1, 1),
+#         "left": (-1, 0, 2),
+#         "up": (0, -1, 3),
+#     }
+#
+#     @staticmethod
+#     def __getitem__(self, item):
+#         if isinstance(item, int):
+#             return Direction.list[item]
+#         elif isinstance(item, str):
+#             return Djson[item]
+#
+#     @staticmethod
+#     def __len__(self):
+#         return len(self.__list)
 
 
 class Character(DrawableObject):
@@ -11,7 +37,6 @@ class Character(DrawableObject):
         "down": (0, 1, 1),
         "left": (-1, 0, 2),
         "up": (0, -1, 3),
-        "none": (0, 0, None)
     }
 
     def __init__(self, game, animator: Animator, start_pos: Tuple[int, int], aura: str = None) -> None:
@@ -38,7 +63,7 @@ class Character(DrawableObject):
         self.animator.stop()
         self.speed = 0
 
-    def set_direction(self, new_direction='none') -> None:
+    def set_direction(self, new_direction: Union[str, int]) -> None:
         self.shift_x, self.shift_y, rotate = self.direction[new_direction]
         if self.rotate == rotate:
             return

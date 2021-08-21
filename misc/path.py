@@ -30,7 +30,3 @@ def create_file_if_not_exist(filepath: str, data: str = "") -> None:
         file = open(filepath, 'w')
         file.write(data)
         file.close()
-
-#
-# def check_collision(rect1: pg.Rect, rect2: pg.Rect):
-#     return rect1.center == rect2.center
