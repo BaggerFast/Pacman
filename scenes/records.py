@@ -6,7 +6,6 @@ from scenes import base
 
 
 class Scene(base.Scene):
-    medal_count = 5
     medals = SpriteSheet(sprite_path=get_path('images/medal.png'), sprite_size=(16, 16))[0]
 
     def create_static_objects(self):
@@ -47,7 +46,7 @@ class Scene(base.Scene):
 
     def __create_medals(self) -> None:
         def creator():
-            for i in range(self.medal_count):
+            for i in range(len(self.medals)):
                 image = ImageObject(self.game, self.medals[i], (16, 55 + 35 * i))
                 image.scale(35, 35)
                 yield image
@@ -58,7 +57,7 @@ class Scene(base.Scene):
         if sum(self.game.records.data) == 0:
             self.__error_text.process_draw()
         else:
-            for i in range(self.medal_count):
+            for i in range(len(self.medals)):
                 if self.game.records.data[i]:
                     self.medals_text[i].process_draw()
                     self.__medals[i].process_draw()

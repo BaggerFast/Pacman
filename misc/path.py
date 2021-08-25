@@ -15,10 +15,8 @@ def get_list_path(path, ext) -> List[str]:
     """
     path = get_path(path)
     pathes = [f for f in os.listdir(path) if f.endswith(f'.{ext.strip(".")}')]
-    pathes = sorted(pathes, key=lambda x: int(
-        x.split(f'.{ext.strip(".")}')[0] if x.split(f'.{ext.strip(".")}')[0].isdigit() else x))
-
-    return [os.path.join(*[path, f]) for f in pathes if f.endswith(f'.{ext.strip(".")}')]
+    pathes.sort(key=lambda x: x.split(f'.{ext.strip(".")}'))
+    return [os.path.join(*[path, f]) for f in pathes]
 
 
 def create_file_if_not_exist(filepath: str, data: str = "") -> None:

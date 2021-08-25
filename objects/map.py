@@ -1,8 +1,27 @@
 from copy import copy
+from random import randint, choice
+
 import pygame as pg
 from misc import get_path, Color
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
+
+
+def rand_color():
+    max_states = 7
+    min_val = 200
+    max_val = 230
+    state = randint(0, max_states)
+    data = [
+        (255, 255, 255),
+        (randint(min_val, max_val), 0, 0),
+        (0, randint(min_val, max_val), 0),
+        (0, 0, randint(min_val, max_val))
+    ]
+    for i, new_color in enumerate(data):
+        if state == max_states - i:
+            return new_color
+    return [randint(min_val, max_val) if choice([0, 1]) != i else 0 for i in range(3)]
 
 
 class Map:

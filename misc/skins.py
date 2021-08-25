@@ -14,8 +14,9 @@ class Skin:
         self.name: str = skin_name
         self.skin_cost: dict = cost
         self.game = game
-        self.__walk = SpriteSheetAnimator(SpriteSheet(get_path(f'{path}/walk.png'), (13, 13)))
-        self.__dead = Animator(SpriteSheet(get_path(f'{path}/dead.png'), (15, 15))[0], time_out=125, repeat=False)
+        self.__walk = SpriteSheetAnimator(SpriteSheet(get_path(f'images/{path}/walk.png'), (13, 13)))
+        self.__dead = Animator(SpriteSheet(get_path(f'images/{path}/dead.png'), (15, 15))[0],
+                               time_out=125, repeat=False)
         self.__image = self.prerender_surface()
 
     @property
@@ -76,12 +77,12 @@ class Skins:
         """
         self.__game = game
 
-        self.default = Skin(self.__game, f'images/pacman/default', {0: 0, 1: 0}, SkinsNames.default)
-        self.half_life = HalfLife(self.__game, f'images/pacman/half_life', {1: 14, 2: 10}, SkinsNames.half_life)
-        self.pokeball =PokeBall(self.__game, f'images/pacman/pokeball', {2: 12, 3: 8}, SkinsNames.pokeball)
-        self.edge = Skin(self.__game, f'images/pacman/edge', {3: 10, 4: 7}, SkinsNames.edge)
-        self.chrome = Skin(self.__game, f'images/pacman/chrome', {4: 7, 5: 6}, SkinsNames.chrome)
-        self.windows = Windows(self.__game, f'images/pacman/windows', {6: 5, 5: 4}, SkinsNames.windows)
+        self.default = Skin(self.__game, f'pacman/default', {0: 0, 1: 0}, SkinsNames.default)
+        self.half_life = HalfLife(self.__game, f'pacman/half_life', {1: 14, 2: 10}, SkinsNames.half_life)
+        self.pokeball = PokeBall(self.__game, f'pacman/pokeball', {2: 12, 3: 8}, SkinsNames.pokeball)
+        self.edge = Skin(self.__game, f'pacman/edge', {3: 10, 4: 7}, SkinsNames.edge)
+        self.chrome = Skin(self.__game, f'pacman/chrome', {4: 7, 5: 6}, SkinsNames.chrome)
+        self.windows = Windows(self.__game, f'pacman/windows', {6: 5, 5: 4}, SkinsNames.windows)
 
         self.__current = self.default
         self.__prerenders = self.prerender_surfaces()

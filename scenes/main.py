@@ -1,8 +1,7 @@
-from pprint import pprint
-
 import pygame as pg
 from misc import ControlCheats
 from misc import LevelLoader, Font, EvenType
+from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
 from objects import SeedContainer, Map, Text, Pacman, Health
 from objects.fruits import Fruit
@@ -12,11 +11,6 @@ from scenes import base
 
 
 class Scene(base.Scene):
-
-    blinky: Blinky
-    pinky: Pinky
-    inky: Inky
-    clyde: Clyde
 
     def create_static_objects(self):
         self.__load_from_map()
@@ -84,8 +78,7 @@ class Scene(base.Scene):
         self.objects = []
         self.game.sounds.siren.unpause()
         hp_cheat = ControlCheats(
-            self.game,
-            [['aezakmi', lambda: pg.event.post(pg.event.Event(EvenType.HealthInc))]]
+            [Cheat(self.game, 'aezakmi', lambda: pg.event.post(pg.event.Event(EvenType.HealthInc)))]
         )
         self.text[-1].surface.set_alpha(0)
         self.__create_map()

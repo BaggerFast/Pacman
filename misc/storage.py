@@ -53,16 +53,6 @@ class Storage(Field):
             file.write(string)
 
     def load(self) -> None:
-        # db = sqlite3.connect('saves.db')
-        # sql = db.cursor()
-        # sql.execute("""
-        #     CREATE TABLE IF NOT EXISTS settings(
-        #             SOUND BOOLEAN,
-        #             FUN BOOLEAN,
-        #             VOLUME INTEGER,
-        #             DIFFICULTY INTEGER
-        #     """)
-
         create_file_if_not_exist(self.__storage_filepath, json.dumps(self.dict(), indent=2))
         with open(self.__storage_filepath, "r") as file:
             try:

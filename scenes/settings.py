@@ -19,7 +19,7 @@ class Scene(base.Scene):
             self.update_text()
 
         def click(self) -> None:
-            self.game.settings.DIFFICULTY = (self.game.settings.DIFFICULTY + 1) % len(self.__difficulties)
+            self.game.settings.DIFFICULTY = (self.game.settings.DIFFICULTY + 1) % 3
             self.update_text()
             self.select()
 

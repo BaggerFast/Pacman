@@ -5,7 +5,7 @@ from misc.constants.skin_names import SkinsNames
 from misc.sprite_sheet import SpriteSheet
 from objects import ButtonController, Text, Button, ImageObject
 from scenes import base
-from misc import Font, get_list_path, BUTTON_SKIN_BUY
+from misc import Font, BUTTON_SKIN_BUY
 
 
 class Scene(base.Scene):
@@ -47,6 +47,7 @@ class Scene(base.Scene):
                 self.game.store_fruit(key, -self.value.skin_cost[key])
             self.game.unlock_skin(self.value.name)
             self.game.scenes.current.create_objects()
+
 
     def create_static_objects(self) -> None:
         self.skins = {
@@ -147,8 +148,8 @@ class Scene(base.Scene):
 
     def update_button_text(self):
         for button in self.__button_controller.buttons:
-            if not (hasattr(button, "value") and hasattr(button.value, "name")):
-                continue
+            if not type(button) in [self.SkinButton, self.BuyButton]:
+                return
             if self.game.skins.current.name == button.value.name:
                 if not (button.text.startswith("-") or button.text.endswith("-")):
                     button.text = f'-{button.text}-'

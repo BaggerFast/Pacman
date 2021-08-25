@@ -2,24 +2,19 @@ import pygame as pg
 
 
 class Cheat:
-    def __init__(self, game, cheat) -> None:
-        self.cheat_code = cheat[0]
-        self.function = cheat[1]
+    def __init__(self, game, code, func) -> None:
+        self.cheat_code = code
+        self.function = func
         self.game = game
 
-    def run(self) -> None:
+    def logic(self) -> None:
+        self.game.sounds.cheat.play()
         self.function()
-
-    def check_enter_code(self, enter_code) -> bool:
-        if enter_code == self.cheat_code:
-            self.game.sounds.cheat.play()
-            self.run()
-        return enter_code == self.cheat_code
 
 
 class ControlCheats:
-    def __init__(self, game, cheat_codes):
-        self.cheats: list[Cheat] = [Cheat(game, cheat) for cheat in cheat_codes]
+    def __init__(self, cheats: list[Cheat]):
+        self.cheats: list[Cheat] = cheats
         self.timer = pg.time.get_ticks()
         self.enter_code: str = ''
         self.old_enter_code: str = ''
@@ -29,7 +24,8 @@ class ControlCheats:
 
     def process_logic(self) -> None:
         for cheat in self.cheats:
-            if cheat.check_enter_code(self.enter_code):
+            if cheat.cheat_code == self.enter_code:
+                cheat.logic()
                 self.enter_code = ''
         if self.old_enter_code == self.enter_code and pg.time.get_ticks() - self.timer >= 1000:
             self.enter_code = ''

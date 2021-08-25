@@ -2,30 +2,15 @@ import sys
 from random import choice, randint
 import pygame as pg
 from PIL import Image, ImageFilter
-from misc import Sounds, ControlCheats
+from misc import Sounds, ControlCheats, EvenType
+from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
 from misc.sound_controller import SoundController
 from misc import Color, HighScore, get_path, List, get_list_path, LevelLoader, Skins, Storage
 from objects import Map, Text
 from misc.constants.variables import *
+from objects.map import rand_color
 from scenes import *
-
-
-def rand_color():
-    max_states = 7
-    min_val = 200
-    max_val = 230
-    state = randint(0, max_states)
-    data = [
-        (255, 255, 255),
-        (randint(min_val, max_val), 0, 0),
-        (0, randint(min_val, max_val), 0),
-        (0, 0, randint(min_val, max_val))
-    ]
-    for i, new_color in enumerate(data):
-        if state == max_states - i:
-            return new_color
-    return [randint(min_val, max_val) if choice([0, 1]) != i else 0 for i in range(3)]
 
 
 class Game:
@@ -206,14 +191,17 @@ class Game:
         self.skins = Skins(self)
 
         self.cheats_var = self.Cheats(self)
+
         self.read_from_storage()
 
-        self.cheats = ControlCheats(self, [
-            ['skins', lambda: self.cheats_var.update("UNLOCK_SKINS")],
-            ['maps', lambda: self.cheats_var.update("UNLOCK_LEVELS")],
-            ['lives', lambda: self.cheats_var.update("INFINITY_LIVES")],
-            ['collision', lambda: self.cheats_var.update("GHOSTS_COLLISION")]
-            ])
+        self.cheats = ControlCheats(
+            [
+                Cheat(self, 'skins', lambda: self.cheats_var.update("UNLOCK_SKINS")),
+                Cheat(self, 'maps', lambda: self.cheats_var.update("UNLOCK_LEVELS")),
+                Cheat(self, 'lives', lambda: self.cheats_var.update("INFINITY_LIVES")),
+                Cheat(self, 'collision', lambda: self.cheats_var.update("GHOSTS_COLLISION"))
+            ]
+        )
 
         self.sounds = self.Music(self)
         self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else SkinsNames.default
@@ -225,7 +213,8 @@ class Game:
         self.storage = Storage(self)
         self.settings = self.Settings(self.storage)
         self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
-        self.maps.cur_id = int(self.storage.last_level_id) if int(self.storage.last_level_id) in self.unlocked_levels else self.__def_level_id
+        self.maps.cur_id = int(self.storage.last_level_id) if int(
+            self.storage.last_level_id) in self.unlocked_levels else self.__def_level_id
         self.unlocked_skins = self.skins.all_skins if self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
         self.eaten_fruits = self.storage.eaten_fruits
         self.highscores = self.storage.highscores
@@ -306,11 +295,6 @@ class Game:
             self.screen.fill(Color.BLACK)
 
         self.scenes.current.process_draw(blur_count)
-        # if self.current_scene == self.scenes.MAIN:
-        #     for i in range((self.width // 8)):
-        #         pg.draw.line(self.screen, (255, 255, 255), (i*8, 0), (i*8, self.height), 1)
-        #     for i in range((self.height // 8)):
-        #         pg.draw.line(self.screen, (255, 255, 255), (0, i*8), (self.width, i*8 ), 1)
         pg.display.flip()
 
     def __additional_draw(self, animations, blur_count, current_time, exceptions):
@@ -344,7 +328,8 @@ class Game:
         current_time = pg.time.get_ticks() / 1000
         surify = pg.image.tostring(self.scenes.MAIN.template, 'RGBA')
         impil = Image.frombytes('RGBA', self.__resolution, surify)
-        piler = impil.filter(ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count)))
+        piler = impil.filter(
+            ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count)))
         surface = pg.image.fromstring(
             piler.tobytes(), piler.size, piler.mode).convert()
         self.screen.blit(surface, (0, 0))
