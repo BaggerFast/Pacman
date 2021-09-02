@@ -5,32 +5,6 @@ from objects import DrawableObject
 from typing import Tuple, List, Union
 
 
-# class Direction:
-#     list = [
-#         (1, 0, "right"),
-#         (0, 1, "down"),
-#         (-1, 0, "left"),
-#         (0, -1, "up")
-#         ]
-#     json = {
-#         "right": (1, 0, 0),
-#         "down": (0, 1, 1),
-#         "left": (-1, 0, 2),
-#         "up": (0, -1, 3),
-#     }
-#
-#     @staticmethod
-#     def __getitem__(self, item):
-#         if isinstance(item, int):
-#             return Direction.list[item]
-#         elif isinstance(item, str):
-#             return Djson[item]
-#
-#     @staticmethod
-#     def __len__(self):
-#         return len(self.__list)
-
-
 class Character(DrawableObject):
     direction = {
         "right": (1, 0, 0),

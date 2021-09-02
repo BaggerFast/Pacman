@@ -1,7 +1,6 @@
 import pygame as pg
 from misc import Animator
 from objects.character_base import Character
-from typing import Tuple
 
 
 class Pacman(Character):
@@ -12,7 +11,7 @@ class Pacman(Character):
         pg.K_d: 'right'
     }
 
-    def __init__(self, game, start_pos: Tuple[int, int]) -> None:
+    def __init__(self, game, start_pos: tuple[int, int]) -> None:
         self.__walk_anim: Animator = game.skins.current.walk
         self.__dead_anim: Animator = game.skins.current.dead
         super().__init__(game, self.__walk_anim, start_pos)

@@ -297,5 +297,5 @@ class Scene(base.Scene):
         self.game.scenes.set(self)
 
     def __call__(self, *args, **kwargs):
-        self.game.scenes.set(self, reset=True, loading=True)
+        self.game.scenes.set(self, reset=True)
 

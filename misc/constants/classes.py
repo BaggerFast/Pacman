@@ -42,7 +42,7 @@ class Sounds:
             setattr(Sounds, key, attrs)
 
     @staticmethod
-    def load_sounds(loading_text, game):
+    def load_sounds():
         list_path = lambda path: [pg.mixer.Sound(path) for path in get_list_path(f'sounds/{path}', ext='ogg')]
         path = lambda path: pg.mixer.Sound(get_path(f'sounds/{path}'))
         func = {
@@ -64,14 +64,6 @@ class Sounds:
             "CREDITS": lambda: list_path('credits'),
         }
         [Sounds.load(key, attr) for key, attr in func.items()]
-
-    @staticmethod
-    def loading():
-        pg.event.get()
-        Sounds.__counter += 1
-        Sounds.__loading_text = f"Loading {int((Sounds.__counter / Sounds.__count) * 100)}%"
-        Sounds.__game.screen.fill(Color.BLACK)
-        Sounds.__game.draw_load_img(Sounds.__loading_text)
 
 
 class Color(NamedTuple):

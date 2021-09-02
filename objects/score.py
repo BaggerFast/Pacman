@@ -16,9 +16,9 @@ class Score(DrawableObject):
         self.fear_count = 0
         self.data = {
             EvenType.EatSeed: lambda: self + Points.POINT_PER_SEED * self.game.difficulty,
-            EvenType.EatEnergizer: self.__eat_energizer,
-            EvenType.EatGhost: self.__eat_ghost,
-            EvenType.StopFearMode: self.__deactivate_fear_mode,
+            EvenType.EatEnergizer: lambda: self.__eat_energizer(),
+            EvenType.EatGhost: lambda: self.__eat_ghost(),
+            EvenType.StopFearMode: lambda: self.__deactivate_fear_mode(),
         }
         self.text = Text(self.game, f'{self.__value}', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
 
@@ -51,12 +51,9 @@ class Score(DrawableObject):
         self + bonus * self.game.difficulty
 
     def __eat_energizer(self):
-        self.__activate_fear_mode()
+        self.fear_mode = True
         for ghost in self.game.current_scene.ghosts:
             ghost.toggle_mode_to_frightened()
-
-    def __activate_fear_mode(self) -> None:
-        self.fear_mode = True
 
     def __deactivate_fear_mode(self) -> None:
         self.fear_mode = False

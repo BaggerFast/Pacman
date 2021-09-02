@@ -1,13 +1,13 @@
 import sys
-from random import choice, randint
+from random import choice
 import pygame as pg
 from PIL import Image, ImageFilter
-from misc import Sounds, ControlCheats, EvenType
+from misc import Sounds, ControlCheats
 from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
 from misc.sound_controller import SoundController
 from misc import Color, HighScore, get_path, List, get_list_path, LevelLoader, Skins, Storage
-from objects import Map, Text
+from objects import Map
 from misc.constants.variables import *
 from objects.map import rand_color
 from scenes import *
@@ -22,11 +22,11 @@ class Game:
             self.UNLOCK_LEVELS = UNLOCK_LEVELS
             self.INFINITY_LIVES = INFINITY_LIVES
             self.GHOSTS_COLLISION = GHOSTS_COLLISION
-            self.game: Game = game
             self.cheat_storage = {
                 'UNLOCK_SKINS': lambda: self.unlock_skins(),
                 'UNLOCK_LEVELS': lambda: self.unlock_levels()
             }
+            self.game: Game = game
 
         def unlock_skins(self):
             self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.UNLOCK_SKINS else self.game.storage.unlocked_skins
@@ -112,7 +112,7 @@ class Game:
         def current(self):
             return self.__current
 
-        def set(self, scene: base.Scene, reset: bool = False, loading: bool = False) -> None:
+        def set(self, scene: base.Scene, reset: bool = False) -> None:
             """
             :param scene: NEXT scene (contains in game.scenes.*)
             :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
@@ -121,8 +121,6 @@ class Game:
             """
             if scene != self.MENU:
                 self.__game.scenes.MENU.first_run = False
-            if loading:
-                self.__game.draw_load_img()
             scene.prev_scene = self.__current
             if self.__current is not None:
                 self.__current.on_deactivate()
@@ -181,8 +179,6 @@ class Game:
         self.screen = pg.display.set_mode(self.__resolution, pg.SCALED)
         self.__clock = pg.time.Clock()
         self.__game_over: bool = False
-        self.draw_load_img()
-        Sounds.load_sounds(self.load_img_text, self)
         self.timer = pg.time.get_ticks() / 1000
         self.time_out: int = 125
         self.animate_timer: int = 0
@@ -191,7 +187,7 @@ class Game:
         self.skins = Skins(self)
 
         self.cheats_var = self.Cheats(self)
-
+        Sounds.load_sounds()
         self.read_from_storage()
 
         self.cheats = ControlCheats(
@@ -253,12 +249,6 @@ class Game:
     @staticmethod
     def __exit_hotkey_pressed(event: pg.event.Event) -> bool:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
-
-    def draw_load_img(self, text=None):
-        self.load_img_text = Text(self, text="Loading" if text is None else text, size=20)
-        self.load_img_text.move_center(self.width // 2, self.height // 2)
-        self.load_img_text.process_draw()
-        pg.display.flip()
 
     def __process_exit_events(self, event: pg.event.Event) -> None:
         if Game.__exit_button_pressed(event) or Game.__exit_hotkey_pressed(event):
