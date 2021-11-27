@@ -1,16 +1,10 @@
 from collections import Generator
 import pygame as pg
 from PIL import ImageFilter, Image
-from objects import ButtonController
-from objects.button import Button
+from objects.button import ButtonController
 
 
 class BaseScene:
-    class SceneButton(Button):
-        def __init__(self, **args):
-            args["function"] = args.pop("scene")
-            super().__init__(**args)
-
     def __init__(self, game):
         self.game = game
         self.prev_scene = None

@@ -1,5 +1,6 @@
 import pygame as pg
-from objects import Button, Text
+from objects import Text
+from objects.button import Button
 from misc import BUTTON_DEFAULT_COLORS, Font
 from scenes.base import BaseScene
 
@@ -23,27 +24,29 @@ class EndScene(BaseScene):
 
     def button_init(self) -> None:
         yield Button(
-            self.game, pg.Rect(0, 0, 180, 35),
-            self.__next_level, 'NEXT LEVEL',
+            game=self.game,
+            rect=pg.Rect(0, 0, 180, 35),
+            function=self.__next_level,
+            text='NEXT LEVEL',
             center=(self.game.width // 2, 210),
             text_size=Font.BUTTON_TEXT_SIZE,
             colors=BUTTON_DEFAULT_COLORS
         )
         if not self.__is_last_level():
-            yield self.SceneButton(
+            yield Button(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 180, 35),
+                rect=pg.Rect(0, 0, 180, 35),
                 text='EXIT',
-                scene=self.game.scenes.MENU,
+                function=self.game.scenes.MENU,
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS
             )
-        yield self.SceneButton(
+        yield Button(
             game=self.game,
-            geometry=pg.Rect(0, 0, 180, 35),
+            rect=pg.Rect(0, 0, 180, 35),
             text='MENU',
-            scene=self.game.scenes.MENU,
+            function=self.game.scenes.MENU,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE,
             colors=BUTTON_DEFAULT_COLORS

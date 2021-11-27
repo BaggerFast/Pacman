@@ -1,6 +1,7 @@
 import pygame as pg
 from objects import Text
 from misc import Font, LIGHT_BUTTON_COLORS
+from objects.button import Button
 from scenes.base import BaseScene
 from scenes.menu import rand_color
 
@@ -14,11 +15,11 @@ class PauseScene(BaseScene):
             "MENU": self.game.scenes.MENU,
         }
         for i, (name, scene) in enumerate(names.items()):
-            yield self.SceneButton(
+            yield Button(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 180, 40),
+                rect=pg.Rect(0, 0, 180, 40),
                 text=name,
-                scene=scene,
+                function=scene,
                 center=(self.game.width // 2, 100+45*i),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=LIGHT_BUTTON_COLORS

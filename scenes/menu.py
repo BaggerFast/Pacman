@@ -1,6 +1,7 @@
 import pygame as pg
 from PIL import ImageFilter, Image
 from objects import Text, ImageObject
+from objects.button import Button
 from objects.map import rand_color
 from misc import Font, Color, VERSION
 from scenes.base import BaseScene
@@ -71,11 +72,11 @@ class MenuScene(BaseScene):
             "EXIT": self.game.exit_game,
         }
         for i, (name, func) in enumerate(names.items()):
-            yield self.SceneButton(
+            yield Button(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 180, 26),
+                rect=pg.Rect(0, 0, 180, 26),
                 text=name,
-                scene=func,
+                function=func,
                 center=(self.game.width // 2, 95 + i * 28),
                 text_size=Font.BUTTON_TEXT_SIZE
             )

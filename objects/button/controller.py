@@ -51,7 +51,8 @@ class ButtonController(DrawableObject):
 
     def process_key_down(self, event: pg.event.Event) -> None:
         if event.type in self.kb_actions.keys():
-            self.kb_actions[event.type]()
+            if not (event.type == EvenType.PressBtn and self.active_button_index < 0):
+                self.kb_actions[event.type]()
 
     def get_button_under_mouse(self, pos) -> Union[int, None]:
         for index, button in enumerate(self.buttons):

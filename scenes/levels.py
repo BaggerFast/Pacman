@@ -1,32 +1,12 @@
 from copy import copy
 import pygame as pg
 from misc import Font
-from objects import ButtonController, Text
-from objects.button import Button
+from objects.button import ButtonController, LvlButton, Button
+from objects import Text
 from scenes.base import BaseScene
 
 
 class LevelsScene(BaseScene):
-    class LvlButton(Button):
-        def __init__(self, **args):
-            self.value = args.pop("value")
-            super().__init__(**args)
-
-        def click(self):
-            self.game.maps.cur_id = self.value[0]
-            self.game.records.update_records()
-            self.game.scenes.set(self.game.scenes.MENU, reset=True)
-
-        def select(self) -> None:
-            self.game.scenes.current.is_current = True
-            self.game.scenes.current.preview.image = self.value[1].image
-            super().select()
-
-        def deselect(self) -> None:
-            if not self.game.scenes.current.is_current:
-                self.game.scenes.current.preview.image = self.game.maps.images[self.game.maps.cur_id].image
-            super().deselect()
-
     __buttons_on_scene = 4
 
     def process_event(self, event: pg.event.Event) -> None:
@@ -44,19 +24,19 @@ class LevelsScene(BaseScene):
 
     def button_init(self):
         for i in range(self.__scroll, self.__scroll + self.__buttons_on_scene):
-            yield self.LvlButton(
+            yield LvlButton(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 100, 40),
+                rect=pg.Rect(0, 0, 100, 40),
                 value=(i, self.game.maps.images[i]),
                 text=f'LEVEL {i + 1}',
                 center=(self.game.width // 2 - 55, (85 + 40 * (i - self.__scroll))),
                 text_size=Font.BUTTON_TEXT_SIZE - 4,
                 active=i in self.game.unlocked_levels)
-        yield self.SceneButton(
+        yield Button(
             game=self.game,
-            geometry=pg.Rect(0, 0, 180, 40),
+            rect=pg.Rect(0, 0, 180, 40),
             text='MENU',
-            scene=self.game.scenes.MENU,
+            function=self.game.scenes.MENU,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 

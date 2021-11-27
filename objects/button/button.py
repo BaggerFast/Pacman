@@ -9,18 +9,17 @@ class Button(BaseButton):
     STATE_HOVER = 1
     STATE_CLICK = 2
 
-    def __init__(self, game, geometry: Union[tuple, pg.Rect], function: Callable[[], None] = None,
-                 text: str = 'Define me', colors: ButtonColor = BUTTON_DEFAULT_COLORS, center: Tuple[int, int] = None,
-                 text_size: int = 60, font=Font.DEFAULT, active: bool = True) -> None:
+    def __init__(self, game, rect: Union[tuple, pg.Rect], text: str, function: Callable[[], None] = None,
+                 colors: ButtonColor = BUTTON_DEFAULT_COLORS, center: Tuple[int, int] = None,
+                 text_size: int = 60, active: bool = True) -> None:
 
-        super().__init__(game, geometry, function)
+        super().__init__(game, rect, function)
         self.__text = text
-        self.font = pg.font.Font(font, text_size)
+        self.__font = pg.font.Font(Font.DEFAULT, text_size)
         self.active = active
         self.__colors: ButtonColor = colors
         self.state = self.STATE_INITIAL
         self.surfaces = self.prepare_surfaces()
-        self.left_button_pressed = False
         if center:
             self.move_center(*center)
 
@@ -31,7 +30,7 @@ class Button(BaseButton):
         if event.type != pg.MOUSEMOTION:
             return
         if self.mouse_hover(event.pos):
-            if not self.left_button_pressed and self.state != self.STATE_HOVER:
+            if self.state != self.STATE_HOVER:
                 self.select()
         elif self.state != self.STATE_INITIAL:
             self.deselect()
@@ -39,16 +38,12 @@ class Button(BaseButton):
     def process_mouse_button_down(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONDOWN or event.type == pg.MOUSEWHEEL:
             return
-        if event.button == pg.BUTTON_LEFT:
-            self.left_button_pressed = True
         if self.mouse_hover(event.pos):
             self.activate()
 
     def process_mouse_button_up(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONUP or event.type == pg.MOUSEWHEEL:
             return
-        if event.button == pg.BUTTON_LEFT:
-            self.left_button_pressed = False
         if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT and self.state != self.STATE_INITIAL:
             self.deselect()
 
@@ -58,10 +53,7 @@ class Button(BaseButton):
         self.process_mouse_motion(event)
         self.process_mouse_button_down(event)
         self.process_mouse_button_up(event)
-        if event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
-            if self.rect.collidepoint(event.pos):
-                self.click()
-                self.game.sounds.click.play()
+        super().process_event(event)
 
     @property
     def colors(self):
@@ -91,7 +83,7 @@ class Button(BaseButton):
         surface = pg.Surface(self.rect.size).convert_alpha()
         zero_rect = surface.get_rect()
 
-        text_surface = self.font.render(self.text, False, self.__colors[state_index].text)
+        text_surface = self.__font.render(self.text, False, self.__colors[state_index].text)
         zero_text_rect = text_surface.get_rect()
         zero_text_rect.center = zero_rect.center
 

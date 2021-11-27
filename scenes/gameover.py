@@ -1,6 +1,7 @@
 import pygame as pg
 from objects import Text
 from misc import Font, BUTTON_DEFAULT_COLORS
+from objects.button import Button
 from scenes.base import BaseScene
 
 
@@ -26,11 +27,11 @@ class GameOverScene(BaseScene):
             "MENU": self.game.scenes.MENU,
         }
         for i, (name, scene) in enumerate(names.items()):
-            yield self.SceneButton(
+            yield Button(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 180, 35),
+                rect=pg.Rect(0, 0, 180, 35),
                 text=name,
-                scene=scene,
+                function=scene,
                 center=(self.game.width // 2, 210+40*i),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS

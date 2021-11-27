@@ -2,6 +2,7 @@ import pygame as pg
 from misc import Color, Font, get_path
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject, Text
+from objects.button import Button
 from scenes.base import BaseScene
 
 
@@ -18,11 +19,11 @@ class RecordsScene(BaseScene):
         self.__create_text_labels()
 
     def button_init(self) -> None:
-        yield self.SceneButton(
+        yield Button(
             game=self.game,
-            geometry=pg.Rect(0, 0, 180, 40),
+            rect=pg.Rect(0, 0, 180, 40),
             text='MENU',
-            scene=self.game.scenes.MENU,
+            function=self.game.scenes.MENU,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 

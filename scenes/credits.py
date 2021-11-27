@@ -27,16 +27,16 @@ class CreditsScene(BaseScene):
         self.__students2 = self.__data.copy()
 
     def button_init(self) -> None:
-        yield self.SceneButton(
+        yield Button(
             game=self.game,
-            geometry=pg.Rect(0, 0, 100, 35),
-            scene=self.game.scenes.MENU,
+            rect=pg.Rect(0, 0, 100, 35),
+            function=self.game.scenes.MENU,
             text="MENU",
             center=(self.game.width // 4, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 
         yield Button(game=self.game,
-                     geometry=pg.Rect(0, 0, 100, 35),
+                     rect=pg.Rect(0, 0, 100, 35),
                      text="SKIP",
                      function=self.__skip_sound,
                      center=(self.game.width // 4 + 110, 250),
