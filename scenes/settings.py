@@ -2,10 +2,10 @@ import pygame as pg
 from misc import Font, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from objects import Text
 from objects.button import Button
-from scenes import base
+from scenes.base import BaseScene
 
 
-class Scene(base.Scene):
+class SettingsScene(BaseScene):
     class DifficultyButton(Button):
 
         __difficulties = [

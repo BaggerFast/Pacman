@@ -2,10 +2,10 @@ import pygame as pg
 from misc import Color, Font, get_path
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject, Text
-from scenes import base
+from scenes.base import BaseScene
 
 
-class Scene(base.Scene):
+class RecordsScene(BaseScene):
     medals = SpriteSheet(sprite_path=get_path('images/medal.png'), sprite_size=(16, 16))[0]
 
     def create_static_objects(self):

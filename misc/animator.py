@@ -1,6 +1,5 @@
 from typing import List
 import pygame as pg
-from misc.sprite_sheet import SpriteSheet
 
 
 class Animator:
@@ -50,8 +49,8 @@ class Animator:
 
 
 class SpriteSheetAnimator(Animator):
-    def __init__(self, sheet: SpriteSheet, time_out: int = 50, repeat: bool = True, aura: str = None):
-        self.sheet: SpriteSheet = sheet
+    def __init__(self, sheet, time_out: int = 50, repeat: bool = True, aura: str = None):
+        self.sheet = sheet
         self.rotate: int = 0
         super().__init__(self.sheet[0], time_out, repeat, aura)
 

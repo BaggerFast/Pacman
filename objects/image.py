@@ -1,6 +1,6 @@
-from typing import Tuple, Union
 import pygame as pg
-from objects import DrawableObject
+from typing import Tuple, Union
+from objects.base import DrawableObject
 
 
 class ImageObject(DrawableObject):

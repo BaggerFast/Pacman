@@ -1,14 +1,16 @@
 import pygame as pg
-from misc import Animator
-from objects.character_base import Character
+from misc import Animator, EvenType
+from misc.animator import SpriteSheetAnimator
+from misc.keyboards import PacmanKeyboard
+from objects.characters.character_base import Character
 
 
 class Pacman(Character):
-    action = {
-        pg.K_w: 'up',
-        pg.K_a: 'left',
-        pg.K_s: 'down',
-        pg.K_d: 'right'
+    dir_action = {
+        EvenType.GoUp: (0, -1, 3),
+        EvenType.GoDown: (0, 1, 1),
+        EvenType.GoLeft: (-1, 0, 2),
+        EvenType.GoRight: (1, 0, 0)
     }
 
     def __init__(self, game, start_pos: tuple[int, int]) -> None:
@@ -16,19 +18,29 @@ class Pacman(Character):
         self.__dead_anim: Animator = game.skins.current.dead
         super().__init__(game, self.__walk_anim, start_pos)
         self.dead = False
-        self.__feature_rotate = "none"
+        self.kb = PacmanKeyboard()
+        self.__feature_rotate = (0, 0, 0)
 
     @property
     def dead_anim(self):
         return self.__dead_anim
 
     def process_event(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key in self.action.keys() and not self.dead:
+        self.kb.process_event(event)
+        if event.type in self.dir_action.keys() and not self.dead:
             self.go()
-            self.__feature_rotate = self.action[event.key]
+            self.__feature_rotate = self.dir_action[event.type]
 
     def get_rect(self):
         return self.animator.current_image.get_rect()
+
+    def set_dir(self):
+        self.shift_x, self.shift_y, rotate = self.__feature_rotate
+        if self.rotate == rotate:
+            return
+        self.rotate = rotate
+        if isinstance(self.animator, SpriteSheetAnimator):
+            self.animator.rotate = rotate
 
     def process_logic(self) -> None:
         self.animator.timer_check()
@@ -40,8 +52,8 @@ class Pacman(Character):
             else:
                 self.stop()
                 self.animator.change_cur_image(0)
-            if self.move_to(self.direction[self.__feature_rotate][2]):
-                self.set_direction(self.__feature_rotate)
+            if self.move_to(self.__feature_rotate[2]):
+                self.set_dir()
         super().process_logic()
 
     def death(self) -> None:

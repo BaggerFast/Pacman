@@ -1,11 +1,11 @@
 import pygame as pg
 from objects import Text
-from scenes import base
 from misc import Font, LIGHT_BUTTON_COLORS
+from scenes.base import BaseScene
 from scenes.menu import rand_color
 
 
-class Scene(base.Scene):
+class PauseScene(BaseScene):
     def button_init(self) -> None:
         names = {
             "CONTINUE": self.game.scenes.MAIN.Continue,

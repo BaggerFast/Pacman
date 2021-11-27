@@ -1,7 +1,7 @@
-from misc.constants.skin_names import SkinsNames
-from . import DrawableObject, Text
-from misc import EvenType, Font, Points
 import pygame as pg
+from objects import Text
+from objects.base import DrawableObject
+from misc import EvenType, Points, Font, SkinsNames
 
 
 class Score(DrawableObject):

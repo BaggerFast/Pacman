@@ -1,10 +1,9 @@
-from .base import DrawableObject
-from .character_base import Character
 from .image import ImageObject
-from .map import Map
-from .pacman import Pacman
-from .seed import SeedContainer
 from .text import Text
-from .button import *
-from .ghosts import *
 from .health import Health
+from .seed import SeedContainer
+from .button import *
+from .characters import *
+from .characters.ghosts import *
+
+

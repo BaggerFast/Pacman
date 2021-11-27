@@ -4,11 +4,11 @@ from copy import copy
 from misc.constants.skin_names import SkinsNames
 from misc.sprite_sheet import SpriteSheet
 from objects import ButtonController, Text, Button, ImageObject
-from scenes import base
 from misc import Font, BUTTON_SKIN_BUY
+from scenes.base import BaseScene
 
 
-class Scene(base.Scene):
+class SkinsScene(BaseScene):
     class SkinButton(Button):
         def __init__(self, **args):
             self.value = args.pop("value")

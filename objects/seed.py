@@ -1,8 +1,7 @@
 import pygame as pg
-from misc import CELL_SIZE, get_path, EvenType, Animator
-from misc.constants.skin_names import SkinsNames
+from misc import Animator, get_path, SkinsNames, CELL_SIZE, EvenType
 from misc.sprite_sheet import SpriteSheet
-from objects import DrawableObject
+from objects.base import DrawableObject
 
 
 class SeedAnimator(Animator):

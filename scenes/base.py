@@ -5,11 +5,11 @@ from objects import ButtonController
 from objects.button import Button
 
 
-class Scene:
+class BaseScene:
     class SceneButton(Button):
         def __init__(self, **args):
             args["function"] = args.pop("scene")
-            super(Scene.SceneButton, self).__init__(**args)
+            super().__init__(**args)
 
     def __init__(self, game):
         self.game = game

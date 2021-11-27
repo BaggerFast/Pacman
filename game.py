@@ -1,16 +1,18 @@
 import sys
 from random import choice
+from typing import List
+
 import pygame as pg
 from PIL import Image, ImageFilter
 from misc import Sounds, ControlCheats
 from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
 from misc.sound_controller import SoundController
-from misc import Color, HighScore, get_path, List, get_list_path, LevelLoader, Skins, Storage
-from objects import Map
+from misc import Color, HighScore, get_path, get_list_path, LevelLoader, Skins, Storage
 from misc.constants.variables import *
-from objects.map import rand_color
+from objects.map import rand_color, Map
 from scenes import *
+from scenes.base import BaseScene
 
 
 class Game:
@@ -95,16 +97,16 @@ class Game:
 
     class Scenes:
         def __init__(self, game):
-            self.PAUSE = pause.Scene(game)
-            self.MENU = menu.Scene(game)
-            self.MAIN = main.Scene(game)
-            self.GAMEOVER = gameover.Scene(game, 0)
-            self.LEVELS = levels.Scene(game)
-            self.RECORDS = records.Scene(game)
-            self.CREDITS = credits.Scene(game)
-            self.ENDGAME = endgame.Scene(game, 0)
-            self.SKINS = skins.Scene(game)
-            self.SETTINGS = settings.Scene(game)
+            self.PAUSE = PauseScene(game)
+            self.MENU = MenuScene(game)
+            self.MAIN = MainScene(game)
+            self.GAMEOVER = GameOverScene(game, 0)
+            self.LEVELS = LevelsScene(game)
+            self.RECORDS = RecordsScene(game)
+            self.CREDITS = CreditsScene(game)
+            self.ENDGAME = EndScene(game, 0)
+            self.SKINS = SkinsScene(game)
+            self.SETTINGS = SettingsScene(game)
             self.__game = game
             self.__current = None
 
@@ -112,7 +114,7 @@ class Game:
         def current(self):
             return self.__current
 
-        def set(self, scene: base.Scene, reset: bool = False) -> None:
+        def set(self, scene: BaseScene, reset: bool = False) -> None:
             """
             :param scene: NEXT scene (contains in game.scenes.*)
             :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)

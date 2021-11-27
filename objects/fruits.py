@@ -1,6 +1,6 @@
 import pygame as pg
 from typing import Tuple
-from misc.constants import CELL_SIZE
+from misc import CELL_SIZE
 from misc.sprite_sheet import SpriteSheet
 from objects.base import DrawableObject
 from objects import Text, ImageObject
@@ -38,7 +38,6 @@ class Fruit(DrawableObject):
     def __change_image(self):
         self.cur_index = (self.cur_index + 1) % len(self.images)
         self.rect = self.current_image.get_rect(center=self.rect.center)
-
         self.fruit_hud.append(ImageObject(self.game, self.images[self.cur_index - 1], (130 + self.cur_index * 12, 270)))
 
     def process_collision(self, obj: DrawableObject):
@@ -57,7 +56,8 @@ class Fruit(DrawableObject):
             self.game.current_scene.score.eat_fruit(self.__scores[self.cur_index])
             self.__change_image()
 
-    def process_logic(self): self.__check_time()
+    def process_logic(self):
+        self.__check_time()
 
     def process_draw(self) -> None:
         self.__draw_fruit()

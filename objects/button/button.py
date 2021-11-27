@@ -1,26 +1,7 @@
 from typing import List, Union, Callable, Tuple
 import pygame as pg
-from misc import Color, Font, ButtonColor, BUTTON_DEFAULT_COLORS
-from objects.base import DrawableObject
-
-
-class BaseButton(DrawableObject):
-    def __init__(self, game, geometry: pg.Rect, function: Callable[[], None]):
-        super().__init__(game)
-        self.rect = geometry
-        self.function = function
-
-    def process_event(self, event: pg.event.Event) -> None:
-        if event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
-            if self.rect.collidepoint(event.pos):
-                self.click()
-
-    def process_draw(self) -> None:
-        if not self.is_hidden:
-            pg.draw.rect(self.game.screen, Color.WHITE, self.rect)
-
-    def click(self) -> None:
-        self.function()
+from misc import Font, ButtonColor, BUTTON_DEFAULT_COLORS
+from objects.button.base import BaseButton
 
 
 class Button(BaseButton):
@@ -28,25 +9,16 @@ class Button(BaseButton):
     STATE_HOVER = 1
     STATE_CLICK = 2
 
-    def __init__(
-        self,
-        game,
-        geometry: Union[tuple, pg.Rect],
-        function: Callable[[], None] = None,
-        text: str = 'Define me',
-        colors: ButtonColor = BUTTON_DEFAULT_COLORS,
-        center: Tuple[int, int] = None,
-        text_size: int = 60,
-        font=Font.DEFAULT,
-        active: bool = True,
-    ) -> None:
+    def __init__(self, game, geometry: Union[tuple, pg.Rect], function: Callable[[], None] = None,
+                 text: str = 'Define me', colors: ButtonColor = BUTTON_DEFAULT_COLORS, center: Tuple[int, int] = None,
+                 text_size: int = 60, font=Font.DEFAULT, active: bool = True) -> None:
 
         super().__init__(game, geometry, function)
         self.__text = text
         self.font = pg.font.Font(font, text_size)
         self.active = active
         self.__colors: ButtonColor = colors
-        self.deselect()
+        self.state = self.STATE_INITIAL
         self.surfaces = self.prepare_surfaces()
         self.left_button_pressed = False
         if center:

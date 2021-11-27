@@ -3,10 +3,10 @@ import pygame as pg
 from misc import Font
 from objects.button import Button
 from objects import Text
-from scenes import base
+from scenes.base import BaseScene
 
 
-class Scene(base.Scene):
+class CreditsScene(BaseScene):
     __data = [
         "Смирнов Андрей",
         "Aleksandrov Daniil",

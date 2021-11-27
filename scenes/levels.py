@@ -3,10 +3,10 @@ import pygame as pg
 from misc import Font
 from objects import ButtonController, Text
 from objects.button import Button
-from scenes import base
+from scenes.base import BaseScene
 
 
-class Scene(base.Scene):
+class LevelsScene(BaseScene):
     class LvlButton(Button):
         def __init__(self, **args):
             self.value = args.pop("value")

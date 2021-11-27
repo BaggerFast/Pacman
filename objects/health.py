@@ -1,6 +1,6 @@
-from .image import ImageObject
-from misc import EvenType
 import pygame as pg
+from misc import EvenType
+from objects import ImageObject
 
 
 class Health(ImageObject):

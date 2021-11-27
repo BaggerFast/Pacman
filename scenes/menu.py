@@ -1,16 +1,15 @@
-from random import choice, randint
 import pygame as pg
 from PIL import ImageFilter, Image
 from objects import Text, ImageObject
 from objects.map import rand_color
-from scenes import base
 from misc import Font, Color, VERSION
+from scenes.base import BaseScene
 
 
-class Scene(base.Scene):
+class MenuScene(BaseScene):
     def __init__(self, game):
         self.first_run = True
-        super(Scene, self).__init__(game)
+        super().__init__(game)
 
     def create_objects(self) -> None:
         self.objects: list = []
@@ -30,7 +29,7 @@ class Scene(base.Scene):
 
     def on_activate(self) -> None:
         self.game.pred = False
-        super(Scene, self).on_activate()
+        super().on_activate()
 
     def change_color(self) -> None:
         for x in range(self.preview.get_width()):

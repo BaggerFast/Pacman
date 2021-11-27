@@ -1,10 +1,10 @@
-from copy import copy
-from random import randint, choice
-
 import pygame as pg
-from misc import get_path, Color
+from copy import copy
+
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
+from random import randint, choice
+from misc import get_path, Color
 
 
 def rand_color():

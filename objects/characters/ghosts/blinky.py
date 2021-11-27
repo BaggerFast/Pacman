@@ -1,8 +1,7 @@
 from typing import Tuple
-from .base import Base
 import pygame as pg
-
-from .ghost_states import GhostState
+from objects.characters.ghosts.base import Base
+from objects.characters.ghosts.ghost_states import GhostState
 
 
 class Blinky(Base):

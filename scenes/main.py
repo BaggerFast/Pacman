@@ -3,14 +3,18 @@ from misc import ControlCheats
 from misc import LevelLoader, Font, EvenType
 from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
-from objects import SeedContainer, Map, Text, Pacman, Health
+from objects import SeedContainer, Text, Pacman, Health
+from objects.characters.ghosts.blinky import Blinky
+from objects.characters.ghosts.clyde import Clyde
+from objects.characters.ghosts.inky import Inky
+from objects.characters.ghosts.pinky import Pinky
 from objects.fruits import Fruit
-from objects.ghosts import *
+from objects.map import Map
 from objects.score import Score
-from scenes import base
+from scenes.base import BaseScene
 
 
-class Scene(base.Scene):
+class MainScene(BaseScene):
 
     def create_static_objects(self):
         self.__load_from_map()

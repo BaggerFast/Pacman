@@ -2,10 +2,11 @@ import pygame as pg
 from misc import Animator, get_path, GHOSTS_MOVING, EvenType
 from misc.animator import SpriteSheetAnimator
 from misc.sprite_sheet import SpriteSheet
-from objects import Character, Pacman, Text
+from objects import  Pacman, Text
 from typing import Tuple
 import random
-from objects.ghosts.ghost_states import GhostState
+from objects.characters.character_base import Character
+from objects.characters.ghosts.ghost_states import GhostState
 
 
 class Base(Character):

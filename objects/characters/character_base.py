@@ -1,8 +1,9 @@
 import pygame as pg
 from misc import CELL_SIZE, Animator
 from misc.animator import SpriteSheetAnimator
-from objects import DrawableObject
 from typing import Tuple, List, Union
+
+from objects.base import DrawableObject
 
 
 class Character(DrawableObject):

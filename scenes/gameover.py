@@ -1,10 +1,10 @@
 import pygame as pg
 from objects import Text
-from scenes import base
 from misc import Font, BUTTON_DEFAULT_COLORS
+from scenes.base import BaseScene
 
 
-class Scene(base.Scene):
+class GameOverScene(BaseScene):
     def __init__(self, game, score):
         super().__init__(game)
         self.score = score

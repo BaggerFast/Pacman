@@ -38,7 +38,5 @@ class ControlCheats:
         pass
 
     def process_event(self, event) -> None:
-        # if event.type == pg.KEYDOWN:
-        #     print(f'{chr(event.key)}-{event.key}')
         if event.type == pg.KEYDOWN and event.key in range(pg.K_a, pg.K_z + 1):
             self.enter_code += chr(event.key)
