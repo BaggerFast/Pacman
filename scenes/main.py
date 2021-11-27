@@ -4,10 +4,7 @@ from misc import LevelLoader, Font, EvenType
 from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
 from objects import SeedContainer, Text, Pacman, Health
-from objects.characters.ghosts.blinky import Blinky
-from objects.characters.ghosts.clyde import Clyde
-from objects.characters.ghosts.inky import Inky
-from objects.characters.ghosts.pinky import Pinky
+from objects.characters.ghosts import *
 from objects.fruits import Fruit
 from objects.map import Map
 from objects.score import Score
@@ -235,7 +232,7 @@ class MainScene(BaseScene):
     def process_logic(self) -> None:
         if not self.game.sounds.intro.get_busy():
             [tx.surface.set_alpha(0) for tx in self.text]
-            super(Scene, self).process_logic()
+            super().process_logic()
             self.__play_music()
             self.__process_collision()
             if self.pacman.animator != self.pacman.dead_anim:

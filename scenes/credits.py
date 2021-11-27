@@ -15,7 +15,6 @@ class CreditsScene(BaseScene):
         "Вартанян Владимир",
         "Дмитрий Пашков",
         "Николайчев Павел",
-        "MSHP LOVE",
     ]
 
     def create_objects(self) -> None:

@@ -1,5 +1,4 @@
 import pygame as pg
-
 from copy import copy
 from misc.constants.skin_names import SkinsNames
 from misc.sprite_sheet import SpriteSheet
@@ -9,6 +8,7 @@ from scenes.base import BaseScene
 
 
 class SkinsScene(BaseScene):
+
     class SkinButton(Button):
         def __init__(self, **args):
             self.value = args.pop("value")
@@ -48,7 +48,6 @@ class SkinsScene(BaseScene):
             self.game.unlock_skin(self.value.name)
             self.game.scenes.current.create_objects()
 
-
     def create_static_objects(self) -> None:
         self.skins = {
             SkinsNames.default: self.game.skins.default,
@@ -80,7 +79,6 @@ class SkinsScene(BaseScene):
         self.objects += list(creator())
 
     def create_fruits_and_text_for_skins(self) -> None:
-
         def creator():
             for index, (skin_name, skin) in enumerate(self.skins.items()):
                 multiply_x = 0
