@@ -14,7 +14,7 @@ class Score(DrawableObject):
         self.__value = 0
         self.fear_mode = False
         self.fear_count = 0
-        self.data = {
+        self.__events = {
             EvenType.EatSeed: lambda: self + Points.POINT_PER_SEED * self.game.difficulty,
             EvenType.EatEnergizer: lambda: self.__eat_energizer(),
             EvenType.EatGhost: lambda: self.__eat_ghost(),
@@ -27,11 +27,8 @@ class Score(DrawableObject):
         self.text.process_draw()
 
     def process_event(self, event: pg.event.Event) -> None:
-        if event.type in self.data:
-            self.data[event.type]()
-
-    def __str__(self):
-        return str(self.__value)
+        if event.type in self.__events:
+            self.__events[event.type]()
 
     def __int__(self):
         return self.__value
@@ -46,6 +43,9 @@ class Score(DrawableObject):
 
     def __iadd__(self, value):
         return self + value
+
+    def __str__(self):
+        return str(self.__value)
 
     def eat_fruit(self, bonus) -> None:
         self + bonus * self.game.difficulty

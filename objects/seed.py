@@ -50,10 +50,10 @@ class SeedContainer(DrawableObject):
         self.__ram_img = pg.image.load(get_path("images/ram.png"))
         self.__x = x
         self.__y = y
-        self.seed_bf = list(self.seed_bufer(seed_data))
+        self.seed_bf = list(self.seed_buffer(seed_data))
         self.big_seed_bf = list(self.big_seed_buffer(energizer_data))
 
-    def seed_bufer(self, data):
+    def seed_buffer(self, data):
         for row in range(len(data)):
             for col in range(len(data[row])):
                 if data[row][col]:

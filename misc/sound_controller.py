@@ -1,10 +1,5 @@
 from typing import Union
-
 import pygame as pg
-
-
-def update(object):
-    object.update_volume()
 
 
 class SoundController:
