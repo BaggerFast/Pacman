@@ -68,7 +68,8 @@ class SettingsScene(BaseScene):
             rect=pg.Rect(0, 0, 120, 35),
             center=(self.game.width // 2, self.__difficulty_pos),
             text_size=Font.BUTTON_TEXT_SIZE,
-            active=self.prev_scene == self.game.scenes.MENU
+            active=self.prev_scene == self.game.scenes.MENU,
+            text=''
         )
 
         yield Button(

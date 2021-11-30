@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Animator, get_path, GHOSTS_MOVING, EvenType
+from misc import Animator, get_path, GHOSTS_MOVING, EvenType, event_append
 from misc.animator import SpriteSheetAnimator
 from misc.sprite_sheet import SpriteSheet
 from objects import  Pacman, Text
@@ -142,7 +142,7 @@ class Base(Character):
         if pg.time.get_ticks() - self.ai_timer >= self.frightened_time - 2000:
             self.animator = self.frightened_walk_anim2
         if pg.time.get_ticks() - self.ai_timer >= self.frightened_time:
-            pg.event.post(pg.event.Event(EvenType.StopFearMode))
+            event_append(EvenType.StopFearMode)
             self.update_ai_timer()
             self.deceleration_multiplier = 1
             self.animator = self.walk_anim

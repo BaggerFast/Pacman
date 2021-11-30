@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Animator, get_path, SkinsNames, CELL_SIZE, EvenType
+from misc import Animator, get_path, SkinsNames, CELL_SIZE, EvenType, event_append
 from misc.sprite_sheet import SpriteSheet
 from objects.base import DrawableObject
 
@@ -86,12 +86,12 @@ class SeedContainer(DrawableObject):
         :return: is objects in collision (bool) and self type (str)
         """
         if self.is_field_empty():
-            pg.event.post(pg.event.Event(EvenType.Win))
+            event_append(EvenType.Win)
 
         for seed in self.seed_bf:
             if seed.check_collision(obj):
                 self.seed_bf.remove(seed)
-                pg.event.post(pg.event.Event(EvenType.EatSeed))
+                event_append(EvenType.EatSeed)
                 if not self.game.sounds.seed.get_busy():
                     self.game.sounds.seed.play()
                 return
@@ -99,7 +99,7 @@ class SeedContainer(DrawableObject):
         for seed in self.big_seed_bf:
             if seed.check_collision(obj):
                 self.big_seed_bf.remove(seed)
-                pg.event.post(pg.event.Event(EvenType.EatEnergizer))
+                event_append(EvenType.EatEnergizer)
 
     def is_field_empty(self) -> bool:
         return not (any([self.seed_bf, self.big_seed_bf]))

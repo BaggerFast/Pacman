@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import EvenType
+from misc import EvenType, event_append
 from objects import ImageObject
 
 
@@ -50,5 +50,5 @@ class Health(ImageObject):
     def process_logic(self) -> None:
         if not self.game.cheats_var.INFINITY_LIVES and int(self) == 0:
             if(not self.game.sounds.pacman.get_busy()) and (not self.game.sounds.intro.get_busy()):
-                pg.event.post(pg.event.Event(EvenType.GameOver))
+                event_append(EvenType.GameOver)
 

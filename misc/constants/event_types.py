@@ -1,11 +1,11 @@
-import pygame
+import pygame as pg
 from enum import IntEnum, auto
 
 
 class EvenType(IntEnum):
 
     def _generate_next_value_(self, start, count, last_values):
-        return pygame.USEREVENT + count + 1
+        return pg.USEREVENT + count + 1
 
     HealthInc = auto()
     HealthDec = auto()
@@ -27,3 +27,7 @@ class EvenType(IntEnum):
     NextBtn = auto()
     PreviousBtn = auto()
     PressBtn = auto()
+
+
+def event_append(event: int):
+    pg.event.post(pg.event.Event(event))

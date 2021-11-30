@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import ControlCheats
+from misc import ControlCheats, event_append
 from misc import LevelLoader, Font, EvenType
 from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
@@ -79,7 +79,7 @@ class MainScene(BaseScene):
         self.objects = []
         self.game.sounds.siren.unpause()
         hp_cheat = ControlCheats(
-            [Cheat(self.game, 'aezakmi', lambda: pg.event.post(pg.event.Event(EvenType.HealthInc)))]
+            [Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))]
         )
         self.text[-1].surface.set_alpha(0)
         self.__create_map()
@@ -177,14 +177,14 @@ class MainScene(BaseScene):
             if ghost.collision_check(self.pacman)[1]:
                 self.__timer_reset_pacman = pg.time.get_ticks()
                 if not self.pacman.dead:
-                    pg.event.post(pg.event.Event(EvenType.HealthDec))
+                    event_append(EvenType.HealthDec)
                     self.pacman.death()
                 for ghost2 in self.ghosts:
                     ghost2.invisible()
             else:
                 if ghost.mode == 'Frightened':
                     ghost.invisible()
-                    pg.event.post(pg.event.Event(EvenType.EatGhost))
+                    event_append(EvenType.EatGhost)
                     self.ghost_text_flag = True
                     self.ghost_text_timer = pg.time.get_ticks()
                 ghost.toggle_mode_to_eaten()

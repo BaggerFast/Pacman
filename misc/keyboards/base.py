@@ -1,6 +1,8 @@
 import dataclasses
 import pygame as pg
 
+from misc import event_append
+
 
 class BaseKeyboard:
     @dataclasses.dataclass
@@ -21,5 +23,5 @@ class BaseKeyboard:
             return
         for key in self.data_keys:
             if event.key in key.keys:
-                pg.event.post(pg.event.Event(key.event))
+                event_append(key.event)
                 return
