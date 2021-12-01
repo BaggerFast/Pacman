@@ -1,7 +1,8 @@
 import pygame as pg
 
 
-class DrawableObject:
+class BaseObject:
+
     def __init__(self, game, is_hidden=False) -> None:
         self.game = game
         self.is_hidden: bool = is_hidden

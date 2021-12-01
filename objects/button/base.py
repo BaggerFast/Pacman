@@ -1,10 +1,10 @@
 from typing import Callable
 from misc import Color
-from objects.base import DrawableObject
+from objects.base import BaseObject
 import pygame as pg
 
 
-class BaseButton(DrawableObject):
+class BaseButton(BaseObject):
     def __init__(self, game, rect: pg.Rect, function: Callable[[], None]):
         super().__init__(game)
         self.rect = rect

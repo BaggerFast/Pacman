@@ -5,6 +5,7 @@ from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
 from random import randint, choice
 from misc import get_path, Color
+from objects.base import BaseObject
 
 
 def rand_color():
@@ -24,9 +25,10 @@ def rand_color():
     return [randint(min_val, max_val) if choice([0, 1]) != i else 0 for i in range(3)]
 
 
-class Map:
+class Map(BaseObject):
+
     def __init__(self, game, map_data):
-        self.game = game
+        super().__init__(game)
         self.color = self.game.map_color
         self.map_data = map_data
         self.tile_size = 8
@@ -65,9 +67,3 @@ class Map:
 
     def process_draw(self):
         self.game.screen.blit(self.surface_for_draw, (0, 20))
-
-    def process_event(self, event: pg.event.Event) -> None:
-        pass
-
-    def process_logic(self) -> None:
-        pass

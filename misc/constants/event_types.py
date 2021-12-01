@@ -18,6 +18,7 @@ class EvenType(IntEnum):
     GameOver = auto()
 
     StopFearMode = auto()
+    FrightenedMode = auto()
 
     GoUp = auto()
     GoDown = auto()

@@ -5,6 +5,7 @@ from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
 from objects import SeedContainer, Text, Pacman, Health
 from objects.characters.ghosts import *
+from objects.characters.ghosts.ghost_states import GhostState
 from objects.fruits import Fruit
 from objects.map import Map
 from objects.score import Score
@@ -79,7 +80,8 @@ class MainScene(BaseScene):
         self.objects = []
         self.game.sounds.siren.unpause()
         hp_cheat = ControlCheats(
-            [Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))]
+            [Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))],
+            self
         )
         self.text[-1].surface.set_alpha(0)
         self.__create_map()
@@ -182,7 +184,7 @@ class MainScene(BaseScene):
                 for ghost2 in self.ghosts:
                     ghost2.invisible()
             else:
-                if ghost.mode == 'Frightened':
+                if ghost.mode == GhostState.frightened:
                     ghost.invisible()
                     event_append(EvenType.EatGhost)
                     self.ghost_text_flag = True
@@ -219,7 +221,7 @@ class MainScene(BaseScene):
 
     def __check_ghosts(self):
         for ghost in self.ghosts:
-            if ghost.mode == 'Frightened':
+            if ghost.mode == GhostState.frightened:
                 break
         else:
             self.game.sounds.siren.pause()
@@ -276,7 +278,7 @@ class MainScene(BaseScene):
         if self.pacman.animator != self.pacman.dead_anim:
             self.game.sounds.siren.unpause()
         for ghost in self.ghosts:
-            if ghost.mode != "Frightened":
+            if ghost.mode != GhostState.frightened:
                 continue
             if self.game.sounds.pellet.get_busy():
                 self.game.sounds.pellet.play()

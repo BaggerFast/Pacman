@@ -1,5 +1,7 @@
 import pygame as pg
 
+from objects.base import BaseObject
+
 
 class Cheat:
     def __init__(self, game, code, func) -> None:
@@ -12,8 +14,10 @@ class Cheat:
         self.function()
 
 
-class ControlCheats:
-    def __init__(self, cheats: list[Cheat]):
+class ControlCheats(BaseObject):
+
+    def __init__(self, cheats: list[Cheat], game):
+        super().__init__(game)
         self.cheats: list[Cheat] = cheats
         self.timer = pg.time.get_ticks()
         self.enter_code: str = ''
@@ -33,9 +37,6 @@ class ControlCheats:
         elif self.old_enter_code != self.enter_code:
             self.update_timer()
         self.old_enter_code = self.enter_code
-
-    def process_draw(self) -> None:
-        pass
 
     def process_event(self, event) -> None:
         if event.type == pg.KEYDOWN and event.key in range(pg.K_a, pg.K_z + 1):

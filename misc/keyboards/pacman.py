@@ -6,7 +6,6 @@ from misc.keyboards.base import BaseKeyboard
 class PacmanKeyboard(BaseKeyboard):
 
     def configure(self):
-
         self.data_keys = [
             self.KeyControl([pg.K_a, pg.K_LEFT], EvenType.GoLeft),
             self.KeyControl([pg.K_d, pg.K_RIGHT], EvenType.GoRight),

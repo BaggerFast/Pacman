@@ -3,10 +3,10 @@ from misc import CELL_SIZE, Animator
 from misc.animator import SpriteSheetAnimator
 from typing import Tuple, List, Union
 
-from objects.base import DrawableObject
+from objects.base import BaseObject
 
 
-class Character(DrawableObject):
+class Character(BaseObject):
     direction = {
         "right": (1, 0, 0),
         "down": (0, 1, 1),

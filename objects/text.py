@@ -1,10 +1,10 @@
 import pygame as pg
 from misc import Font
 from typing import Tuple
-from objects.base import DrawableObject
+from objects.base import BaseObject
 
 
-class Text(DrawableObject):
+class Text(BaseObject):
     def __init__(self, game, text: str = "", size: int = 0, rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0),
                  color=pg.Color(255, 255, 255), font=Font.DEFAULT):
 
@@ -49,9 +49,3 @@ class Text(DrawableObject):
 
     def process_draw(self) -> None:
         self.game.screen.blit(self.surface, self.rect)
-
-    def process_event(self, event) -> None:
-        pass
-
-    def process_logic(self) -> None:
-        pass

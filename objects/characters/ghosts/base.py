@@ -74,6 +74,9 @@ class Base(Character):
 
         self.old_timer = pg.time.get_ticks()
         self.old_ai_timer = pg.time.get_ticks()
+        self.__events = {
+            EvenType.FrightenedMode: self.toggle_mode_to_frightened
+        }
 
     def behaviour_in_the_house(self):
         # если он внутри дома и не может выйти то бегать вверх вниз
@@ -219,6 +222,10 @@ class Base(Character):
         self.mode = GhostState.eaten
         self.animator = self.eaten_walk_anim
         self.acceleration_multiplier = 2
+
+    def process_event(self, event: pg.event.Event) -> None:
+        if event.type in self.__events:
+            self.__events[event.type]()
 
     def process_draw(self) -> None:
         if self.mode == GhostState.eaten:

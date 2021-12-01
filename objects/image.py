@@ -1,19 +1,22 @@
 import pygame as pg
 from typing import Tuple, Union
-from objects.base import DrawableObject
+from objects.base import BaseObject
 
 
-class ImageObject(DrawableObject):
-    def __init__(self, game, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0)) -> None:
+class ImageObject(BaseObject):
+
+    def __init__(self, game, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0)):
         super().__init__(game)
-        if isinstance(image, str):
-            self.__filename = image
-            self.image = pg.image.load(self.__filename).convert_alpha()
-        elif isinstance(image, pg.Surface):
-            self.image = image
-
+        self.image = self.parse_image(image)
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
+
+    @staticmethod
+    def parse_image(image):
+        if isinstance(image, str):
+            return pg.image.load(image).convert_alpha()
+        elif isinstance(image, pg.Surface):
+            return image
 
     def scale(self, x, y) -> None:
         self.image = pg.transform.scale(self.image, (x, y))
@@ -34,10 +37,5 @@ class ImageObject(DrawableObject):
         self.rect.topleft = topleft
 
     def process_draw(self) -> None:
-        self.game.screen.blit(self.image, self.rect)
-
-    def process_event(self, event: pg.event.Event) -> None:
-        pass
-
-    def process_logic(self) -> None:
-        pass
+        if not self.is_hidden:
+            self.game.screen.blit(self.image, self.rect)

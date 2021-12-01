@@ -34,11 +34,6 @@ class ButtonColor(NamedTuple):
         members = inspect.getmembers(BUTTON_DEFAULT_COLORS, lambda member: type(member) == ButtonStateColor)
         return [item[0] for item in members]
 
-    def from_dict(self, data: dict) -> None:
-        member_names = self.get_members_list()
-        for name in member_names:
-            self.init_section(name, data)
-
 
 BUTTON_DEFAULT_COLORS = ButtonColor(
     static=ButtonStateColor(text=Color.GRAY, background=Color.TRANSPERENT),

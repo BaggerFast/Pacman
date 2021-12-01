@@ -173,6 +173,7 @@ class Game:
     __resolution = width, height = 224, 285
     __FPS: int = 60
     __def_level_id = 0
+
     pg.display.set_caption('PACMAN')
     pg.display.set_icon(pg.transform.scale(pg.image.load(get_path('images/ico.png')), (256, 256)))
 
@@ -198,7 +199,7 @@ class Game:
                 Cheat(self, 'maps', lambda: self.cheats_var.update("UNLOCK_LEVELS")),
                 Cheat(self, 'lives', lambda: self.cheats_var.update("INFINITY_LIVES")),
                 Cheat(self, 'collision', lambda: self.cheats_var.update("GHOSTS_COLLISION"))
-            ]
+            ], self
         )
 
         self.sounds = self.Music(self)
@@ -253,7 +254,7 @@ class Game:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
 
     def __process_exit_events(self, event: pg.event.Event) -> None:
-        if Game.__exit_button_pressed(event) or Game.__exit_hotkey_pressed(event):
+        if self.__exit_button_pressed(event) or self.__exit_hotkey_pressed(event):
             self.exit_game()
 
     def __process_all_events(self) -> None:

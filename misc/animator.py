@@ -36,9 +36,6 @@ class Animator:
     def change_cur_image(self, index: int) -> None:
         self.current_index = index
 
-    def change_cur_aura(self, aura: str = None) -> None:
-        self.current_aura = pg.image.load(aura) if aura else aura
-
     def image_swap(self) -> None:
         if self.current_index == len(self.images)-1:
             if not self.__repeat:

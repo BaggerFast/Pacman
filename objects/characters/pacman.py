@@ -6,6 +6,7 @@ from objects.characters.character_base import Character
 
 
 class Pacman(Character):
+
     dir_action = {
         EvenType.GoUp: (0, -1, 3),
         EvenType.GoDown: (0, 1, 1),
@@ -57,9 +58,11 @@ class Pacman(Character):
         super().process_logic()
 
     def death(self) -> None:
-        self.animator = self.__dead_anim
         self.game.sounds.siren.pause()
         self.game.sounds.pellet.stop()
         self.game.sounds.pacman.play()
+
+        self.animator = self.__dead_anim
         self.animator.start()
+
         self.dead = True

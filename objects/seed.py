@@ -1,13 +1,12 @@
 import pygame as pg
 from misc import Animator, get_path, SkinsNames, CELL_SIZE, EvenType, event_append
 from misc.sprite_sheet import SpriteSheet
-from objects.base import DrawableObject
+from objects.base import BaseObject
 
 
 class SeedAnimator(Animator):
-    def __init__(self, images: list[pg.Surface], game, time_out: int = 50,
+    def __init__(self, images: list[pg.Surface], time_out: int = 50,
                  repeat: bool = False, aura: str = None):
-        self.game = game
         super().__init__(images, time_out, repeat, aura)
 
     def timer_check(self) -> None:
@@ -15,7 +14,7 @@ class SeedAnimator(Animator):
         self.image_swap()
 
 
-class Seed(DrawableObject):
+class Seed(BaseObject):
     def __init__(self, game, rect, image):
         super().__init__(game)
         self.rect = rect
@@ -37,14 +36,14 @@ class Seed(DrawableObject):
 class BigSeed(Seed):
     def __init__(self, game, rect):
         path = 'images/big_seed.png' if game.skins.current.name != SkinsNames.chrome else "images/big_seed_google.png"
-        self.animator = SeedAnimator(SpriteSheet(get_path(path), (9, 9))[0], game)
+        self.animator = SeedAnimator(SpriteSheet(get_path(path), (9, 9))[0])
         super().__init__(game, rect, self.animator.current_image)
 
     def process_draw(self) -> None:
         self.game.screen.blit(self.animator.current_image, self.rect)
 
 
-class SeedContainer(DrawableObject):
+class SeedContainer(BaseObject):
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
         super().__init__(game)
         self.__ram_img = pg.image.load(get_path("images/ram.png"))
@@ -80,7 +79,7 @@ class SeedContainer(DrawableObject):
         self.__draw_seeds()
         self.__draw_energizers()
 
-    def process_collision(self, obj: DrawableObject):
+    def process_collision(self, obj: BaseObject):
         """
         :param obj: any class with pygame.rect
         :return: is objects in collision (bool) and self type (str)
