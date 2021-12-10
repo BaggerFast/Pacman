@@ -109,7 +109,3 @@ class CreditsScene(BaseScene):
         self.game.sounds.reload_sounds()
         self.game.sounds.credits.play()
 
-    def additional_event_check(self, event: pg.event.Event) -> None:
-        if self.game.current_scene == self:
-            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-                self.game.scenes.set(self.game.scenes.MENU)

@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import Animator, get_path, GHOSTS_MOVING, EvenType, event_append
+from misc import Animator, get_path, EvenType, event_append
 from misc.animator import SpriteSheetAnimator
 from misc.sprite_sheet import SpriteSheet
 from objects import  Pacman, Text
@@ -204,10 +204,6 @@ class Base(Character):
         }
         if self.mode in ghost_states:
             ghost_states[self.mode]()
-
-    def step(self) -> None:
-        if not GHOSTS_MOVING:
-            super().step()
 
     def toggle_mode_to_frightened(self):
         if self.mode != GhostState.eaten and self.frightened_time:

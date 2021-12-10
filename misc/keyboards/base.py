@@ -25,3 +25,11 @@ class BaseKeyboard:
             if event.key in key.keys:
                 event_append(key.event)
                 return
+
+    def process_logic(self):
+        keys = pg.key.get_pressed()
+        for kb in self.data_keys:
+            for key in kb.keys:
+                if keys[key]:
+                    event_append(kb.event)
+                    return

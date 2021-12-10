@@ -83,7 +83,7 @@ class SettingsScene(BaseScene):
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.game.scenes.set(self.prev_scene)
+            self.prev_scene()
 
     def __call__(self, *args, **kwargs):
         self.game.scenes.set(self, reset=True)

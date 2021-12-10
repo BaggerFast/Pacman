@@ -14,7 +14,7 @@ def main():
         game.main_loop()
         game.exit_game()
     except Exception:
-        print(traceback.format_exc())
+        print(traceback.print_exc())
         if not DEBUG:
             with open(f"exception-{datetime.now().strftime('%m-%d-%Y-%H-%M-%S')}.log", "w") as file:
                 file.write(traceback.format_exc())

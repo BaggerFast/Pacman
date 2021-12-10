@@ -8,13 +8,13 @@ class DifficultyButton(Button):
         "hard"
     ]
 
-    def __init__(self, **args):
-        super().__init__(**args)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.update_text()
 
     def click(self) -> None:
         self.game.sounds.click.play()
-        self.game.settings.DIFFICULTY = (self.game.settings.DIFFICULTY + 1) % 3
+        self.game.settings.change_difficulty()
         self.update_text()
         self.select()
 

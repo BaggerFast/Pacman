@@ -18,9 +18,6 @@ class Animator:
     def current_image(self) -> pg.Surface:
         return self.images[self.current_index]
 
-    def get_len_anim(self) -> int:
-        return len(self.images)
-
     def stop(self) -> None:
         self.__run = False
 

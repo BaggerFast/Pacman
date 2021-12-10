@@ -6,9 +6,9 @@ from scenes.base import BaseScene
 
 
 class GameOverScene(BaseScene):
-    def __init__(self, game, score):
+    def __init__(self, game):
         super().__init__(game)
-        self.score = score
+        self.score = 0
 
     def create_objects(self) -> None:
         super().create_objects()

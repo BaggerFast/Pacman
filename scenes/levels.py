@@ -9,9 +9,6 @@ from scenes.base import BaseScene
 class LevelsScene(BaseScene):
     __buttons_on_scene = 4
 
-    def process_event(self, event: pg.event.Event) -> None:
-        super().process_event(event)
-
     def create_static_objects(self):
         self.is_current = False
         self.__scroll = max(min(self.game.maps.cur_id, self.game.maps.count - self.__buttons_on_scene), 0)
@@ -62,18 +59,16 @@ class LevelsScene(BaseScene):
         self.__scroll = max(self.__scroll, 0)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.game.scenes.set(self.game.scenes.MENU)
-        elif event.type == pg.MOUSEWHEEL:
+        if event.type == pg.MOUSEWHEEL:
             self.__scroll -= event.y
             self.scroll_threshold()
             self.create_objects()
-        elif event.type == pg.KEYDOWN:
-            if not (event.key in [pg.K_e, pg.K_q]):
-                return
+        elif event.type == pg.KEYDOWN and not (event.key in [pg.K_e, pg.K_q]):
             if event.key == pg.K_e:
                 self.__scroll += 1
             elif event.key == pg.K_q:
                 self.__scroll -= 1
             self.scroll_threshold()
             self.create_objects()
+        super().additional_event_check(event)
+

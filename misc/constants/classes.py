@@ -1,31 +1,36 @@
 import pygame as pg
-from typing import NamedTuple, List
+from typing import NamedTuple
 from misc.path import get_path, get_list_path
 
 
+def load_sound(name: str):
+    return pg.mixer.Sound(get_path(f'sounds/{name}'))
+
+
+def load_list_sounds(name: str):
+    return [pg.mixer.Sound(path) for path in get_list_path(f'sounds/{name}', ext='ogg')]
+
+
 class Sounds:
-    __loading_text: str = ''
-    __game = None
-    __counter = 0
-    __count = 100
-    CLICK: pg.mixer.Sound = None
-    SEED: pg.mixer.Sound = None
-    SEED_FUN: pg.mixer.Sound = None
-    FRUIT: pg.mixer.Sound = None
-    GHOST: pg.mixer.Sound = None
-    POC_INTRO: pg.mixer.Sound = None
-    INTERMISSION: pg.mixer.Sound = None
-    PELLET: pg.mixer.Sound = None
-    CHEAT: pg.mixer.Sound = None
-    DEAD: List[pg.mixer.Sound] = []
-    GAMEOVER: List[pg.mixer.Sound] = []
-    INTRO: List[pg.mixer.Sound] = []
-    SIREN: List[pg.mixer.Sound] = []
-    CREDITS: List[pg.mixer.Sound] = []
-    # valve
-    VALVE_SOUNDS: List[pg.mixer.Sound] = []
-    # windows
-    WINDOWS_SOUNDS: List[pg.mixer.Sound] = []
+    pg.mixer.init()
+
+    CLICK = load_sound('navigation.ogg')
+    SEED = load_sound('munch.ogg')
+    SEED_FUN = load_sound('leader.ogg')
+    FRUIT = load_sound('eat_fruit.ogg')
+    GHOST = load_sound('eat_ghost.ogg')
+    POC_INTRO = load_sound('pokemon_intro.ogg')
+    INTERMISSION = load_sound('intermission.ogg')
+    PELLET = load_sound('power_pellet.ogg')
+    CHEAT = load_sound('cheat.ogg')
+
+    DEAD = load_list_sounds('death')
+    GAMEOVER = load_list_sounds('gameover')
+    INTRO = load_list_sounds("intro")
+    SIREN = load_list_sounds("siren")
+    CREDITS = load_list_sounds('credits')
+    VALVE_SOUNDS = load_list_sounds('valve_skin')
+    WINDOWS_SOUNDS = load_list_sounds('windows_skin')
 
     class Ch:
         pacman: int = 0
@@ -34,36 +39,6 @@ class Sounds:
         siren: int = 3
         seed = ghost = fruit = 4
         pellet: int = 5
-
-    @staticmethod
-    def load(key, attr):
-        if hasattr(Sounds, key):
-            attrs = attr()
-            setattr(Sounds, key, attrs)
-
-    @staticmethod
-    def load_sounds():
-        list_path = lambda path: [pg.mixer.Sound(path) for path in get_list_path(f'sounds/{path}', ext='ogg')]
-        path = lambda path: pg.mixer.Sound(get_path(f'sounds/{path}'))
-        func = {
-            'CLICK': lambda: path('navigation.ogg'),
-            "SEED": lambda: path('munch.ogg'),
-            "SEED_FUN": lambda: path('leader.ogg'),
-            "FRUIT": lambda: path('eat_fruit.ogg'),
-            "GHOST": lambda: path('eat_ghost.ogg'),
-            "POC_INTRO": lambda: path("pokemon_intro.ogg"),
-            "INTERMISSION": lambda: path('intermission.ogg'),
-            "PELLET": lambda:  path('power_pellet.ogg'),
-            "CHEAT": lambda:  path('cheat.ogg'),
-            "DEAD": lambda: list_path('death'),
-            "GAMEOVER": lambda: list_path('gameover'),
-            "INTRO": lambda: list_path("intro"),
-            "SIREN": lambda: list_path("siren"),
-            "VALVE_SOUNDS": lambda:  list_path('valve_skin'),
-            "WINDOWS_SOUNDS": lambda: list_path('windows_skin'),
-            "CREDITS": lambda: list_path('credits'),
-        }
-        [Sounds.load(key, attr) for key, attr in func.items()]
 
 
 class Color(NamedTuple):

@@ -1,12 +1,16 @@
 import os
+from distutils.util import strtobool
 from typing import List
-
 
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
 
 
 def get_path(path) -> str:
     return os.path.join(*[ROOT_DIR] + path.lower().replace('\\', '/').split('/'))
+
+
+def bool_venv_var(venv_variable: str):
+    return os.getenv(venv_variable, "false").lower() == 'true'
 
 
 def get_list_path(path, ext) -> List[str]:
@@ -17,7 +21,8 @@ def get_list_path(path, ext) -> List[str]:
 
 
 def create_file_if_not_exist(filepath: str, data: str = "") -> None:
-    if not os.path.exists(filepath):
-        file = open(filepath, 'w')
-        file.write(data)
-        file.close()
+    if os.path.exists(filepath):
+        return
+    file = open(filepath, 'w')
+    file.write(data)
+    file.close()

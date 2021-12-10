@@ -1,15 +1,14 @@
 import sys
 from random import choice
 from typing import List
-
 import pygame as pg
 from PIL import Image, ImageFilter
-from misc import Sounds, ControlCheats
+from misc import Sounds, ControlCheats, FRUITS_COUNT
 from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
+from misc.path import bool_venv_var
 from misc.sound_controller import SoundController
 from misc import Color, HighScore, get_path, get_list_path, LevelLoader, Skins, Storage
-from misc.constants.variables import *
 from objects.map import rand_color, Map
 from scenes import *
 from scenes.base import BaseScene
@@ -19,15 +18,27 @@ class Game:
     map_color = rand_color()
 
     class Cheats:
+
+        class Adapter:
+
+            def __init__(self, active):
+                self.active = active
+
+            def __call__(self, *args, **kwargs):
+                self.active = not self.active
+
+            def __bool__(self):
+                return self.active
+
         def __init__(self, game):
-            self.UNLOCK_SKINS = UNLOCK_SKINS
-            self.UNLOCK_LEVELS = UNLOCK_LEVELS
-            self.INFINITY_LIVES = INFINITY_LIVES
-            self.GHOSTS_COLLISION = GHOSTS_COLLISION
-            self.cheat_storage = {
-                'UNLOCK_SKINS': lambda: self.unlock_skins(),
-                'UNLOCK_LEVELS': lambda: self.unlock_levels()
-            }
+            self.UNLOCK_SKINS = self.Adapter(bool_venv_var('skins'))
+            self.UNLOCK_LEVELS = self.Adapter(bool_venv_var('levels'))
+            self.INFINITY_LIVES = self.Adapter(bool_venv_var('lives'))
+            self.GHOSTS_COLLISION = self.Adapter(bool_venv_var('collision'))
+            # self.cheat_storage = {
+            #     'UNLOCK_SKINS': self.unlock_skins,
+            #     'UNLOCK_LEVELS': self.unlock_levels
+            # }
             self.game: Game = game
 
         def unlock_skins(self):
@@ -43,10 +54,11 @@ class Game:
         def update(self, key_code):
             if hasattr(self, key_code):
                 setattr(self, key_code, not getattr(self, key_code))
-            if key_code in self.cheat_storage:
-                self.cheat_storage[key_code]()
+            # if key_code in self.cheat_storage:
+            #     self.cheat_storage[key_code]()
 
     class Settings:
+
         def __init__(self, storage):
             self.SOUND = storage.settings.SOUND
             self.FUN = storage.settings.FUN
@@ -56,6 +68,9 @@ class Game:
         def change_volume(self, num: int):
             self.VOLUME = max(self.VOLUME + num, 0)
             self.VOLUME = min(self.VOLUME, 100)
+
+        def change_difficulty(self):
+            self.DIFFICULTY = (self.DIFFICULTY + 1) % 3
 
     class Music:
         def __init__(self, game):
@@ -100,15 +115,15 @@ class Game:
             self.PAUSE = PauseScene(game)
             self.MENU = MenuScene(game)
             self.MAIN = MainScene(game)
-            self.GAMEOVER = GameOverScene(game, 0)
+            self.GAMEOVER = GameOverScene(game)
             self.LEVELS = LevelsScene(game)
             self.RECORDS = RecordsScene(game)
             self.CREDITS = CreditsScene(game)
-            self.ENDGAME = EndScene(game, 0)
+            self.ENDGAME = EndScene(game)
             self.SKINS = SkinsScene(game)
             self.SETTINGS = SettingsScene(game)
             self.__game = game
-            self.__current = None
+            self.__current = self.MENU
 
         @property
         def current(self):
@@ -118,31 +133,28 @@ class Game:
             """
             :param scene: NEXT scene (contains in game.scenes.*)
             :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
-            :param loading: displays "Loading..." until scene will be loaded
             IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
             """
+            if not isinstance(scene, BaseScene):
+                return
             if scene != self.MENU:
                 self.__game.scenes.MENU.first_run = False
             scene.prev_scene = self.__current
-            if self.__current is not None:
-                self.__current.on_deactivate()
+            self.__current.on_deactivate()
             self.__current = scene
             if reset:
                 self.__current.on_reset()
             self.__current.on_activate()
 
     class Maps:
+
         def __init__(self, game):
             self.game = game
             self.levels = []
             self.count = 0
             self.cur_id = 0
             self.read_levels()
-            self.__images = list(self.prerender_surfaces())
-
-        @property
-        def images(self):
-            return self.__images
+            self.images = list(self.prerender_surfaces())
 
         @property
         def full_surface(self):
@@ -159,7 +171,7 @@ class Game:
             self.__map = Map(self.game, self.__map_data)
 
         def keys(self) -> List[int]:
-            return [i for i in range(self.count)]
+            return list(range(self.count))
 
         def read_levels(self) -> None:
             self.levels = get_list_path("maps", ext='json')
@@ -173,98 +185,72 @@ class Game:
     __resolution = width, height = 224, 285
     __FPS: int = 60
     __def_level_id = 0
+    __game_over: bool = False
+    screen = pg.display.set_mode(__resolution, pg.SCALED)
 
     pg.display.set_caption('PACMAN')
     pg.display.set_icon(pg.transform.scale(pg.image.load(get_path('images/ico.png')), (256, 256)))
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.maps = self.Maps(self)
-        self.screen = pg.display.set_mode(self.__resolution, pg.SCALED)
         self.__clock = pg.time.Clock()
-        self.__game_over: bool = False
         self.timer = pg.time.get_ticks() / 1000
         self.time_out: int = 125
         self.animate_timer: int = 0
         self.pred: bool = False
-
+        self.storage = Storage(self)
         self.skins = Skins(self)
-
         self.cheats_var = self.Cheats(self)
-        Sounds.load_sounds()
         self.read_from_storage()
-
-        self.cheats = ControlCheats(
+        self.__cheats = ControlCheats(
             [
-                Cheat(self, 'skins', lambda: self.cheats_var.update("UNLOCK_SKINS")),
-                Cheat(self, 'maps', lambda: self.cheats_var.update("UNLOCK_LEVELS")),
-                Cheat(self, 'lives', lambda: self.cheats_var.update("INFINITY_LIVES")),
-                Cheat(self, 'collision', lambda: self.cheats_var.update("GHOSTS_COLLISION"))
-            ], self
-        )
+                Cheat(self, 'skins', self.cheats_var.UNLOCK_SKINS),
+                Cheat(self, 'maps', self.cheats_var.UNLOCK_LEVELS),
+                Cheat(self, 'lives', self.cheats_var.INFINITY_LIVES),
+                Cheat(self, 'collision', self.cheats_var.GHOSTS_COLLISION())
+            ])
 
         self.sounds = self.Music(self)
         self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else SkinsNames.default
         self.records = HighScore(self)
+
         self.scenes = self.Scenes(self)
-        self.scenes.set(self.scenes.MENU)
+        self.scenes.MENU()
+        self.scenes.MENU.create_objects()
 
     def read_from_storage(self):
-        self.storage = Storage(self)
         self.settings = self.Settings(self.storage)
         self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
-        self.maps.cur_id = int(self.storage.last_level_id) if int(
-            self.storage.last_level_id) in self.unlocked_levels else self.__def_level_id
+        self.maps.cur_id = self.storage.last_level_id if self.storage.last_level_id in self.unlocked_levels else \
+            self.__def_level_id
         self.unlocked_skins = self.skins.all_skins if self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
         self.eaten_fruits = self.storage.eaten_fruits
         self.highscores = self.storage.highscores
 
-    def save_to_storage(self):
-        self.storage.settings.SOUND = self.settings.SOUND
-        self.storage.settings.FUN = self.settings.FUN
-        self.storage.settings.VOLUME = self.settings.VOLUME
-        self.storage.settings.DIFFICULTY = self.settings.DIFFICULTY
-        self.storage.last_level_id = self.maps.cur_id
-        self.storage.last_skin = self.skins.current.name
-        self.storage.eaten_fruits = self.eaten_fruits
-
-        self.storage.unlocked_levels = self.unlocked_levels if not self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
-        self.storage.unlocked_skins = self.unlocked_skins if not self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
-
-        self.storage.highscores = self.highscores
-        self.storage.save()
-
     @property
-    def difficulty(self):
+    def difficulty(self) -> int:
         return self.settings.DIFFICULTY + 1
 
     @property
-    def current_scene(self):
+    def current_scene(self) -> BaseScene:
         return self.scenes.current
 
     @property
-    def size(self):
+    def size(self) -> tuple:
         return self.__resolution
 
-    @staticmethod
-    def __exit_button_pressed(event: pg.event.Event) -> bool:
-        return event.type == pg.QUIT
-
-    @staticmethod
-    def __exit_hotkey_pressed(event: pg.event.Event) -> bool:
-        return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
-
     def __process_exit_events(self, event: pg.event.Event) -> None:
-        if self.__exit_button_pressed(event) or self.__exit_hotkey_pressed(event):
+        if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q):
             self.exit_game()
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
-            self.cheats.process_event(event)
+            self.__cheats.process_event(event)
             self.__process_exit_events(event)
             self.scenes.current.process_event(event)
 
     def __process_all_logic(self) -> None:
-        self.cheats.process_logic()
+        self.__cheats.process_logic()
         self.scenes.current.process_logic()
         if self.current_scene != self.scenes.MAIN:
             for ghost in self.scenes.MAIN.ghosts:
@@ -337,8 +323,7 @@ class Game:
             self.__clock.tick(self.__FPS)
 
     def exit_game(self) -> None:
-        self.save_to_storage()
-        print('Bye bye')
+        self.storage.save()
         sys.exit(0)
 
     def unlock_level(self, level_id: int = 0) -> None:

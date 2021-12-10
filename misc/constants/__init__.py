@@ -1,4 +1,4 @@
-from .variables import *
+from .variables import DEBUG, CELL_SIZE, FRUITS_COUNT, HIGHSCORES_COUNT, VERSION
 from .classes import Sounds, Color, Points, Font
 from .button import BUTTON_GREEN_COLORS, ButtonStateColor, BUTTON_RED_COLORS, BUTTON_DEFAULT_COLORS,\
     BUTTON_SKIN_BUY, LIGHT_BUTTON_COLORS, ButtonColor

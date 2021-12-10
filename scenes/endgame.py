@@ -6,9 +6,9 @@ from scenes.base import BaseScene
 
 
 class EndScene(BaseScene):
-    def __init__(self, game, score):
+    def __init__(self, game):
         super().__init__(game)
-        self.score = score
+        self.score = 0
 
     def create_objects(self) -> None:
         super().create_objects()
@@ -75,7 +75,7 @@ class EndScene(BaseScene):
         next_level = self.game.maps.cur_id + 1
         self.game.maps.cur_id = next_level
         self.game.records.update_records()
-        self.game.scenes.set(self.game.scenes.MAIN, reset=True)
+        self.game.scenes.MAIN(reset=True)
 
     def __is_last_level(self) -> bool:
         return (self.game.maps.cur_id + 1) < self.game.maps.count

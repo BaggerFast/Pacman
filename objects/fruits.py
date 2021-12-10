@@ -20,17 +20,17 @@ class Fruit(BaseObject):
         self.fruit_hud: List[ImageObject] = []
 
     @property
-    def current_image(self):
+    def current_image(self) -> pg.Surface:
         return self.images[self.cur_index]
 
-    def __draw_fruit(self):
+    def __draw_fruit(self) -> None:
         if self.__eaten:
             Text(game=self.game, text=str(self.__scores[self.cur_index - 1] * self.game.difficulty),
                  size=10, rect=self.rect).process_draw()
         if self.is_hidden:
             self.game.screen.blit(self.current_image, self.rect)
 
-    def __change_image(self):
+    def __change_image(self) -> None:
         self.cur_index = (self.cur_index + 1) % len(self.images)
         self.rect = self.current_image.get_rect(center=self.rect.center)
         self.fruit_hud.append(ImageObject(self.game, self.images[self.cur_index-1], (130 + self.cur_index * 12, 270)))

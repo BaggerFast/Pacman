@@ -30,7 +30,6 @@ class MenuScene(BaseScene):
 
     def on_activate(self) -> None:
         self.game.pred = False
-        super().on_activate()
 
     def change_color(self) -> None:
         for x in range(self.preview.get_width()):
@@ -80,3 +79,4 @@ class MenuScene(BaseScene):
                 center=(self.game.width // 2, 95 + i * 28),
                 text_size=Font.BUTTON_TEXT_SIZE
             )
+

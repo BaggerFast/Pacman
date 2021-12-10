@@ -80,10 +80,6 @@ class SeedContainer(BaseObject):
         self.__draw_energizers()
 
     def process_collision(self, obj: BaseObject):
-        """
-        :param obj: any class with pygame.rect
-        :return: is objects in collision (bool) and self type (str)
-        """
         if self.is_field_empty():
             event_append(EvenType.Win)
 

@@ -81,7 +81,6 @@ class MainScene(BaseScene):
         self.game.sounds.siren.unpause()
         hp_cheat = ControlCheats(
             [Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))],
-            self
         )
         self.text[-1].surface.set_alpha(0)
         self.__create_map()
@@ -152,14 +151,13 @@ class MainScene(BaseScene):
         self.template = self.screen.copy()
         self.game.timer = pg.time.get_ticks() / 1000
         self.game.scenes.GAMEOVER.score = self.score
-        self.game.scenes.set(self.game.scenes.GAMEOVER)
+        self.game.scenes.GAMEOVER()
 
     def __win_game(self):
         self.template = self.screen.copy()
         self.game.timer = pg.time.get_ticks() / 1000
         self.game.scenes.ENDGAME.score = self.score
         self.game.scenes.ENDGAME(self.score)
-
 
     def __change_prefered_ghost(self) -> None:
         self.__count_prefered_ghost += 1
@@ -299,6 +297,6 @@ class MainScene(BaseScene):
     def Continue(self):
         self.game.scenes.set(self)
 
-    def __call__(self, *args, **kwargs):
-        self.game.scenes.set(self, reset=True)
+    def __call__(self, reset=True):
+        self.game.scenes.set(self, reset)
 

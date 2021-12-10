@@ -1,6 +1,5 @@
 import pygame as pg
 from copy import copy
-
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
 from random import randint, choice

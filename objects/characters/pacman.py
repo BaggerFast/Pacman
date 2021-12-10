@@ -27,7 +27,6 @@ class Pacman(Character):
         return self.__dead_anim
 
     def process_event(self, event: pg.event.Event) -> None:
-        self.kb.process_event(event)
         if event.type in self.dir_action.keys() and not self.dead:
             self.go()
             self.__feature_rotate = self.dir_action[event.type]
@@ -44,6 +43,7 @@ class Pacman(Character):
             self.animator.rotate = rotate
 
     def process_logic(self) -> None:
+        self.kb.process_logic()
         self.animator.timer_check()
         if self.dead:
             return
