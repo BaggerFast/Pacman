@@ -9,9 +9,8 @@ from scenes.base import BaseScene
 class RecordsScene(BaseScene):
     medals = SpriteSheet(sprite_path=get_path('images/medal.png'), sprite_size=(16, 16))[0]
 
-    def create_static_objects(self):
+    def start_logic(self):
         self.__create_medals()
-        self.__create_title()
         self.__create_error_label()
 
     def create_objects(self) -> None:
@@ -23,11 +22,11 @@ class RecordsScene(BaseScene):
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
             text='MENU',
-            function=self.game.scenes.MENU,
+            function=self.game.scene_manager.pop,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 
-    def __create_title(self) -> None:
+    def create_title(self) -> None:
         title = Text(self.game, 'RECORDS', 32, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
@@ -40,6 +39,8 @@ class RecordsScene(BaseScene):
         def creator():
             text_colors = [Color.GOLD, Color.SILVER, Color.BRONZE, Color.WHITE, Color.WHITE]
             for i, text_color in enumerate(text_colors):
+                if self.game.records.data[i] <= 0:
+                    break
                 yield Text(self.game, str(self.game.records.data[i]), 30, pg.Rect(60, 55 + 35 * i, 0, 0), text_color)
 
         self.game.records.update_records()
@@ -54,11 +55,9 @@ class RecordsScene(BaseScene):
         self.__medals = list(creator())
 
     def additional_draw(self) -> None:
-        super().additional_draw()
-        if sum(self.game.records.data) == 0:
+        if not self.medals_text:
             self.__error_text.process_draw()
         else:
-            for i in range(len(self.medals)):
-                if self.game.records.data[i]:
-                    self.medals_text[i].process_draw()
-                    self.__medals[i].process_draw()
+            for i in range(len(self.medals_text)):
+                self.medals_text[i].process_draw()
+                self.__medals[i].process_draw()

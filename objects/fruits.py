@@ -1,6 +1,6 @@
 import pygame as pg
 from typing import Tuple
-from misc import CELL_SIZE
+from misc import CELL_SIZE, get_path
 from misc.sprite_sheet import SpriteSheet
 from objects.base import BaseObject
 from objects import Text, ImageObject
@@ -10,30 +10,30 @@ from typing import List
 class Fruit(BaseObject):
     def __init__(self, game, pos: tuple) -> None:
         super().__init__(game)
-        self.images = SpriteSheet('images/fruits.png', (14, 14))[0]
-        self.cur_index: int = 0
+        self.images = SpriteSheet(get_path('images/fruits.png'), (14, 14))[0]
+        self.__cur_index: int = 0
         self.rect = self.current_image.get_rect()
         self.move_center(*self.pos_from_cell(pos))
         self.__scores: List[int] = [100, 300, 500, 700, 1000, 2000, 3000, 5000]
         self.__eaten: bool = False
         self.__start_time = pg.time.get_ticks()
-        self.fruit_hud: List[ImageObject] = []
+        self.__fruit_hud: List[ImageObject] = []
 
     @property
     def current_image(self) -> pg.Surface:
-        return self.images[self.cur_index]
+        return self.images[self.__cur_index]
 
     def __draw_fruit(self) -> None:
         if self.__eaten:
-            Text(game=self.game, text=str(self.__scores[self.cur_index - 1] * self.game.difficulty),
+            Text(game=self.game, text=str(self.__scores[self.__cur_index - 1] * self.game.difficulty),
                  size=10, rect=self.rect).process_draw()
         if self.is_hidden:
             self.game.screen.blit(self.current_image, self.rect)
 
     def __change_image(self) -> None:
-        self.cur_index = (self.cur_index + 1) % len(self.images)
+        self.__cur_index = (self.__cur_index + 1) % len(self.images)
         self.rect = self.current_image.get_rect(center=self.rect.center)
-        self.fruit_hud.append(ImageObject(self.game, self.images[self.cur_index-1], (130 + self.cur_index * 12, 270)))
+        self.__fruit_hud.append(ImageObject(self.game, self.images[self.__cur_index - 1], (130 + self.__cur_index * 12, 270)))
 
     def process_collision(self, obj: BaseObject):
         """
@@ -46,8 +46,8 @@ class Fruit(BaseObject):
         self.is_hidden = False
         self.__eaten = True
         self.__start_time = pg.time.get_ticks()
-        self.game.store_fruit(self.cur_index, 1 * self.game.difficulty)
-        self.game.current_scene.score.eat_fruit(self.__scores[self.cur_index])
+        self.game.store_fruit(self.__cur_index, 1 * self.game.difficulty)
+        self.game.current_scene.score.eat_fruit(self.__scores[self.__cur_index])
         self.__change_image()
 
     def process_logic(self):
@@ -56,7 +56,7 @@ class Fruit(BaseObject):
 
     def process_draw(self) -> None:
         self.__draw_fruit()
-        for fruit in self.fruit_hud:
+        for fruit in self.__fruit_hud:
             fruit.process_draw()
 
     @staticmethod

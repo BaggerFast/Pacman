@@ -24,7 +24,6 @@ class Base(Character):
         self.deceleration_multiplier = 1
         self.acceleration_multiplier = 1
         self.deceleration_multiplier_with_rect = 1
-
         self.frightened_time = frightened_time
         self.chase_time = chase_time
         self.scatter_time = scatter_time
@@ -41,21 +40,16 @@ class Base(Character):
 
         self.eaten_walk_anim = SpriteSheetAnimator(SpriteSheet(get_path('images/ghost/eaten.png'), (12, 14)))
 
-        super().__init__(
-            game,
-            self.walk_anim,
-            start_pos,
-            get_path(f'images/ghost/{type(self).__name__.lower()}/aura.png'))
+        aura_path = get_path(f'images/ghost/{type(self).__name__.lower()}/aura.png')
+        super().__init__(game, self.walk_anim, start_pos, aura_path)
 
         self.is_can_leave_home = False
         self.count_eat_seeds_in_home = 0
 
         self.collision = False
-        self.set_direction("left")
 
         self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
-        self.invisible_anim = Animator(SpriteSheet(get_path('images/ghost/invisible.png'))[0])
         self.love_cell = (0, 0)
 
         self.is_invisible = False
@@ -64,6 +58,7 @@ class Base(Character):
         self.work_counter = True
 
         self.mode = GhostState.scatter
+
         self.gg_text = Text(
             self.game, '100',
             10, pg.Rect(0, 0, 0, 0),
@@ -74,9 +69,6 @@ class Base(Character):
 
         self.old_timer = pg.time.get_ticks()
         self.old_ai_timer = pg.time.get_ticks()
-        self.__events = {
-            EvenType.FrightenedMode: self.toggle_mode_to_frightened
-        }
 
     def behaviour_in_the_house(self):
         # если он внутри дома и не может выйти то бегать вверх вниз
@@ -87,7 +79,7 @@ class Base(Character):
             self.set_direction('down')
 
     def slow_corridor(self):
-        for rect in self.game.current_scene.slow_ghost_rect:
+        for rect in self.game.scene_manager.current.slow_ghost_rect:
             if self.in_rect(rect):
                 self.deceleration_multiplier_with_rect = 2
 
@@ -130,7 +122,6 @@ class Base(Character):
         self.timer = pg.time.get_ticks()
 
     def invisible(self) -> None:
-        self.animator = self.invisible_anim
         self.is_invisible = True
         self.collision = False
 
@@ -156,20 +147,24 @@ class Base(Character):
         self.deceleration_multiplier = 1
         self.love_cell = (self.game.current_scene.blinky.start_pos[0] // 8,
                           (self.game.current_scene.blinky.start_pos[1] - 20) // 8)
+
         if not self.tmp_flag1 and self.rect.center == self.game.current_scene.blinky.start_pos:
-            self.collision = False
             self.set_direction('down')
+            self.collision = False
             self.tmp_flag1 = True
+
         if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.game.current_scene.pinky.start_pos[1]:
+            self.set_direction('up')
             self.animator = self.walk_anim
             self.acceleration_multiplier = 1
             self.deceleration_multiplier = 2
-            self.set_direction('up')
             self.tmp_flag2 = True
+
         if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
-            self.deceleration_multiplier = 1
             self.set_direction('left')
             self.mode = GhostState.scatter
+
+            self.deceleration_multiplier = 1
             self.collision = True
             self.update_ai_timer()
             self.tmp_flag1 = False
@@ -220,12 +215,20 @@ class Base(Character):
         self.acceleration_multiplier = 2
 
     def process_event(self, event: pg.event.Event) -> None:
-        if event.type in self.__events:
-            self.__events[event.type]()
+        events = {
+            EvenType.FrightenedMode: self.toggle_mode_to_frightened
+        }
+        if event.type in events:
+            events[event.type]()
 
     def process_draw(self) -> None:
         if self.mode == GhostState.eaten:
             self.gg_text.text = f'{200 * self.game.difficulty ** 2}' # * 2 ** self.game.score.fear_count2
             self.gg_text.process_draw()
-        super().process_draw()
+        if not self.is_invisible:
+            super().process_draw()
 
+    def set_power(self, frightened_time: int, chase_time: int, scatter_time: int):
+        self.frightened_time = frightened_time
+        self.chase_time = chase_time
+        self.scatter_time = scatter_time

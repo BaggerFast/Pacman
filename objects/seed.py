@@ -32,12 +32,22 @@ class Seed(BaseObject):
     def process_draw(self) -> None:
         self.game.screen.blit(self.image, self.rect)
 
+    def remove(self):
+        event_append(EvenType.EatSeed)
+        if not self.game.sounds.seed.get_busy():
+            self.game.sounds.seed.play()
+
 
 class BigSeed(Seed):
     def __init__(self, game, rect):
         path = 'images/big_seed.png' if game.skins.current.name != SkinsNames.chrome else "images/big_seed_google.png"
         self.animator = SeedAnimator(SpriteSheet(get_path(path), (9, 9))[0])
         super().__init__(game, rect, self.animator.current_image)
+
+    def remove(self):
+        event_append(EvenType.EatEnergizer)
+        if not self.game.sounds.seed.get_busy():
+            self.game.sounds.seed.play()
 
     def process_draw(self) -> None:
         self.game.screen.blit(self.animator.current_image, self.rect)
@@ -82,19 +92,19 @@ class SeedContainer(BaseObject):
     def process_collision(self, obj: BaseObject):
         if self.is_field_empty():
             event_append(EvenType.Win)
+            return
 
         for seed in self.seed_bf:
             if seed.check_collision(obj):
+                seed.remove()
                 self.seed_bf.remove(seed)
-                event_append(EvenType.EatSeed)
-                if not self.game.sounds.seed.get_busy():
-                    self.game.sounds.seed.play()
                 return
 
         for seed in self.big_seed_bf:
             if seed.check_collision(obj):
+                seed.remove()
                 self.big_seed_bf.remove(seed)
-                event_append(EvenType.EatEnergizer)
+                return 
 
     def is_field_empty(self) -> bool:
         return not (any([self.seed_bf, self.big_seed_bf]))

@@ -6,14 +6,13 @@ from scenes.base import BaseScene
 
 
 class GameOverScene(BaseScene):
-    def __init__(self, game):
+    def __init__(self, game, score):
         super().__init__(game)
-        self.score = 0
+        self.score = score
 
     def create_objects(self) -> None:
         super().create_objects()
-        self.__create_score_text()
-        self.__create_highscore_text()
+        self.objects += [self.__get_score_text, self.__get_highscore_text]
 
     def create_title(self) -> None:
         for i, text in enumerate(['GAME', 'OVER']):
@@ -23,8 +22,8 @@ class GameOverScene(BaseScene):
 
     def button_init(self) -> None:
         names = {
-            "RESTART": self.game.scenes.MAIN,
-            "MENU": self.game.scenes.MENU,
+            "RESTART": lambda: self.scene_manager.set(self.game.scenes.MAIN(self.game)),
+            "MENU": lambda: self.scene_manager.set(self.game.scenes.MENU(self.game)),
         }
         for i, (name, scene) in enumerate(names.items()):
             yield Button(
@@ -37,20 +36,21 @@ class GameOverScene(BaseScene):
                 colors=BUTTON_DEFAULT_COLORS
             )
 
-    def __create_score_text(self) -> None:
+    @property
+    def __get_score_text(self) -> Text:
         text_score = Text(self.game, f'Score: {self.score}', 20)
         text_score.move_center(self.game.width // 2, 135)
-        self.objects.append(text_score)
+        return text_score
 
-    def __create_highscore_text(self) -> None:
+    @property
+    def __get_highscore_text(self) -> Text:
         text_highscore = Text(self.game, f'High score: {self.game.records.data[0]}',  20)
         text_highscore.move_center(self.game.width // 2, 165)
-        self.objects.append(text_highscore)
+        return text_highscore
 
-    def on_deactivate(self) -> None:
+    def on_exit(self) -> None:
         self.game.sounds.gameover.stop()
 
-    def on_activate(self) -> None:
-        super().on_activate()
+    def on_enter(self) -> None:
         self.game.sounds.pacman.stop()
         self.game.sounds.gameover.play()

@@ -33,7 +33,7 @@ class LevelsScene(BaseScene):
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
             text='MENU',
-            function=self.game.scenes.MENU,
+            function=self.game.scene_manager.pop,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 

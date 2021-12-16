@@ -15,12 +15,13 @@ class SettingsScene(BaseScene):
         volume_text = Text(self.game, "VOLUME", 20)
         volume_text.move_center(self.game.width // 2, self.__volume_position)
 
-        self.volume_value = Text(self.game, f"{self.game.settings.VOLUME} %", 20)
-        self.volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
+        volume_value = Text(self.game, f"{self.game.settings.VOLUME} %", 20)
+        volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
 
-        self.static_objects += [volume_text, self.volume_value, self.create_title()]
+        self.static_objects += [volume_text, volume_value, self.title]
 
-    def create_title(self) -> Text:
+    @property
+    def title(self) -> Text:
         text = Text(self.game, "SETTINGS", 30, font=Font.TITLE)
         text.move_center(self.game.width // 2, 30)
         return text
@@ -45,7 +46,7 @@ class SettingsScene(BaseScene):
             colors=BUTTON_GREEN_COLORS if self.game.settings.FUN else BUTTON_RED_COLORS,
             var="FUN",
             name="FUN",
-            active=self.prev_scene == self.game.scenes.MENU
+            active= True
         )
 
         yield SelectButton(
@@ -68,7 +69,7 @@ class SettingsScene(BaseScene):
             rect=pg.Rect(0, 0, 120, 35),
             center=(self.game.width // 2, self.__difficulty_pos),
             text_size=Font.BUTTON_TEXT_SIZE,
-            active=self.prev_scene == self.game.scenes.MENU,
+            active=True,
             text=''
         )
 
@@ -76,14 +77,7 @@ class SettingsScene(BaseScene):
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
             text='BACK',
-            function=self.prev_scene,
+            function=self.game.scene_manager.pop,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE
         )
-
-    def additional_event_check(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.prev_scene()
-
-    def __call__(self, *args, **kwargs):
-        self.game.scenes.set(self, reset=True)

@@ -43,3 +43,12 @@ class Pinky(Base):
             if pg.time.get_ticks() - self.ai_timer >= self.chase_time:
                 self.update_ai_timer()
                 self.mode = GhostState.scatter
+
+    def set_difficult(self, difficult):
+        data = {
+            0: [8000, 20000, 7000],
+            1: [4000, 40000, 5000],
+            2: [2000, 80000, 3000],
+        }
+        if difficult in data:
+            self.set_power(*data[difficult])

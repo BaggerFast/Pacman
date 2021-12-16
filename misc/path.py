@@ -1,5 +1,4 @@
 import os
-from distutils.util import strtobool
 from typing import List
 
 ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))

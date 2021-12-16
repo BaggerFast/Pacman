@@ -21,7 +21,7 @@ class Blinky(Base):
 
     def ghosts_ai(self) -> None:
         super().ghosts_ai()
-        scene = self.game.current_scene
+        scene = self.game.scene_manager.current
         pacman = scene.pacman
         if self.mode == GhostState.scatter:
             self.love_cell = self.love_point_in_scatter_mode
@@ -33,3 +33,13 @@ class Blinky(Base):
             if pg.time.get_ticks() - self.ai_timer >= self.chase_time:
                 self.update_ai_timer()
                 self.mode = GhostState.scatter
+
+    def set_difficult(self, difficult):
+        # todo improve difficult system
+        data = {
+            0: [8000, 20000, 7000],
+            1: [4000, 40000, 5000],
+            2: [2000, 80000, 3000],
+        }
+        if difficult in data:
+            self.set_power(*data[difficult])

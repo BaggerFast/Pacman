@@ -3,16 +3,16 @@ from objects import Text
 from misc import Font, LIGHT_BUTTON_COLORS
 from objects.button import Button
 from scenes.base import BaseScene
-from scenes.menu import rand_color
 
 
 class PauseScene(BaseScene):
+
     def button_init(self) -> None:
         names = {
-            "CONTINUE": self.game.scenes.MAIN.Continue,
-            "SETTINGS": self.game.scenes.SETTINGS,
-            "RESTART": self.game.scenes.MAIN,
-            "MENU": self.game.scenes.MENU,
+            "CONTINUE": self.game.scene_manager.pop,
+            "SETTINGS": lambda: self.game.scene_manager.push(self.game.scenes.SETTINGS(self.game)),
+            "RESTART": lambda: self.game.scene_manager.set(self.game.scenes.MAIN(self.game)),
+            "MENU": lambda: self.game.scene_manager.push(self.game.scenes.MENU(self.game)),
         }
         for i, (name, scene) in enumerate(names.items()):
             yield Button(
@@ -29,11 +29,3 @@ class PauseScene(BaseScene):
         main_text = Text(self.game, 'PAUSE', 40, font=Font.TITLE)
         main_text.move_center(self.game.width // 2, 35)
         self.static_objects.append(main_text)
-
-    def additional_event_check(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.game.scenes.MAIN(False)
-
-    def on_deactivate(self) -> None:
-        self.game.pred = True
-        self.game.map_color = rand_color()

@@ -30,7 +30,7 @@ class CreditsScene(BaseScene):
         yield Button(
             game=self.game,
             rect=pg.Rect(0, 0, 100, 35),
-            function=self.game.scenes.MENU,
+            function=self.game.scene_manager.pop,
             text="MENU",
             center=(self.game.width // 4, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
@@ -102,7 +102,7 @@ class CreditsScene(BaseScene):
             self.game.sounds.credits.play()
         self.__process_students()
 
-    def on_deactivate(self) -> None:
+    def on_exit(self) -> None:
         self.game.sounds.credits.stop()
 
     def __skip_sound(self):

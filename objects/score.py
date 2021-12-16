@@ -10,7 +10,6 @@ class Score(BaseObject):
 
     def __init__(self, game):
         super().__init__(game)
-        self.game = game
         self.__value = 0
         self.fear_mode = False
         self.fear_count = 0
@@ -18,9 +17,9 @@ class Score(BaseObject):
 
         self.__events = {
             EvenType.EatSeed: lambda: self + Points.POINT_PER_SEED * self.game.difficulty,
-            EvenType.EatEnergizer: lambda: self.__eat_energizer(),
-            EvenType.EatGhost: lambda: self.__eat_ghost(),
-            EvenType.StopFearMode: lambda: self.__deactivate_fear_mode(),
+            EvenType.EatEnergizer: self.__eat_energizer,
+            EvenType.EatGhost: self.__eat_ghost,
+            EvenType.StopFearMode: self.__deactivate_fear_mode,
         }
 
     def process_draw(self) -> None:

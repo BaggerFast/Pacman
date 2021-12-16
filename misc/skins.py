@@ -1,12 +1,12 @@
+import pygame as pg
 from copy import copy
 from typing import Union, Dict
-import pygame as pg
+from objects import ImageObject
+from misc.sprite_sheet import SpriteSheet
 from misc import Animator, get_path, Sounds
 from misc.animator import SpriteSheetAnimator
 from misc.constants.skin_names import SkinsNames
 from misc.sound_controller import SoundController
-from misc.sprite_sheet import SpriteSheet
-from objects import ImageObject
 
 
 class Skin:

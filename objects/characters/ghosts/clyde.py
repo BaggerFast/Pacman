@@ -39,3 +39,12 @@ class Clyde(Base):
             self.love_cell = pacman.get_cell()
             if self.two_cells_dis(self.get_cell(), pacman.get_cell()) <= 8:
                 self.mode = GhostState.scatter
+
+    def set_difficult(self, difficult):
+        data = {
+            0: [8000, 0, 0],
+            1: [4000, 0, 0],
+            2: [2000, 0, 0],
+        }
+        if difficult in data:
+            self.set_power(*data[difficult])

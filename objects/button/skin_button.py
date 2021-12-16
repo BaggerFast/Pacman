@@ -10,16 +10,16 @@ class SkinButton(Button):
         self.game.sounds.click.play()
         self.game.skins.current = self.value
         self.select()
-        self.game.scenes.current.update_button_text()
+        #self.game.scenes.current.update_button_text()
 
     def deselect(self) -> None:
-        scene = self.game.scenes.current
+        scene = self.game.scene_manager.current
         if not scene.is_current:
             scene.preview.image = self.game.skins.current.image.image
         super().deselect()
 
     def select(self) -> None:
-        scene = self.game.scenes.current
+        scene = self.game.current_scene
         scene.is_current = True
         scene.preview.image = self.value.image.image
         super().select()

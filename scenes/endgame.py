@@ -6,16 +6,17 @@ from scenes.base import BaseScene
 
 
 class EndScene(BaseScene):
-    def __init__(self, game):
+    def __init__(self, game, score):
         super().__init__(game)
-        self.score = 0
+        self.score = score
+
+    def start_logic(self):
+        self.__save_record()
+        self.__unlock_level()
 
     def create_objects(self) -> None:
         super().create_objects()
-        self.__save_record()
-        self.__create_score_text()
-        self.__create_highscore_text()
-        self.__unlock_level()
+        self.objects += [self.__get_score_text, self.__get_highscore_text]
 
     def create_title(self) -> None:
         text = Text(self.game, 'VICTORY', 40, font=Font.TITLE)
@@ -32,12 +33,12 @@ class EndScene(BaseScene):
             text_size=Font.BUTTON_TEXT_SIZE,
             colors=BUTTON_DEFAULT_COLORS
         )
-        if not self.__is_last_level():
+        if not self.__is_last_level:
             yield Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 180, 35),
                 text='EXIT',
-                function=self.game.scenes.MENU,
+                function=lambda: self.scene_manager.set(self.game.scenes.MENU(self.game)),
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS
@@ -46,28 +47,30 @@ class EndScene(BaseScene):
             game=self.game,
             rect=pg.Rect(0, 0, 180, 35),
             text='MENU',
-            function=self.game.scenes.MENU,
+            function=lambda: self.scene_manager.set(self.game.scenes.MENU(self.game)),
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE,
             colors=BUTTON_DEFAULT_COLORS
         )
 
-    def __create_score_text(self) -> None:
+    @property
+    def __get_score_text(self) -> Text:
         text_score = Text(self.game, f'Score: {self.score}', 20)
         text_score.move_center(self.game.width // 2, 135)
-        self.objects.append(text_score)
+        return text_score
 
-    def __create_highscore_text(self) -> None:
+    @property
+    def __get_highscore_text(self) -> Text:
         text_highscore = Text(self.game, f'High score: {self.game.records.data[0]}'if int(self.score) <= self.game.records.data[0] else f'New record: {self.score}', 20)
         text_highscore.move_center(self.game.width // 2, 165)
-        self.objects.append(text_highscore)
+        return text_highscore
 
     def __save_record(self) -> None:
         self.game.records.add_new_record(int(self.score))
         self.game.records.update_records()
 
     def __unlock_level(self) -> None:
-        if self.__is_last_level():
+        if self.__is_last_level:
             next_level = self.game.maps.cur_id + 1
             self.game.unlock_level(next_level)
 
@@ -75,18 +78,15 @@ class EndScene(BaseScene):
         next_level = self.game.maps.cur_id + 1
         self.game.maps.cur_id = next_level
         self.game.records.update_records()
-        self.game.scenes.MAIN(reset=True)
+        self.scene_manager.set(self.game.scenes.MAIN(self.game))
 
+    @property
     def __is_last_level(self) -> bool:
         return (self.game.maps.cur_id + 1) < self.game.maps.count
 
-    def on_activate(self) -> None:
-        super().on_activate()
+    def on_enter(self) -> None:
         self.game.sounds.siren.stop()
         self.game.sounds.gameover.play()
 
-    def on_deactivate(self) -> None:
+    def on_exit(self) -> None:
         self.game.sounds.gameover.stop()
-
-    def __call__(self, *args, **kwargs):
-        self.game.scenes.set(self, reset=True)

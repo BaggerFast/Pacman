@@ -12,6 +12,7 @@ from misc import Color, HighScore, get_path, get_list_path, LevelLoader, Skins, 
 from objects.map import rand_color, Map
 from scenes import *
 from scenes.base import BaseScene
+from scenes.manager import SceneManager
 
 
 class Game:
@@ -112,39 +113,16 @@ class Game:
 
     class Scenes:
         def __init__(self, game):
-            self.PAUSE = PauseScene(game)
-            self.MENU = MenuScene(game)
-            self.MAIN = MainScene(game)
-            self.GAMEOVER = GameOverScene(game)
-            self.LEVELS = LevelsScene(game)
-            self.RECORDS = RecordsScene(game)
-            self.CREDITS = CreditsScene(game)
-            self.ENDGAME = EndScene(game)
-            self.SKINS = SkinsScene(game)
-            self.SETTINGS = SettingsScene(game)
-            self.__game = game
-            self.__current = self.MENU
-
-        @property
-        def current(self):
-            return self.__current
-
-        def set(self, scene: BaseScene, reset: bool = False) -> None:
-            """
-            :param scene: NEXT scene (contains in game.scenes.*)
-            :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
-            IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
-            """
-            if not isinstance(scene, BaseScene):
-                return
-            if scene != self.MENU:
-                self.__game.scenes.MENU.first_run = False
-            scene.prev_scene = self.__current
-            self.__current.on_deactivate()
-            self.__current = scene
-            if reset:
-                self.__current.on_reset()
-            self.__current.on_activate()
+            self.PAUSE = PauseScene
+            self.MENU = MenuScene
+            self.MAIN = MainScene
+            self.GAMEOVER = GameOverScene
+            self.LEVELS = LevelsScene
+            self.RECORDS = RecordsScene
+            self.CREDITS = CreditsScene
+            self.ENDGAME = EndScene
+            self.SKINS = SkinsScene
+            self.SETTINGS = SettingsScene
 
     class Maps:
 
@@ -194,7 +172,6 @@ class Game:
     def __init__(self):
         self.maps = self.Maps(self)
         self.__clock = pg.time.Clock()
-        self.timer = pg.time.get_ticks() / 1000
         self.time_out: int = 125
         self.animate_timer: int = 0
         self.pred: bool = False
@@ -202,8 +179,8 @@ class Game:
         self.skins = Skins(self)
         self.cheats_var = self.Cheats(self)
         self.read_from_storage()
-        self.__cheats = ControlCheats(
-            [
+        self.scene_manager = SceneManager(self)
+        self.__cheats = ControlCheats([
                 Cheat(self, 'skins', self.cheats_var.UNLOCK_SKINS),
                 Cheat(self, 'maps', self.cheats_var.UNLOCK_LEVELS),
                 Cheat(self, 'lives', self.cheats_var.INFINITY_LIVES),
@@ -215,8 +192,7 @@ class Game:
         self.records = HighScore(self)
 
         self.scenes = self.Scenes(self)
-        self.scenes.MENU()
-        self.scenes.MENU.create_objects()
+        self.scene_manager.set(MenuScene(self))
 
     def read_from_storage(self):
         self.settings = self.Settings(self.storage)
@@ -233,7 +209,7 @@ class Game:
 
     @property
     def current_scene(self) -> BaseScene:
-        return self.scenes.current
+        return self.scene_manager.current
 
     @property
     def size(self) -> tuple:
@@ -247,21 +223,22 @@ class Game:
         for event in pg.event.get():
             self.__cheats.process_event(event)
             self.__process_exit_events(event)
-            self.scenes.current.process_event(event)
+            self.scene_manager.process_event(event)
 
     def __process_all_logic(self) -> None:
         self.__cheats.process_logic()
-        self.scenes.current.process_logic()
-        if self.current_scene != self.scenes.MAIN:
-            for ghost in self.scenes.MAIN.ghosts:
-                ghost.timer = pg.time.get_ticks() - (pg.time.get_ticks() - ghost.old_timer)
-                ghost.ai_timer = pg.time.get_ticks() - (pg.time.get_ticks() - ghost.old_ai_timer)
-        else:
-            for ghost in self.scenes.MAIN.ghosts:
-                ghost.old_timer = pg.time.get_ticks()
-                ghost.old_ai_timer = pg.time.get_ticks()
+        self.scene_manager.process_logic()
+        # if self.current_scene != self.scenes.MAIN:
+        #     for ghost in self.scenes.MAIN.ghosts:
+        #         ghost.timer = pg.time.get_ticks() - (pg.time.get_ticks() - ghost.old_timer)
+        #         ghost.ai_timer = pg.time.get_ticks() - (pg.time.get_ticks() - ghost.old_ai_timer)
+        # else:
+        #     for ghost in self.scenes.MAIN.ghosts:
+        #         ghost.old_timer = pg.time.get_ticks()
+        #         ghost.old_ai_timer = pg.time.get_ticks()
 
     def __process_all_draw(self) -> None:
+        """
         blur_count = 0
         current_time = pg.time.get_ticks() / 1000
 
@@ -270,20 +247,25 @@ class Game:
 
         blur_count = self.__additional_draw(animations, blur_count, current_time, exceptions)
 
-        if self.scenes.current in animations:
+        if self.scene_manager.current in animations:
             self.screen.fill(Color.BLACK)
 
-        self.scenes.current.process_draw(blur_count)
+        self.scene_manager.current.process_draw(blur_count)
+        """
+        self.screen.fill(Color.BLACK)
+        self.scene_manager.process_draw()
         pg.display.flip()
 
+    """
     def __additional_draw(self, animations, blur_count, current_time, exceptions):
-        if self.scenes.current not in exceptions and self.scenes.current not in animations and self.scenes.current != self.scenes.MENU:
+
+        if self.scene_manager.current not in exceptions and self.scene_manager.current not in animations and self.scene_manager.current != self.scenes.MENU:
             self.screen.fill(Color.BLACK)
-        elif self.scenes.current in exceptions:
+        elif self.scene_manager.current in exceptions:
             blur_count = self.__exceptions_draw()
-        elif self.scenes.current in animations and not self.pred:
+        elif self.scene_manager.current in animations and not self.pred:
             blur_count = self.__animations_draw(current_time)
-        elif self.scenes.current == self.scenes.MENU and self.scenes.MENU.first_run:
+        elif self.scene_manager.current == self.scenes.MENU and self.scenes.MENU.first_run:
             blur_count = self.__predraw_draw(current_time)
         return blur_count
 
@@ -314,6 +296,7 @@ class Game:
         self.screen.blit(surface, (0, 0))
         blur_count = 0
         return blur_count
+    """
 
     def main_loop(self) -> None:
         while not self.__game_over:

@@ -10,7 +10,7 @@ from scenes.base import BaseScene
 
 class SkinsScene(BaseScene):
 
-    def create_static_objects(self) -> None:
+    def start_logic(self) -> None:
         self.skins = {
             SkinsNames.default: self.game.skins.default,
             SkinsNames.edge: self.game.skins.edge,
@@ -19,14 +19,13 @@ class SkinsScene(BaseScene):
             SkinsNames.windows: self.game.skins.windows,
             SkinsNames.chrome: self.game.skins.chrome,
         }
-        self.is_current = False
         self.fruit_images: list[str] = SpriteSheet('images/fruits.png', (14, 14))[0]
-        self.__create_title()
 
     def create_objects(self) -> None:
-        self.objects = []
         self.preview = copy(self.game.skins.current.image)
+
         self.objects.append(self.preview)
+
         self.create_buttons()
         self.create_fruits_and_text_we_have()
         self.create_fruits_and_text_for_skins()
@@ -62,7 +61,7 @@ class SkinsScene(BaseScene):
         pos_regarding_buttons_y = self.button_pos_y - 6
         self.objects += list(creator())
 
-    def __create_title(self) -> None:
+    def create_title(self) -> None:
         title = Text(self.game, 'SELECT SKIN', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
@@ -89,14 +88,14 @@ class SkinsScene(BaseScene):
                     text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
                     colors=BUTTON_SKIN_BUY
                 )
+
         yield Button(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
             text='MENU',
-            function=self.game.scenes.MENU,
+            function=self.game.scene_manager.pop,
             center=(self.game.width // 2, 250),
-            text_size=Font.BUTTON_TEXT_SIZE
-        )
+            text_size=Font.BUTTON_TEXT_SIZE)
 
     def create_buttons(self) -> None:
         self.button_pos_x = self.game.width // 2 - 65
