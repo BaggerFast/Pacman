@@ -44,13 +44,13 @@ class Game:
 
         def unlock_skins(self):
             self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.UNLOCK_SKINS else self.game.storage.unlocked_skins
-            if self.game.scenes.current == self.game.scenes.SKINS:
-                self.game.scenes.current.create_objects()
+            if isinstance(self.game.scene_manager.current, SkinsScene):
+                self.game.scene_manager.current.create_objects()
 
         def unlock_levels(self):
             self.game.unlocked_levels = self.game.maps.keys() if self.game.cheats_var.UNLOCK_LEVELS else self.game.storage.unlocked_levels
-            if self.game.scenes.current == self.game.scenes.LEVELS:
-                self.game.scenes.current.create_objects()
+            if isinstance(self.game.scene_manager.current, LevelsScene):
+                self.game.scene_manager.current.create_objects()
 
         def update(self, key_code):
             if hasattr(self, key_code):
