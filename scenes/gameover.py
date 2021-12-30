@@ -18,12 +18,12 @@ class GameOverScene(BaseScene):
         for i, text in enumerate(['GAME', 'OVER']):
             text = Text(self.game, text, 40, font=Font.TITLE)
             text.move_center(self.game.width // 2, 30 + i * 40)
-            self.static_objects.append(text)
+            self.objects.append(text)
 
     def button_init(self) -> None:
         names = {
-            "RESTART": lambda: self.scene_manager.set(self.game.scenes.MAIN(self.game)),
-            "MENU": lambda: self.scene_manager.set(self.game.scenes.MENU(self.game)),
+            "RESTART": lambda: self.scene_manager.reset(self.game.scenes.MAIN(self.game)),
+            "MENU": lambda: self.scene_manager.reset(self.game.scenes.MENU(self.game)),
         }
         for i, (name, scene) in enumerate(names.items()):
             yield Button(

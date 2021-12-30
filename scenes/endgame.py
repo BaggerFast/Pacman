@@ -21,7 +21,7 @@ class EndScene(BaseScene):
     def create_title(self) -> None:
         text = Text(self.game, 'VICTORY', 40, font=Font.TITLE)
         text.move_center(self.game.width // 2, 30)
-        self.static_objects.append(text)
+        self.objects.append(text)
 
     def button_init(self) -> None:
         yield Button(
@@ -38,7 +38,7 @@ class EndScene(BaseScene):
                 game=self.game,
                 rect=pg.Rect(0, 0, 180, 35),
                 text='EXIT',
-                function=lambda: self.scene_manager.set(self.game.scenes.MENU(self.game)),
+                function=lambda: self.scene_manager.reset(self.game.scenes.MENU(self.game)),
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS
@@ -47,7 +47,7 @@ class EndScene(BaseScene):
             game=self.game,
             rect=pg.Rect(0, 0, 180, 35),
             text='MENU',
-            function=lambda: self.scene_manager.set(self.game.scenes.MENU(self.game)),
+            function=lambda: self.scene_manager.reset(self.game.scenes.MENU(self.game)),
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE,
             colors=BUTTON_DEFAULT_COLORS
@@ -78,7 +78,7 @@ class EndScene(BaseScene):
         next_level = self.game.maps.cur_id + 1
         self.game.maps.cur_id = next_level
         self.game.records.update_records()
-        self.scene_manager.set(self.game.scenes.MAIN(self.game))
+        self.scene_manager.reset(self.game.scenes.MAIN(self.game))
 
     @property
     def __is_last_level(self) -> bool:

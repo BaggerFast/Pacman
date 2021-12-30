@@ -23,7 +23,7 @@ class SceneManager:
             return self.scenes[-2]
 
     @property
-    def is_empty(self):
+    def is_empty(self) -> bool:
         return len(self.scenes) <= 0
 
     @scenes_available
@@ -46,7 +46,7 @@ class SceneManager:
     def process_draw(self):
         self.scenes[-1].process_draw()
 
-    def push(self, scene):
+    def append(self, scene):
         self.exit_scene()
         self.scenes.append(scene)
         self.enter_scene()
@@ -56,6 +56,6 @@ class SceneManager:
         self.scenes.pop()
         self.enter_scene()
 
-    def set(self, scene):
+    def reset(self, scene):
         self.scenes = []
-        self.push(scene)
+        self.append(scene)

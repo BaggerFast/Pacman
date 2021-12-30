@@ -30,8 +30,8 @@ class MainScene(BaseScene):
         self.ghost_text_timer = pg.time.get_ticks()
         self.ghost_text_flag = False
 
-    def create_static_objects(self):
-        self.static_objects += [*self.__get_static_text, self.__get_hud]
+    def create_title(self) -> None:
+        self.objects += [*self.__get_static_text, self.__get_hud]
 
     @property
     def __get_static_text(self):
@@ -74,7 +74,7 @@ class MainScene(BaseScene):
                 text = Text(self.game, i, 30, font=Font.TITLE, rect=pg.Rect(20, 0, 20, 20))
                 text.move_center(self.game.width // 2, self.game.height // 2)
                 text.surface.set_alpha(0)
-                self.static_objects.append(text)
+                self.objects.append(text)
                 yield text
         self.text = list(creator())
 
@@ -111,12 +111,12 @@ class MainScene(BaseScene):
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         data = {
-            EvenType.GameOver: lambda: self.scene_manager.set(self.game.scenes.GAMEOVER(self.game, self.score)),
-            EvenType.Win: lambda: self.scene_manager.set(self.game.scenes.ENDGAME(self.game, self.score)),
+            EvenType.GameOver: lambda: self.scene_manager.reset(self.game.scenes.GAMEOVER(self.game, self.score)),
+            EvenType.Win: lambda: self.scene_manager.reset(self.game.scenes.ENDGAME(self.game, self.score)),
         }
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             pg.mixer.pause()
-            self.game.scene_manager.push(self.game.scenes.PAUSE(self.game))
+            self.game.scene_manager.append(self.game.scenes.PAUSE(self.game))
         elif event.type in data:
             data[event.type]()
 

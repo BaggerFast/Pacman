@@ -112,7 +112,7 @@ class Game:
             self.game.skins.current.sound_preset()
 
     class Scenes:
-        def __init__(self, game):
+        def __init__(self):
             self.PAUSE = PauseScene
             self.MENU = MenuScene
             self.MAIN = MainScene
@@ -163,7 +163,6 @@ class Game:
     __resolution = width, height = 224, 285
     __FPS: int = 60
     __def_level_id = 0
-    __game_over: bool = False
     screen = pg.display.set_mode(__resolution, pg.SCALED)
 
     pg.display.set_caption('PACMAN')
@@ -179,20 +178,25 @@ class Game:
         self.skins = Skins(self)
         self.cheats_var = self.Cheats(self)
         self.read_from_storage()
+
         self.scene_manager = SceneManager(self)
+
         self.__cheats = ControlCheats([
                 Cheat(self, 'skins', self.cheats_var.UNLOCK_SKINS),
                 Cheat(self, 'maps', self.cheats_var.UNLOCK_LEVELS),
                 Cheat(self, 'lives', self.cheats_var.INFINITY_LIVES),
-                Cheat(self, 'collision', self.cheats_var.GHOSTS_COLLISION())
+                Cheat(self, 'collision', self.cheats_var.GHOSTS_COLLISION)
             ])
 
         self.sounds = self.Music(self)
+
         self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else SkinsNames.default
         self.records = HighScore(self)
 
-        self.scenes = self.Scenes(self)
-        self.scene_manager.set(MenuScene(self))
+        #todo scenes import
+        self.scenes = self.Scenes()
+
+        self.scene_manager.reset(MenuScene(self))
 
     def read_from_storage(self):
         self.settings = self.Settings(self.storage)
@@ -228,14 +232,6 @@ class Game:
     def __process_all_logic(self) -> None:
         self.__cheats.process_logic()
         self.scene_manager.process_logic()
-        # if self.current_scene != self.scenes.MAIN:
-        #     for ghost in self.scenes.MAIN.ghosts:
-        #         ghost.timer = pg.time.get_ticks() - (pg.time.get_ticks() - ghost.old_timer)
-        #         ghost.ai_timer = pg.time.get_ticks() - (pg.time.get_ticks() - ghost.old_ai_timer)
-        # else:
-        #     for ghost in self.scenes.MAIN.ghosts:
-        #         ghost.old_timer = pg.time.get_ticks()
-        #         ghost.old_ai_timer = pg.time.get_ticks()
 
     def __process_all_draw(self) -> None:
         """
@@ -299,7 +295,7 @@ class Game:
     """
 
     def main_loop(self) -> None:
-        while not self.__game_over:
+        while True:
             self.__process_all_events()
             self.__process_all_logic()
             self.__process_all_draw()

@@ -11,11 +11,9 @@ class BaseScene:
         self.scene_manager = self.game.scene_manager
 
         self.objects: list = []
-        self.static_objects: list = []
-
         self.start_logic()
-        self.create_static_objects()
         self.create_objects()
+        self.create_title()
 
     def start_logic(self):
         pass
@@ -30,8 +28,8 @@ class BaseScene:
             obj.process_logic()
         self.additional_logic()
 
-    def process_draw(self, blur_count: int = 0) -> None:
-        all_objects = self.objects+self.static_objects
+    def process_draw(self) -> None:
+        all_objects = self.objects
         for obj in all_objects:
             obj.process_draw()
         self.additional_draw()

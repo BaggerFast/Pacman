@@ -30,7 +30,7 @@ class MenuScene(BaseScene):
         title = Text(self.game, 'PACMAN', 36, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
 
-        self.static_objects.append(title)
+        self.objects.append(title)
 
     @property
     def __level_indicator(self) -> Text:
@@ -55,12 +55,12 @@ class MenuScene(BaseScene):
 
     def button_init(self):
         names = {
-            "PLAY": lambda: self.scene_manager.set(self.game.scenes.MAIN(self.game)),
-            "LEVELS": lambda: self.scene_manager.push(self.game.scenes.LEVELS(self.game)),
-            "SKINS": lambda: self.scene_manager.push(self.game.scenes.SKINS(self.game)),
-            "RECORDS": lambda: self.scene_manager.push(self.game.scenes.RECORDS(self.game)),
-            "SETTINGS": lambda: self.scene_manager.push(self.game.scenes.SETTINGS(self.game)),
-            "CREDITS": lambda: self.scene_manager.push(self.game.scenes.CREDITS(self.game)),
+            "PLAY": lambda: self.scene_manager.reset(self.game.scenes.MAIN(self.game)),
+            "LEVELS": lambda: self.scene_manager.append(self.game.scenes.LEVELS(self.game)),
+            "SKINS": lambda: self.scene_manager.append(self.game.scenes.SKINS(self.game)),
+            "RECORDS": lambda: self.scene_manager.append(self.game.scenes.RECORDS(self.game)),
+            "SETTINGS": lambda: self.scene_manager.append(self.game.scenes.SETTINGS(self.game)),
+            "CREDITS": lambda: self.scene_manager.append(self.game.scenes.CREDITS(self.game)),
             "EXIT": self.game.exit_game,
         }
         for i, (name, func) in enumerate(names.items()):

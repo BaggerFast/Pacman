@@ -91,7 +91,7 @@ class CreditsScene(BaseScene):
             del self.__students[index]
 
     def additional_logic(self) -> None:
-        if len(self.__students2) == 0:
+        if self.__students2:
             self.__students2 = self.__data.copy()
         elif len(self.__students) == len(self.__students2) and not self.__on_screen:
             self.__students.clear()

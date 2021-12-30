@@ -17,7 +17,7 @@ class LevelsScene(BaseScene):
     def __create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
-        self.static_objects.append(title)
+        self.objects.append(title)
 
     def button_init(self):
         for i in range(self.__scroll, self.__scroll + self.__buttons_on_scene):

@@ -64,7 +64,7 @@ class SkinsScene(BaseScene):
     def create_title(self) -> None:
         title = Text(self.game, 'SELECT SKIN', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
-        self.static_objects.append(title)
+        self.objects.append(title)
 
     def button_init(self):
         for i, (skin_name, skin) in enumerate(self.skins.items()):

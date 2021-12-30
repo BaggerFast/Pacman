@@ -10,15 +10,15 @@ class SettingsScene(BaseScene):
     __volume_position = 150
     __difficulty_pos = 210
 
-    def create_static_objects(self) -> None:
-
+    def create_objects(self) -> None:
+        super().create_objects()
         volume_text = Text(self.game, "VOLUME", 20)
         volume_text.move_center(self.game.width // 2, self.__volume_position)
 
         volume_value = Text(self.game, f"{self.game.settings.VOLUME} %", 20)
         volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
 
-        self.static_objects += [volume_text, volume_value, self.title]
+        self.objects += [volume_text, volume_value, self.title]
 
     @property
     def title(self) -> Text:
@@ -46,7 +46,7 @@ class SettingsScene(BaseScene):
             colors=BUTTON_GREEN_COLORS if self.game.settings.FUN else BUTTON_RED_COLORS,
             var="FUN",
             name="FUN",
-            active= True
+            active=True
         )
 
         yield SelectButton(
