@@ -8,16 +8,19 @@ from objects.button.button import Button
 
 class ButtonController(BaseObject):
 
-    def __init__(self, game, buttons: List[Button]):
+    def __init__(self, game, buttons):
         super().__init__(game)
         self.buttons = buttons
         self.active_button_index = -1
         self.kb_actions = {
-            EvenType.NextBtn: lambda: self.select_next_button(),
-            EvenType.PreviousBtn: lambda: self.select_previous_button(),
+            EvenType.NextBtn: lambda: self.select_button_checker(1),
+            EvenType.PreviousBtn: lambda: self.select_button_checker(-1),
             EvenType.PressBtn: lambda: self.press_current_button(),
         }
         self.kb = MenuKeyboard()
+
+    def button_add(self, button: Button):
+        self.buttons.append(button)
 
     def deselect_current_button(self) -> None:
         self.buttons[self.active_button_index].deselect()
@@ -25,25 +28,12 @@ class ButtonController(BaseObject):
     def select_current_button(self) -> None:
         self.buttons[self.active_button_index].select()
 
-    def select_previous_button(self) -> None:
-        self.deselect_current_button()
-        self.active_button_index -= 1
-        if self.active_button_index < 0:
-            self.active_button_index = len(self.buttons) - 1
-        if self.buttons[self.active_button_index].active:
+    def select_button_checker(self, index: int) -> None:
+        active_button_index = (self.active_button_index + index) % len(self.buttons)
+        if self.buttons[active_button_index].active:
+            self.deselect_current_button()
+            self.active_button_index = active_button_index
             self.select_current_button()
-        else:
-            self.select_previous_button()
-
-    def select_next_button(self) -> None:
-        self.deselect_current_button()
-        self.active_button_index += 1
-        if self.active_button_index == len(self.buttons):
-            self.active_button_index = 0
-        if self.buttons[self.active_button_index].active:
-            self.select_current_button()
-        else:
-            self.select_next_button()
 
     def press_current_button(self) -> None:
         self.buttons[self.active_button_index].activate()

@@ -23,9 +23,7 @@ class SkinsScene(BaseScene):
 
     def create_objects(self) -> None:
         self.preview = copy(self.game.skins.current.image)
-
         self.objects.append(self.preview)
-
         self.create_buttons()
         self.create_fruits_and_text_we_have()
         self.create_fruits_and_text_for_skins()
@@ -88,7 +86,6 @@ class SkinsScene(BaseScene):
                     text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
                     colors=BUTTON_SKIN_BUY
                 )
-
         yield Button(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
@@ -101,16 +98,12 @@ class SkinsScene(BaseScene):
         self.button_pos_x = self.game.width // 2 - 65
         self.button_pos_y = 90
         self.button_pos_multiply_y = 25
-        self.__button_controller = ButtonController(self.game, list(self.button_init()))
-        self.objects.append(self.__button_controller)
-        self.update_button_text()
-
-    def update_button_text(self):
-        for button in self.__button_controller.buttons:
+        button_controller = ButtonController(self.game, list(self.button_init()))
+        for button in button_controller.buttons:
             if not type(button) in [SkinButton, BuyButton]:
                 return
             if self.game.skins.current.name == button.value.name:
-                if not (button.text.startswith("-") or button.text.endswith("-")):
-                    button.text = f'-{button.text}-'
+                button.text = f'-{button.text}-'
             else:
                 button.text = button.text.strip('-')
+        self.objects.append(button_controller)

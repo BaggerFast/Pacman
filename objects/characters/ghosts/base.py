@@ -2,7 +2,7 @@ import pygame as pg
 from misc import Animator, get_path, EvenType, event_append
 from misc.animator import SpriteSheetAnimator
 from misc.sprite_sheet import SpriteSheet
-from objects import  Pacman, Text
+from objects import Pacman, Text
 from typing import Tuple
 import random
 from objects.characters.character_base import Character

@@ -1,10 +1,10 @@
 from typing import List, Union, Callable, Tuple
 import pygame as pg
 from misc import Font, ButtonColor, BUTTON_DEFAULT_COLORS
-from objects.button.base import BaseButton
+from objects.base import BaseObject
 
 
-class Button(BaseButton):
+class Button(BaseObject):
     STATE_INITIAL = 0
     STATE_HOVER = 1
     STATE_CLICK = 2
@@ -12,8 +12,9 @@ class Button(BaseButton):
     def __init__(self, game, rect: Union[tuple, pg.Rect], text: str, function: Callable[[], None] = None,
                  colors: ButtonColor = BUTTON_DEFAULT_COLORS, center: Tuple[int, int] = None,
                  text_size: int = 60, active: bool = True) -> None:
-
-        super().__init__(game, rect, function)
+        super().__init__(game)
+        self.rect = rect
+        self.function = function
         self.__text = text
         self.__font = pg.font.Font(Font.DEFAULT, text_size)
         self.active = active
@@ -47,13 +48,18 @@ class Button(BaseButton):
         if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT and self.state != self.STATE_INITIAL:
             self.deselect()
 
+    def process_mouse_click(self, event: pg.event.Event):
+        if event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
+            if self.rect.collidepoint(event.pos):
+                self.click()
+
     def process_event(self, event: pg.event.Event) -> None:
         if not self.active:
             return
         self.process_mouse_motion(event)
         self.process_mouse_button_down(event)
         self.process_mouse_button_up(event)
-        super().process_event(event)
+        self.process_mouse_click(event)
 
     @property
     def colors(self):
@@ -104,3 +110,7 @@ class Button(BaseButton):
 
     def activate(self) -> None:
         self.state = self.STATE_CLICK
+
+    def click(self) -> None:
+        self.game.sounds.click.play()
+        self.function()

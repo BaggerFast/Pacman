@@ -1,9 +1,10 @@
-from collections import Generator
 import pygame as pg
+from collections import Generator
+from misc.base_pattern import BasePattern
 from objects.button import ButtonController
 
 
-class BaseScene:
+class BaseScene(BasePattern):
 
     def __init__(self, game):
         self.game = game
@@ -12,11 +13,15 @@ class BaseScene:
         self.scenes = self.game.Scenes
         self.objects: list = []
         self.start_logic()
-        self.create_objects()
-        self.create_title()
+        self.recreate()
 
     def start_logic(self):
         pass
+
+    def recreate(self):
+        self.objects = []
+        self.create_objects()
+        self.create_title()
 
     def process_event(self, event: pg.event.Event) -> None:
         for obj in self.objects:
@@ -29,19 +34,9 @@ class BaseScene:
         self.additional_logic()
 
     def process_draw(self) -> None:
-        all_objects = self.objects
-        for obj in all_objects:
+        for obj in self.objects:
             obj.process_draw()
         self.additional_draw()
-        """"if blur_count:
-            surify = pg.image.tostring(self.screen, 'RGBA')
-            impil = Image.frombytes('RGBA', (224, 285), surify)
-            piler = impil.filter(ImageFilter.GaussianBlur(radius=blur_count))
-            surface = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
-            self.screen.blit(surface, (0, 0)) """
-
-    def create_static_objects(self) -> None:
-        self.create_title()
 
     def create_objects(self) -> None:
         buttons = list(self.button_init())
@@ -52,19 +47,13 @@ class BaseScene:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.scene_manager.pop()
 
-    def additional_logic(self) -> None:
-        pass
-
-    def additional_draw(self) -> None:
-        pass
-
     def create_title(self) -> None:
         pass
 
-    def on_enter(self):
+    def on_enter(self) -> None:
         pass
 
-    def on_exit(self):
+    def on_exit(self) -> None:
         pass
 
     def button_init(self) -> Generator:

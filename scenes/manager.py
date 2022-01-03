@@ -56,6 +56,11 @@ class SceneManager:
         self.scenes.pop()
         self.enter_scene()
 
+    def swap(self, scene):
+        self.scenes.pop()
+        self.scenes.append(scene)
+        self.enter_scene()
+
     def reset(self, scene):
         self.scenes = []
         self.append(scene)

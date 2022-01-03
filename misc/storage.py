@@ -72,9 +72,7 @@ class Storage(Field):
     def load(self) -> None:
         create_file_if_not_exist(self.__storage_filepath, json.dumps(self.dict(), indent=2))
         with open(self.__storage_filepath, "r") as file:
-            try:
-                json_dict = json.load(file)
-                self.read_dict(json_dict)
-            except JSONDecodeError:
-                pass
-        self.save_to_file()
+            json_dict = json.load(file)
+            self.read_dict(json_dict)
+
+

@@ -161,7 +161,6 @@ class Game:
     __FPS: int = 60
     __def_level_id = 0
     screen = pg.display.set_mode(__resolution, pg.SCALED)
-
     pg.display.set_caption('PACMAN')
     pg.display.set_icon(pg.transform.scale(pg.image.load(get_path('images/ico.png')), (256, 256)))
 

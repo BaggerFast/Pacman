@@ -1,7 +1,8 @@
 import pygame as pg
+from misc.base_pattern import BasePattern
 
 
-class BaseObject:
+class BaseObject(BasePattern):
 
     def __init__(self, game, is_hidden=False) -> None:
         self.game = game
@@ -15,12 +16,3 @@ class BaseObject:
     def move_center(self, x: int, y: int) -> None:
         self.rect.centerx = x
         self.rect.centery = y
-
-    def process_event(self, event: pg.event.Event) -> None:
-        pass
-
-    def process_logic(self) -> None:
-        pass
-
-    def process_draw(self) -> None:
-        pass

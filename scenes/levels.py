@@ -1,6 +1,6 @@
 from copy import copy
 import pygame as pg
-from misc import Font
+from misc import Font, EvenType
 from objects.button import ButtonController, LvlButton, Button
 from objects import Text
 from scenes.base import BaseScene
@@ -9,10 +9,16 @@ from scenes.base import BaseScene
 class LevelsScene(BaseScene):
     __buttons_on_scene = 4
 
+    def start_logic(self):
+        self.is_current = False
+        self.__scroll = max(min(self.game.maps.cur_id, self.game.maps.count - self.__buttons_on_scene), 0)
+
     def create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
-        self.objects.append(title)
+        title2 = Text(self.game, 'Scroll - [q, e]', 15, font=Font.DEFAULT)
+        title2.move_center(self.game.width // 2, 50)
+        self.objects += [title, title2]
 
     def button_init(self):
         for i in range(self.__scroll, self.__scroll + self.__buttons_on_scene):
@@ -33,39 +39,33 @@ class LevelsScene(BaseScene):
             text_size=Font.BUTTON_TEXT_SIZE)
 
     def create_buttons(self) -> None:
-        button_controller = ButtonController(self.game, list(self.button_init()))
-        for button in button_controller.buttons:
+        buttons = list(self.button_init())
+        for button in buttons:
             if hasattr(button, "value"):
                 if self.game.maps.cur_id == button.value[0]:
                     button.text = '-' + button.text + '-'
+        button_controller = ButtonController(self.game, buttons)
         self.objects.append(button_controller)
 
-    def unlocked(self) -> int:
-        return len(self.game.unlocked_levels)
-
     def create_objects(self) -> None:
-        self.is_current = False
-        self.__scroll = max(min(self.game.maps.cur_id, self.game.maps.count - self.__buttons_on_scene), 0)
-        self.objects = []
         self.preview = copy(self.game.maps.images[self.game.maps.cur_id])
         self.objects.append(self.preview)
         self.create_buttons()
 
-    def scroll_threshold(self) -> None:
-        self.__scroll = min(self.__scroll, self.game.maps.count - self.__buttons_on_scene)
+    def update_scroll(self, index: int) -> None:
+        self.__scroll = min(self.__scroll+index, self.game.maps.count - self.__buttons_on_scene)
         self.__scroll = max(self.__scroll, 0)
 
     def additional_event_check(self, event: pg.event.Event) -> None:
+        actions = {
+            pg.K_e: lambda: self.update_scroll(1),
+            pg.K_q: lambda: self.update_scroll(-1),
+        }
         if event.type == pg.MOUSEWHEEL:
-            self.__scroll -= event.y
-            self.scroll_threshold()
-            self.create_objects()
-        elif event.type == pg.KEYDOWN and not (event.key in [pg.K_e, pg.K_q]):
-            if event.key == pg.K_e:
-                self.__scroll += 1
-            elif event.key == pg.K_q:
-                self.__scroll -= 1
-            self.scroll_threshold()
-            self.create_objects()
+            self.update_scroll(-event.y)
+            self.recreate()
+        elif event.type == pg.KEYDOWN and event.key in actions.keys():
+            actions[event.key]()
+            self.recreate()
         super().additional_event_check(event)
 

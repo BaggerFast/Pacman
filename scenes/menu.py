@@ -73,3 +73,5 @@ class MenuScene(BaseScene):
                 text_size=Font.BUTTON_TEXT_SIZE
             )
 
+    def additional_event_check(self, event: pg.event.Event) -> None:
+        pass
