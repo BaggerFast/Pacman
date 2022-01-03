@@ -22,8 +22,8 @@ class GameOverScene(BaseScene):
 
     def button_init(self) -> None:
         names = {
-            "RESTART": lambda: self.scene_manager.reset(self.game.scenes.MAIN(self.game)),
-            "MENU": lambda: self.scene_manager.reset(self.game.scenes.MENU(self.game)),
+            "RESTART": lambda: self.scene_manager.reset(self.scenes.MAIN(self.game)),
+            "MENU": lambda: self.scene_manager.reset(self.scenes.MENU(self.game)),
         }
         for i, (name, scene) in enumerate(names.items()):
             yield Button(

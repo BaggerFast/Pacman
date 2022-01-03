@@ -9,12 +9,7 @@ from scenes.base import BaseScene
 class LevelsScene(BaseScene):
     __buttons_on_scene = 4
 
-    def create_static_objects(self):
-        self.is_current = False
-        self.__scroll = max(min(self.game.maps.cur_id, self.game.maps.count - self.__buttons_on_scene), 0)
-        self.__create_title()
-
-    def __create_title(self) -> None:
+    def create_title(self) -> None:
         title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
@@ -49,6 +44,8 @@ class LevelsScene(BaseScene):
         return len(self.game.unlocked_levels)
 
     def create_objects(self) -> None:
+        self.is_current = False
+        self.__scroll = max(min(self.game.maps.cur_id, self.game.maps.count - self.__buttons_on_scene), 0)
         self.objects = []
         self.preview = copy(self.game.maps.images[self.game.maps.cur_id])
         self.objects.append(self.preview)

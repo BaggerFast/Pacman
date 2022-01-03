@@ -9,7 +9,7 @@ class BaseScene:
         self.game = game
         self.screen: pg.Surface = self.game.screen
         self.scene_manager = self.game.scene_manager
-
+        self.scenes = self.game.Scenes
         self.objects: list = []
         self.start_logic()
         self.create_objects()

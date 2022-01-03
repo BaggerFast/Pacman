@@ -111,12 +111,12 @@ class MainScene(BaseScene):
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         data = {
-            EvenType.GameOver: lambda: self.scene_manager.reset(self.game.scenes.GAMEOVER(self.game, self.score)),
-            EvenType.Win: lambda: self.scene_manager.reset(self.game.scenes.ENDGAME(self.game, self.score)),
+            EvenType.GameOver: lambda: self.scene_manager.reset(self.scenes.GAMEOVER(self.game, self.score)),
+            EvenType.Win: lambda: self.scene_manager.reset(self.scenes.ENDGAME(self.game, self.score)),
         }
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             pg.mixer.pause()
-            self.game.scene_manager.append(self.game.scenes.PAUSE(self.game))
+            self.game.scene_manager.append(self.scenes.PAUSE(self.game))
         elif event.type in data:
             data[event.type]()
 

@@ -10,9 +10,9 @@ class PauseScene(BaseScene):
     def button_init(self) -> None:
         names = {
             "CONTINUE": self.game.scene_manager.pop,
-            "SETTINGS": lambda: self.game.scene_manager.append(self.game.scenes.SETTINGS(self.game)),
-            "RESTART": lambda: self.game.scene_manager.reset(self.game.scenes.MAIN(self.game)),
-            "MENU": lambda: self.game.scene_manager.append(self.game.scenes.MENU(self.game)),
+            "SETTINGS": lambda: self.game.scene_manager.append(self.scenes.SETTINGS(self.game)),
+            "RESTART": lambda: self.game.scene_manager.reset(self.scenes.MAIN(self.game)),
+            "MENU": lambda: self.game.scene_manager.append(self.scenes.MENU(self.game)),
         }
         for i, (name, scene) in enumerate(names.items()):
             yield Button(

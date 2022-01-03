@@ -38,7 +38,7 @@ class EndScene(BaseScene):
                 game=self.game,
                 rect=pg.Rect(0, 0, 180, 35),
                 text='EXIT',
-                function=lambda: self.scene_manager.reset(self.game.scenes.MENU(self.game)),
+                function=lambda: self.scene_manager.reset(self.scenes.MAIN(self.game)),
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS
@@ -47,7 +47,7 @@ class EndScene(BaseScene):
             game=self.game,
             rect=pg.Rect(0, 0, 180, 35),
             text='MENU',
-            function=lambda: self.scene_manager.reset(self.game.scenes.MENU(self.game)),
+            function=lambda: self.scene_manager.reset(self.scenes.MENU(self.game)),
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE,
             colors=BUTTON_DEFAULT_COLORS

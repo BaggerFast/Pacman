@@ -55,12 +55,12 @@ class MenuScene(BaseScene):
 
     def button_init(self):
         names = {
-            "PLAY": lambda: self.scene_manager.reset(self.game.scenes.MAIN(self.game)),
-            "LEVELS": lambda: self.scene_manager.append(self.game.scenes.LEVELS(self.game)),
-            "SKINS": lambda: self.scene_manager.append(self.game.scenes.SKINS(self.game)),
-            "RECORDS": lambda: self.scene_manager.append(self.game.scenes.RECORDS(self.game)),
-            "SETTINGS": lambda: self.scene_manager.append(self.game.scenes.SETTINGS(self.game)),
-            "CREDITS": lambda: self.scene_manager.append(self.game.scenes.CREDITS(self.game)),
+            "PLAY": lambda: self.scene_manager.reset(self.scenes.MAIN(self.game)),
+            "LEVELS": lambda: self.scene_manager.append(self.scenes.LEVELS(self.game)),
+            "SKINS": lambda: self.scene_manager.append(self.scenes.SKINS(self.game)),
+            "RECORDS": lambda: self.scene_manager.append(self.scenes.RECORDS(self.game)),
+            "SETTINGS": lambda: self.scene_manager.append(self.scenes.SETTINGS(self.game)),
+            "CREDITS": lambda: self.scene_manager.append(self.scenes.CREDITS(self.game)),
             "EXIT": self.game.exit_game,
         }
         for i, (name, func) in enumerate(names.items()):
