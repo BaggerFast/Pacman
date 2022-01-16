@@ -1,5 +1,5 @@
 import pygame as pg
-from typing import NamedTuple
+from typing import NamedTuple, Callable
 from misc.path import get_path, get_list_path
 
 
@@ -87,3 +87,8 @@ class Font:
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     BUTTON_FOR_SKINS_TEXT_SIZE = Tuple(size=16).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size
+
+
+class MenuPreset(NamedTuple):
+    header: str
+    function: Callable

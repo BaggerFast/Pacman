@@ -41,11 +41,9 @@ class LevelsScene(BaseScene):
     def create_buttons(self) -> None:
         buttons = list(self.button_init())
         for button in buttons:
-            if hasattr(button, "value"):
-                if self.game.maps.cur_id == button.value[0]:
-                    button.text = '-' + button.text + '-'
-        button_controller = ButtonController(self.game, buttons)
-        self.objects.append(button_controller)
+            if hasattr(button, "value") and self.game.maps.cur_id == button.value[0]:
+                button.text = '-' + button.text + '-'
+        self.objects.append(ButtonController(self.game, buttons))
 
     def create_objects(self) -> None:
         self.preview = copy(self.game.maps.images[self.game.maps.cur_id])

@@ -1,4 +1,6 @@
 import pygame as pg
+
+from misc.constants.classes import MenuPreset
 from objects import Text
 from misc import Font, BUTTON_DEFAULT_COLORS
 from objects.button import Button
@@ -22,15 +24,15 @@ class GameOverScene(BaseScene):
 
     def button_init(self) -> None:
         names = {
-            "RESTART": lambda: self.scene_manager.reset(self.scenes.MAIN(self.game)),
-            "MENU": lambda: self.scene_manager.reset(self.scenes.MENU(self.game)),
+            MenuPreset("RESTART", lambda: self.scene_manager.reset(self.scenes.MAIN(self.game))),
+            MenuPreset("MENU", lambda: self.scene_manager.reset(self.scenes.MENU(self.game))),
         }
-        for i, (name, scene) in enumerate(names.items()):
+        for i, menu_preset in enumerate(names):
             yield Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 180, 35),
-                text=name,
-                function=scene,
+                text=menu_preset.header,
+                function=menu_preset.function,
                 center=(self.game.width // 2, 210+40*i),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS

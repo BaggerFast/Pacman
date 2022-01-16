@@ -1,5 +1,5 @@
 import pygame as pg
-from misc import ControlCheats, event_append
+from misc import ControlCheats, event_append, Sounds
 from misc import LevelLoader, Font, EvenType
 from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
@@ -37,8 +37,7 @@ class MainScene(BaseScene):
     def __get_static_text(self):
         scores_label_text = Text(
             self.game, f'{"MEMORY" if self.game.skins.current.name == SkinsNames.chrome else "SCORE"}',
-            Font.MAIN_SCENE_SIZE,
-            rect=pg.Rect(10, 0, 20, 20)
+            Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20)
         )
 
         high_scores_label_text = Text(
@@ -221,22 +220,7 @@ class MainScene(BaseScene):
                 ghost.gg_text.text = ' '
             self.ghost_text_flag = False
 
-    # def on(self) -> None:
-    #     self.game.sounds.intro.unpause()
-    #     self.template = self.screen
-    #     if self.pacman.animator != self.pacman.dead_anim:
-    #         self.game.sounds.siren.unpause()
-    #     for ghost in self.ghosts:
-    #         if ghost.mode != GhostState.frightened:
-    #             continue
-    #         if self.game.sounds.pellet.get_busy():
-    #             self.game.sounds.pellet.play()
-    #             break
-    #     if self.pacman.animator == self.pacman.dead_anim:
-    #         self.game.sounds.pacman.unpause()
-
     def on_reset(self) -> None:
-        pg.mixer.stop()
         self.game.sounds.intro.play()
         self.game.sounds.reload_sounds()
 

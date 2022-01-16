@@ -1,10 +1,5 @@
-def scenes_available(func):
-    def wrapped(*args, **kwargs):
-        self = args[0]
-        if not self.is_empty:
-            return func(*args, **kwargs)
-    return wrapped
-
+from scenes.base import BaseScene
+import pygame as pg
 
 class SceneManager:
 
@@ -13,54 +8,46 @@ class SceneManager:
         self.game = game
 
     @property
-    @scenes_available
-    def current(self):
-        return self.scenes[-1]
-
-    @property
-    def previous(self):
-        if len(self.scenes) > 1:
-            return self.scenes[-2]
-
-    @property
-    def is_empty(self) -> bool:
+    def __is_empty(self) -> bool:
         return len(self.scenes) <= 0
 
-    @scenes_available
-    def enter_scene(self):
-        self.scenes[-1].on_enter()
+    @property
+    def current(self) -> BaseScene:
+        if not self.__is_empty:
+            return self.scenes[-1]
+        else:
+            raise Exception('Пустая сцена')
 
-    @scenes_available
-    def exit_scene(self):
-        self.scenes[-1].on_exit()
+    def enter_scene(self) -> None:
+        self.current.on_enter()
 
-    @scenes_available
+    def exit_scene(self) -> None:
+        if not self.__is_empty:
+            self.current.on_exit()
+
     def process_logic(self) -> None:
-        self.scenes[-1].process_logic()
+        self.current.process_logic()
 
-    @scenes_available
     def process_event(self, event) -> None:
-        self.scenes[-1].process_event(event)
+        self.current.process_event(event)
 
-    @scenes_available
-    def process_draw(self):
-        self.scenes[-1].process_draw()
+    def process_draw(self) -> None:
+        self.current.process_draw()
 
-    def append(self, scene):
+    def append(self, scene: BaseScene) -> None:
         self.exit_scene()
         self.scenes.append(scene)
         self.enter_scene()
 
-    def pop(self):
+    def pop(self) -> None:
         self.exit_scene()
         self.scenes.pop()
         self.enter_scene()
 
-    def swap(self, scene):
+    def swap(self, scene: BaseScene) -> None:
         self.scenes.pop()
         self.scenes.append(scene)
         self.enter_scene()
 
-    def reset(self, scene):
-        self.scenes = []
-        self.append(scene)
+    def reset(self, scene: BaseScene) -> None:
+        self.scenes = [scene]

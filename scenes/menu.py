@@ -1,5 +1,7 @@
 import pygame as pg
 from PIL import ImageFilter, Image
+
+from misc.constants.classes import MenuPreset
 from objects import Text, ImageObject
 from objects.button import Button
 from objects.map import rand_color
@@ -54,21 +56,21 @@ class MenuScene(BaseScene):
         self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
     def button_init(self):
-        names = {
-            "PLAY": lambda: self.scene_manager.reset(self.scenes.MAIN(self.game)),
-            "LEVELS": lambda: self.scene_manager.append(self.scenes.LEVELS(self.game)),
-            "SKINS": lambda: self.scene_manager.append(self.scenes.SKINS(self.game)),
-            "RECORDS": lambda: self.scene_manager.append(self.scenes.RECORDS(self.game)),
-            "SETTINGS": lambda: self.scene_manager.append(self.scenes.SETTINGS(self.game)),
-            "CREDITS": lambda: self.scene_manager.append(self.scenes.CREDITS(self.game)),
-            "EXIT": self.game.exit_game,
-        }
-        for i, (name, func) in enumerate(names.items()):
+        names = [
+            MenuPreset("PLAY", lambda: self.scene_manager.reset(self.scenes.MAIN(self.game))),
+            MenuPreset("LEVELS", lambda: self.scene_manager.append(self.scenes.LEVELS(self.game))),
+            MenuPreset("SKINS", lambda: self.scene_manager.append(self.scenes.SKINS(self.game))),
+            MenuPreset("RECORDS", lambda: self.scene_manager.append(self.scenes.RECORDS(self.game))),
+            MenuPreset("SETTINGS", lambda: self.scene_manager.append(self.scenes.SETTINGS(self.game))),
+            MenuPreset("CREDITS", lambda: self.scene_manager.append(self.scenes.CREDITS(self.game))),
+            MenuPreset("EXIT", self.game.exit_game),
+        ]
+        for i, menu_preset in enumerate(names):
             yield Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 180, 26),
-                text=name,
-                function=func,
+                text=menu_preset.header,
+                function=menu_preset.function,
                 center=(self.game.width // 2, 95 + i * 28),
                 text_size=Font.BUTTON_TEXT_SIZE
             )
