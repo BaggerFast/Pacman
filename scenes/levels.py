@@ -1,7 +1,7 @@
 from copy import copy
 import pygame as pg
 from misc import Font, EvenType
-from objects.button import ButtonController, LvlButton, Button
+from objects.buttons import ButtonController, LvlButton, Button
 from objects import Text
 from scenes.base import BaseScene
 

@@ -1,14 +1,16 @@
+from enum import IntEnum, auto
+
 import pygame as pg
 from typing import NamedTuple, Callable
 from misc.path import get_path, get_list_path
 
 
 def load_sound(name: str):
-    return pg.mixer.Sound(get_path(f'sounds/{name}'))
+    return pg.mixer.Sound(get_path(f'assets/sounds/{name}'))
 
 
 def load_list_sounds(name: str):
-    return [pg.mixer.Sound(path) for path in get_list_path(f'sounds/{name}', ext='ogg')]
+    return [pg.mixer.Sound(path) for path in get_list_path(f'assets/sounds/{name}', ext='ogg')]
 
 
 class Sounds:
@@ -33,12 +35,13 @@ class Sounds:
     WINDOWS_SOUNDS = load_list_sounds('windows_skin')
 
     class Ch:
-        pacman: int = 0
-        intro: int = 1
-        game_over = menu = 2
-        siren: int = 3
-        seed = ghost = fruit = 4
-        pellet: int = 5
+        # todo fix channels
+        pacman = 1
+        intro = 2
+        game_over = menu = 3
+        siren = 4
+        eatable = 5
+        pellet = 6
 
 
 class Color(NamedTuple):
@@ -81,8 +84,8 @@ class Font:
         size: int = 0
         font: str = ''
 
-    TITLE = Tuple(font=get_path('fonts/title.ttf')).font
-    DEFAULT = Tuple(font=get_path('fonts/default.ttf')).font
+    TITLE = Tuple(font=get_path('assets/fonts/title.ttf')).font
+    DEFAULT = Tuple(font=get_path('assets/fonts/default.ttf')).font
     MAIN_SCENE_SIZE = Tuple(size=10).size
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     BUTTON_FOR_SKINS_TEXT_SIZE = Tuple(size=16).size

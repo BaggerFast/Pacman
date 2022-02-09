@@ -1,6 +1,7 @@
 import pygame as pg
 from typing import Tuple
 from misc import CELL_SIZE, get_path
+from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects.base import BaseObject
 from objects import Text, ImageObject
@@ -10,7 +11,7 @@ from typing import List
 class Fruit(BaseObject):
     def __init__(self, game, pos: tuple) -> None:
         super().__init__(game)
-        self.images = SpriteSheet(get_path('images/fruits.png'), (14, 14))[0]
+        self.images = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
         self.__cur_index: int = 0
         self.rect = self.current_image.get_rect()
         self.move_center(*self.pos_from_cell(pos))

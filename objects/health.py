@@ -47,6 +47,6 @@ class Health(ImageObject):
 
     def process_logic(self) -> None:
         cheat = self.game.cheats_var.INFINITY_LIVES
-        if all([not cheat, not self.__alive, not self.game.sounds.pacman.get_busy()]):
+        if all([not cheat, not self.__alive, not self.game.sounds.pacman.is_busy()]):
             event_append(EvenType.GameOver)
 

@@ -3,6 +3,7 @@ from misc import HIGHSCORES_COUNT
 
 
 class HighScore:
+
     def __init__(self, game) -> None:
         self.game = game
         self.__level_id = self.game.maps.cur_id

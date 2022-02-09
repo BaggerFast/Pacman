@@ -1,5 +1,4 @@
 import pygame as pg
-
 from misc.base_pattern import BasePattern
 
 
@@ -9,7 +8,7 @@ class Cheat:
         self.function = func
         self.game = game
 
-    def logic(self) -> None:
+    def __call__(self):
         self.game.sounds.cheat.play()
         self.function()
 
@@ -22,22 +21,27 @@ class ControlCheats(BasePattern):
         self.enter_code: str = ''
         self.old_enter_code: str = ''
 
-    def update_timer(self) -> None:
+    def __update_timer(self) -> None:
         self.timer = pg.time.get_ticks()
 
-    def process_logic(self) -> None:
+    def __complete_cheat(self):
         for cheat in self.cheats:
-            if cheat.cheat_code != self.enter_code:
-                continue
-            cheat.logic()
-            self.enter_code = ''
+            if cheat.cheat_code == self.enter_code:
+                cheat()
+                self.enter_code = ''
+                break
 
+    def __update_enter_code(self):
         if self.old_enter_code == self.enter_code and pg.time.get_ticks() - self.timer >= 1000:
             self.enter_code = ''
-            self.update_timer()
+            self.__update_timer()
         elif self.old_enter_code != self.enter_code:
-            self.update_timer()
+            self.__update_timer()
         self.old_enter_code = self.enter_code
+
+    def process_logic(self) -> None:
+        self.__complete_cheat()
+        self.__update_enter_code()
 
     def process_event(self, event) -> None:
         if event.type == pg.KEYDOWN and event.key in range(pg.K_a, pg.K_z + 1):

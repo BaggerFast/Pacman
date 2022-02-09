@@ -1,4 +1,4 @@
-from objects.button import Button
+from objects.buttons import Button
 
 
 class BuyButton(Button):

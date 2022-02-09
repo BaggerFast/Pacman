@@ -1,6 +1,6 @@
 import pygame as pg
 from objects import Text
-from objects.button import Button
+from objects.buttons import Button
 from misc import BUTTON_DEFAULT_COLORS, Font
 from scenes.base import BaseScene
 

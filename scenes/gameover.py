@@ -3,7 +3,7 @@ import pygame as pg
 from misc.constants.classes import MenuPreset
 from objects import Text
 from misc import Font, BUTTON_DEFAULT_COLORS
-from objects.button import Button
+from objects.buttons import Button
 from scenes.base import BaseScene
 
 

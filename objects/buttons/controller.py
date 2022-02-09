@@ -3,7 +3,7 @@ import pygame as pg
 from misc import EvenType
 from misc.keyboards import MenuKeyboard
 from objects.base import BaseObject
-from objects.button.button import Button
+from objects.buttons.button import Button
 
 
 class ButtonController(BaseObject):

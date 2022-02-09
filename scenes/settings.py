@@ -1,7 +1,7 @@
 import pygame as pg
 from misc import Font, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from objects import Text
-from objects.button import SettingButton, SelectButton, DifficultyButton, Button
+from objects.buttons import SettingButton, SelectButton, DifficultyButton, Button
 from scenes.base import BaseScene
 
 

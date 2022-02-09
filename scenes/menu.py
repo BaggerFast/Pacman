@@ -3,7 +3,7 @@ from PIL import ImageFilter, Image
 
 from misc.constants.classes import MenuPreset
 from objects import Text, ImageObject
-from objects.button import Button
+from objects.buttons import Button
 from objects.map import rand_color
 from misc import Font, Color, VERSION
 from scenes.base import BaseScene

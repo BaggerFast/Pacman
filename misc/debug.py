@@ -1,9 +1,10 @@
 import time
 
 
-def time_of_func(func):
+def check_execution_time(func):
     def wrapped(*args, **kwargs):
         start_time = time.monotonic()
-        func(*args, **kwargs)
+        data = func(*args, **kwargs)
         print(f'{func.__qualname__}:{round(time.monotonic() - start_time, 3)}')
+        return data
     return wrapped

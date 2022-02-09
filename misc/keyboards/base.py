@@ -1,6 +1,5 @@
 import dataclasses
 import pygame as pg
-
 from misc import event_append
 
 
@@ -10,26 +9,21 @@ class BaseKeyboard:
         keys: list
         event: int
 
-    data_keys = []
-
-    def __init__(self):
-        self.configure()
-
-    def configure(self) -> None:
-        raise NotImplementedError
+    keys_control = []
 
     def process_event(self, event: pg.event) -> None:
         if event.type != pg.KEYDOWN:
             return
-        for key in self.data_keys:
+        for key in self.keys_control:
             if event.key in key.keys:
                 event_append(key.event)
                 return
 
     def process_logic(self):
-        keys = pg.key.get_pressed()
-        for kb in self.data_keys:
+        pressed_keys = pg.key.get_pressed()
+        for kb in self.keys_control:
             for key in kb.keys:
-                if keys[key]:
+                if pressed_keys[key]:
                     event_append(kb.event)
                     return
+

@@ -1,9 +1,11 @@
 import pygame as pg
 from copy import copy
 from typing import Union, Dict
+
+from misc.path import get_image_path
 from objects import ImageObject
 from misc.sprite_sheet import SpriteSheet
-from misc import Animator, get_path, Sounds
+from misc import Animator, Sounds
 from misc.animator import SpriteSheetAnimator
 from misc.constants.skin_names import SkinsNames
 from misc.sound_controller import SoundController
@@ -15,8 +17,8 @@ class Skin:
         self.name: str = skin_name
         self.skin_cost: dict = cost
         self.game = game
-        self.__walk = SpriteSheetAnimator(SpriteSheet(get_path(f'images/pacman/{path}/walk.png'), (13, 13)))
-        self.__dead = Animator(SpriteSheet(get_path(f'images/pacman/{path}/dead.png'), (15, 15))[0],
+        self.__walk = SpriteSheetAnimator(SpriteSheet(get_image_path(f'pacman/{path}/walk.png'), (13, 13)))
+        self.__dead = Animator(SpriteSheet(get_image_path(f'pacman/{path}/dead.png'), (15, 15))[0],
                                time_out=125, repeat=False)
         self.__image = self.prerender_surface()
 
@@ -50,10 +52,10 @@ class HalfLife(Skin):
     def sound_preset(self):
         self.game.sounds.siren = SoundController(self.game, Sounds.Ch.siren, Sounds.VALVE_SOUNDS[0])
         self.game.sounds.intro = SoundController(self.game, Sounds.Ch.intro, Sounds.VALVE_SOUNDS[1])
-        self.game.sounds.seed = SoundController(self.game, Sounds.Ch.seed, Sounds.VALVE_SOUNDS[2])
-        self.game.sounds.ghost = SoundController(self.game, Sounds.Ch.ghost, Sounds.VALVE_SOUNDS[3])
+        self.game.sounds.seed = SoundController(self.game, Sounds.Ch.eatable, Sounds.VALVE_SOUNDS[2])
+        self.game.sounds.ghost = SoundController(self.game, Sounds.Ch.eatable, Sounds.VALVE_SOUNDS[3])
         self.game.sounds.pellet = SoundController(self.game, Sounds.Ch.pellet, Sounds.VALVE_SOUNDS[4])
-        self.game.sounds.fruit = SoundController(self.game, Sounds.Ch.fruit, Sounds.VALVE_SOUNDS[5])
+        self.game.sounds.fruit = SoundController(self.game, Sounds.Ch.eatable, Sounds.VALVE_SOUNDS[5])
         self.game.sounds.pacman = SoundController(self.game, Sounds.Ch.pacman, Sounds.VALVE_SOUNDS[6])
 
 
@@ -62,10 +64,10 @@ class Windows(Skin):
     def sound_preset(self):
         self.game.sounds.intro = SoundController(self.game, Sounds.Ch.intro, Sounds.WINDOWS_SOUNDS[0])
         self.game.sounds.pacman = SoundController(self.game, Sounds.Ch.pacman, Sounds.WINDOWS_SOUNDS[1])
-        self.game.sounds.seed = SoundController(self.game, Sounds.Ch.seed, Sounds.WINDOWS_SOUNDS[2])
+        self.game.sounds.seed = SoundController(self.game, Sounds.Ch.eatable, Sounds.WINDOWS_SOUNDS[2])
         self.game.sounds.gameover = SoundController(self.game, Sounds.Ch.game_over, Sounds.WINDOWS_SOUNDS[3])
-        self.game.sounds.ghost = SoundController(self.game, Sounds.Ch.ghost, Sounds.WINDOWS_SOUNDS[4])
-        self.game.sounds.fruit = SoundController(self.game, Sounds.Ch.fruit, Sounds.WINDOWS_SOUNDS[5])
+        self.game.sounds.ghost = SoundController(self.game, Sounds.Ch.eatable, Sounds.WINDOWS_SOUNDS[4])
+        self.game.sounds.fruit = SoundController(self.game, Sounds.Ch.eatable, Sounds.WINDOWS_SOUNDS[5])
 
 
 class PokeBall(Skin):

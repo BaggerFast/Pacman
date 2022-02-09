@@ -83,15 +83,15 @@ class Game:
             self.credits = SoundController(self.game, Sounds.Ch.menu, choice(Sounds.CREDITS))
             self.siren = SoundController(self.game, Sounds.Ch.siren, choice(Sounds.SIREN))
             self.pellet = SoundController(self.game, Sounds.Ch.pellet, Sounds.PELLET)
-            self.ghost = SoundController(self.game, Sounds.Ch.ghost, Sounds.GHOST)
-            self.fruit = SoundController(self.game, Sounds.Ch.fruit, Sounds.FRUIT)
+            self.ghost = SoundController(self.game, Sounds.Ch.eatable, Sounds.GHOST)
+            self.fruit = SoundController(self.game, Sounds.Ch.eatable, Sounds.FRUIT)
             self.cheat = SoundController(self.game, Sounds.Ch.menu, Sounds.CHEAT)
 
         def preset_for_fun(self):
             if self.fun:
                 self.pacman = SoundController(self.game, Sounds.Ch.pacman,
                                               choice([path for path in Sounds.DEAD[1:]]))
-                self.seed = SoundController(self.game, Sounds.Ch.seed, Sounds.SEED_FUN)
+                self.seed = SoundController(self.game, Sounds.Ch.eatable, Sounds.SEED_FUN)
                 self.intro = SoundController(self.game, Sounds.Ch.intro,
                                              choice([path for path in Sounds.INTRO[1:]]))
                 self.gameover = SoundController(self.game, Sounds.Ch.game_over,
@@ -99,7 +99,7 @@ class Game:
             else:
                 self.pacman = SoundController(self.game, Sounds.Ch.pacman, Sounds.DEAD[0])
                 self.gameover = SoundController(self.game, Sounds.Ch.game_over, Sounds.GAMEOVER[0])
-                self.seed = SoundController(self.game, Sounds.Ch.seed, Sounds.SEED)
+                self.seed = SoundController(self.game, Sounds.Ch.eatable, Sounds.SEED)
                 self.intro = SoundController(self.game, Sounds.Ch.intro, Sounds.INTRO[0])
 
         def reload_sounds(self):
@@ -162,7 +162,7 @@ class Game:
     __def_level_id = 0
     screen = pg.display.set_mode(__resolution, pg.SCALED)
     pg.display.set_caption('PACMAN')
-    pg.display.set_icon(pg.transform.scale(pg.image.load(get_path('images/ico.png')), (256, 256)))
+    pg.display.set_icon(pg.transform.scale(pg.image.load(get_path('assets/images/ico.png')), (256, 256)))
 
     def __init__(self):
         self.maps = self.Maps(self)
@@ -178,17 +178,16 @@ class Game:
         self.scene_manager = SceneManager(self)
 
         self.__cheats = ControlCheats([
-                Cheat(self, 'skins', self.cheats_var.UNLOCK_SKINS),
-                Cheat(self, 'maps', self.cheats_var.UNLOCK_LEVELS),
-                Cheat(self, 'lives', self.cheats_var.INFINITY_LIVES),
-                Cheat(self, 'collision', self.cheats_var.GHOSTS_COLLISION)
-            ])
+            Cheat(self, 'skins', self.cheats_var.UNLOCK_SKINS),
+            Cheat(self, 'maps', self.cheats_var.UNLOCK_LEVELS),
+            Cheat(self, 'lives', self.cheats_var.INFINITY_LIVES),
+            Cheat(self, 'collision', self.cheats_var.GHOSTS_COLLISION)
+        ])
 
         self.sounds = self.Music(self)
 
         self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else SkinsNames.default
         self.records = HighScore(self)
-
 
         self.scene_manager.reset(MenuScene(self))
 

@@ -1,13 +1,14 @@
 import pygame as pg
-from misc import Color, Font, get_path
+from misc import Color, Font
+from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject, Text
-from objects.button import Button
+from objects.buttons import Button
 from scenes.base import BaseScene
 
 
 class RecordsScene(BaseScene):
-    medals = SpriteSheet(sprite_path=get_path('images/medal.png'), sprite_size=(16, 16))[0]
+    medals = SpriteSheet(sprite_path=get_image_path('medal.png'), sprite_size=(16, 16))[0]
 
     def start_logic(self):
         self.__create_medals()

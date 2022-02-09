@@ -1,5 +1,4 @@
 import json
-from json import JSONDecodeError
 from misc import create_file_if_not_exist, FRUITS_COUNT, HIGHSCORES_COUNT, get_path
 from misc.constants.skin_names import SkinsNames
 
@@ -72,7 +71,6 @@ class Storage(Field):
     def load(self) -> None:
         create_file_if_not_exist(self.__storage_filepath, json.dumps(self.dict(), indent=2))
         with open(self.__storage_filepath, "r") as file:
-            json_dict = json.load(file)
-            self.read_dict(json_dict)
+            self.read_dict(json.load(file))
 
 

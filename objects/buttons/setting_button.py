@@ -1,5 +1,5 @@
 from misc import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
-from objects.button import Button
+from objects.buttons import Button
 
 
 class SettingButton(Button):

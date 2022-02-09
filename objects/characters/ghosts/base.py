@@ -1,6 +1,7 @@
 import pygame as pg
 from misc import Animator, get_path, EvenType, event_append
 from misc.animator import SpriteSheetAnimator
+from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects import Pacman, Text
 from typing import Tuple
@@ -29,18 +30,18 @@ class Base(Character):
         self.scatter_time = scatter_time
 
         self.walk_anim = SpriteSheetAnimator(
-           SpriteSheet(get_path(f'images/ghost/{type(self).__name__.lower()}/walk.png'), (14, 14))
+           SpriteSheet(get_image_path(f'ghost/{type(self).__name__.lower()}/walk.png'), (14, 14))
         )
         self.frightened_walk_anim1 = Animator(
-           SpriteSheet(get_path('images/ghost/fear1.png'), (14, 14))[0], aura=get_path('images/ghost/aura_blue.png')
+           SpriteSheet(get_image_path('ghost/fear1.png'), (14, 14))[0], aura=get_image_path('ghost/aura_blue.png')
         )
         self.frightened_walk_anim2 = Animator(
-           SpriteSheet(get_path('images/ghost/fear2.png'), (14, 14))[0], aura=get_path('images/ghost/aura_white.png')
+           SpriteSheet(get_image_path('ghost/fear2.png'), (14, 14))[0], aura=get_image_path('ghost/aura_white.png')
         )
 
-        self.eaten_walk_anim = SpriteSheetAnimator(SpriteSheet(get_path('images/ghost/eaten.png'), (12, 14)))
+        self.eaten_walk_anim = SpriteSheetAnimator(SpriteSheet(get_image_path('ghost/eaten.png'), (12, 14)))
 
-        aura_path = get_path(f'images/ghost/{type(self).__name__.lower()}/aura.png')
+        aura_path = get_image_path(f'ghost/{type(self).__name__.lower()}/aura.png')
         super().__init__(game, self.walk_anim, start_pos, aura_path)
 
         self.is_can_leave_home = False

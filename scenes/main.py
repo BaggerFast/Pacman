@@ -164,7 +164,7 @@ class MainScene(BaseScene):
                 break
         else:
             self.game.sounds.siren.pause()
-            if not self.game.sounds.pellet.get_busy():
+            if not self.game.sounds.pellet.is_busy():
                 self.game.sounds.pellet.play()
             return
         self.game.sounds.siren.unpause()
@@ -186,9 +186,9 @@ class MainScene(BaseScene):
                 ghost.update_timer()
 
     def process_logic(self) -> None:
-        if not self.game.sounds.intro.get_busy():
+        if not self.game.sounds.intro.is_busy():
             super().process_logic()
-            if not self.game.sounds.siren.get_busy():
+            if not self.game.sounds.siren.is_busy():
                 self.game.sounds.siren.play()
             self.__process_collision()
             if self.pacman.animator != self.pacman.dead_anim:

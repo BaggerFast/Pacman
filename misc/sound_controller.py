@@ -25,8 +25,7 @@ class SoundController:
         self.channel.pause()
 
     def unpause(self) -> None:
-        self.update()
         self.channel.unpause()
 
-    def get_busy(self) -> bool:
+    def is_busy(self) -> bool:
         return self.channel.get_busy()

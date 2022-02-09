@@ -1,5 +1,7 @@
 import pygame as pg
 from copy import copy
+
+from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
 from random import randint, choice
@@ -31,7 +33,7 @@ class Map(BaseObject):
         self.color = self.game.map_color
         self.map_data = map_data
         self.tile_size = 8
-        self.sprite_sheet = SpriteSheet(sprite_path=get_path('images/map.png'), sprite_size=(self.tile_size,
+        self.sprite_sheet = SpriteSheet(sprite_path=get_image_path('map.png'), sprite_size=(self.tile_size,
                                                                                              self.tile_size))
         self.start_x, self.start_y = 0, 0
         self.surface = self.load_surface()

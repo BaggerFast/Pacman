@@ -1,7 +1,7 @@
 import pygame as pg
 from collections import Generator
 from misc.base_pattern import BasePattern
-from objects.button import ButtonController
+from objects.buttons import ButtonController
 
 
 class BaseScene(BasePattern):

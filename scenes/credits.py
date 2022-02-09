@@ -1,7 +1,7 @@
 from random import randint
 import pygame as pg
 from misc import Font
-from objects.button import Button
+from objects.buttons import Button
 from objects import Text
 from scenes.base import BaseScene
 
@@ -97,7 +97,7 @@ class CreditsScene(BaseScene):
             self.__students.clear()
         elif pg.time.get_ticks() // 2 % 100 == 0 and not len(self.__students) == len(self.__students2):
             self.__create_student()
-        if not self.game.sounds.credits.get_busy():
+        if not self.game.sounds.credits.is_busy():
             self.game.sounds.reload_sounds()
             self.game.sounds.credits.play()
         self.__process_students()

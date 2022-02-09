@@ -8,6 +8,10 @@ def get_path(path) -> str:
     return os.path.join(*[ROOT_DIR] + path.lower().replace('\\', '/').split('/'))
 
 
+def get_image_path(path) -> str:
+    return get_path(f'assets/images/{path}')
+
+
 def bool_venv_var(venv_variable: str):
     return os.getenv(venv_variable, "false").lower() == 'true'
 

@@ -1,5 +1,6 @@
 import pygame as pg
 from misc import Animator, get_path, SkinsNames, CELL_SIZE, EvenType, event_append
+from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects.base import BaseObject
 
@@ -34,19 +35,19 @@ class Seed(BaseObject):
 
     def remove(self):
         event_append(EvenType.EatSeed)
-        if not self.game.sounds.seed.get_busy():
+        if not self.game.sounds.seed.is_busy():
             self.game.sounds.seed.play()
 
 
 class BigSeed(Seed):
     def __init__(self, game, rect):
-        path = 'images/big_seed.png' if game.skins.current.name != SkinsNames.chrome else "images/big_seed_google.png"
-        self.animator = SeedAnimator(SpriteSheet(get_path(path), (9, 9))[0])
+        path = 'big_seed.png' if game.skins.current.name != SkinsNames.chrome else "big_seed_google.png"
+        self.animator = SeedAnimator(SpriteSheet(get_image_path(path), (9, 9))[0])
         super().__init__(game, rect, self.animator.current_image)
 
     def remove(self):
         event_append(EvenType.EatEnergizer)
-        if not self.game.sounds.seed.get_busy():
+        if not self.game.sounds.seed.is_busy():
             self.game.sounds.seed.play()
 
     def process_draw(self) -> None:
@@ -56,7 +57,7 @@ class BigSeed(Seed):
 class SeedContainer(BaseObject):
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
         super().__init__(game)
-        self.__ram_img = pg.image.load(get_path("images/ram.png"))
+        self.__ram_img = pg.image.load(get_image_path("ram.png"))
         self.__x = x
         self.__y = y
         self.seed_bf = list(self.seed_buffer(seed_data))
