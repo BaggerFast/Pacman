@@ -1,12 +1,13 @@
-import pygame as pg
 from copy import copy
+from random import randint, choice
 
+import pygame as pg
+
+from misc import Color
+from misc.interfaces import IDrawable
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
-from random import randint, choice
-from misc import get_path, Color
-from objects.base import BaseObject
 
 
 def rand_color():
@@ -26,15 +27,15 @@ def rand_color():
     return [randint(min_val, max_val) if choice([0, 1]) != i else 0 for i in range(3)]
 
 
-class Map(BaseObject):
+class Map(IDrawable):
 
     def __init__(self, game, map_data):
-        super().__init__(game)
+        self.game = game
         self.color = self.game.map_color
         self.map_data = map_data
         self.tile_size = 8
         self.sprite_sheet = SpriteSheet(sprite_path=get_image_path('map.png'), sprite_size=(self.tile_size,
-                                                                                             self.tile_size))
+                                                                                            self.tile_size))
         self.start_x, self.start_y = 0, 0
         self.surface = self.load_surface()
         self.surface_for_draw = self.surface_recolor()

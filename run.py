@@ -1,14 +1,11 @@
-from datetime import datetime
 import traceback
-import pygame as pg
+from datetime import datetime
+
 from game import Game
 from misc import DEBUG
 
 
 def main():
-    pg.display.init()
-    pg.font.init()
-    pg.mixer.init()
     try:
         game = Game()
         game.main_loop()

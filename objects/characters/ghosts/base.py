@@ -1,16 +1,20 @@
+import random
+from abc import ABC
+from typing import Tuple
+
 import pygame as pg
-from misc import Animator, get_path, EvenType, event_append
+
+from misc import Animator, EvenType, event_append
 from misc.animator import SpriteSheetAnimator
+from misc.interfaces.object_interfaces import IEventful
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects import Pacman, Text
-from typing import Tuple
-import random
 from objects.characters.character_base import Character
 from objects.characters.ghosts.ghost_states import GhostState
 
 
-class Base(Character):
+class Base(Character, IEventful, ABC):
     love_point_in_scatter_mode = (0, 0)
     max_count_eat_seeds_in_home = 0
     direction2 = {
@@ -42,7 +46,7 @@ class Base(Character):
         self.eaten_walk_anim = SpriteSheetAnimator(SpriteSheet(get_image_path('ghost/eaten.png'), (12, 14)))
 
         aura_path = get_image_path(f'ghost/{type(self).__name__.lower()}/aura.png')
-        super().__init__(game, self.walk_anim, start_pos, aura_path)
+        Character.__init__(self, game, self.walk_anim, start_pos, aura_path)
 
         self.is_can_leave_home = False
         self.count_eat_seeds_in_home = 0

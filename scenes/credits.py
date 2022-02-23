@@ -1,8 +1,10 @@
 from random import randint
+
 import pygame as pg
+
 from misc import Font
-from objects.buttons import Button
 from objects import Text
+from objects.buttons import Button
 from scenes.base import BaseScene
 
 
@@ -108,4 +110,3 @@ class CreditsScene(BaseScene):
     def __skip_sound(self):
         self.game.sounds.reload_sounds()
         self.game.sounds.credits.play()
-

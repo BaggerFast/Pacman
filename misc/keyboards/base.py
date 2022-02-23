@@ -1,9 +1,13 @@
 import dataclasses
+from abc import ABC
+
 import pygame as pg
+
 from misc import event_append
+from misc.interfaces.object_interfaces import IEventful, ILogical
 
 
-class BaseKeyboard:
+class BaseKeyboard(IEventful, ILogical, ABC):
     @dataclasses.dataclass
     class KeyControl:
         keys: list

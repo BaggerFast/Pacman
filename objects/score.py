@@ -1,15 +1,16 @@
 import pygame as pg
-from objects import Text
-from objects.base import BaseObject
+
 from misc import EvenType, Points, Font, SkinsNames, event_append
+from misc.interfaces import IDrawable, IEventful
+from objects import Text
 
 
-class Score(BaseObject):
+class Score(IDrawable, IEventful):
     base_pos = (5, 270)
     shift = 20
 
     def __init__(self, game):
-        super().__init__(game)
+        self.game = game
         self.__value = 0
         self.fear_mode = False
         self.fear_count = 0

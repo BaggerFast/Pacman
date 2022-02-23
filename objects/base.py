@@ -1,8 +1,9 @@
+from abc import ABC
+
 import pygame as pg
-from misc.base_pattern import BasePattern
 
 
-class BaseObject(BasePattern):
+class BaseObject(ABC):
 
     def __init__(self, game, is_hidden=False) -> None:
         self.game = game

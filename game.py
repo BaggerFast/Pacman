@@ -1,13 +1,15 @@
 import sys
 from random import choice
 from typing import List
+
 import pygame as pg
+
+from misc import Color, HighScore, get_path, get_list_path, LevelLoader, Skins, Storage
 from misc import Sounds, ControlCheats, FRUITS_COUNT
 from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
 from misc.path import bool_venv_var
 from misc.sound_controller import SoundController
-from misc import Color, HighScore, get_path, get_list_path, LevelLoader, Skins, Storage
 from objects.map import rand_color, Map
 from scenes import *
 from scenes.base import BaseScene
@@ -15,6 +17,11 @@ from scenes.manager import SceneManager
 
 
 class Game:
+
+    pg.display.init()
+    pg.font.init()
+    pg.mixer.init()
+
     map_color = rand_color()
 
     class Cheats:

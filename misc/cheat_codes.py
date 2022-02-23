@@ -1,5 +1,6 @@
 import pygame as pg
-from misc.base_pattern import BasePattern
+
+from misc.interfaces import ILogical, IEventful
 
 
 class Cheat:
@@ -13,7 +14,7 @@ class Cheat:
         self.function()
 
 
-class ControlCheats(BasePattern):
+class ControlCheats(ILogical, IEventful):
 
     def __init__(self, cheats: list[Cheat]):
         self.cheats: list[Cheat] = cheats

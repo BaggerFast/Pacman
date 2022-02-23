@@ -1,14 +1,17 @@
-import pygame as pg
-from misc import Font
 from typing import Tuple
+
+import pygame as pg
+
+from misc import Font
+from misc.interfaces import IDrawable
 from objects.base import BaseObject
 
 
-class Text(BaseObject):
+class Text(BaseObject, IDrawable):
     def __init__(self, game, text: str = "", size: int = 0, rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0),
                  color=pg.Color(255, 255, 255), font=Font.DEFAULT):
 
-        super().__init__(game)
+        BaseObject.__init__(self, game)
         self.rect = rect
         self.__pos = rect
         self.size = size

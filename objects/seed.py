@@ -1,8 +1,9 @@
 import pygame as pg
-from misc import Animator, get_path, SkinsNames, CELL_SIZE, EvenType, event_append
+
+from misc import Animator, SkinsNames, CELL_SIZE, EvenType, event_append
+from misc.interfaces import IDrawable
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
-from objects.base import BaseObject
 
 
 class SeedAnimator(Animator):
@@ -15,9 +16,10 @@ class SeedAnimator(Animator):
         self.image_swap()
 
 
-class Seed(BaseObject):
+class Seed(IDrawable):
+
     def __init__(self, game, rect, image):
-        super().__init__(game)
+        self.game = game
         self.rect = rect
         self.image = image
 
@@ -54,9 +56,10 @@ class BigSeed(Seed):
         self.game.screen.blit(self.animator.current_image, self.rect)
 
 
-class SeedContainer(BaseObject):
+class SeedContainer(IDrawable):
+
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
-        super().__init__(game)
+        self.game = game
         self.__ram_img = pg.image.load(get_image_path("ram.png"))
         self.__x = x
         self.__y = y
@@ -90,7 +93,7 @@ class SeedContainer(BaseObject):
         self.__draw_seeds()
         self.__draw_energizers()
 
-    def process_collision(self, obj: BaseObject):
+    def process_collision(self, obj):
         if self.is_field_empty():
             event_append(EvenType.Win)
             return

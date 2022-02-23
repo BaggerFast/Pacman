@@ -1,11 +1,13 @@
-import pygame as pg
 from copy import copy
+
+import pygame as pg
+
+from misc import Font, BUTTON_SKIN_BUY
 from misc.constants.skin_names import SkinsNames
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
-from objects.buttons import ButtonController, Button, SkinButton, BuyButton
 from objects import Text, ImageObject
-from misc import Font, BUTTON_SKIN_BUY
+from objects.buttons import ButtonController, Button, SkinButton, BuyButton
 from scenes.base import BaseScene
 
 
@@ -100,11 +102,12 @@ class SkinsScene(BaseScene):
         self.button_pos_y = 90
         self.button_pos_multiply_y = 25
         button_controller = ButtonController(self.game, list(self.button_init()))
-        for button in button_controller.buttons:
-            if not type(button) in [SkinButton, BuyButton]:
-                return
-            if self.game.skins.current.name == button.value.name:
-                button.text = f'-{button.text}-'
-            else:
-                button.text = button.text.strip('-')
+        # for button in button_controller.buttons:
+        #     if not type(button) in [SkinButton, BuyButton]:
+        #         return
+        #     if self.game.skins.current.name == buttons[index].value.name:
+        #         if not (buttons[index].text.startswith("-") or buttons[index].text.endswith("-")):
+        #             buttons[index].text = '-' + buttons[index].text + '-'
+        #     else:
+        #         buttons[index].text = buttons[index].text.strip('-')
         self.objects.append(button_controller)

@@ -1,16 +1,20 @@
-import pygame as pg
+from typing import List
 from typing import Tuple
-from misc import CELL_SIZE, get_path
+
+import pygame as pg
+
+from misc import CELL_SIZE
+from misc.interfaces import IDrawable, ILogical
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
-from objects.base import BaseObject
 from objects import Text, ImageObject
-from typing import List
+from objects.base import BaseObject
 
 
-class Fruit(BaseObject):
+class Fruit(BaseObject, IDrawable, ILogical):
+
     def __init__(self, game, pos: tuple) -> None:
-        super().__init__(game)
+        BaseObject.__init__(self, game)
         self.images = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
         self.__cur_index: int = 0
         self.rect = self.current_image.get_rect()
@@ -48,6 +52,7 @@ class Fruit(BaseObject):
         self.__eaten = True
         self.__start_time = pg.time.get_ticks()
         self.game.store_fruit(self.__cur_index, 1 * self.game.difficulty)
+
         self.game.current_scene.score.eat_fruit(self.__scores[self.__cur_index])
         self.__change_image()
 

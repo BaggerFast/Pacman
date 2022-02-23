@@ -1,11 +1,13 @@
 import pygame as pg
+
 from misc import Animator, EvenType
 from misc.animator import SpriteSheetAnimator
+from misc.interfaces.object_interfaces import IEventful
 from misc.keyboards import PacmanKeyboard
 from objects.characters.character_base import Character
 
 
-class Pacman(Character):
+class Pacman(Character, IEventful):
 
     dir_action = {
         EvenType.GoUp: (0, -1, 3),

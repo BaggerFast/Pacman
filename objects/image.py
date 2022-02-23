@@ -1,12 +1,15 @@
-import pygame as pg
 from typing import Tuple, Union
+
+import pygame as pg
+
+from misc.interfaces.object_interfaces import IDrawable
 from objects.base import BaseObject
 
 
-class ImageObject(BaseObject):
+class ImageObject(BaseObject, IDrawable):
 
     def __init__(self, game, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0)):
-        super().__init__(game)
+        BaseObject.__init__(self, game)
         self.image = self.parse_image(image)
         self.rect = self.image.get_rect()
         self.rect.topleft = pos

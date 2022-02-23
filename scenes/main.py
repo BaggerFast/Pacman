@@ -1,5 +1,6 @@
 import pygame as pg
-from misc import ControlCheats, event_append, Sounds
+
+from misc import ControlCheats, event_append
 from misc import LevelLoader, Font, EvenType
 from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames

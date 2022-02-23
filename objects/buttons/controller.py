@@ -1,15 +1,17 @@
-from typing import List, Union
+from typing import Union
+
 import pygame as pg
+
 from misc import EvenType
+from misc.interfaces.object_interfaces import IDrawable, IEventful
 from misc.keyboards import MenuKeyboard
-from objects.base import BaseObject
 from objects.buttons.button import Button
 
 
-class ButtonController(BaseObject):
+class ButtonController(IDrawable, IEventful):
 
     def __init__(self, game, buttons):
-        super().__init__(game)
+        self.game = game
         self.buttons = buttons
         self.active_button_index = -1
         self.kb_actions = {

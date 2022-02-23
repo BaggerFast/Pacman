@@ -8,4 +8,3 @@ from .pause import PauseScene
 from .records import RecordsScene
 from .settings import SettingsScene
 from .skins import SkinsScene
-

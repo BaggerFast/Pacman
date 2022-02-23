@@ -1,5 +1,5 @@
 from scenes.base import BaseScene
-import pygame as pg
+
 
 class SceneManager:
 
@@ -15,8 +15,7 @@ class SceneManager:
     def current(self) -> BaseScene:
         if not self.__is_empty:
             return self.scenes[-1]
-        else:
-            raise Exception('Пустая сцена')
+        raise Exception('Пустая сцена')
 
     def enter_scene(self) -> None:
         self.current.on_enter()

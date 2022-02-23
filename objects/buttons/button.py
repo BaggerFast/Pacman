@@ -1,10 +1,13 @@
 from typing import List, Union, Callable, Tuple
+
 import pygame as pg
+
 from misc import Font, ButtonColor, BUTTON_DEFAULT_COLORS
+from misc.interfaces import IDrawable, IEventful
 from objects.base import BaseObject
 
 
-class Button(BaseObject):
+class Button(BaseObject, IDrawable, IEventful):
     STATE_INITIAL = 0
     STATE_HOVER = 1
     STATE_CLICK = 2
@@ -12,7 +15,7 @@ class Button(BaseObject):
     def __init__(self, game, rect: Union[tuple, pg.Rect], text: str, function: Callable[[], None] = None,
                  colors: ButtonColor = BUTTON_DEFAULT_COLORS, center: Tuple[int, int] = None,
                  text_size: int = 60, active: bool = True) -> None:
-        super().__init__(game)
+        BaseObject.__init__(self, game)
         self.rect = rect
         self.function = function
         self.__text = text

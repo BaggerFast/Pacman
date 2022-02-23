@@ -1,12 +1,15 @@
-import pygame as pg
-from misc import CELL_SIZE, Animator
-from misc.animator import SpriteSheetAnimator
+from abc import ABC
 from typing import Tuple, List, Union
 
+import pygame as pg
+
+from misc import CELL_SIZE, Animator
+from misc.animator import SpriteSheetAnimator
+from misc.interfaces.object_interfaces import IDrawable, ILogical
 from objects.base import BaseObject
 
 
-class Character(BaseObject):
+class Character(BaseObject, ILogical, IDrawable, ABC):
     direction = {
         "right": (1, 0, 0),
         "down": (0, 1, 1),
@@ -15,7 +18,7 @@ class Character(BaseObject):
     }
 
     def __init__(self, game, animator: Animator, start_pos: Tuple[int, int], aura: str = None) -> None:
-        super().__init__(game)
+        BaseObject.__init__(self, game)
         self.__aura = pg.image.load(aura) if aura else aura
         self.animator: Animator = animator
         self.rect: pg.Rect = self.animator.current_image.get_rect()

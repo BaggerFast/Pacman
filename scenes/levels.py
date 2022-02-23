@@ -1,8 +1,10 @@
 from copy import copy
+
 import pygame as pg
-from misc import Font, EvenType
-from objects.buttons import ButtonController, LvlButton, Button
+
+from misc import Font
 from objects import Text
+from objects.buttons import ButtonController, LvlButton, Button
 from scenes.base import BaseScene
 
 
@@ -66,4 +68,3 @@ class LevelsScene(BaseScene):
             actions[event.key]()
             self.recreate()
         super().additional_event_check(event)
-

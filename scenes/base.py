@@ -1,10 +1,12 @@
-import pygame as pg
 from collections import Generator
-from misc.base_pattern import BasePattern
+
+import pygame as pg
+
+from misc.interfaces.object_interfaces import IGenericObject, IEventful, ILogical, IDrawable
 from objects.buttons import ButtonController
 
 
-class BaseScene(BasePattern):
+class BaseScene(IGenericObject):
 
     def __init__(self, game):
         self.game = game
@@ -25,17 +27,22 @@ class BaseScene(BasePattern):
 
     def process_event(self, event: pg.event.Event) -> None:
         for obj in self.objects:
-            obj.process_event(event)
-        self.additional_event_check(event)
+            if isinstance(obj, IEventful):
+                obj.process_event(event)
+        self.additional_event(event)
 
     def process_logic(self) -> None:
         for obj in self.objects:
-            obj.process_logic()
+            if isinstance(obj, ILogical):
+                print(obj)
+                obj.process_logic()
         self.additional_logic()
 
     def process_draw(self) -> None:
         for obj in self.objects:
-            obj.process_draw()
+            if isinstance(obj, IDrawable):
+                print(obj)
+                obj.process_draw()
         self.additional_draw()
 
     def create_objects(self) -> None:
@@ -43,7 +50,7 @@ class BaseScene(BasePattern):
         if buttons:
             self.objects.append(ButtonController(self.game, buttons))
 
-    def additional_event_check(self, event: pg.event.Event) -> None:
+    def additional_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self.scene_manager.pop()
 
