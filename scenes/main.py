@@ -4,7 +4,7 @@ from misc import ControlCheats, event_append
 from misc import LevelLoader, Font, EvenType
 from misc.cheat_codes import Cheat
 from misc.constants.skin_names import SkinsNames
-from objects import SeedContainer, Text, Pacman, Health
+from objects import SeedContainer, Text, Pacman
 from objects.characters.ghosts import *
 from objects.characters.ghosts.ghost_states import GhostState
 from objects.fruits import Fruit
@@ -19,8 +19,6 @@ class MainScene(BaseScene):
         self.__load_from_map()
         self.__create_sounds()
         self.__create_start_anim()
-
-        self.hp = Health(self.game, 3)
         self.score = Score(self.game)
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
 
@@ -83,7 +81,7 @@ class MainScene(BaseScene):
         hp_cheat = ControlCheats([Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))])
         self.text[-1].surface.set_alpha(0)
         self.pacman = Pacman(self.game, self.__player_position)
-        self.objects += [hp_cheat, self.__map, self.__seeds, self.fruit, self.pacman, self.hp, self.score]
+        self.objects += [hp_cheat, self.__map, self.__seeds, self.fruit, self.pacman, self.score]
         self.__create_ghost()
         self.on_reset()
 

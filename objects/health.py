@@ -59,4 +59,3 @@ class Health(ImageObject, IGenericObject):
     @property
     def alive(self) -> bool:
         return self.__lives > 0
-

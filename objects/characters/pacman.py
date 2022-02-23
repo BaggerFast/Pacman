@@ -4,6 +4,7 @@ from misc import Animator, EvenType
 from misc.animator import SpriteSheetAnimator
 from misc.interfaces.object_interfaces import IEventful
 from misc.keyboards import PacmanKeyboard
+from objects import Health
 from objects.characters.character_base import Character
 
 
@@ -20,6 +21,7 @@ class Pacman(Character, IEventful):
         self.__walk_anim: Animator = game.skins.current.walk
         self.__dead_anim: Animator = game.skins.current.dead
         super().__init__(game, self.__walk_anim, start_pos)
+        self.hp = Health(self.game, 3)
         self.dead = False
         self.kb = PacmanKeyboard()
         self.__feature_rotate = (0, 0, 0)
@@ -29,6 +31,7 @@ class Pacman(Character, IEventful):
         return self.__dead_anim
 
     def process_event(self, event: pg.event.Event) -> None:
+        self.hp.process_event(event)
         if event.type in self.dir_action.keys() and not self.dead:
             self.go()
             self.__feature_rotate = self.dir_action[event.type]
@@ -46,6 +49,7 @@ class Pacman(Character, IEventful):
 
     def process_logic(self) -> None:
         self.kb.process_logic()
+        self.hp.process_logic()
         self.animator.timer_check()
         if self.dead:
             return
