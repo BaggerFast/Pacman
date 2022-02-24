@@ -19,9 +19,9 @@ class MenuScene(BaseScene):
         self.blur_preview()
 
     def create_objects(self) -> None:
-        image = ImageObject(self.game, self.preview, (0, 0))
+        image = ImageObject(self.preview, (0, 0))
 
-        ver = Text(self.game, VERSION, 8, font=Font.TITLE)
+        ver = Text(VERSION, 8, font=Font.TITLE)
         ver.move(self.game.width - 50, 270)
 
         self.objects += [image, ver, self.__level_indicator]
@@ -29,14 +29,14 @@ class MenuScene(BaseScene):
         super().create_objects()
 
     def create_title(self) -> None:
-        title = Text(self.game, 'PACMAN', 36, font=Font.TITLE)
+        title = Text('PACMAN', 36, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
 
         self.objects.append(title)
 
     @property
     def __level_indicator(self) -> Text:
-        indicator = Text(self.game, self.game.maps.level_name, 15, font=Font.TITLE)
+        indicator = Text(self.game.maps.level_name, 15, font=Font.TITLE)
         indicator.move_center(self.game.width // 2, 60)
         return indicator
 

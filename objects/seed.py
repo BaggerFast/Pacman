@@ -32,8 +32,8 @@ class Seed(IDrawable):
     def check_collision(self, obj):
         return self.get_rect.center == obj.rect.center
 
-    def process_draw(self) -> None:
-        self.game.screen.blit(self.image, self.rect)
+    def process_draw(self, screen: pg.Surface) -> None:
+        screen.blit(self.image, self.rect)
 
     def remove(self):
         event_append(EvenType.EatSeed)
@@ -52,7 +52,7 @@ class BigSeed(Seed):
         if not self.game.sounds.seed.is_busy():
             self.game.sounds.seed.play()
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         self.game.screen.blit(self.animator.current_image, self.rect)
 
 
@@ -76,22 +76,22 @@ class SeedContainer(IDrawable):
         for energizer in data:
             yield BigSeed(self.game,  (self.__x + energizer[0] * CELL_SIZE, self.__y + energizer[1] * CELL_SIZE))
 
-    def __draw_seeds(self) -> None:
+    def __draw_seeds(self, screen: pg.Surface) -> None:
         for seed in self.seed_bf:
-            seed.process_draw()
+            seed.process_draw(screen)
 
-    def __draw_energizers(self) -> None:
+    def __draw_energizers(self, screen: pg.Surface) -> None:
         flag = pg.time.get_ticks() - self.game.animate_timer > self.game.time_out
         if flag:
             self.game.animate_timer = pg.time.get_ticks()
         for seed in self.big_seed_bf:
             if flag:
                 seed.animator.timer_check()
-            seed.process_draw()
+            seed.process_draw(screen)
 
-    def process_draw(self) -> None:
-        self.__draw_seeds()
-        self.__draw_energizers()
+    def process_draw(self, screen: pg.Surface) -> None:
+        self.__draw_seeds(screen)
+        self.__draw_energizers(screen)
 
     def process_collision(self, obj):
         if self.is_field_empty():

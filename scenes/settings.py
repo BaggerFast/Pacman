@@ -12,17 +12,17 @@ class SettingsScene(BaseScene):
 
     def create_objects(self) -> None:
         super().create_objects()
-        volume_text = Text(self.game, "VOLUME", 20)
+        volume_text = Text("VOLUME", 20)
         volume_text.move_center(self.game.width // 2, self.__volume_position)
 
-        volume_value = Text(self.game, f"{self.game.settings.VOLUME} %", 20)
+        volume_value = Text(f"{self.game.settings.VOLUME} %", 20)
         volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
 
         self.objects += [volume_text, volume_value, self.title]
 
     @property
     def title(self) -> Text:
-        text = Text(self.game, "SETTINGS", 30, font=Font.TITLE)
+        text = Text("SETTINGS", 30, font=Font.TITLE)
         text.move_center(self.game.width // 2, 30)
         return text
 

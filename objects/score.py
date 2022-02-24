@@ -14,7 +14,7 @@ class Score(IDrawable, IEventful):
         self.__value = 0
         self.fear_mode = False
         self.fear_count = 0
-        self.text = Text(self.game, f'{self.__value}', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
+        self.text = Text(f'{self.__value}', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
 
         self.__events = {
             EvenType.EatSeed: lambda: self + Points.POINT_PER_SEED * self.game.difficulty,
@@ -23,9 +23,9 @@ class Score(IDrawable, IEventful):
             EvenType.StopFearMode: self.__deactivate_fear_mode,
         }
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         self.text.text = f'{self.__value} {"Mb" if self.game.skins.current.name == SkinsNames.chrome else ""}'
-        self.text.process_draw()
+        self.text.process_draw(screen)
 
     def process_event(self, event: pg.event.Event) -> None:
         if event.type in self.__events:

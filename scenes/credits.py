@@ -51,7 +51,7 @@ class CreditsScene(BaseScene):
         students = list(set(self.__students2) - set((obj.text for obj in self.__students)))
         label = str(students[randint(0, len(students) - 1)])
         self.__students2.pop(self.__students2.index(label))
-        student = Text(self.game, label, Font.CREDITS_SCENE_SIZE)
+        student = Text(label, Font.CREDITS_SCENE_SIZE)
 
         is_student_y_correct = False
         tries = 0

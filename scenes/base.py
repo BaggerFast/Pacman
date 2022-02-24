@@ -1,7 +1,5 @@
 from collections import Generator
-
 import pygame as pg
-
 from misc.interfaces.object_interfaces import IGenericObject, IEventful, ILogical, IDrawable
 from objects.buttons import ButtonController
 
@@ -34,16 +32,15 @@ class BaseScene(IGenericObject):
     def process_logic(self) -> None:
         for obj in self.objects:
             if isinstance(obj, ILogical):
-                print(obj)
                 obj.process_logic()
         self.additional_logic()
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         for obj in self.objects:
             if isinstance(obj, IDrawable):
-                print(obj)
-                obj.process_draw()
-        self.additional_draw()
+                print(type(obj))
+                obj.process_draw(screen)
+        self.additional_draw(screen)
 
     def create_objects(self) -> None:
         buttons = list(self.button_init())

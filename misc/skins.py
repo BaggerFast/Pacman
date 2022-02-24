@@ -39,7 +39,7 @@ class Skin:
         return self.__image
 
     def prerender_surface(self) -> ImageObject:
-        image = ImageObject(self.game, self.__walk.sheet[0][3], (145, 125))
+        image = ImageObject(self.__walk.sheet[0][3], (145, 125))
         image.scale(70, 70)
         return image
 

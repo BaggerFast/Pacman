@@ -14,7 +14,8 @@ from objects.base import BaseObject
 class Fruit(BaseObject, IDrawable, ILogical):
 
     def __init__(self, game, pos: tuple) -> None:
-        BaseObject.__init__(self, game)
+        BaseObject.__init__(self)
+        self.game = game
         self.images = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
         self.__cur_index: int = 0
         self.rect = self.current_image.get_rect()
@@ -28,17 +29,17 @@ class Fruit(BaseObject, IDrawable, ILogical):
     def current_image(self) -> pg.Surface:
         return self.images[self.__cur_index]
 
-    def __draw_fruit(self) -> None:
+    def __draw_fruit(self, screen: pg.Surface) -> None:
         if self.__eaten:
-            Text(game=self.game, text=str(self.__scores[self.__cur_index - 1] * self.game.difficulty),
-                 size=10, rect=self.rect).process_draw()
+            Text(text=str(self.__scores[self.__cur_index - 1] * self.game.difficulty),
+                 size=10, rect=self.rect).process_draw(screen)
         if self.is_hidden:
             self.game.screen.blit(self.current_image, self.rect)
 
     def __change_image(self) -> None:
         self.__cur_index = (self.__cur_index + 1) % len(self.images)
         self.rect = self.current_image.get_rect(center=self.rect.center)
-        self.__fruit_hud.append(ImageObject(self.game, self.images[self.__cur_index - 1], (130 + self.__cur_index * 12, 270)))
+        self.__fruit_hud.append(ImageObject(self.images[self.__cur_index - 1], (130 + self.__cur_index * 12, 270)))
 
     def process_collision(self, obj: BaseObject):
         """
@@ -60,10 +61,10 @@ class Fruit(BaseObject, IDrawable, ILogical):
         self.is_hidden = pg.time.get_ticks() - self.__start_time >= 9000
         self.__eaten = not (pg.time.get_ticks() - self.__start_time >= 300)
 
-    def process_draw(self) -> None:
-        self.__draw_fruit()
+    def process_draw(self, screen: pg.Surface) -> None:
+        self.__draw_fruit(screen)
         for fruit in self.__fruit_hud:
-            fruit.process_draw()
+            fruit.process_draw(screen)
 
     @staticmethod
     def pos_from_cell(cell: Tuple[int, int]) -> Tuple[int, int]:

@@ -63,9 +63,9 @@ class Map(IDrawable):
         return self.surface
 
     def prerender_map_image_scaled(self) -> ImageObject:
-        image = ImageObject(self.game, self.surface, (110, 96))
+        image = ImageObject(self.surface, (110, 96))
         image.smoothscale(100, 100)
         return image
 
-    def process_draw(self):
-        self.game.screen.blit(self.surface_for_draw, (0, 20))
+    def process_draw(self, screen: pg.Surface):
+        screen.blit(self.surface_for_draw, (0, 20))

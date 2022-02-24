@@ -16,9 +16,9 @@ class LevelsScene(BaseScene):
         self.__scroll = max(min(self.game.maps.cur_id, self.game.maps.count - self.__buttons_on_scene), 0)
 
     def create_title(self) -> None:
-        title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
+        title = Text('SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
-        title2 = Text(self.game, 'Scroll - [q, e]', 15, font=Font.DEFAULT)
+        title2 = Text('Scroll - [q, e]', 15, font=Font.DEFAULT)
         title2.move_center(self.game.width // 2, 50)
         self.objects += [title, title2]
 

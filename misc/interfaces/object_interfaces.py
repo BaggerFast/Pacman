@@ -6,9 +6,9 @@ import pygame as pg
 class IDrawable(ABC):
 
     @abstractmethod
-    def process_draw(self) -> None: pass
+    def process_draw(self, screen: pg.Surface) -> None: pass
 
-    def additional_draw(self) -> None: pass
+    def additional_draw(self, screen: pg.Surface) -> None: pass
 
 
 class IEventful(ABC):
@@ -36,4 +36,4 @@ class IGenericObject(IDrawable, ILogical, IEventful):
     def process_logic(self) -> None: pass
 
     @abstractmethod
-    def process_draw(self) -> None: pass
+    def process_draw(self, screen: pg.Surface) -> None: pass

@@ -69,6 +69,6 @@ class ButtonController(IDrawable, IEventful):
         self.process_key_down(event)
         self.process_mouse_motion(event)
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         for button in self.buttons:
-            button.process_draw()
+            button.process_draw(screen)

@@ -18,7 +18,7 @@ class GameOverScene(BaseScene):
 
     def create_title(self) -> None:
         for i, text in enumerate(['GAME', 'OVER']):
-            text = Text(self.game, text, 40, font=Font.TITLE)
+            text = Text(text, 40, font=Font.TITLE)
             text.move_center(self.game.width // 2, 30 + i * 40)
             self.objects.append(text)
 
@@ -40,13 +40,13 @@ class GameOverScene(BaseScene):
 
     @property
     def __get_score_text(self) -> Text:
-        text_score = Text(self.game, f'Score: {self.score}', 20)
+        text_score = Text(f'Score: {self.score}', 20)
         text_score.move_center(self.game.width // 2, 135)
         return text_score
 
     @property
     def __get_highscore_text(self) -> Text:
-        text_highscore = Text(self.game, f'High score: {self.game.records.data[0]}',  20)
+        text_highscore = Text(f'High score: {self.game.records.data[0]}',  20)
         text_highscore.move_center(self.game.width // 2, 165)
         return text_highscore
 

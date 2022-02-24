@@ -235,7 +235,7 @@ class Game:
 
     def __process_all_draw(self) -> None:
         self.screen.fill(Color.BLACK)
-        self.scene_manager.process_draw()
+        self.scene_manager.process_draw(self.screen)
         pg.display.flip()
 
     def main_loop(self) -> None:

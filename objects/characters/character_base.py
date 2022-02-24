@@ -18,7 +18,8 @@ class Character(BaseObject, ILogical, IDrawable, ABC):
     }
 
     def __init__(self, game, animator: Animator, start_pos: Tuple[int, int], aura: str = None) -> None:
-        BaseObject.__init__(self, game)
+        BaseObject.__init__(self)
+        self.game = game
         self.__aura = pg.image.load(aura) if aura else aura
         self.animator: Animator = animator
         self.rect: pg.Rect = self.animator.current_image.get_rect()
@@ -52,15 +53,15 @@ class Character(BaseObject, ILogical, IDrawable, ABC):
     def process_logic(self) -> None:
         self.step()
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         for i in range(-1, 2):
             if self.animator.current_aura:
-                self.game.screen.blit(self.animator.current_aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
+                screen.blit(self.animator.current_aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
                                                                    self.rect.centery - self.__aura.get_rect().height // 2))
             elif self.__aura:
-                self.game.screen.blit(self.__aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
+                screen.blit(self.__aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
                                                     self.rect.centery - self.__aura.get_rect().height // 2))
-            self.game.screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
+            screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
 
     def movement_cell(self, cell: Tuple[int, int]) -> list:
         scene = self.game.current_scene

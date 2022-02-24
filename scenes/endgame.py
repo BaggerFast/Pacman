@@ -19,7 +19,7 @@ class EndScene(BaseScene):
         self.objects += [self.__get_score_text, self.__get_highscore_text]
 
     def create_title(self) -> None:
-        text = Text(self.game, 'VICTORY', 40, font=Font.TITLE)
+        text = Text('VICTORY', 40, font=Font.TITLE)
         text.move_center(self.game.width // 2, 30)
         self.objects.append(text)
 
@@ -55,13 +55,13 @@ class EndScene(BaseScene):
 
     @property
     def __get_score_text(self) -> Text:
-        text_score = Text(self.game, f'Score: {self.score}', 20)
+        text_score = Text(f'Score: {self.score}', 20)
         text_score.move_center(self.game.width // 2, 135)
         return text_score
 
     @property
     def __get_highscore_text(self) -> Text:
-        text_highscore = Text(self.game, f'High score: {self.game.records.data[0]}'if int(self.score) <= self.game.records.data[0] else f'New record: {self.score}', 20)
+        text_highscore = Text(f'High score: {self.game.records.data[0]}'if int(self.score) <= self.game.records.data[0] else f'New record: {self.score}', 20)
         text_highscore.move_center(self.game.width // 2, 165)
         return text_highscore
 

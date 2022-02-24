@@ -28,6 +28,6 @@ class PauseScene(BaseScene):
             )
 
     def create_title(self) -> None:
-        main_text = Text(self.game, 'PAUSE', 40, font=Font.TITLE)
+        main_text = Text('PAUSE', 40, font=Font.TITLE)
         main_text.move_center(self.game.width // 2, 35)
         self.objects.append(main_text)

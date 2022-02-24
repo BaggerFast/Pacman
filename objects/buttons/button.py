@@ -15,7 +15,8 @@ class Button(BaseObject, IDrawable, IEventful):
     def __init__(self, game, rect: Union[tuple, pg.Rect], text: str, function: Callable[[], None] = None,
                  colors: ButtonColor = BUTTON_DEFAULT_COLORS, center: Tuple[int, int] = None,
                  text_size: int = 60, active: bool = True) -> None:
-        BaseObject.__init__(self, game)
+        BaseObject.__init__(self)
+        self.game = game
         self.rect = rect
         self.function = function
         self.__text = text
@@ -101,9 +102,9 @@ class Button(BaseObject, IDrawable, IEventful):
 
         return surface
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         if not self.is_hidden:
-            self.game.screen.blit(self.surfaces[self.state], self.rect.topleft)
+            screen.blit(self.surfaces[self.state], self.rect.topleft)
 
     def select(self) -> None:
         self.state = self.STATE_HOVER

@@ -8,10 +8,10 @@ from objects.base import BaseObject
 
 
 class Text(BaseObject, IDrawable):
-    def __init__(self, game, text: str = "", size: int = 0, rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0),
+    def __init__(self, text: str = "", size: int = 0, rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0),
                  color=pg.Color(255, 255, 255), font=Font.DEFAULT):
 
-        BaseObject.__init__(self, game)
+        BaseObject.__init__(self)
         self.rect = rect
         self.__pos = rect
         self.size = size
@@ -50,5 +50,5 @@ class Text(BaseObject, IDrawable):
     def pos(self, pos: Tuple[int, int]):
         self.__pos = pos
 
-    def process_draw(self) -> None:
-        self.game.screen.blit(self.surface, self.rect)
+    def process_draw(self, screen) -> None:
+        screen.blit(self.surface, self.rect)

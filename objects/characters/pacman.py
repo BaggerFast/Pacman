@@ -4,7 +4,7 @@ from misc import Animator, EvenType
 from misc.animator import SpriteSheetAnimator
 from misc.interfaces.object_interfaces import IEventful
 from misc.keyboards import PacmanKeyboard
-from objects import Health
+from objects import HealthController
 from objects.characters.character_base import Character
 
 
@@ -17,11 +17,11 @@ class Pacman(Character, IEventful):
         EvenType.GoRight: (1, 0, 0)
     }
 
-    def __init__(self, game, start_pos: tuple[int, int]) -> None:
+    def __init__(self, game, start_pos: tuple[int, int]):
         self.__walk_anim: Animator = game.skins.current.walk
         self.__dead_anim: Animator = game.skins.current.dead
         super().__init__(game, self.__walk_anim, start_pos)
-        self.hp = Health(self.game, 3)
+        self.hp = HealthController(self.game, 3)
         self.dead = False
         self.kb = PacmanKeyboard()
         self.__feature_rotate = (0, 0, 0)

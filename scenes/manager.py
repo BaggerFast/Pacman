@@ -1,4 +1,5 @@
 from scenes.base import BaseScene
+import pygame as pg
 
 
 class SceneManager:
@@ -30,8 +31,8 @@ class SceneManager:
     def process_event(self, event) -> None:
         self.current.process_event(event)
 
-    def process_draw(self) -> None:
-        self.current.process_draw()
+    def process_draw(self, screen: pg.Surface) -> None:
+        self.current.process_draw(screen)
 
     def append(self, scene: BaseScene) -> None:
         self.exit_scene()

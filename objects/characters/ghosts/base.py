@@ -64,10 +64,7 @@ class Base(Character, IEventful, ABC):
 
         self.mode = GhostState.scatter
 
-        self.gg_text = Text(
-            self.game, '100',
-            10, pg.Rect(0, 0, 0, 0),
-        )
+        self.gg_text = Text('100', 10, pg.Rect(0, 0, 0, 0))
 
         self.tmp_flag1 = False
         self.tmp_flag2 = False
@@ -226,12 +223,12 @@ class Base(Character, IEventful, ABC):
         if event.type in events:
             events[event.type]()
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         if self.mode == GhostState.eaten:
             self.gg_text.text = f'{200 * self.game.difficulty ** 2}' # * 2 ** self.game.score.fear_count2
-            self.gg_text.process_draw()
+            self.gg_text.process_draw(screen)
         if not self.is_invisible:
-            super().process_draw()
+            super().process_draw(screen)
 
     def set_power(self, frightened_time: int, chase_time: int, scatter_time: int):
         self.frightened_time = frightened_time

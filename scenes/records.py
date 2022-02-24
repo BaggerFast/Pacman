@@ -28,12 +28,12 @@ class RecordsScene(BaseScene):
             text_size=Font.BUTTON_TEXT_SIZE)
 
     def create_title(self) -> None:
-        title = Text(self.game, 'RECORDS', 32, font=Font.TITLE)
+        title = Text('RECORDS', 32, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
 
     def __create_error_label(self) -> None:
-        self.__error_text = Text(self.game, 'NO RECORDS', 24, color=Color.RED)
+        self.__error_text = Text('NO RECORDS', 24, color=Color.RED)
         self.__error_text.move_center(self.game.width // 2, 100)
 
     def __create_text_labels(self) -> None:
@@ -42,7 +42,7 @@ class RecordsScene(BaseScene):
             for i, text_color in enumerate(text_colors):
                 if self.game.records.data[i] <= 0:
                     break
-                yield Text(self.game, str(self.game.records.data[i]), 30, pg.Rect(60, 55 + 35 * i, 0, 0), text_color)
+                yield Text(str(self.game.records.data[i]), 30, pg.Rect(60, 55 + 35 * i, 0, 0), text_color)
 
         self.game.records.update_records()
         self.medals_text = list(creator())
@@ -50,15 +50,15 @@ class RecordsScene(BaseScene):
     def __create_medals(self) -> None:
         def creator():
             for i in range(len(self.medals)):
-                image = ImageObject(self.game, self.medals[i], (16, 55 + 35 * i))
+                image = ImageObject(self.medals[i], (16, 55 + 35 * i))
                 image.scale(35, 35)
                 yield image
         self.__medals = list(creator())
 
-    def additional_draw(self) -> None:
+    def additional_draw(self, screen: pg.Surface) -> None:
         if not self.medals_text:
-            self.__error_text.process_draw()
+            self.__error_text.process_draw(screen)
         else:
             for i in range(len(self.medals_text)):
-                self.medals_text[i].process_draw()
-                self.__medals[i].process_draw()
+                self.medals_text[i].process_draw(screen)
+                self.__medals[i].process_draw(screen)

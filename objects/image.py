@@ -1,15 +1,13 @@
 from typing import Tuple, Union
-
 import pygame as pg
-
 from misc.interfaces.object_interfaces import IDrawable
 from objects.base import BaseObject
 
 
 class ImageObject(BaseObject, IDrawable):
 
-    def __init__(self, game, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0)):
-        BaseObject.__init__(self, game)
+    def __init__(self, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0)):
+        BaseObject.__init__(self)
         self.image = self.parse_image(image)
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
@@ -39,6 +37,6 @@ class ImageObject(BaseObject, IDrawable):
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         if not self.is_hidden:
-            self.game.screen.blit(self.image, self.rect)
+            screen.blit(self.image, self.rect)
