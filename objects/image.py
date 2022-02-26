@@ -1,8 +1,6 @@
 from typing import Tuple, Union
-
 import pygame as pg
-
-from misc.interfaces.igeneric_object import IDrawable
+from misc.interfaces import IDrawable
 from objects.base import BaseObject
 
 

@@ -1,7 +1,5 @@
 from typing import Tuple
-
 import pygame as pg
-
 from misc.constants import Font
 from misc.interfaces import IDrawable
 from objects.base import BaseObject

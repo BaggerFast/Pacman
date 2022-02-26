@@ -11,7 +11,7 @@ class BaseScene(IGenericObject):
 
     def __init__(self, game):
         self.game = game
-        self.screen: pg.Surface = self.game.__screen
+        self.screen: pg.Surface = self.game.screen
         self._scene_manager = scenes.SceneManager()
         self.objects: list = []
         self.start_logic()
@@ -50,7 +50,7 @@ class BaseScene(IGenericObject):
 
     def additional_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.scene_manager.pop()
+            self._scene_manager.pop()
 
     def create_title(self) -> None:
         pass

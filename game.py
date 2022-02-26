@@ -3,7 +3,6 @@ from random import choice
 from typing import List
 
 import pygame as pg
-
 import scenes
 from misc import HighScore, get_list_path, LevelLoader, Storage, ControlCheats
 from misc.cheat_codes import Cheat
@@ -152,7 +151,7 @@ class Game:
     __resolution = width, height = 224, 285
     __FPS: int = 60
     __def_level_id = 0
-    __screen = pg.display.set_mode(__resolution, pg.SCALED)
+    screen = pg.display.set_mode(__resolution, pg.SCALED)
 
     pg.display.set_caption('PACMAN')
     pg.display.set_icon(pg.transform.scale(pg.image.load(get_image_path('ico.png')), (256, 256)))
@@ -166,7 +165,7 @@ class Game:
         self.storage = Storage(self)
         self.skins = Skins(self)
         self.cheats_var = self.Cheats(self)
-        self.read_from_storage()
+        self.__read_from_storage()
 
         self.scene_manager = scenes.SceneManager()
 
@@ -184,7 +183,7 @@ class Game:
 
         self.scene_manager.reset(scenes.MenuScene(self))
 
-    def read_from_storage(self):
+    def __read_from_storage(self):
         self.settings = self.Settings(self.storage)
         self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
         self.maps.cur_id = self.storage.last_level_id if self.storage.last_level_id in self.unlocked_levels else \
@@ -220,8 +219,8 @@ class Game:
         self.scene_manager.process_logic()
 
     def __process_all_draw(self) -> None:
-        self.__screen.fill(Color.BLACK)
-        self.scene_manager.process_draw(self.__screen)
+        self.screen.fill(Color.BLACK)
+        self.scene_manager.process_draw(self.screen)
         pg.display.flip()
 
     def main_loop(self) -> None:

@@ -1,13 +1,11 @@
-from typing import List
-from typing import Tuple
-
+from typing import List, Tuple
 import pygame as pg
-
 from misc.constants import CELL_SIZE
 from misc.interfaces import IDrawable, ILogical
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
-from objects import Text, ImageObject
+from .text import Text
+from .image import ImageObject
 from objects.base import BaseObject
 
 
@@ -36,7 +34,7 @@ class Fruit(BaseObject, IDrawable, ILogical):
             Text(text=str(self.__scores[self.__cur_index - 1] * self.game.difficulty),
                  size=10, rect=self.rect).process_draw(screen)
         if self.is_hidden:
-            self.game.__screen.blit(self.current_image, self.rect)
+            screen.blit(self.current_image, self.rect)
 
     def __change_image(self) -> None:
         self.__cur_index = (self.__cur_index + 1) % len(self.images)

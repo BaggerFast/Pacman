@@ -1,7 +1,5 @@
 from abc import abstractmethod, ABC
-
 import pygame as pg
-
 from misc.interfaces import ILogical, IDrawable, IEventful
 
 

@@ -9,7 +9,6 @@ def main():
     try:
         game = Game()
         game.main_loop()
-        game.exit_game()
     except Exception:
         if not DEBUG:
             with open(f"exception-{datetime.now().strftime('%m-%d-%Y-%H-%M-%S')}.log", "w") as file:

@@ -1,14 +1,12 @@
 import pygame as pg
-
 import scenes
-from misc import ControlCheats
-from misc import LevelLoader
+from misc import ControlCheats, LevelLoader
 from misc.cheat_codes import Cheat
 from misc.constants import Font, event_append, EvenType
 from misc.constants.skin_names import SkinsNames
 from objects import SeedContainer, Text
-from objects.characters import Pacman
-from objects.characters.ghosts import *
+from objects.characters import *
+
 from objects.characters.ghosts.ghost_states import GhostState
 from objects.fruits import Fruit
 from objects.map import Map

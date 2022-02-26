@@ -2,7 +2,7 @@ import pygame as pg
 
 from misc.constants import EvenType, SkinsNames, event_append, Points, Font
 from misc.interfaces import IDrawable, IEventful
-from objects import Text
+from objects.text import Text
 
 
 class Score(IDrawable, IEventful):

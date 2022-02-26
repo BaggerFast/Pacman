@@ -56,7 +56,7 @@ class BigSeed(Seed):
             self.game.sounds.seed.play()
 
     def process_draw(self, screen: pg.Surface) -> None:
-        self.game.__screen.blit(self.animator.current_image, self.rect)
+        screen.blit(self.animator.current_image, self.rect)
 
 
 class SeedContainer(IDrawable):
@@ -73,11 +73,12 @@ class SeedContainer(IDrawable):
         for row in range(len(data)):
             for col in range(len(data[row])):
                 if data[row][col]:
-                    yield Seed(self.game, (self.__x - 2 + col * CELL_SIZE, self.__y - 2 + row * CELL_SIZE), self.__ram_img)
+                    yield Seed(self.game, (self.__x - 2 + col * CELL_SIZE, self.__y - 2 + row * CELL_SIZE),
+                               self.__ram_img)
 
     def big_seed_buffer(self, data):
         for energizer in data:
-            yield BigSeed(self.game,  (self.__x + energizer[0] * CELL_SIZE, self.__y + energizer[1] * CELL_SIZE))
+            yield BigSeed(self.game, (self.__x + energizer[0] * CELL_SIZE, self.__y + energizer[1] * CELL_SIZE))
 
     def __draw_seeds(self, screen: pg.Surface) -> None:
         for seed in self.seed_bf:

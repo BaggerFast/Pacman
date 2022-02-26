@@ -1,5 +1,4 @@
 import pygame as pg
-
 import scenes
 from misc.constants import Color, Font
 from misc.path import get_image_path

@@ -11,7 +11,6 @@ from misc.interfaces.igeneric_object import IEventful
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects import Text
-from objects.characters import Pacman
 from objects.characters.character_base import Character
 from objects.characters.ghosts.ghost_states import GhostState
 
@@ -108,7 +107,7 @@ class Base(Character, IEventful, ABC):
                 self.animator.timer_check()
         self.process_logic_iterator += 1
 
-    def collision_check(self, pacman: Pacman):
+    def collision_check(self, pacman):
         return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 3 and
                 self.collision and not self.game.cheats_var.GHOSTS_COLLISION,
                 self.mode not in [GhostState.frightened, GhostState.eaten])

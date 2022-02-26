@@ -28,7 +28,6 @@ class PauseScene(BaseScene):
                 colors=LIGHT_BUTTON_COLORS
             )
 
-
     def create_title(self) -> None:
         main_text = Text('PAUSE', 40, font=Font.TITLE)
         main_text.move_center(self.game.width // 2, 35)
