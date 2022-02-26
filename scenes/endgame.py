@@ -1,11 +1,12 @@
 import pygame as pg
+
+import scenes
+from misc.constants import Font, BUTTON_DEFAULT_COLORS
 from objects import Text
 from objects.buttons import Button
-from misc import BUTTON_DEFAULT_COLORS, Font
-from scenes.base import BaseScene
 
 
-class EndScene(BaseScene):
+class EndScene(scenes.BaseScene):
     def __init__(self, game, score):
         super().__init__(game)
         self.score = score
@@ -38,7 +39,7 @@ class EndScene(BaseScene):
                 game=self.game,
                 rect=pg.Rect(0, 0, 180, 35),
                 text='EXIT',
-                function=lambda: self.scene_manager.reset(self.scenes.MAIN(self.game)),
+                function=lambda: self._scene_manager.reset(scenes.MainScene(self.game)),
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS
@@ -47,7 +48,7 @@ class EndScene(BaseScene):
             game=self.game,
             rect=pg.Rect(0, 0, 180, 35),
             text='MENU',
-            function=lambda: self.scene_manager.reset(self.scenes.MENU(self.game)),
+            function=lambda: self._scene_manager.reset(scenes.MenuScene(self.game)),
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE,
             colors=BUTTON_DEFAULT_COLORS
@@ -78,7 +79,7 @@ class EndScene(BaseScene):
         next_level = self.game.maps.cur_id + 1
         self.game.maps.cur_id = next_level
         self.game.records.update_records()
-        self.scene_manager.reset(self.game.scenes.MAIN(self.game))
+        self._scene_manager.reset(self.game.scenes.MAIN(self.game))
 
     @property
     def __is_last_level(self) -> bool:

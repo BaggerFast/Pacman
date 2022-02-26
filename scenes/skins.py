@@ -2,16 +2,16 @@ from copy import copy
 
 import pygame as pg
 
-from misc import Font, BUTTON_SKIN_BUY
+import scenes
+from misc.constants import Font, BUTTON_SKIN_BUY
 from misc.constants.skin_names import SkinsNames
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects import Text, ImageObject
 from objects.buttons import ButtonController, Button, SkinButton, BuyButton
-from scenes.base import BaseScene
 
 
-class SkinsScene(BaseScene):
+class SkinsScene(scenes.BaseScene):
 
     def start_logic(self) -> None:
         self.skins = {
@@ -93,7 +93,7 @@ class SkinsScene(BaseScene):
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
             text='MENU',
-            function=self.game.scene_manager.pop,
+            function=self._scene_manager.pop,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 

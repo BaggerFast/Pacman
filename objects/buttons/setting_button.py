@@ -1,4 +1,4 @@
-from misc import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
+from misc.constants import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from objects.buttons import Button
 
 

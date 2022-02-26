@@ -2,13 +2,13 @@ from copy import copy
 
 import pygame as pg
 
-from misc import Font
+import scenes
+from misc.constants import Font
 from objects import Text
 from objects.buttons import ButtonController, LvlButton, Button
-from scenes.base import BaseScene
 
 
-class LevelsScene(BaseScene):
+class LevelsScene(scenes.BaseScene):
     __buttons_on_scene = 4
 
     def start_logic(self):
@@ -36,7 +36,7 @@ class LevelsScene(BaseScene):
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
             text='MENU',
-            function=self.game.scene_manager.pop,
+            function=self._scene_manager.pop,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 
@@ -67,4 +67,4 @@ class LevelsScene(BaseScene):
         elif event.type == pg.KEYDOWN and event.key in actions.keys():
             actions[event.key]()
             self.recreate()
-        super().additional_event_check(event)
+        super().additional_event(event)

@@ -1,6 +1,7 @@
 import pygame as pg
 
-from misc import Animator, SkinsNames, CELL_SIZE, EvenType, event_append
+from misc import Animator
+from misc.constants import EvenType, event_append, CELL_SIZE, SkinsNames
 from misc.interfaces import IDrawable
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
@@ -19,6 +20,7 @@ class SeedAnimator(Animator):
 class Seed(IDrawable):
 
     def __init__(self, game, rect, image):
+        # todo delete game
         self.game = game
         self.rect = rect
         self.image = image
@@ -43,6 +45,7 @@ class Seed(IDrawable):
 
 class BigSeed(Seed):
     def __init__(self, game, rect):
+        # todo delete game
         path = 'big_seed.png' if game.skins.current.name != SkinsNames.chrome else "big_seed_google.png"
         self.animator = SeedAnimator(SpriteSheet(get_image_path(path), (9, 9))[0])
         super().__init__(game, rect, self.animator.current_image)
@@ -53,7 +56,7 @@ class BigSeed(Seed):
             self.game.sounds.seed.play()
 
     def process_draw(self, screen: pg.Surface) -> None:
-        self.game.screen.blit(self.animator.current_image, self.rect)
+        self.game.__screen.blit(self.animator.current_image, self.rect)
 
 
 class SeedContainer(IDrawable):
@@ -98,17 +101,15 @@ class SeedContainer(IDrawable):
             event_append(EvenType.Win)
             return
 
-        for seed in self.seed_bf:
-            if seed.check_collision(obj):
-                seed.remove()
-                self.seed_bf.remove(seed)
-                return
+        self.__seed_remover(self.seed_bf, obj)
+        self.__seed_remover(self.big_seed_bf, obj)
 
-        for seed in self.big_seed_bf:
+    def __seed_remover(self, seeds: list[Seed], obj) -> None:
+        for seed in seeds:
             if seed.check_collision(obj):
                 seed.remove()
-                self.big_seed_bf.remove(seed)
-                return 
+                seeds.remove(seed)
+                return
 
     def is_field_empty(self) -> bool:
         return not (any([self.seed_bf, self.big_seed_bf]))

@@ -1,19 +1,22 @@
-import pygame as pg
 from copy import copy
 from typing import Union, Dict
 
-from misc.path import get_image_path
-from objects import ImageObject
-from misc.sprite_sheet import SpriteSheet
-from misc import Animator, Sounds
+import pygame as pg
+
+from misc import Animator
 from misc.animator import SpriteSheetAnimator
+from misc.constants.classes import Sounds
 from misc.constants.skin_names import SkinsNames
+from misc.path import get_image_path
 from misc.sound_controller import SoundController
+from misc.sprite_sheet import SpriteSheet
+from objects import ImageObject
 
 
 class Skin:
 
     def __init__(self, game, path: str, cost: dict, skin_name: str = SkinsNames.default):
+        # todo delete game
         self.name: str = skin_name
         self.skin_cost: dict = cost
         self.game = game
@@ -79,6 +82,7 @@ class PokeBall(Skin):
 class Skins:
 
     def __init__(self, game):
+        # todo delete game
         self.game = game
 
         self.default = Skin(self.game, f'default', {0: 0, 1: 0}, SkinsNames.default)

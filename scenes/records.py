@@ -1,13 +1,14 @@
 import pygame as pg
-from misc import Color, Font
+
+import scenes
+from misc.constants import Color, Font
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject, Text
 from objects.buttons import Button
-from scenes.base import BaseScene
 
 
-class RecordsScene(BaseScene):
+class RecordsScene(scenes.BaseScene):
     medals = SpriteSheet(sprite_path=get_image_path('medal.png'), sprite_size=(16, 16))[0]
 
     def start_logic(self):
@@ -23,7 +24,7 @@ class RecordsScene(BaseScene):
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
             text='MENU',
-            function=self.game.scene_manager.pop,
+            function=self._scene_manager.pop,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 

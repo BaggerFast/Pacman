@@ -3,7 +3,7 @@ from random import randint, choice
 
 import pygame as pg
 
-from misc import Color
+from misc.constants import Color
 from misc.interfaces import IDrawable
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
@@ -29,9 +29,8 @@ def rand_color():
 
 class Map(IDrawable):
 
-    def __init__(self, game, map_data):
-        self.game = game
-        self.color = self.game.map_color
+    def __init__(self, map_color, map_data):
+        self.color = map_color
         self.map_data = map_data
         self.tile_size = 8
         self.sprite_sheet = SpriteSheet(sprite_path=get_image_path('map.png'), sprite_size=(self.tile_size,
@@ -50,7 +49,7 @@ class Map(IDrawable):
 
     def load_surface(self):
         surface = pg.Surface((len(self.map_data[0]) * self.tile_size, len(self.map_data) * self.tile_size))
-        x, y = 0, 0
+        y = 0
         for row in self.map_data:
             x = 0
             for tile in row:

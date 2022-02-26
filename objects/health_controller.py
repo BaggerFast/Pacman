@@ -1,5 +1,6 @@
 import pygame as pg
-from misc import EvenType, event_append
+
+from misc.constants import EvenType, event_append
 from misc.interfaces import IDrawable, IEventful, ILogical
 from objects import ImageObject
 
@@ -9,10 +10,12 @@ class HealthView(ImageObject):
     def __init__(self, image, pos: tuple[int, int], shift: int):
         ImageObject.__init__(self, image=image, pos=pos)
         self.image = pg.transform.flip(self.image, True, False)
+        self.shift = shift
         self.hp_count = 0
 
     def process_draw(self, screen: pg.Surface) -> None:
-        screen.blits((self.image, (self.rect.x + i * self.shift, self.rect.y)) for i in range(self.__cur_hp))
+        for i in range(self.hp_count):
+            screen.blit(self.image, (self.rect.x + i * self.shift, self.rect.y))
 
 
 class HealthLogic(IEventful):
@@ -29,8 +32,10 @@ class HealthLogic(IEventful):
         }
 
     @property
-    def alive(self) -> bool:
-        return self.__cur_hp > 0
+    def alive(self) -> bool: return self.__cur_hp > 0
+
+    @property
+    def count(self) -> int: return self.__cur_hp
 
     def get_damage(self, amount: int) -> None:
         """
@@ -47,10 +52,6 @@ class HealthLogic(IEventful):
     def __check_limits(self, amount: int) -> int:
         return max(0, min(self.__max_hp, int(amount)))
 
-    @property
-    def count(self):
-        return self.__cur_hp
-
     def process_event(self, event: pg.event.Event) -> None:
         if event.type in self.__events:
             self.__events[event.type]()
@@ -65,12 +66,11 @@ class HealthController(IDrawable, ILogical, IEventful):
 
     def process_logic(self) -> None:
         # todo health alive usability
+        self.hp_view.hp_count = self.hp.count
         cheat = self.game.cheats_var.INFINITY_LIVES
         if all([not cheat, not self.hp.alive, not self.game.sounds.pacman.is_busy()]):
             event_append(EvenType.GameOver)
 
-    def process_event(self, event: pg.event.Event) -> None:
-        self.hp.process_event(event)
+    def process_event(self, event: pg.event.Event) -> None: self.hp.process_event(event)
 
-    def process_draw(self, screen: pg.Surface) -> None:
-        pass
+    def process_draw(self, screen: pg.Surface) -> None: self.hp_view.process_draw(screen)

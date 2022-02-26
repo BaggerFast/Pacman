@@ -1,15 +1,15 @@
 import pygame as pg
 from PIL import ImageFilter, Image
 
-from misc.constants.classes import MenuPreset
+import scenes
+from misc.constants import VERSION
+from misc.constants.classes import MenuPreset, Font, Color
 from objects import Text, ImageObject
 from objects.buttons import Button
 from objects.map import rand_color
-from misc import Font, Color, VERSION
-from scenes.base import BaseScene
 
 
-class MenuScene(BaseScene):
+class MenuScene(scenes.BaseScene):
 
     def start_logic(self):
         self.preview = self.game.maps.full_surface
@@ -51,18 +51,18 @@ class MenuScene(BaseScene):
         rect = self.preview.get_rect()
         surify = pg.image.tostring(self.preview, 'RGBA')
         impil = Image.frombytes('RGBA', (rect.width, rect.height), surify)
-        piler = impil.resize(self.game.size). \
+        piler = impil.resize(self.game.resolution). \
             filter(ImageFilter.GaussianBlur(radius=blur_count))
         self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
     def button_init(self):
         names = [
-            MenuPreset("PLAY", lambda: self.scene_manager.reset(self.scenes.MAIN(self.game))),
-            MenuPreset("LEVELS", lambda: self.scene_manager.append(self.scenes.LEVELS(self.game))),
-            MenuPreset("SKINS", lambda: self.scene_manager.append(self.scenes.SKINS(self.game))),
-            MenuPreset("RECORDS", lambda: self.scene_manager.append(self.scenes.RECORDS(self.game))),
-            MenuPreset("SETTINGS", lambda: self.scene_manager.append(self.scenes.SETTINGS(self.game))),
-            MenuPreset("CREDITS", lambda: self.scene_manager.append(self.scenes.CREDITS(self.game))),
+            MenuPreset("PLAY", lambda: self._scene_manager.reset(scenes.MainScene(self.game))),
+            MenuPreset("LEVELS", lambda: self._scene_manager.append(scenes.LevelsScene(self.game))),
+            MenuPreset("SKINS", lambda: self._scene_manager.append(scenes.SkinsScene(self.game))),
+            MenuPreset("RECORDS", lambda: self._scene_manager.append(scenes.RecordsScene(self.game))),
+            MenuPreset("SETTINGS", lambda: self._scene_manager.append(scenes.SkinsScene(self.game))),
+            MenuPreset("CREDITS", lambda: self._scene_manager.append(scenes.CreditsScene(self.game))),
             MenuPreset("EXIT", self.game.exit_game),
         ]
         for i, menu_preset in enumerate(names):

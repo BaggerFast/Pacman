@@ -4,12 +4,14 @@ from typing import Tuple
 
 import pygame as pg
 
-from misc import Animator, EvenType, event_append
+from misc import Animator
 from misc.animator import SpriteSheetAnimator
-from misc.interfaces.object_interfaces import IEventful
+from misc.constants import event_append, EvenType
+from misc.interfaces.igeneric_object import IEventful
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
-from objects import Pacman, Text
+from objects import Text
+from objects.characters import Pacman
 from objects.characters.character_base import Character
 from objects.characters.ghosts.ghost_states import GhostState
 

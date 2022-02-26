@@ -1,13 +1,13 @@
 import pygame as pg
 
-from misc.constants.classes import MenuPreset
+import scenes
+from misc.constants import BUTTON_DEFAULT_COLORS
+from misc.constants.classes import MenuPreset, Font
 from objects import Text
-from misc import Font, BUTTON_DEFAULT_COLORS
 from objects.buttons import Button
-from scenes.base import BaseScene
 
 
-class GameOverScene(BaseScene):
+class GameOverScene(scenes.BaseScene):
     def __init__(self, game, score):
         super().__init__(game)
         self.score = score
@@ -24,8 +24,8 @@ class GameOverScene(BaseScene):
 
     def button_init(self) -> None:
         names = {
-            MenuPreset("RESTART", lambda: self.scene_manager.reset(self.scenes.MAIN(self.game))),
-            MenuPreset("MENU", lambda: self.scene_manager.reset(self.scenes.MENU(self.game))),
+            MenuPreset("RESTART", lambda: self._scene_manager.reset(scenes.MainScene(self.game))),
+            MenuPreset("MENU", lambda: self._scene_manager.reset(scenes.MenuScene(self.game))),
         }
         for i, menu_preset in enumerate(names):
             yield Button(

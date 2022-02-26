@@ -1,8 +1,9 @@
-from .image import ImageObject
-from .text import Text
+from .fruits import Fruit
 from .health_controller import HealthController
+from .image import ImageObject
+from .map import Map
+from .score import Score
 from .seed import SeedContainer
-from .characters import *
-from .characters.ghosts import *
+from .text import Text
 
 

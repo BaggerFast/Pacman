@@ -1,13 +1,16 @@
 from typing import Tuple, Union
+
 import pygame as pg
-from misc.interfaces.object_interfaces import IDrawable
+
+from misc.interfaces.igeneric_object import IDrawable
 from objects.base import BaseObject
 
 
 class ImageObject(BaseObject, IDrawable):
 
-    def __init__(self, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0)):
+    def __init__(self, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0), is_hidden=False):
         BaseObject.__init__(self)
+        self.is_hidden = is_hidden
         self.image = self.parse_image(image)
         self.rect = self.image.get_rect()
         self.rect.topleft = pos

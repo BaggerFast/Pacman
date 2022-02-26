@@ -1,8 +1,9 @@
 import pygame as pg
 
-from misc import Animator, EvenType
+from misc import Animator
 from misc.animator import SpriteSheetAnimator
-from misc.interfaces.object_interfaces import IEventful
+from misc.constants import EvenType
+from misc.interfaces.igeneric_object import IEventful
 from misc.keyboards import PacmanKeyboard
 from objects import HealthController
 from objects.characters.character_base import Character
@@ -20,7 +21,7 @@ class Pacman(Character, IEventful):
     def __init__(self, game, start_pos: tuple[int, int]):
         self.__walk_anim: Animator = game.skins.current.walk
         self.__dead_anim: Animator = game.skins.current.dead
-        super().__init__(game, self.__walk_anim, start_pos)
+        Character.__init__(self, game, self.__walk_anim, start_pos)
         self.hp = HealthController(self.game, 3)
         self.dead = False
         self.kb = PacmanKeyboard()
@@ -35,6 +36,10 @@ class Pacman(Character, IEventful):
         if event.type in self.dir_action.keys() and not self.dead:
             self.go()
             self.__feature_rotate = self.dir_action[event.type]
+
+    def process_draw(self, screen: pg.Surface) -> None:
+        Character.process_draw(self, screen)
+        self.hp.process_draw(screen)
 
     def get_rect(self):
         return self.animator.current_image.get_rect()
@@ -61,7 +66,7 @@ class Pacman(Character, IEventful):
                 self.animator.change_cur_image(0)
             if self.move_to(self.__feature_rotate[2]):
                 self.set_dir()
-        super().process_logic()
+        Character.process_logic(self)
 
     def death(self) -> None:
         self.game.sounds.siren.pause()

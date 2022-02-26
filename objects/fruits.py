@@ -3,7 +3,7 @@ from typing import Tuple
 
 import pygame as pg
 
-from misc import CELL_SIZE
+from misc.constants import CELL_SIZE
 from misc.interfaces import IDrawable, ILogical
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
@@ -15,11 +15,13 @@ class Fruit(BaseObject, IDrawable, ILogical):
 
     def __init__(self, game, pos: tuple) -> None:
         BaseObject.__init__(self)
+        # todo delete game
         self.game = game
         self.images = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
         self.__cur_index: int = 0
         self.rect = self.current_image.get_rect()
         self.move_center(*self.pos_from_cell(pos))
+        self.is_hidden = False
         self.__scores: List[int] = [100, 300, 500, 700, 1000, 2000, 3000, 5000]
         self.__eaten: bool = False
         self.__start_time = pg.time.get_ticks()
@@ -34,7 +36,7 @@ class Fruit(BaseObject, IDrawable, ILogical):
             Text(text=str(self.__scores[self.__cur_index - 1] * self.game.difficulty),
                  size=10, rect=self.rect).process_draw(screen)
         if self.is_hidden:
-            self.game.screen.blit(self.current_image, self.rect)
+            self.game.__screen.blit(self.current_image, self.rect)
 
     def __change_image(self) -> None:
         self.__cur_index = (self.__cur_index + 1) % len(self.images)

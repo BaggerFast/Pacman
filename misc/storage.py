@@ -1,5 +1,7 @@
 import json
-from misc import create_file_if_not_exist, FRUITS_COUNT, HIGHSCORES_COUNT, get_path
+
+from misc import create_file_if_not_exist, get_path
+from misc.constants import HIGHSCORES_COUNT, FRUITS_COUNT
 from misc.constants.skin_names import SkinsNames
 
 
@@ -39,6 +41,7 @@ class Storage(Field):
 
     def __init__(self, game) -> None:
         self.game = game
+        # todo delete game
         self.last_level_id = 0
         self.last_skin = SkinsNames.default
         self.unlocked_levels = [0]

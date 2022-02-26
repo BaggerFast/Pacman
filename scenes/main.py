@@ -1,19 +1,21 @@
 import pygame as pg
 
-from misc import ControlCheats, event_append
-from misc import LevelLoader, Font, EvenType
+import scenes
+from misc import ControlCheats
+from misc import LevelLoader
 from misc.cheat_codes import Cheat
+from misc.constants import Font, event_append, EvenType
 from misc.constants.skin_names import SkinsNames
-from objects import SeedContainer, Text, Pacman
+from objects import SeedContainer, Text
+from objects.characters import Pacman
 from objects.characters.ghosts import *
 from objects.characters.ghosts.ghost_states import GhostState
 from objects.fruits import Fruit
 from objects.map import Map
 from objects.score import Score
-from scenes.base import BaseScene
 
 
-class MainScene(BaseScene):
+class MainScene(scenes.BaseScene):
 
     def start_logic(self):
         self.__load_from_map()
@@ -56,7 +58,7 @@ class MainScene(BaseScene):
         self.__fruit_position = self.__loader.get_fruit_position()
         self.slow_ghost_rect = self.__loader.get_slow_ghost_rect()
         self.cant_up_ghost_rect = self.__loader.get_cant_up_ghost_rect()
-        self.__map = Map(self.game, self.__map_data)
+        self.__map = Map(self.game.map_color, self.__map_data)
 
     def __create_sounds(self):
         self.timer = 0
@@ -104,14 +106,14 @@ class MainScene(BaseScene):
     def movements_data(self):
         return self.__movements_data
 
-    def additional_event_check(self, event: pg.event.Event) -> None:
+    def additional_event(self, event: pg.event.Event) -> None:
         data = {
-            EvenType.GameOver: lambda: self.scene_manager.reset(self.scenes.GAMEOVER(self.game, self.score)),
-            EvenType.Win: lambda: self.scene_manager.reset(self.scenes.ENDGAME(self.game, self.score)),
+            EvenType.GameOver: lambda: self._scene_manager.reset(scenes.GameOverScene(self.game, self.score)),
+            EvenType.Win: lambda: self._scene_manager.reset(scenes.EndScene(self.game, self.score)),
         }
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             pg.mixer.pause()
-            self.game.scene_manager.append(self.scenes.PAUSE(self.game))
+            self._scene_manager.append(scenes.PauseScene(self.game))
         elif event.type in data:
             data[event.type]()
 

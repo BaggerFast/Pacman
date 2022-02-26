@@ -1,5 +1,6 @@
 import pygame as pg
-from misc import EvenType
+
+from misc.constants import EvenType
 from misc.keyboards.base import BaseKeyboard
 
 

@@ -3,13 +3,14 @@ import pygame as pg
 from misc.interfaces import ILogical, IEventful
 
 
-class Cheat:
+class Cheat(ILogical):
+
     def __init__(self, game, code, func):
         self.cheat_code = code
         self.function = func
         self.game = game
 
-    def __call__(self):
+    def process_logic(self) -> None:
         self.game.sounds.cheat.play()
         self.function()
 
@@ -28,7 +29,7 @@ class ControlCheats(ILogical, IEventful):
     def __complete_cheat(self):
         for cheat in self.cheats:
             if cheat.cheat_code == self.enter_code:
-                cheat()
+                cheat.process_logic()
                 self.enter_code = ''
                 break
 

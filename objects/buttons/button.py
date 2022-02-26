@@ -2,7 +2,7 @@ from typing import List, Union, Callable, Tuple
 
 import pygame as pg
 
-from misc import Font, ButtonColor, BUTTON_DEFAULT_COLORS
+from misc.constants import Font, ButtonColor, BUTTON_DEFAULT_COLORS
 from misc.interfaces import IDrawable, IEventful
 from objects.base import BaseObject
 
@@ -16,8 +16,10 @@ class Button(BaseObject, IDrawable, IEventful):
                  colors: ButtonColor = BUTTON_DEFAULT_COLORS, center: Tuple[int, int] = None,
                  text_size: int = 60, active: bool = True) -> None:
         BaseObject.__init__(self)
+        # todo delete game
         self.game = game
         self.rect = rect
+        self.is_hidden = False
         self.function = function
         self.__text = text
         self.__font = pg.font.Font(Font.DEFAULT, text_size)

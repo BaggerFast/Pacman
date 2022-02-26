@@ -3,8 +3,8 @@ from abc import ABC
 
 import pygame as pg
 
-from misc import event_append
-from misc.interfaces.object_interfaces import IEventful, ILogical
+from misc.constants import event_append
+from misc.interfaces.igeneric_object import IEventful, ILogical
 
 
 class BaseKeyboard(IEventful, ILogical, ABC):

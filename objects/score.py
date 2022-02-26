@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc import EvenType, Points, Font, SkinsNames, event_append
+from misc.constants import EvenType, SkinsNames, event_append, Points, Font
 from misc.interfaces import IDrawable, IEventful
 from objects import Text
 
@@ -10,6 +10,7 @@ class Score(IDrawable, IEventful):
     shift = 20
 
     def __init__(self, game):
+        # todo delete game
         self.game = game
         self.__value = 0
         self.fear_mode = False
@@ -31,22 +32,18 @@ class Score(IDrawable, IEventful):
         if event.type in self.__events:
             self.__events[event.type]()
 
-    def __int__(self):
-        return self.__value
+    def __int__(self): return self.__value
 
     @property
-    def score(self):
-        return self.__value
+    def score(self): return self.__value
 
     def __add__(self, value):
         self.__value += value
         return self
 
-    def __iadd__(self, value):
-        return self + value
+    def __iadd__(self, value): return self + value
 
-    def __str__(self):
-        return str(self.__value)
+    def __str__(self): return str(self.__value)
 
     def eat_fruit(self, bonus) -> None:
         self + bonus * self.game.difficulty

@@ -1,8 +1,9 @@
 import pygame as pg
 
-from misc.constants.classes import MenuPreset
+import scenes
+from misc.constants import LIGHT_BUTTON_COLORS
+from misc.constants.classes import MenuPreset, Font
 from objects import Text
-from misc import Font, LIGHT_BUTTON_COLORS
 from objects.buttons import Button
 from scenes.base import BaseScene
 
@@ -11,10 +12,10 @@ class PauseScene(BaseScene):
 
     def button_init(self) -> None:
         names = [
-            MenuPreset("CONTINUE", self.scene_manager.pop),
-            MenuPreset("SETTINGS", lambda: self.scene_manager.append(self.scenes.SETTINGS(self.game))),
-            MenuPreset("RESTART", lambda: self.scene_manager.reset(self.scenes.MAIN(self.game))),
-            MenuPreset("MENU", lambda: self.scene_manager.append(self.scenes.MENU(self.game))),
+            MenuPreset("CONTINUE", self._scene_manager.pop),
+            MenuPreset("SETTINGS", lambda: self._scene_manager.append(scenes.SettingsScene(self.game))),
+            MenuPreset("RESTART", lambda: self._scene_manager.reset(scenes.MainScene(self.game))),
+            MenuPreset("MENU", lambda: self._scene_manager.append(scenes.MenuScene(self.game))),
         ]
         for i, menu_preset in enumerate(names):
             yield Button(
@@ -26,6 +27,7 @@ class PauseScene(BaseScene):
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=LIGHT_BUTTON_COLORS
             )
+
 
     def create_title(self) -> None:
         main_text = Text('PAUSE', 40, font=Font.TITLE)

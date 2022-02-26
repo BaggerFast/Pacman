@@ -4,16 +4,16 @@ from typing import List
 
 import pygame as pg
 
-from misc import Color, HighScore, get_path, get_list_path, LevelLoader, Skins, Storage
-from misc import Sounds, ControlCheats, FRUITS_COUNT
+import scenes
+from misc import HighScore, get_list_path, LevelLoader, Storage, ControlCheats
 from misc.cheat_codes import Cheat
+from misc.constants import Color, FRUITS_COUNT
+from misc.constants.classes import Sounds
 from misc.constants.skin_names import SkinsNames
-from misc.path import bool_venv_var
+from misc.path import bool_venv_var, get_image_path
+from misc.skins import Skins
 from misc.sound_controller import SoundController
 from objects.map import rand_color, Map
-from scenes import *
-from scenes.base import BaseScene
-from scenes.manager import SceneManager
 
 
 class Game:
@@ -50,12 +50,12 @@ class Game:
 
         def unlock_skins(self):
             self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.UNLOCK_SKINS else self.game.storage.unlocked_skins
-            if isinstance(self.game.scene_manager.current, SkinsScene):
+            if isinstance(self.game.scene_manager.current, scenes.SkinsScene):
                 self.game.scene_manager.current.create_objects()
 
         def unlock_levels(self):
             self.game.unlocked_levels = self.game.maps.keys() if self.game.cheats_var.UNLOCK_LEVELS else self.game.storage.unlocked_levels
-            if isinstance(self.game.scene_manager.current, LevelsScene):
+            if isinstance(self.game.scene_manager.current, scenes.LevelsScene):
                 self.game.scene_manager.current.create_objects()
 
         def update(self, key_code):
@@ -117,21 +117,6 @@ class Game:
                 return
             self.game.skins.current.sound_preset()
 
-    class Scenes:
-        PAUSE = PauseScene
-        MENU = MenuScene
-        MAIN = MainScene
-        GAMEOVER = GameOverScene
-        LEVELS = LevelsScene
-        RECORDS = RecordsScene
-        CREDITS = CreditsScene
-        ENDGAME = EndScene
-        SKINS = SkinsScene
-        SETTINGS = SettingsScene
-
-        def __new__(cls):
-            raise TypeError('Static classes cannot be instantiated')
-
     class Maps:
 
         def __init__(self, game):
@@ -154,7 +139,7 @@ class Game:
         def __load_from_map(self, level_id: int = 0) -> None:
             self.__loader = LevelLoader(self.levels[level_id])
             self.__map_data = self.__loader.get_map_data()
-            self.__map = Map(self.game, self.__map_data)
+            self.__map = Map(self.game.map_color, self.__map_data)
 
         def keys(self) -> List[int]:
             return list(range(self.count))
@@ -167,9 +152,10 @@ class Game:
     __resolution = width, height = 224, 285
     __FPS: int = 60
     __def_level_id = 0
-    screen = pg.display.set_mode(__resolution, pg.SCALED)
+    __screen = pg.display.set_mode(__resolution, pg.SCALED)
+
     pg.display.set_caption('PACMAN')
-    pg.display.set_icon(pg.transform.scale(pg.image.load(get_path('assets/images/ico.png')), (256, 256)))
+    pg.display.set_icon(pg.transform.scale(pg.image.load(get_image_path('ico.png')), (256, 256)))
 
     def __init__(self):
         self.maps = self.Maps(self)
@@ -182,7 +168,7 @@ class Game:
         self.cheats_var = self.Cheats(self)
         self.read_from_storage()
 
-        self.scene_manager = SceneManager(self)
+        self.scene_manager = scenes.SceneManager()
 
         self.__cheats = ControlCheats([
             Cheat(self, 'skins', self.cheats_var.UNLOCK_SKINS),
@@ -196,7 +182,7 @@ class Game:
         self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else SkinsNames.default
         self.records = HighScore(self)
 
-        self.scene_manager.reset(MenuScene(self))
+        self.scene_manager.reset(scenes.MenuScene(self))
 
     def read_from_storage(self):
         self.settings = self.Settings(self.storage)
@@ -212,11 +198,11 @@ class Game:
         return self.settings.DIFFICULTY + 1
 
     @property
-    def current_scene(self) -> BaseScene:
+    def current_scene(self) -> scenes.BaseScene:
         return self.scene_manager.current
 
     @property
-    def size(self) -> tuple:
+    def resolution(self) -> tuple:
         return self.__resolution
 
     def __process_exit_events(self, event: pg.event.Event) -> None:
@@ -234,8 +220,8 @@ class Game:
         self.scene_manager.process_logic()
 
     def __process_all_draw(self) -> None:
-        self.screen.fill(Color.BLACK)
-        self.scene_manager.process_draw(self.screen)
+        self.__screen.fill(Color.BLACK)
+        self.scene_manager.process_draw(self.__screen)
         pg.display.flip()
 
     def main_loop(self) -> None:

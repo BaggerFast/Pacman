@@ -2,7 +2,7 @@ import traceback
 from datetime import datetime
 
 from game import Game
-from misc import DEBUG
+from misc.constants import DEBUG
 
 
 def main():

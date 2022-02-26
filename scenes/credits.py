@@ -2,13 +2,13 @@ from random import randint
 
 import pygame as pg
 
-from misc import Font
+import scenes
+from misc.constants import Font
 from objects import Text
 from objects.buttons import Button
-from scenes.base import BaseScene
 
 
-class CreditsScene(BaseScene):
+class CreditsScene(scenes.BaseScene):
     __data = [
         "Смирнов Андрей",
         "Aleksandrov Daniil",
@@ -32,7 +32,7 @@ class CreditsScene(BaseScene):
         yield Button(
             game=self.game,
             rect=pg.Rect(0, 0, 100, 35),
-            function=self.game.scene_manager.pop,
+            function=self._scene_manager.pop,
             text="MENU",
             center=(self.game.width // 4, 250),
             text_size=Font.BUTTON_TEXT_SIZE)

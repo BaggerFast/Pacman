@@ -10,7 +10,7 @@ class LvlButton(Button):
         self.game.sounds.click.play()
         self.game.maps.cur_id = self.value[0]
         self.game.records.update_records()
-        self.game.scene_manager.reset(self.game.Scenes.MENU(self.game))
+        self.game.scene_manager.reset(self.scenes.MENU(self.game))
 
     def select(self) -> None:
         self.game.scene_manager.scenes[-1].is_current = True

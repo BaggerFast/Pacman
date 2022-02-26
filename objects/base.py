@@ -5,8 +5,7 @@ import pygame as pg
 
 class BaseObject(ABC):
 
-    def __init__(self, is_hidden=False) -> None:
-        self.is_hidden: bool = is_hidden
+    def __init__(self) -> None:
         self.rect: pg.rect.Rect = pg.rect.Rect(0, 0, 0, 0)
 
     def move(self, x, y) -> None:

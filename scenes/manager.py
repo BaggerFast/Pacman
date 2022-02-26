@@ -1,12 +1,13 @@
-from scenes.base import BaseScene
 import pygame as pg
 
+from meta_classes import SingletonMeta
+from scenes.base import BaseScene
 
-class SceneManager:
 
-    def __init__(self, game):
-        self.scenes = []
-        self.game = game
+class SceneManager(metaclass=SingletonMeta):
+
+    def __init__(self):
+        self.scenes: list[BaseScene] = []
 
     @property
     def __is_empty(self) -> bool:

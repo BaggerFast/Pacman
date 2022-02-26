@@ -2,8 +2,8 @@ from typing import Union
 
 import pygame as pg
 
-from misc import EvenType
-from misc.interfaces.object_interfaces import IDrawable, IEventful
+from misc.constants import EvenType
+from misc.interfaces.igeneric_object import IDrawable, IEventful
 from misc.keyboards import MenuKeyboard
 from objects.buttons.button import Button
 

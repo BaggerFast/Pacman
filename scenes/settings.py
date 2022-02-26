@@ -1,11 +1,12 @@
 import pygame as pg
-from misc import Font, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
+
+import scenes
+from misc.constants import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS, Font
 from objects import Text
 from objects.buttons import SettingButton, SelectButton, DifficultyButton, Button
-from scenes.base import BaseScene
 
 
-class SettingsScene(BaseScene):
+class SettingsScene(scenes.BaseScene):
 
     __volume_position = 150
     __difficulty_pos = 210
@@ -77,7 +78,7 @@ class SettingsScene(BaseScene):
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
             text='BACK',
-            function=self.game.scene_manager.pop,
+            function=self._scene_manager.pop,
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE
         )

@@ -26,6 +26,5 @@ def get_list_path(path, ext) -> List[str]:
 def create_file_if_not_exist(filepath: str, data: str = "") -> None:
     if os.path.exists(filepath):
         return
-    file = open(filepath, 'w')
-    file.write(data)
-    file.close()
+    with open(filepath, 'w') as f:
+        f.write(data)
