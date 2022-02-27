@@ -1,7 +1,5 @@
 from typing import List, Union, Callable, Tuple
-
 import pygame as pg
-
 from misc.constants import Font, ButtonColor, BUTTON_DEFAULT_COLORS
 from misc.interfaces import IDrawable, IEventful
 from objects.base import BaseObject

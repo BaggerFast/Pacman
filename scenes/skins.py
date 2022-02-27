@@ -1,7 +1,5 @@
 from copy import copy
-
 import pygame as pg
-
 import scenes
 from misc.constants import Font, BUTTON_SKIN_BUY
 from misc.constants.skin_names import SkinsNames
@@ -13,7 +11,9 @@ from objects.buttons import ButtonController, Button, SkinButton, BuyButton
 
 class SkinsScene(scenes.BaseScene):
 
-    def start_logic(self) -> None:
+    def __init__(self, game):
+        super().__init__(game)
+
         self.skins = {
             SkinsNames.default: self.game.skins.default,
             SkinsNames.edge: self.game.skins.edge,

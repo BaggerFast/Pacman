@@ -14,4 +14,3 @@ class PacmanKeyboard(BaseKeyboard):
             self.KeyControl([pg.K_s, pg.K_DOWN], EvenType.GoDown),
         ]
         super().__init__()
-

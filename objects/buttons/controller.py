@@ -1,7 +1,5 @@
 from typing import Union
-
 import pygame as pg
-
 from misc.constants import EvenType
 from misc.interfaces.igeneric_object import IDrawable, IEventful
 from misc.keyboards import MenuKeyboard
@@ -17,7 +15,7 @@ class ButtonController(IDrawable, IEventful):
         self.kb_actions = {
             EvenType.NextBtn: lambda: self.select_button_checker(1),
             EvenType.PreviousBtn: lambda: self.select_button_checker(-1),
-            EvenType.PressBtn: lambda: self.press_current_button(),
+            EvenType.PressBtn: self.press_current_button,
         }
         self.kb = MenuKeyboard()
 

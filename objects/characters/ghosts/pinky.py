@@ -1,6 +1,6 @@
+import pygame as pg
 from typing import Tuple
 from .base import Base
-import pygame as pg
 
 from .ghost_states import GhostState
 

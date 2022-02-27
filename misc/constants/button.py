@@ -16,7 +16,7 @@ class ButtonColor(NamedTuple):
 
     @staticmethod
     def get_members_list() -> list:
-        members = inspect.getmembers(BUTTON_DEFAULT_COLORS, lambda member: type(member) == ButtonStateColor)
+        members = inspect.getmembers(BUTTON_DEFAULT_COLORS, lambda member: isinstance(member, ButtonStateColor))
         return [item[0] for item in members]
 
 

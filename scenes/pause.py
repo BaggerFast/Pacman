@@ -1,5 +1,4 @@
 import pygame as pg
-
 import scenes
 from misc.constants import LIGHT_BUTTON_COLORS
 from misc.constants.classes import MenuPreset, Font

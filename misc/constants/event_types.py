@@ -1,5 +1,5 @@
-import pygame as pg
 from enum import IntEnum, auto
+import pygame as pg
 
 
 class EvenType(IntEnum):

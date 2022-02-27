@@ -1,7 +1,6 @@
 import sys
 from random import choice
 from typing import List
-
 import pygame as pg
 import scenes
 from misc import HighScore, get_list_path, LevelLoader, Storage, ControlCheats
@@ -41,10 +40,6 @@ class Game:
             self.UNLOCK_LEVELS = self.Adapter(bool_venv_var('levels'))
             self.INFINITY_LIVES = self.Adapter(bool_venv_var('lives'))
             self.GHOSTS_COLLISION = self.Adapter(bool_venv_var('collision'))
-            # self.cheat_storage = {
-            #     'UNLOCK_SKINS': self.unlock_skins,
-            #     'UNLOCK_LEVELS': self.unlock_levels
-            # }
             self.game: Game = game
 
         def unlock_skins(self):
@@ -79,6 +74,7 @@ class Game:
             self.DIFFICULTY = (self.DIFFICULTY + 1) % 3
 
     class Music:
+
         def __init__(self, game):
             self.game = game
             self.reload_sounds()
@@ -120,16 +116,20 @@ class Game:
 
         def __init__(self, game):
             self.game = game
-            self.levels = []
             self.cur_id = 0
-            self.levels = get_list_path("maps", ext='json')
-            self.count = len(self.levels)
+            self.levels: list = get_list_path("maps", ext='json')
             self.images = list(self.prerender_surfaces())
+
+        def __len__(self):
+            return len(self.levels)
 
         @property
         def full_surface(self):
             self.__load_from_map(self.cur_id)
             return self.__map.prerender_map_surface()
+
+        def is_last_level(self) -> bool:
+            return self.cur_id + 1 < len(self)
 
         @property
         def level_name(self):
@@ -141,10 +141,10 @@ class Game:
             self.__map = Map(self.game.map_color, self.__map_data)
 
         def keys(self) -> List[int]:
-            return list(range(self.count))
+            return list(range(len(self)))
 
         def prerender_surfaces(self):
-            for level_id in range(self.count):
+            for level_id in range(len(self.levels)):
                 self.__load_from_map(level_id)
                 yield self.__map.prerender_map_image_scaled()
 

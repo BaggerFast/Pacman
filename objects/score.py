@@ -1,5 +1,4 @@
 import pygame as pg
-
 from misc.constants import EvenType, SkinsNames, event_append, Points, Font
 from misc.interfaces import IDrawable, IEventful
 from objects.text import Text

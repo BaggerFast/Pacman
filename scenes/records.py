@@ -10,7 +10,8 @@ from objects.buttons import Button
 class RecordsScene(scenes.BaseScene):
     medals = SpriteSheet(sprite_path=get_image_path('medal.png'), sprite_size=(16, 16))[0]
 
-    def start_logic(self):
+    def __init__(self, game):
+        super().__init__(game)
         self.__create_medals()
         self.__create_error_label()
 

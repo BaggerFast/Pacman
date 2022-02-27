@@ -1,5 +1,4 @@
 import pygame as pg
-
 from meta_classes import SingletonMeta
 from scenes.base import BaseScene
 
@@ -19,9 +18,6 @@ class SceneManager(metaclass=SingletonMeta):
             return self.scenes[-1]
         raise Exception('Пустая сцена')
 
-    def enter_scene(self) -> None:
-        self.current.on_enter()
-
     def exit_scene(self) -> None:
         if not self.__is_empty:
             self.current.on_exit()
@@ -37,18 +33,19 @@ class SceneManager(metaclass=SingletonMeta):
 
     def append(self, scene: BaseScene) -> None:
         self.exit_scene()
+        scene.configurate()
         self.scenes.append(scene)
-        self.enter_scene()
+        self.current.on_enter()
 
     def pop(self) -> None:
         self.exit_scene()
         self.scenes.pop()
-        self.enter_scene()
+        self.current.on_enter()
 
     def swap(self, scene: BaseScene) -> None:
         self.scenes.pop()
         self.scenes.append(scene)
-        self.enter_scene()
 
     def reset(self, scene: BaseScene) -> None:
-        self.scenes = [scene]
+        self.scenes.clear()
+        self.append(scene)

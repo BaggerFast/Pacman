@@ -101,7 +101,7 @@ class Base(Character, IEventful, ABC):
             self.rotate = 0
 
         if not self.process_logic_iterator % self.deceleration_multiplier_with_rect:
-            for i in range(self.acceleration_multiplier):
+            for _ in range(self.acceleration_multiplier):
                 self.ghosts_ai()
                 self.step()
                 self.animator.timer_check()

@@ -11,7 +11,8 @@ from objects.map import rand_color
 
 class MenuScene(scenes.BaseScene):
 
-    def start_logic(self):
+    def __init__(self, game):
+        super().__init__(game)
         self.preview = self.game.maps.full_surface
         self.color = rand_color()
         self.game.map_color = self.color
@@ -61,7 +62,7 @@ class MenuScene(scenes.BaseScene):
             MenuPreset("LEVELS", lambda: self._scene_manager.append(scenes.LevelsScene(self.game))),
             MenuPreset("SKINS", lambda: self._scene_manager.append(scenes.SkinsScene(self.game))),
             MenuPreset("RECORDS", lambda: self._scene_manager.append(scenes.RecordsScene(self.game))),
-            MenuPreset("SETTINGS", lambda: self._scene_manager.append(scenes.SkinsScene(self.game))),
+            MenuPreset("SETTINGS", lambda: self._scene_manager.append(scenes.SettingsScene(self.game))),
             MenuPreset("CREDITS", lambda: self._scene_manager.append(scenes.CreditsScene(self.game))),
             MenuPreset("EXIT", self.game.exit_game),
         ]
@@ -74,6 +75,3 @@ class MenuScene(scenes.BaseScene):
                 center=(self.game.width // 2, 95 + i * 28),
                 text_size=Font.BUTTON_TEXT_SIZE
             )
-
-    def additional_event_check(self, event: pg.event.Event) -> None:
-        pass

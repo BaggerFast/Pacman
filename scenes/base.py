@@ -1,7 +1,5 @@
 from collections import Generator
-
 import pygame as pg
-
 import scenes
 from misc.interfaces.igeneric_object import IGenericObject, IEventful, ILogical, IDrawable
 from objects.buttons import ButtonController
@@ -14,14 +12,8 @@ class BaseScene(IGenericObject):
         self.screen: pg.Surface = self.game.screen
         self._scene_manager = scenes.SceneManager()
         self.objects: list = []
-        self.start_logic()
-        self.recreate()
 
-    def start_logic(self):
-        pass
-
-    def recreate(self):
-        self.objects = []
+    def configurate(self):
         self.create_objects()
         self.create_title()
 

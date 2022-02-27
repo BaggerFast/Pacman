@@ -30,4 +30,3 @@ class BaseKeyboard(IEventful, ILogical, ABC):
                 if pressed_keys[key]:
                     event_append(kb.event)
                     return
-

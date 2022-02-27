@@ -5,5 +5,3 @@ from .map import Map
 from .score import Score
 from .seed import SeedContainer
 from .text import Text
-
-

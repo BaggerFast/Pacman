@@ -4,9 +4,9 @@ from misc.constants import CELL_SIZE
 from misc.interfaces import IDrawable, ILogical
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
+from objects.base import BaseObject
 from .text import Text
 from .image import ImageObject
-from objects.base import BaseObject
 
 
 class Fruit(BaseObject, IDrawable, ILogical):

@@ -1,7 +1,5 @@
 from copy import copy
-
 import pygame as pg
-
 import scenes
 from misc.constants import Font
 from objects import Text
@@ -11,9 +9,10 @@ from objects.buttons import ButtonController, LvlButton, Button
 class LevelsScene(scenes.BaseScene):
     __buttons_on_scene = 4
 
-    def start_logic(self):
+    def __init__(self, game):
+        super().__init__(game)
         self.is_current = False
-        self.__scroll = max(min(self.game.maps.cur_id, self.game.maps.count - self.__buttons_on_scene), 0)
+        self.__scroll = max(min(self.game.maps.cur_id, len(self.game.maps) - self.__buttons_on_scene), 0)
 
     def create_title(self) -> None:
         title = Text('SELECT LEVEL', 25, font=Font.TITLE)
@@ -53,18 +52,20 @@ class LevelsScene(scenes.BaseScene):
         self.create_buttons()
 
     def update_scroll(self, index: int) -> None:
-        self.__scroll = min(self.__scroll+index, self.game.maps.count - self.__buttons_on_scene)
+        self.__scroll = min(self.__scroll + index, len(self.game.maps) - self.__buttons_on_scene)
         self.__scroll = max(self.__scroll, 0)
 
-    def additional_event_check(self, event: pg.event.Event) -> None:
+    def additional_event(self, event: pg.event.Event) -> None:
         actions = {
             pg.K_e: lambda: self.update_scroll(1),
             pg.K_q: lambda: self.update_scroll(-1),
         }
         if event.type == pg.MOUSEWHEEL:
             self.update_scroll(-event.y)
-            self.recreate()
+            self.objects.clear()
+            self.configurate()
         elif event.type == pg.KEYDOWN and event.key in actions.keys():
             actions[event.key]()
-            self.recreate()
+            self.objects.clear()
+            self.configurate()
         super().additional_event(event)

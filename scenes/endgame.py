@@ -1,5 +1,4 @@
 import pygame as pg
-
 import scenes
 from misc.constants import Font, BUTTON_DEFAULT_COLORS
 from objects import Text
@@ -7,6 +6,7 @@ from objects.buttons import Button
 
 
 class EndScene(scenes.BaseScene):
+
     def __init__(self, game, score):
         super().__init__(game)
         self.score = score
@@ -34,7 +34,7 @@ class EndScene(scenes.BaseScene):
             text_size=Font.BUTTON_TEXT_SIZE,
             colors=BUTTON_DEFAULT_COLORS
         )
-        if not self.__is_last_level:
+        if not self.game.maps.is_last_level():
             yield Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 180, 35),
@@ -71,7 +71,7 @@ class EndScene(scenes.BaseScene):
         self.game.records.update_records()
 
     def __unlock_level(self) -> None:
-        if self.__is_last_level:
+        if not self.game.maps.is_last_level():
             next_level = self.game.maps.cur_id + 1
             self.game.unlock_level(next_level)
 
@@ -79,11 +79,7 @@ class EndScene(scenes.BaseScene):
         next_level = self.game.maps.cur_id + 1
         self.game.maps.cur_id = next_level
         self.game.records.update_records()
-        self._scene_manager.reset(self.game.scenes.MAIN(self.game))
-
-    @property
-    def __is_last_level(self) -> bool:
-        return (self.game.maps.cur_id + 1) < self.game.maps.count
+        self._scene_manager.reset(scenes.MainScene(self.game))
 
     def on_enter(self) -> None:
         self.game.sounds.siren.stop()

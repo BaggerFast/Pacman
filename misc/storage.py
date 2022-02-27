@@ -48,7 +48,7 @@ class Storage(Field):
         self.unlocked_skins = [SkinsNames.default]
         self.settings = self.__Settings()
         self.eaten_fruits = [0] * FRUITS_COUNT
-        self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(game.maps.count)]
+        self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(len(game.maps))]
         self.load()
 
     def save(self) -> None:
@@ -75,5 +75,3 @@ class Storage(Field):
         create_file_if_not_exist(self.__storage_filepath, json.dumps(self.dict(), indent=2))
         with open(self.__storage_filepath, "r") as file:
             self.read_dict(json.load(file))
-
-

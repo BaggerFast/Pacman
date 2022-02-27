@@ -15,7 +15,8 @@ from objects.score import Score
 
 class MainScene(scenes.BaseScene):
 
-    def start_logic(self):
+    def __init__(self, game):
+        super().__init__(game)
         self.__load_from_map()
         self.__create_sounds()
         self.__create_start_anim()

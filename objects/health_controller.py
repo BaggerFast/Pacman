@@ -31,10 +31,12 @@ class HealthLogic(IEventful):
         }
 
     @property
-    def alive(self) -> bool: return self.__cur_hp > 0
+    def alive(self) -> bool:
+        return self.__cur_hp > 0
 
     @property
-    def count(self) -> int: return self.__cur_hp
+    def count(self) -> int:
+        return self.__cur_hp
 
     def get_damage(self, amount: int) -> None:
         """
@@ -70,6 +72,8 @@ class HealthController(IDrawable, ILogical, IEventful):
         if all([not cheat, not self.hp.alive, not self.game.sounds.pacman.is_busy()]):
             event_append(EvenType.GameOver)
 
-    def process_event(self, event: pg.event.Event) -> None: self.hp.process_event(event)
+    def process_event(self, event: pg.event.Event) -> None:
+        self.hp.process_event(event)
 
-    def process_draw(self, screen: pg.Surface) -> None: self.hp_view.process_draw(screen)
+    def process_draw(self, screen: pg.Surface) -> None:
+        self.hp_view.process_draw(screen)

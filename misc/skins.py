@@ -85,12 +85,12 @@ class Skins:
         # todo delete game
         self.game = game
 
-        self.default = Skin(self.game, f'default', {0: 0, 1: 0}, SkinsNames.default)
-        self.half_life = HalfLife(self.game, f'half_life', {1: 14, 2: 10}, SkinsNames.half_life)
-        self.pokeball = PokeBall(self.game, f'pokeball', {2: 12, 3: 8}, SkinsNames.pokeball)
-        self.edge = Skin(self.game, f'edge', {3: 10, 4: 7}, SkinsNames.edge)
-        self.chrome = Skin(self.game, f'chrome', {4: 7, 5: 6}, SkinsNames.chrome)
-        self.windows = Windows(self.game, f'windows', {6: 5, 5: 4}, SkinsNames.windows)
+        self.default = Skin(self.game, 'default', {0: 0, 1: 0}, SkinsNames.default)
+        self.half_life = HalfLife(self.game, 'half_life', {1: 14, 2: 10}, SkinsNames.half_life)
+        self.pokeball = PokeBall(self.game, 'pokeball', {2: 12, 3: 8}, SkinsNames.pokeball)
+        self.edge = Skin(self.game, 'edge', {3: 10, 4: 7}, SkinsNames.edge)
+        self.chrome = Skin(self.game, 'chrome', {4: 7, 5: 6}, SkinsNames.chrome)
+        self.windows = Windows(self.game, 'windows', {6: 5, 5: 4}, SkinsNames.windows)
 
         self.__current = self.default
 

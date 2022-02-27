@@ -1,8 +1,6 @@
 from copy import copy
 from random import randint, choice
-
 import pygame as pg
-
 from misc.constants import Color
 from misc.interfaces import IDrawable
 from misc.path import get_image_path
