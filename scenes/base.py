@@ -6,6 +6,7 @@ from objects.buttons import ButtonController
 
 
 class BaseScene(IGenericObject):
+    # todo сделать регионы во всех сценах на англ
 
     def __init__(self, game):
         self.game = game

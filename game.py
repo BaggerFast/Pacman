@@ -15,6 +15,7 @@ from objects.map import rand_color, Map
 
 
 class Game:
+    # todo переменовать регион
     # region Инициализация pygame
     pg.display.init()
     pg.font.init()
@@ -200,6 +201,7 @@ class Game:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q):
             self.exit_game()
 
+    # todo переменовать регион
     # region реализация интерфейсов обьектов
     def __process_all_events(self) -> None:
         for event in pg.event.get():
