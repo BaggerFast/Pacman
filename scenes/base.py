@@ -10,13 +10,12 @@ class BaseScene(IGenericObject):
     def __init__(self, game):
         self.game = game
         self.screen: pg.Surface = self.game.screen
-        self._scene_manager = scenes.SceneManager()
         self.objects: list = []
+        self._scene_manager = scenes.SceneManager()
 
-    def configurate(self):
-        self.create_objects()
-        self.create_title()
+    # region публичные методы
 
+    # region реализация интерфейса
     def process_event(self, event: pg.event.Event) -> None:
         for obj in self.objects:
             if isinstance(obj, IEventful):
@@ -35,17 +34,11 @@ class BaseScene(IGenericObject):
                 obj.process_draw(screen)
         self.additional_draw(screen)
 
-    def create_objects(self) -> None:
-        buttons = list(self.button_init())
-        if buttons:
-            self.objects.append(ButtonController(self.game, buttons))
-
     def additional_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self._scene_manager.pop()
 
-    def create_title(self) -> None:
-        pass
+    # endregion
 
     def on_enter(self) -> None:
         pass
@@ -53,5 +46,21 @@ class BaseScene(IGenericObject):
     def on_exit(self) -> None:
         pass
 
-    def button_init(self) -> Generator:
+    # endregion
+
+    # region приватные методы
+    def _create_title(self) -> None:
+        pass
+
+    def _button_init(self) -> Generator:
         yield []
+
+    def _create_objects(self) -> None:
+        buttons = list(self._button_init())
+        if buttons:
+            self.objects.append(ButtonController(self.game, buttons))
+
+    def _configurate(self):
+        self._create_objects()
+        self._create_title()
+    # endregion

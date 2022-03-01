@@ -30,7 +30,7 @@ class MainScene(scenes.BaseScene):
         self.ghost_text_timer = pg.time.get_ticks()
         self.ghost_text_flag = False
 
-    def create_title(self) -> None:
+    def _create_title(self) -> None:
         self.objects += [*self.__get_static_text, self.__get_hud]
 
     @property
@@ -74,7 +74,7 @@ class MainScene(scenes.BaseScene):
                 yield text
         self.text = list(creator())
 
-    def create_objects(self) -> None:
+    def _create_objects(self) -> None:
         self.game.sounds.siren.unpause()
         hp_cheat = ControlCheats([Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))])
         self.text[-1].surface.set_alpha(0)
@@ -191,7 +191,7 @@ class MainScene(scenes.BaseScene):
             if self.pacman.animator != self.pacman.dead_anim:
                 self.__check_ghosts()
             if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
-                self.create_objects()
+                self._create_objects()
                 self.__seeds_eaten = 0
                 self.__max_seeds_eaten_to_prefered_ghost = 7
                 for ghost in self.ghosts:

@@ -61,7 +61,7 @@ class Map(IDrawable):
 
     def prerender_map_image_scaled(self) -> ImageObject:
         image = ImageObject(self.surface, (110, 96))
-        image.smoothscale(100, 100)
+        image.smooth_scale(100, 100)
         return image
 
     def process_draw(self, screen: pg.Surface):

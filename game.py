@@ -8,55 +8,51 @@ from misc.cheat_codes import Cheat
 from misc.constants import Color, FRUITS_COUNT
 from misc.constants.classes import Sounds
 from misc.constants.skin_names import SkinsNames
-from misc.path import bool_venv_var, get_image_path
+from misc.path import get_image_path
 from misc.skins import Skins
 from misc.sound_controller import SoundController
 from objects.map import rand_color, Map
 
 
 class Game:
-
+    # region Инициализация pygame
     pg.display.init()
     pg.font.init()
     pg.mixer.init()
+    # endregion
+
+    # region Заголовок окна и иконка приложения
+    pg.display.set_caption('PACMAN')
+    pg.display.set_icon(pg.transform.scale(pg.image.load(get_image_path('ico.png')), (256, 256)))
+    # endregion
 
     map_color = rand_color()
 
     class Cheats:
 
-        class Adapter:
-
-            def __init__(self, active):
-                self.active = active
-
-            def __call__(self, *args, **kwargs):
-                self.active = not self.active
-
-            def __bool__(self):
-                return self.active
-
         def __init__(self, game):
-            self.UNLOCK_SKINS = self.Adapter(bool_venv_var('skins'))
-            self.UNLOCK_LEVELS = self.Adapter(bool_venv_var('levels'))
-            self.INFINITY_LIVES = self.Adapter(bool_venv_var('lives'))
-            self.GHOSTS_COLLISION = self.Adapter(bool_venv_var('collision'))
+            self.UNLOCK_SKINS = False
+            self.UNLOCK_LEVELS = False
+            self.INFINITY_LIVES = False
+            self.GHOSTS_COLLISION = False
             self.game: Game = game
+            self.parse_args()
+
+        def parse_args(self):
+            vars = self.__dict__
+            for arg in sys.argv[1:]:
+                if arg.upper() in vars.keys():
+                    vars[arg.upper()] = True
 
         def unlock_skins(self):
             self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.UNLOCK_SKINS else self.game.storage.unlocked_skins
             if isinstance(self.game.scene_manager.current, scenes.SkinsScene):
-                self.game.scene_manager.current.create_objects()
+                self.game.scene_manager.current._create_objects()
 
         def unlock_levels(self):
             self.game.unlocked_levels = self.game.maps.keys() if self.game.cheats_var.UNLOCK_LEVELS else self.game.storage.unlocked_levels
             if isinstance(self.game.scene_manager.current, scenes.LevelsScene):
-                self.game.scene_manager.current.create_objects()
-
-        def update(self, key_code):
-            if hasattr(self, key_code):
-                setattr(self, key_code, not getattr(self, key_code))
-            # if key_code in self.cheat_storage:
-            #     self.cheat_storage[key_code]()
+                self.game.scene_manager.current._create_objects()
 
     class Settings:
 
@@ -153,15 +149,11 @@ class Game:
     __def_level_id = 0
     screen = pg.display.set_mode(__resolution, pg.SCALED)
 
-    pg.display.set_caption('PACMAN')
-    pg.display.set_icon(pg.transform.scale(pg.image.load(get_image_path('ico.png')), (256, 256)))
-
     def __init__(self):
         self.maps = self.Maps(self)
         self.__clock = pg.time.Clock()
         self.time_out: int = 125
         self.animate_timer: int = 0
-        self.pred: bool = False
         self.storage = Storage(self)
         self.skins = Skins(self)
         self.cheats_var = self.Cheats(self)
@@ -208,6 +200,7 @@ class Game:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q):
             self.exit_game()
 
+    # region реализация интерфейсов обьектов
     def __process_all_events(self) -> None:
         for event in pg.event.get():
             self.__cheats.process_event(event)
@@ -222,6 +215,8 @@ class Game:
         self.screen.fill(Color.BLACK)
         self.scene_manager.process_draw(self.screen)
         pg.display.flip()
+
+    # endregion
 
     def main_loop(self) -> None:
         while True:

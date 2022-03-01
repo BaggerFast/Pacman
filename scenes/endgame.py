@@ -11,20 +11,17 @@ class EndScene(scenes.BaseScene):
         super().__init__(game)
         self.score = score
 
-    def start_logic(self):
-        self.__save_record()
-        self.__unlock_level()
-
-    def create_objects(self) -> None:
-        super().create_objects()
+    # region реализация унаследованного класса
+    def _create_objects(self) -> None:
+        super()._create_objects()
         self.objects += [self.__get_score_text, self.__get_highscore_text]
 
-    def create_title(self) -> None:
+    def _create_title(self) -> None:
         text = Text('VICTORY', 40, font=Font.TITLE)
         text.move_center(self.game.width // 2, 30)
         self.objects.append(text)
 
-    def button_init(self) -> None:
+    def _button_init(self) -> None:
         yield Button(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 35),
@@ -54,6 +51,20 @@ class EndScene(scenes.BaseScene):
             colors=BUTTON_DEFAULT_COLORS
         )
 
+    def _configurate(self):
+        self.__save_record()
+        self.__unlock_level()
+
+    def on_enter(self) -> None:
+        self.game.sounds.siren.stop()
+        self.game.sounds.gameover.play()
+
+    def on_exit(self) -> None:
+        self.game.sounds.gameover.stop()
+
+    # endregion
+
+    # region приватные методы
     @property
     def __get_score_text(self) -> Text:
         text_score = Text(f'Score: {self.score}', 20)
@@ -62,7 +73,8 @@ class EndScene(scenes.BaseScene):
 
     @property
     def __get_highscore_text(self) -> Text:
-        text_highscore = Text(f'High score: {self.game.records.data[0]}'if int(self.score) <= self.game.records.data[0] else f'New record: {self.score}', 20)
+        text_highscore = Text(f'High score: {self.game.records.data[0]}' if int(self.score) <= self.game.records.data[
+            0] else f'New record: {self.score}', 20)
         text_highscore.move_center(self.game.width // 2, 165)
         return text_highscore
 
@@ -80,10 +92,4 @@ class EndScene(scenes.BaseScene):
         self.game.maps.cur_id = next_level
         self.game.records.update_records()
         self._scene_manager.reset(scenes.MainScene(self.game))
-
-    def on_enter(self) -> None:
-        self.game.sounds.siren.stop()
-        self.game.sounds.gameover.play()
-
-    def on_exit(self) -> None:
-        self.game.sounds.gameover.stop()
+    # endregion

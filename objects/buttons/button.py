@@ -89,7 +89,7 @@ class Button(BaseObject, IDrawable, IEventful):
             surfaces.append(self.prepare_surface(index))
         return surfaces
 
-    def prepare_surface(self, state_index: int) -> pg.Surface:
+    def prepare_surface(self, state_index: int) -> pg.surface.Surface:
         surface = pg.Surface(self.rect.size).convert_alpha()
         zero_rect = surface.get_rect()
 

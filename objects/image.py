@@ -26,7 +26,7 @@ class ImageObject(BaseObject, IDrawable):
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
 
-    def smoothscale(self, x, y) -> None:
+    def smooth_scale(self, x, y) -> None:
         self.image = pg.transform.smoothscale(self.image, (x, y))
         topleft = self.rect.topleft
         self.rect = self.image.get_rect()

@@ -12,10 +12,6 @@ def get_image_path(path) -> str:
     return get_path(f'assets/images/{path}')
 
 
-def bool_venv_var(venv_variable: str):
-    return os.getenv(venv_variable, "false").lower() == 'true'
-
-
 def get_list_path(path, ext) -> List[str]:
     path = get_path(path)
     pathes = [f for f in os.listdir(path) if f.endswith(f'.{ext.strip(".")}')]

@@ -9,7 +9,7 @@ from scenes.base import BaseScene
 
 class PauseScene(BaseScene):
 
-    def button_init(self) -> None:
+    def _button_init(self) -> None:
         names = [
             MenuPreset("CONTINUE", self._scene_manager.pop),
             MenuPreset("SETTINGS", lambda: self._scene_manager.append(scenes.SettingsScene(self.game))),
@@ -27,7 +27,7 @@ class PauseScene(BaseScene):
                 colors=LIGHT_BUTTON_COLORS
             )
 
-    def create_title(self) -> None:
+    def _create_title(self) -> None:
         main_text = Text('PAUSE', 40, font=Font.TITLE)
         main_text.move_center(self.game.width // 2, 35)
         self.objects.append(main_text)

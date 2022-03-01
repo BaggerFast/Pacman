@@ -15,11 +15,11 @@ class RecordsScene(scenes.BaseScene):
         self.__create_medals()
         self.__create_error_label()
 
-    def create_objects(self) -> None:
-        super().create_objects()
+    def _create_objects(self) -> None:
+        super()._create_objects()
         self.__create_text_labels()
 
-    def button_init(self) -> None:
+    def _button_init(self) -> None:
         yield Button(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
@@ -28,7 +28,7 @@ class RecordsScene(scenes.BaseScene):
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 
-    def create_title(self) -> None:
+    def _create_title(self) -> None:
         title = Text('RECORDS', 32, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)

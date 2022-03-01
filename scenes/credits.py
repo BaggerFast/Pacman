@@ -19,8 +19,8 @@ class CreditsScene(scenes.BaseScene):
         "Николайчев Павел",
     ]
 
-    def create_objects(self) -> None:
-        super().create_objects()
+    def _create_objects(self) -> None:
+        super()._create_objects()
         self.__on_screen = 0
         self.start_pos = -30
         self.__speed = 0.3
@@ -28,7 +28,7 @@ class CreditsScene(scenes.BaseScene):
         self.__students = []
         self.__students2 = self.__data.copy()
 
-    def button_init(self) -> None:
+    def _button_init(self) -> None:
         yield Button(
             game=self.game,
             rect=pg.Rect(0, 0, 100, 35),

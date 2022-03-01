@@ -17,4 +17,4 @@ class BuyButton(Button):
         for key in self.value.skin_cost.keys():
             self.game.store_fruit(key, -self.value.skin_cost[key])
         self.game.unlock_skin(self.value.name)
-        self.game.scenes.current.create_objects()
+        self.game.scenes.current._create_objects()

@@ -1,5 +1,4 @@
 import pygame as pg
-
 from misc.interfaces import ILogical, IEventful
 
 
@@ -45,7 +44,6 @@ class ControlCheats(ILogical, IEventful):
         self.__complete_cheat()
         self.__update_enter_code()
 
-    def process_event(self, event) -> None:
+    def process_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key in range(pg.K_a, pg.K_z + 1):
             self.enter_code += chr(event.key)
-

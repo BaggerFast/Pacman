@@ -12,17 +12,17 @@ class GameOverScene(scenes.BaseScene):
         super().__init__(game)
         self.score = score
 
-    def create_objects(self) -> None:
-        super().create_objects()
+    def _create_objects(self) -> None:
+        super()._create_objects()
         self.objects += [self.__get_score_text, self.__get_highscore_text]
 
-    def create_title(self) -> None:
+    def _create_title(self) -> None:
         for i, text in enumerate(['GAME', 'OVER']):
             text = Text(text, 40, font=Font.TITLE)
             text.move_center(self.game.width // 2, 30 + i * 40)
             self.objects.append(text)
 
-    def button_init(self) -> None:
+    def _button_init(self) -> None:
         names = {
             MenuPreset("RESTART", lambda: self._scene_manager.reset(scenes.MainScene(self.game))),
             MenuPreset("MENU", lambda: self._scene_manager.reset(scenes.MenuScene(self.game))),

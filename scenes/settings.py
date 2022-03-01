@@ -1,5 +1,4 @@
 import pygame as pg
-
 import scenes
 from misc.constants import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS, Font
 from objects import Text
@@ -11,8 +10,8 @@ class SettingsScene(scenes.BaseScene):
     __volume_position = 150
     __difficulty_pos = 210
 
-    def create_objects(self) -> None:
-        super().create_objects()
+    def _create_objects(self) -> None:
+        super()._create_objects()
         volume_text = Text("VOLUME", 20)
         volume_text.move_center(self.game.width // 2, self.__volume_position)
 
@@ -27,7 +26,7 @@ class SettingsScene(scenes.BaseScene):
         text.move_center(self.game.width // 2, 30)
         return text
 
-    def button_init(self) -> None:
+    def _button_init(self) -> None:
         yield SettingButton(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 35),

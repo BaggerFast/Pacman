@@ -13,7 +13,6 @@ class SkinsScene(scenes.BaseScene):
 
     def __init__(self, game):
         super().__init__(game)
-
         self.skins = {
             SkinsNames.default: self.game.skins.default,
             SkinsNames.edge: self.game.skins.edge,
@@ -24,7 +23,7 @@ class SkinsScene(scenes.BaseScene):
         }
         self.fruit_images: list[str] = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
 
-    def create_objects(self) -> None:
+    def _create_objects(self) -> None:
         self.preview = copy(self.game.skins.current.image)
         self.objects.append(self.preview)
         self.create_buttons()
@@ -38,6 +37,7 @@ class SkinsScene(scenes.BaseScene):
                 text = Text(str(self.game.eaten_fruits[i]), 10)
                 text.move_center(self.game.width // 8 - 10 + i * 25, 60)
                 yield text
+
         self.objects += list(creator())
 
     def create_fruits_and_text_for_skins(self) -> None:
@@ -62,22 +62,22 @@ class SkinsScene(scenes.BaseScene):
         pos_regarding_buttons_y = self.button_pos_y - 6
         self.objects += list(creator())
 
-    def create_title(self) -> None:
+    def _create_title(self) -> None:
         title = Text('SELECT SKIN', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
 
-    def button_init(self):
+    def _button_init(self):
         for i, (skin_name, skin) in enumerate(self.skins.items()):
             if skin.is_unlocked:
                 yield SkinButton(
-                        game=self.game,
-                        rect=pg.Rect(0, 0, 90, 25),
-                        text=skin_name,
-                        value=skin,
-                        center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
-                        text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                        active=skin.name in self.game.unlocked_skins
+                    game=self.game,
+                    rect=pg.Rect(0, 0, 90, 25),
+                    text=skin_name,
+                    value=skin,
+                    center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
+                    text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
+                    active=skin.name in self.game.unlocked_skins
                 )
             else:
                 yield BuyButton(
@@ -101,7 +101,7 @@ class SkinsScene(scenes.BaseScene):
         self.button_pos_x = self.game.width // 2 - 65
         self.button_pos_y = 90
         self.button_pos_multiply_y = 25
-        button_controller = ButtonController(self.game, list(self.button_init()))
+        button_controller = ButtonController(self.game, list(self._button_init()))
         # for button in button_controller.buttons:
         #     if not type(button) in [SkinButton, BuyButton]:
         #         return

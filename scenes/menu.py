@@ -19,7 +19,7 @@ class MenuScene(scenes.BaseScene):
         self.change_color()
         self.blur_preview()
 
-    def create_objects(self) -> None:
+    def _create_objects(self) -> None:
         image = ImageObject(self.preview, (0, 0))
 
         ver = Text(VERSION, 8, font=Font.TITLE)
@@ -27,9 +27,9 @@ class MenuScene(scenes.BaseScene):
 
         self.objects += [image, ver, self.__level_indicator]
 
-        super().create_objects()
+        super()._create_objects()
 
-    def create_title(self) -> None:
+    def _create_title(self) -> None:
         title = Text('PACMAN', 36, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
 
@@ -56,7 +56,7 @@ class MenuScene(scenes.BaseScene):
             filter(ImageFilter.GaussianBlur(radius=blur_count))
         self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
-    def button_init(self):
+    def _button_init(self):
         names = [
             MenuPreset("PLAY", lambda: self._scene_manager.reset(scenes.MainScene(self.game))),
             MenuPreset("LEVELS", lambda: self._scene_manager.append(scenes.LevelsScene(self.game))),

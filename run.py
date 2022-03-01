@@ -1,8 +1,7 @@
 import traceback
 from datetime import datetime
-
-from game import Game
 from misc.constants import DEBUG
+from game import Game
 
 
 def main():
