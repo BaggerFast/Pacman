@@ -63,9 +63,9 @@ class LevelsScene(scenes.BaseScene):
         if event.type == pg.MOUSEWHEEL:
             self.update_scroll(-event.y)
             self.objects.clear()
-            self._configurate()
+            self.configurate()
         elif event.type == pg.KEYDOWN and event.key in actions.keys():
             actions[event.key]()
             self.objects.clear()
-            self._configurate()
+            self.configurate()
         super().additional_event(event)

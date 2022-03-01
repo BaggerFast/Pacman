@@ -51,7 +51,7 @@ class EndScene(scenes.BaseScene):
             colors=BUTTON_DEFAULT_COLORS
         )
 
-    def _configurate(self):
+    def configurate(self):
         self.__save_record()
         self.__unlock_level()
 

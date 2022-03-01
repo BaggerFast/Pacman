@@ -42,7 +42,7 @@ class SkinsScene(scenes.BaseScene):
 
     def create_fruits_and_text_for_skins(self) -> None:
         def creator():
-            for index, (skin_name, skin) in enumerate(self.skins.items()):
+            for index, skin in enumerate(self.skins.keys()):
                 multiply_x = 0
                 if skin.is_unlocked:
                     continue

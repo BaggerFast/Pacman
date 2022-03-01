@@ -6,10 +6,13 @@ from misc.interfaces import ILogical, IDrawable, IEventful
 class IGenericObject(IDrawable, ILogical, IEventful, ABC):
 
     @abstractmethod
-    def process_event(self, event: pg.event.Event) -> None: pass
+    def process_event(self, event: pg.event.Event) -> None:
+        pass
 
     @abstractmethod
-    def process_logic(self) -> None: pass
+    def process_logic(self) -> None:
+        pass
 
     @abstractmethod
-    def process_draw(self, screen: pg.Surface) -> None: pass
+    def process_draw(self, screen: pg.Surface) -> None:
+        pass
