@@ -2,6 +2,7 @@ from objects.buttons import Button
 
 
 class BuyButton(Button):
+
     def __init__(self, **args):
         self.value = args.pop("value")
         super().__init__(**args)

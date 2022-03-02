@@ -31,6 +31,25 @@ class Character(BaseObject, ILogical, IDrawable, ABC):
         self.speed: int = 0
         self.rotate: int = 0
 
+    # region Public
+
+    # region Implementation of IDrawable, ILogical
+
+    def process_logic(self) -> None:
+        self.step()
+
+    def process_draw(self, screen: pg.Surface) -> None:
+        for i in range(-1, 2):
+            if self.animator.current_aura:
+                screen.blit(self.animator.current_aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
+                                                                   self.rect.centery - self.__aura.get_rect().height // 2))
+            elif self.__aura:
+                screen.blit(self.__aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
+                                                    self.rect.centery - self.__aura.get_rect().height // 2))
+            screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
+
+    # endregion
+
     def step(self) -> None:
         self.rect.centerx = (self.rect.centerx + self.shift_x * self.speed + self.game.width) % self.game.width
         self.rect.centery = (self.rect.centery + self.shift_y * self.speed + self.game.height) % self.game.height
@@ -51,19 +70,6 @@ class Character(BaseObject, ILogical, IDrawable, ABC):
         self.rotate = rotate
         if isinstance(self.animator, SpriteSheetAnimator):
             self.animator.rotate = rotate
-
-    def process_logic(self) -> None:
-        self.step()
-
-    def process_draw(self, screen: pg.Surface) -> None:
-        for i in range(-1, 2):
-            if self.animator.current_aura:
-                screen.blit(self.animator.current_aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
-                                                                   self.rect.centery - self.__aura.get_rect().height // 2))
-            elif self.__aura:
-                screen.blit(self.__aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
-                                                    self.rect.centery - self.__aura.get_rect().height // 2))
-            screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
 
     def movement_cell(self, cell: Tuple[int, int]) -> list:
         scene = self.game.current_scene
@@ -89,3 +95,5 @@ class Character(BaseObject, ILogical, IDrawable, ABC):
     @staticmethod
     def pos_from_cell(cell: Tuple[int, int]) -> Tuple[int, int]:
         return cell[0] * CELL_SIZE + CELL_SIZE // 2, cell[1] * CELL_SIZE + 20 + CELL_SIZE // 2
+
+    # endregion

@@ -12,12 +12,18 @@ class Blinky(Base):
         self.mode = GhostState.scatter
         self.set_direction('left')
 
+    # region Public
+
+    # region Implementation of parent class
+
     def process_logic(self) -> None:
         self.is_in_home = False
         if not self.is_invisible:
             super().process_logic()
             self.collision = True
             self.go()
+
+    # endregion
 
     def ghosts_ai(self) -> None:
         super().ghosts_ai()
@@ -43,3 +49,5 @@ class Blinky(Base):
         }
         if difficult in data:
             self.set_power(*data[difficult])
+
+    # endregion

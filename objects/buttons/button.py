@@ -28,6 +28,24 @@ class Button(BaseObject, IDrawable, IEventful):
         if center:
             self.move_center(*center)
 
+    # region Public
+
+    # region Implementation of IDrawable, IEventful
+
+    def process_event(self, event: pg.event.Event) -> None:
+        if not self.active:
+            return
+        self.process_mouse_motion(event)
+        self.process_mouse_button_down(event)
+        self.process_mouse_button_up(event)
+        self.process_mouse_click(event)
+
+    def process_draw(self, screen: pg.Surface) -> None:
+        if not self.is_hidden:
+            screen.blit(self.surfaces[self.state], self.rect.topleft)
+
+    # endregion
+
     def mouse_hover(self, pos: Tuple[Union[int, float], Union[int, float]]) -> bool:
         return bool(self.rect.collidepoint(pos)) and self.active
 
@@ -56,14 +74,6 @@ class Button(BaseObject, IDrawable, IEventful):
         if event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
             if self.rect.collidepoint(event.pos):
                 self.click()
-
-    def process_event(self, event: pg.event.Event) -> None:
-        if not self.active:
-            return
-        self.process_mouse_motion(event)
-        self.process_mouse_button_down(event)
-        self.process_mouse_button_up(event)
-        self.process_mouse_click(event)
 
     @property
     def colors(self):
@@ -102,10 +112,6 @@ class Button(BaseObject, IDrawable, IEventful):
 
         return surface
 
-    def process_draw(self, screen: pg.Surface) -> None:
-        if not self.is_hidden:
-            screen.blit(self.surfaces[self.state], self.rect.topleft)
-
     def select(self) -> None:
         self.state = self.STATE_HOVER
 
@@ -118,3 +124,5 @@ class Button(BaseObject, IDrawable, IEventful):
     def click(self) -> None:
         self.game.sounds.click.play()
         self.function()
+
+    # endregion

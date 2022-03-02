@@ -27,30 +27,15 @@ class Pacman(Character, IEventful):
         self.kb = PacmanKeyboard()
         self.__feature_rotate = (0, 0, 0)
 
-    @property
-    def dead_anim(self):
-        return self.__dead_anim
+    # region Public
+
+    # region Implementation of parent classes
 
     def process_event(self, event: pg.event.Event) -> None:
         self.hp.process_event(event)
         if event.type in self.dir_action.keys() and not self.dead:
             self.go()
             self.__feature_rotate = self.dir_action[event.type]
-
-    def process_draw(self, screen: pg.Surface) -> None:
-        Character.process_draw(self, screen)
-        self.hp.process_draw(screen)
-
-    def get_rect(self):
-        return self.animator.current_image.get_rect()
-
-    def set_dir(self):
-        self.shift_x, self.shift_y, rotate = self.__feature_rotate
-        if self.rotate == rotate:
-            return
-        self.rotate = rotate
-        if isinstance(self.animator, SpriteSheetAnimator):
-            self.animator.rotate = rotate
 
     def process_logic(self) -> None:
         self.kb.process_logic()
@@ -68,6 +53,27 @@ class Pacman(Character, IEventful):
                 self.set_dir()
         Character.process_logic(self)
 
+    def process_draw(self, screen: pg.Surface) -> None:
+        Character.process_draw(self, screen)
+        self.hp.process_draw(screen)
+
+    # endregion
+
+    @property
+    def dead_anim(self):
+        return self.__dead_anim
+
+    def get_rect(self):
+        return self.animator.current_image.get_rect()
+
+    def set_dir(self):
+        self.shift_x, self.shift_y, rotate = self.__feature_rotate
+        if self.rotate == rotate:
+            return
+        self.rotate = rotate
+        if isinstance(self.animator, SpriteSheetAnimator):
+            self.animator.rotate = rotate
+
     def death(self) -> None:
         self.game.sounds.siren.pause()
         self.game.sounds.pellet.stop()
@@ -77,3 +83,5 @@ class Pacman(Character, IEventful):
         self.animator.start()
 
         self.dead = True
+
+    # endregion
