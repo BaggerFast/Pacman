@@ -8,12 +8,17 @@ from misc.interfaces.igeneric_object import IEventful, ILogical
 
 
 class BaseKeyboard(IEventful, ILogical, ABC):
+
     @dataclasses.dataclass
     class KeyControl:
         keys: list
         event: int
 
     keys_control = []
+
+    # region Public
+
+    # region Implementation of ILogical, IEventful
 
     def process_event(self, event: pg.event) -> None:
         if event.type != pg.KEYDOWN:
@@ -30,3 +35,7 @@ class BaseKeyboard(IEventful, ILogical, ABC):
                 if pressed_keys[key]:
                     event_append(kb.event)
                     return
+
+    # endregion
+
+    # endregion

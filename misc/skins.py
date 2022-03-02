@@ -25,6 +25,8 @@ class Skin:
                                time_out=125, repeat=False)
         self.__image = self.prerender_surface()
 
+    # region Public
+
     @property
     def is_unlocked(self):
         return self.name in self.game.unlocked_skins
@@ -48,6 +50,8 @@ class Skin:
 
     def sound_preset(self):
         pass
+
+    # endregion
 
 
 class HalfLife(Skin):
@@ -94,6 +98,8 @@ class Skins:
 
         self.__current = self.default
 
+    # region Public
+
     def prerender_surfaces(self) -> Dict[str, pg.Surface]:
         return {key: self.__dict__[key].image for key in self.all_skins}
 
@@ -111,3 +117,5 @@ class Skins:
             self.__current = self.__dict__[value]
         elif isinstance(value, Skin):
             self.__current = value
+
+    # endregion

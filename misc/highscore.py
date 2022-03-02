@@ -12,6 +12,8 @@ class HighScore:
             self.highscores.append([0] * HIGHSCORES_COUNT)
         self.__data = sorted(self.highscores[self.__level_id])
 
+    # region Public
+
     @property
     def highscores(self) -> List[List[int]]:
         return self.game.highscores
@@ -37,3 +39,5 @@ class HighScore:
     def update_records(self) -> None:
         self.__level_id = self.game.maps.cur_id
         self.__data = sorted(self.highscores[self.__level_id])
+
+    # endregion

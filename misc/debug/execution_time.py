@@ -2,6 +2,7 @@ import time
 
 
 def check_execution_time(func):
+
     def wrapped(*args, **kwargs):
         start_time = time.monotonic()
         data = func(*args, **kwargs)

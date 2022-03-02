@@ -5,11 +5,13 @@ from misc.constants.classes import Color
 
 
 class ButtonStateColor(NamedTuple):
+
     text: pg.Color
     background: pg.Color
 
 
 class ButtonColor(NamedTuple):
+
     static: ButtonStateColor
     hover: ButtonStateColor
     click: ButtonStateColor
