@@ -1,9 +1,11 @@
 import pygame as pg
 from meta_classes import SingletonMeta
+from misc.interfaces import IGenericObject
 from scenes.base import BaseScene
 
 
-class SceneManager(metaclass=SingletonMeta):
+class SceneManager(IGenericObject):
+    __metaclass__ = SingletonMeta
 
     def __init__(self):
         self.scenes: list[BaseScene] = []
