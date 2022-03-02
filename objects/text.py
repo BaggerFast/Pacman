@@ -19,6 +19,13 @@ class Text(BaseObject, IDrawable):
         self.text = text
         self.surface: pg.Surface
 
+    # region Implementation of IDrawable
+
+    def process_draw(self, screen) -> None:
+        screen.blit(self.surface, self.rect)
+
+    # endregion
+
     @property
     def pos(self):
         return self.__pos
@@ -47,6 +54,3 @@ class Text(BaseObject, IDrawable):
     @pos.setter
     def pos(self, pos: Tuple[int, int]):
         self.__pos = pos
-
-    def process_draw(self, screen) -> None:
-        screen.blit(self.surface, self.rect)

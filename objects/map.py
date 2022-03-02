@@ -8,6 +8,7 @@ from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
 
 
+# todo move rand_color
 def rand_color():
     max_states = 7
     min_val = 200
@@ -37,6 +38,15 @@ class Map(IDrawable):
         self.surface = self.load_surface()
         self.surface_for_draw = self.surface_recolor()
 
+    # region Public
+
+    # region Implementation of IDrawable
+
+    def process_draw(self, screen: pg.Surface):
+        screen.blit(self.surface_for_draw, (0, 20))
+
+    # endregion
+
     def surface_recolor(self):
         srf = copy(self.surface)
         for x in range(srf.get_width()):
@@ -64,5 +74,4 @@ class Map(IDrawable):
         image.smooth_scale(100, 100)
         return image
 
-    def process_draw(self, screen: pg.Surface):
-        screen.blit(self.surface_for_draw, (0, 20))
+    # endregion

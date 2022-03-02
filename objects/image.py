@@ -13,6 +13,16 @@ class ImageObject(BaseObject, IDrawable):
         self.rect = self.image.get_rect()
         self.rect.topleft = pos
 
+    # region Public
+
+    # region Implementation of IDrawable
+
+    def process_draw(self, screen: pg.Surface) -> None:
+        if not self.is_hidden:
+            screen.blit(self.image, self.rect)
+
+    # endregion
+
     @staticmethod
     def parse_image(image):
         if isinstance(image, str):
@@ -38,6 +48,4 @@ class ImageObject(BaseObject, IDrawable):
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
 
-    def process_draw(self, screen: pg.Surface) -> None:
-        if not self.is_hidden:
-            screen.blit(self.image, self.rect)
+    # endregion
