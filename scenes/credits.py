@@ -23,7 +23,31 @@ class CreditsScene(scenes.BaseScene):
 
     # region Public
 
-    # region Realization of methods
+    # region Implementation of IGenericObject
+
+    def additional_logic(self) -> None:
+        if self.__students2:
+            self.__students2 = self.__data.copy()
+        elif len(self.__students) == len(self.__students2) and not self.__on_screen:
+            self.__students.clear()
+        elif pg.time.get_ticks() // 2 % 100 == 0 and not len(self.__students) == len(self.__students2):
+            self.__create_student()
+        if not self.game.sounds.credits.is_busy():
+            self.game.sounds.reload_sounds()
+            self.game.sounds.credits.play()
+        self.__process_students()
+
+    # endregion
+
+    def on_exit(self) -> None:
+        self.game.sounds.credits.stop()
+
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
+
     def _create_objects(self) -> None:
         super()._create_objects()
         self.__on_screen = 0
@@ -49,24 +73,8 @@ class CreditsScene(scenes.BaseScene):
                      center=(self.game.width // 4 + 110, 250),
                      text_size=Font.BUTTON_TEXT_SIZE)
 
-    def additional_logic(self) -> None:
-        if self.__students2:
-            self.__students2 = self.__data.copy()
-        elif len(self.__students) == len(self.__students2) and not self.__on_screen:
-            self.__students.clear()
-        elif pg.time.get_ticks() // 2 % 100 == 0 and not len(self.__students) == len(self.__students2):
-            self.__create_student()
-        if not self.game.sounds.credits.is_busy():
-            self.game.sounds.reload_sounds()
-            self.game.sounds.credits.play()
-        self.__process_students()
     # endregion
 
-    def on_exit(self) -> None:
-        self.game.sounds.credits.stop()
-    # endregion
-
-    # region Private
     def __get_random_student_y(self) -> int:
         return randint(25, self.game.height - 75)
 
@@ -118,4 +126,5 @@ class CreditsScene(scenes.BaseScene):
     def __skip_sound(self):
         self.game.sounds.reload_sounds()
         self.game.sounds.credits.play()
+
     # endregion

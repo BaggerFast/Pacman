@@ -17,7 +17,42 @@ class LevelsScene(scenes.BaseScene):
 
     # region Public
 
-    # region Realization of methods
+    # region Implementation of IGenericObject
+
+    def additional_event(self, event: pg.event.Event) -> None:
+        actions = {
+            pg.K_e: lambda: self.update_scroll(1),
+            pg.K_q: lambda: self.update_scroll(-1),
+        }
+        if event.type == pg.MOUSEWHEEL:
+            self.update_scroll(-event.y)
+            self.objects.clear()
+            self.configurate()
+        elif event.type == pg.KEYDOWN and event.key in actions.keys():
+            actions[event.key]()
+            self.objects.clear()
+            self.configurate()
+        super().additional_event(event)
+
+    # endregion
+
+    def update_scroll(self, index: int) -> None:
+        self.__scroll = min(self.__scroll + index, len(self.game.maps) - self.__buttons_on_scene)
+        self.__scroll = max(self.__scroll, 0)
+
+    def create_buttons(self) -> None:
+        buttons = list(self._button_init())
+        for button in buttons:
+            if hasattr(button, "value") and self.game.maps.cur_id == button.value[0]:
+                button.text = '-' + button.text + '-'
+        self.objects.append(ButtonController(self.game, buttons))
+
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
+
     def _create_title(self) -> None:
         title = Text('SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
@@ -43,37 +78,11 @@ class LevelsScene(scenes.BaseScene):
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 
-    def additional_event(self, event: pg.event.Event) -> None:
-        actions = {
-            pg.K_e: lambda: self.update_scroll(1),
-            pg.K_q: lambda: self.update_scroll(-1),
-        }
-        if event.type == pg.MOUSEWHEEL:
-            self.update_scroll(-event.y)
-            self.objects.clear()
-            self.configurate()
-        elif event.type == pg.KEYDOWN and event.key in actions.keys():
-            actions[event.key]()
-            self.objects.clear()
-            self.configurate()
-        super().additional_event(event)
     # endregion
 
-    def update_scroll(self, index: int) -> None:
-        self.__scroll = min(self.__scroll + index, len(self.game.maps) - self.__buttons_on_scene)
-        self.__scroll = max(self.__scroll, 0)
-
-    def create_buttons(self) -> None:
-        buttons = list(self._button_init())
-        for button in buttons:
-            if hasattr(button, "value") and self.game.maps.cur_id == button.value[0]:
-                button.text = '-' + button.text + '-'
-        self.objects.append(ButtonController(self.game, buttons))
-    # endregion
-
-    # region Private
     def _create_objects(self) -> None:
         self.preview = copy(self.game.maps.images[self.game.maps.cur_id])
         self.objects.append(self.preview)
         self.create_buttons()
+
     # endregion

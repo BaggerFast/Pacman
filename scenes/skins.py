@@ -26,50 +26,6 @@ class SkinsScene(scenes.BaseScene):
 
     # region Public
 
-    # region Realization of methods
-    def _create_objects(self) -> None:
-        self.preview = copy(self.game.skins.current.image)
-        self.objects.append(self.preview)
-        self.create_buttons()
-        self.create_fruits_and_text_we_have()
-        self.create_fruits_and_text_for_skins()
-
-    def _create_title(self) -> None:
-        title = Text('SELECT SKIN', 25, font=Font.TITLE)
-        title.move_center(self.game.width // 2, 30)
-        self.objects.append(title)
-
-    def _button_init(self):
-        for i, (skin_name, skin) in enumerate(self.skins.items()):
-            if skin.is_unlocked:
-                yield SkinButton(
-                    game=self.game,
-                    rect=pg.Rect(0, 0, 90, 25),
-                    text=skin_name,
-                    value=skin,
-                    center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
-                    text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                    active=skin.name in self.game.unlocked_skins
-                )
-            else:
-                yield BuyButton(
-                    game=self.game,
-                    rect=pg.Rect(0, 0, 90, 25),
-                    text=skin_name,
-                    value=skin,
-                    center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
-                    text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                    colors=BUTTON_SKIN_BUY
-                )
-        yield Button(
-            game=self.game,
-            rect=pg.Rect(0, 0, 180, 40),
-            text='MENU',
-            function=self._scene_manager.pop,
-            center=(self.game.width // 2, 250),
-            text_size=Font.BUTTON_TEXT_SIZE)
-    # endregion
-
     def create_buttons(self) -> None:
         self.button_pos_x = self.game.width // 2 - 65
         self.button_pos_y = 90
@@ -116,4 +72,54 @@ class SkinsScene(scenes.BaseScene):
         pos_regarding_buttons_x = self.button_pos_x + 45
         pos_regarding_buttons_y = self.button_pos_y - 6
         self.objects += list(creator())
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
+
+    def _create_objects(self) -> None:
+        self.preview = copy(self.game.skins.current.image)
+        self.objects.append(self.preview)
+        self.create_buttons()
+        self.create_fruits_and_text_we_have()
+        self.create_fruits_and_text_for_skins()
+
+    def _create_title(self) -> None:
+        title = Text('SELECT SKIN', 25, font=Font.TITLE)
+        title.move_center(self.game.width // 2, 30)
+        self.objects.append(title)
+
+    def _button_init(self):
+        for i, (skin_name, skin) in enumerate(self.skins.items()):
+            if skin.is_unlocked:
+                yield SkinButton(
+                    game=self.game,
+                    rect=pg.Rect(0, 0, 90, 25),
+                    text=skin_name,
+                    value=skin,
+                    center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
+                    text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
+                    active=skin.name in self.game.unlocked_skins
+                )
+            else:
+                yield BuyButton(
+                    game=self.game,
+                    rect=pg.Rect(0, 0, 90, 25),
+                    text=skin_name,
+                    value=skin,
+                    center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
+                    text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
+                    colors=BUTTON_SKIN_BUY
+                )
+        yield Button(
+            game=self.game,
+            rect=pg.Rect(0, 0, 180, 40),
+            text='MENU',
+            function=self._scene_manager.pop,
+            center=(self.game.width // 2, 250),
+            text_size=Font.BUTTON_TEXT_SIZE)
+
+    # endregion
+
     # endregion

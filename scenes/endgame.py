@@ -13,8 +13,21 @@ class EndScene(scenes.BaseScene):
         self.score = score
 
     # region Public
+    def configurate(self):
+        self.__save_record()
+        self.__unlock_level()
 
-    # region Realization of methods
+    def on_enter(self) -> None:
+        self.game.sounds.siren.stop()
+        self.game.sounds.gameover.play()
+
+    def on_exit(self) -> None:
+        self.game.sounds.gameover.stop()
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
     def _create_objects(self) -> None:
         super()._create_objects()
         self.objects += [self.__get_score_text, self.__get_highscore_text]
@@ -55,19 +68,6 @@ class EndScene(scenes.BaseScene):
         )
     # endregion
 
-    def configurate(self):
-        self.__save_record()
-        self.__unlock_level()
-
-    def on_enter(self) -> None:
-        self.game.sounds.siren.stop()
-        self.game.sounds.gameover.play()
-
-    def on_exit(self) -> None:
-        self.game.sounds.gameover.stop()
-    # endregion
-
-    # region Private
     @property
     def __get_score_text(self) -> Text:
         text_score = Text(f'Score: {self.score}', 20)

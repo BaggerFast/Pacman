@@ -33,18 +33,7 @@ class MainScene(scenes.BaseScene):
 
     # region Public
 
-    # region Realization of methods
-    def _create_title(self) -> None:
-        self.objects += [*self.__get_static_text, self.__get_hud]
-
-    def _create_objects(self) -> None:
-        self.game.sounds.siren.unpause()
-        hp_cheat = ControlCheats([Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))])
-        self.text[-1].surface.set_alpha(0)
-        self.pacman = Pacman(self.game, self.__player_position)
-        self.objects += [hp_cheat, self.__map, self.__seeds, self.fruit, self.pacman, self.score]
-        self.__create_ghost()
-        self.on_reset()
+    # region Implementation of IGenericObject
 
     def process_logic(self) -> None:
         if not self.game.sounds.intro.is_busy():
@@ -91,6 +80,7 @@ class MainScene(scenes.BaseScene):
             self._scene_manager.append(scenes.PauseScene(self.game))
         elif event.type in data:
             data[event.type]()
+
     # endregion
 
     def select_ghost_go(self):
@@ -119,6 +109,23 @@ class MainScene(scenes.BaseScene):
     # endregion
 
     # region Private
+
+    # region Implementation of BaseScene
+
+    def _create_title(self) -> None:
+        self.objects += [*self.__get_static_text, self.__get_hud]
+
+    def _create_objects(self) -> None:
+        self.game.sounds.siren.unpause()
+        hp_cheat = ControlCheats([Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))])
+        self.text[-1].surface.set_alpha(0)
+        self.pacman = Pacman(self.game, self.__player_position)
+        self.objects += [hp_cheat, self.__map, self.__seeds, self.fruit, self.pacman, self.score]
+        self.__create_ghost()
+        self.on_reset()
+
+    # endregion
+
     @property
     def __get_static_text(self):
         scores_label_text = Text(f'{"MEMORY" if self.game.skins.current.name == SkinsNames.chrome else "SCORE"}',
@@ -228,4 +235,5 @@ class MainScene(scenes.BaseScene):
             return
         self.game.sounds.siren.unpause()
         self.game.sounds.pellet.stop()
+
     # endregion

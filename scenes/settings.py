@@ -12,7 +12,18 @@ class SettingsScene(scenes.BaseScene):
 
     # region Public
 
-    # region Realization of methods
+    @property
+    def title(self) -> Text:
+        text = Text("SETTINGS", 30, font=Font.TITLE)
+        text.move_center(self.game.width // 2, 30)
+        return text
+
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
+
     def _create_objects(self) -> None:
         super()._create_objects()
         volume_text = Text("VOLUME", 20)
@@ -78,11 +89,7 @@ class SettingsScene(scenes.BaseScene):
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE
         )
+
     # endregion
 
-    @property
-    def title(self) -> Text:
-        text = Text("SETTINGS", 30, font=Font.TITLE)
-        text.move_center(self.game.width // 2, 30)
-        return text
     # endregion

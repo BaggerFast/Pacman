@@ -16,7 +16,7 @@ class BaseScene(IGenericObject):
 
     # region Public
 
-    # region Realization of methods
+    # region Implementation of IGenericObject
     def process_event(self, event: pg.event.Event) -> None:
         for obj in self.objects:
             if isinstance(obj, IEventful):
