@@ -1,81 +1,77 @@
-import pygame as pg
-from typing import NamedTuple, List
+from typing import NamedTuple, Callable
 
+import pygame as pg
+
+from meta_classes import SingletonMeta
 from misc.path import get_path, get_list_path
 
 
-class Sounds:
+def load_sound(name: str):
+    return pg.mixer.Sound(get_path(f'assets/sounds/{name}'))
+
+
+def load_list_sounds(name: str):
+    return [pg.mixer.Sound(path) for path in get_list_path(f'assets/sounds/{name}', ext='ogg')]
+
+
+class Sounds(metaclass=SingletonMeta):
     pg.mixer.init()
-    __loading_text: str = ''
-    __game = None
-    __counter = 0
-    __count = 32
-    CLICK: pg.mixer.Sound = None
-    SEED: pg.mixer.Sound = None
-    SEED_FUN: pg.mixer.Sound = None
-    FRUIT: pg.mixer.Sound = None
-    GHOST: pg.mixer.Sound = None
-    POC_INTRO: pg.mixer.Sound = None
-    INTERMISSION: pg.mixer.Sound = None
-    PELLET: pg.mixer.Sound = None
-    CHEAT: pg.mixer.Sound = None
-    DEAD: List[pg.mixer.Sound] = []
-    GAMEOVER: List[pg.mixer.Sound] = []
-    INTRO: List[pg.mixer.Sound] = []
-    SIREN: List[pg.mixer.Sound] = []
-    CREDITS: List[pg.mixer.Sound] = []
-    # valve
-    VALVE_SOUNDS: List[pg.mixer.Sound] = []
-    # windows
-    WINDOWS_SOUNDS: List[pg.mixer.Sound] = []
 
-    @staticmethod
-    def load_sounds(loading_text, game):
-        Sounds.__game = game
-        Sounds.__loading_text = loading_text
-        Sounds.CLICK = pg.mixer.Sound(get_path('navigation', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.SEED = pg.mixer.Sound(get_path('munch', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.SEED_FUN = pg.mixer.Sound(get_path('leader', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.FRUIT = pg.mixer.Sound(get_path('eat_fruit', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.GHOST = pg.mixer.Sound(get_path('eat_ghost', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.POC_INTRO = pg.mixer.Sound(get_path("pokemon_intro", 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.INTERMISSION = pg.mixer.Sound(get_path('intermission', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.PELLET = pg.mixer.Sound(get_path('power_pellet', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.CHEAT = pg.mixer.Sound(get_path('cheat', 'ogg', 'sounds'))
-        Sounds.loading()
-        Sounds.DEAD = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'death')]
-        Sounds.loading()
-        Sounds.GAMEOVER = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'gameover')]
-        Sounds.loading()
-        Sounds.INTRO = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'intro')]
-        Sounds.loading()
-        Sounds.SIREN = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'siren')]
-        Sounds.loading()
-        for path in get_list_path('ogg', 'sounds', 'credits'):
-            Sounds.loading()
-            Sounds.CREDITS.append(pg.mixer.Sound(path))
-        Sounds.loading()
-        # valve
-        Sounds.VALVE_SOUNDS = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'valve_skin')]
-        Sounds.loading()
-        # windows
-        Sounds.WINDOWS_SOUNDS = [pg.mixer.Sound(path) for path in get_list_path('ogg', 'sounds', 'windows_skin')]
+    class Ch:
+        # todo fix channels
+        pacman = 1
+        intro = 2
+        game_over = menu = 3
+        siren = 4
+        eatable = 5
+        pellet = 6
 
-    @staticmethod
-    def loading():
-        pg.event.get()
-        Sounds.__counter += 1
-        Sounds.__loading_text = f"Loading {int((Sounds.__counter / Sounds.__count) * 100)}%"
-        Sounds.__game.screen.fill(Color.BLACK)
-        Sounds.__game.draw_load_img(Sounds.__loading_text)
+    CLICK = load_sound('navigation.ogg')
+    SEED = load_sound('munch.ogg')
+    SEED_FUN = load_sound('leader.ogg')
+    FRUIT = load_sound('eat_fruit.ogg')
+    GHOST = load_sound('eat_ghost.ogg')
+    POC_INTRO = load_sound('pokemon_intro.ogg')
+    INTERMISSION = load_sound('intermission.ogg')
+    PELLET = load_sound('power_pellet.ogg')
+    CHEAT = load_sound('cheat.ogg')
+    DEAD = load_list_sounds('death')
+    GAMEOVER = load_list_sounds('gameover')
+    INTRO = load_list_sounds("intro")
+    SIREN = load_list_sounds("siren")
+    CREDITS = load_list_sounds('credits')
+    VALVE_SOUNDS = load_list_sounds('valve_skin')
+    WINDOWS_SOUNDS = load_list_sounds('windows_skin')
+
+
+class Sounds3(metaclass=SingletonMeta):
+
+    class Ch:
+        # todo fix channels
+        pacman = 1
+        intro = 2
+        game_over = menu = 3
+        siren = 4
+        eatable = 5
+        pellet = 6
+
+    def __init__(self):
+        self.CLICK = load_sound('navigation.ogg')
+        self.SEED = load_sound('munch.ogg')
+        self.SEED_FUN = load_sound('leader.ogg')
+        self.FRUIT = load_sound('eat_fruit.ogg')
+        self.GHOST = load_sound('eat_ghost.ogg')
+        self.POC_INTRO = load_sound('pokemon_intro.ogg')
+        self.INTERMISSION = load_sound('intermission.ogg')
+        self.PELLET = load_sound('power_pellet.ogg')
+        self.CHEAT = load_sound('cheat.ogg')
+        self.DEAD = load_list_sounds('death')
+        self.GAMEOVER = load_list_sounds('gameover')
+        self.INTRO = load_list_sounds("intro")
+        self.SIREN = load_list_sounds("siren")
+        self.CREDITS = load_list_sounds('credits')
+        self.VALVE_SOUNDS = load_list_sounds('valve_skin')
+        self.WINDOWS_SOUNDS = load_list_sounds('windows_skin')
 
 
 class Color(NamedTuple):
@@ -118,9 +114,14 @@ class Font:
         size: int = 0
         font: str = ''
 
-    TITLE = Tuple(font=get_path('title', 'ttf', 'fonts')).font
-    DEFAULT = Tuple(font=get_path('default', 'ttf', 'fonts')).font
+    TITLE = Tuple(font=get_path('assets/fonts/title.ttf')).font
+    DEFAULT = Tuple(font=get_path('assets/fonts/default.ttf')).font
     MAIN_SCENE_SIZE = Tuple(size=10).size
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     BUTTON_FOR_SKINS_TEXT_SIZE = Tuple(size=16).size
     CREDITS_SCENE_SIZE = Tuple(size=14).size
+
+
+class MenuPreset(NamedTuple):
+    header: str
+    function: Callable

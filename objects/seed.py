@@ -1,83 +1,116 @@
 import pygame as pg
-from misc import CELL_SIZE, Color, get_path, HIGH_CALORIE_SEEDS
-from objects import DrawableObject
+
+from misc import Animator
+from misc.constants import EvenType, event_append, CELL_SIZE, SkinsNames
+from misc.interfaces import IDrawable
+from misc.path import get_image_path
+from misc.sprite_sheet import SpriteSheet
 
 
-class SeedContainer(DrawableObject):
+class SeedAnimator(Animator):
+    def __init__(self, images: list[pg.Surface], time_out: int = 50,
+                 repeat: bool = False, aura: str = None):
+        super().__init__(images, time_out, repeat, aura)
+
+    def timer_check(self) -> None:
+        self.current_index += 1
+        self.image_swap()
+
+
+class Seed(IDrawable):
+
+    def __init__(self, game, rect, image):
+        # todo delete game
+        self.game = game
+        self.rect = rect
+        self.image = image
+
+    @property
+    def get_rect(self):
+        rect = self.image.get_rect()
+        rect.x, rect.y = self.rect[0], self.rect[1]
+        return rect
+
+    def check_collision(self, obj):
+        return self.get_rect.center == obj.rect.center
+
+    def process_draw(self, screen: pg.Surface) -> None:
+        screen.blit(self.image, self.rect)
+
+    def remove(self):
+        event_append(EvenType.EatSeed)
+        if not self.game.sounds.seed.is_busy():
+            self.game.sounds.seed.play()
+
+
+class BigSeed(Seed):
+    def __init__(self, game, rect):
+        # todo delete game
+        path = 'big_seed.png' if game.skins.current.name != SkinsNames.chrome else "big_seed_google.png"
+        self.animator = SeedAnimator(SpriteSheet(get_image_path(path), (9, 9))[0])
+        super().__init__(game, rect, self.animator.current_image)
+
+    def remove(self):
+        event_append(EvenType.EatEnergizer)
+        if not self.game.sounds.seed.is_busy():
+            self.game.sounds.seed.play()
+
+    def process_draw(self, screen: pg.Surface) -> None:
+        screen.blit(self.animator.current_image, self.rect)
+
+
+class SeedContainer(IDrawable):
+
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
-        super().__init__(game)
-        self.__ram_img = pg.image.load(get_path("ram", "png", "images"))
+        self.game = game
+        self.__ram_img = pg.image.load(get_image_path("ram.png"))
         self.__x = x
         self.__y = y
-        self.__seeds = seed_data
-        self.__energizers = energizer_data
-        self.__color = {
-            -1: Color.WHITE,
-            1: Color.BLACK
-        }
-        self.__index_color = 1
-        self.__seeds_on_field = 0
-        for row in range(len(self.__seeds)):
-            for col in range(len(self.__seeds[row])):
-                if self.__seeds[row][col]:
-                    self.__seeds_on_field += 1
-        self.__max_seeds = self.__seeds_on_field
+        self.seed_bf = list(self.seed_buffer(seed_data))
+        self.big_seed_bf = list(self.big_seed_buffer(energizer_data))
 
-    @property
-    def x(self):
-        return self.__x
+    def seed_buffer(self, data):
+        for row in range(len(data)):
+            for col in range(len(data[row])):
+                if data[row][col]:
+                    yield Seed(self.game, (self.__x - 2 + col * CELL_SIZE, self.__y - 2 + row * CELL_SIZE),
+                               self.__ram_img)
 
-    @property
-    def y(self):
-        return self.__y
+    def big_seed_buffer(self, data):
+        for energizer in data:
+            yield BigSeed(self.game, (self.__x + energizer[0] * CELL_SIZE, self.__y + energizer[1] * CELL_SIZE))
 
-    def __draw_seeds(self) -> None:
-        for row in range(len(self.__seeds)):
-            for col in range(len(self.__seeds[row])):
-                if self.__seeds[row][col]:
-                    if self.game.skins.current.name == "chrome":
-                        self.game.screen.blit(self.__ram_img, (self.x + col * CELL_SIZE + CELL_SIZE // 2 - 6,
-                                                               self.y + row * CELL_SIZE + CELL_SIZE // 2 - 6))
-                    else:
-                        pg.draw.circle(self.game.screen, Color.WHITE, (self.x + col * CELL_SIZE + CELL_SIZE // 2,
-                                                                       self.y + row * CELL_SIZE + CELL_SIZE // 2), 1)
+    def __draw_seeds(self, screen: pg.Surface) -> None:
+        for seed in self.seed_bf:
+            seed.process_draw(screen)
 
-    def __draw_energizers(self) -> None:
-        if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
+    def __draw_energizers(self, screen: pg.Surface) -> None:
+        flag = pg.time.get_ticks() - self.game.animate_timer > self.game.time_out
+        if flag:
             self.game.animate_timer = pg.time.get_ticks()
-            self.__index_color *= -1
-        for energizer in self.__energizers:
-            pg.draw.circle(self.game.screen, self.__color[self.__index_color],
-                           (self.x + energizer[0] * CELL_SIZE + CELL_SIZE // 2,
-                            self.y + energizer[1] * CELL_SIZE + CELL_SIZE // 2), 4)
+        for seed in self.big_seed_bf:
+            if flag:
+                seed.animator.timer_check()
+            seed.process_draw(screen)
 
-    def process_draw(self) -> None:
-        self.__draw_seeds()
-        self.__draw_energizers()
+    def process_draw(self, screen: pg.Surface) -> None:
+        self.__draw_seeds(screen)
+        self.__draw_energizers(screen)
 
-    def process_collision(self, object) -> int:
-        """
-        :param object: any class with pygame.rect
-        :return: is objects in collision (bool) and self type (str)
-        """
-        for row in range(len(self.__seeds)):
-            for col in range(len(self.__seeds[row])):
-                if self.__seeds[row][col] and row * CELL_SIZE + 18 == object.rect.y:
-                    if col * CELL_SIZE - 2 == object.rect.x:
-                        self.__seeds[row][col] = None
-                        if not self.game.sounds.seed.get_busy():
-                            self.game.sounds.seed.play()
-                        self.game.score.eat_seed()
-                        self.__seeds_on_field -= 1
-                        return 1
-        for energizer in self.__energizers:
-            if energizer[1] * CELL_SIZE + 18 == object.rect.y:
-                if energizer[0] * CELL_SIZE - 2 == object.rect.x:
-                    self.__energizers.remove(energizer)
-                    self.game.score.eat_energizer()
-                    return 2
+    def process_collision(self, obj):
+        if self.is_field_empty():
+            event_append(EvenType.Win)
+            return
+
+        self.__seed_remover(self.seed_bf, obj)
+        self.__seed_remover(self.big_seed_bf, obj)
+
+    def __seed_remover(self, seeds: list[Seed], obj) -> None:
+        for seed in seeds:
+            if seed.check_collision(obj):
+                seed.remove()
+                seeds.remove(seed)
+                return
 
     def is_field_empty(self) -> bool:
-        if self.__seeds_on_field == (self.__max_seeds - 10 if HIGH_CALORIE_SEEDS else 0):
-            return True
-        return False
+        return not (any([self.seed_bf, self.big_seed_bf]))

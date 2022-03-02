@@ -1,40 +1,41 @@
 import pygame as pg
-from objects import ButtonController, Text
-from scenes import base
-from misc import Font, LIGHT_BUTTON_COLORS
-from scenes.menu import rand_color
+import scenes
+from misc.constants import LIGHT_BUTTON_COLORS
+from misc.constants.classes import MenuPreset, Font
+from objects import Text
+from objects.buttons import Button
+from scenes.base import BaseScene
 
 
-class Scene(base.Scene):
-    def create_buttons(self) -> None:
+class PauseScene(BaseScene):
+
+    # region Private
+
+    # region Implementation of BaseScene
+
+    def _button_init(self) -> None:
         names = [
-            ("CONTINUE", self.game.scenes.MAIN.Continue),
-            ("SETTINGS", self.game.scenes.SETTINGS),
-            ("RESTART", self.game.scenes.MAIN),
-            ("MENU", self.game.scenes.MENU),
+            MenuPreset("CONTINUE", self._scene_manager.pop),
+            MenuPreset("SETTINGS", lambda: self._scene_manager.append(scenes.SettingsScene(self.game))),
+            MenuPreset("RESTART", lambda: self._scene_manager.reset(scenes.MainScene(self.game))),
+            MenuPreset("MENU", lambda: self._scene_manager.append(scenes.MenuScene(self.game))),
         ]
-        buttons = []
-        for i in range(len(names)):
-            buttons.append(self.SceneButton(
+        for i, menu_preset in enumerate(names):
+            yield Button(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 180, 40),
-                text=names[i][0],
-                scene=names[i][1],
+                rect=pg.Rect(0, 0, 180, 40),
+                text=menu_preset.header,
+                function=menu_preset.function,
                 center=(self.game.width // 2, 100+45*i),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=LIGHT_BUTTON_COLORS
-            ))
-        self.objects.append(ButtonController(self.game, buttons))
+            )
 
-    def create_title(self) -> None:
-        self.__main_text = Text(self.game, 'PAUSE', 40, font=Font.TITLE)
-        self.__main_text.move_center(self.game.width // 2, 35)
-        self.static_objects.append(self.__main_text)
+    def _create_title(self) -> None:
+        main_text = Text('PAUSE', 40, font=Font.TITLE)
+        main_text.move_center(self.game.width // 2, 35)
+        self.objects.append(main_text)
 
-    def additional_event_check(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.game.scenes.set(self.game.scenes.MAIN)
+    # endregion
 
-    def on_deactivate(self) -> None:
-        self.game.pred = True
-        self.game.map_color = rand_color()
+    # endregion

@@ -1,21 +1,24 @@
 from typing import Tuple, Union
-
 import pygame as pg
+from misc.interfaces import IDrawable
+from objects.base import BaseObject
 
-from objects import DrawableObject
 
+class ImageObject(BaseObject, IDrawable):
 
-class ImageObject(DrawableObject):
-    def __init__(self, game, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0)) -> None:
-        super().__init__(game)
-        if isinstance(image, str):
-            self.__filename = image
-            self.image = pg.image.load(self.__filename).convert_alpha()
-        elif isinstance(image, pg.Surface):
-            self.image = image
-
+    def __init__(self, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0), is_hidden=False):
+        BaseObject.__init__(self)
+        self.is_hidden = is_hidden
+        self.image = self.parse_image(image)
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = pos
+        self.rect.topleft = pos
+
+    @staticmethod
+    def parse_image(image):
+        if isinstance(image, str):
+            return pg.image.load(image).convert_alpha()
+        elif isinstance(image, pg.Surface):
+            return image
 
     def scale(self, x, y) -> None:
         self.image = pg.transform.scale(self.image, (x, y))
@@ -23,7 +26,7 @@ class ImageObject(DrawableObject):
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
 
-    def smoothscale(self, x, y) -> None:
+    def smooth_scale(self, x, y) -> None:
         self.image = pg.transform.smoothscale(self.image, (x, y))
         topleft = self.rect.topleft
         self.rect = self.image.get_rect()
@@ -35,11 +38,6 @@ class ImageObject(DrawableObject):
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
 
-    def process_draw(self) -> None:
-        self.game.screen.blit(self.image, self.rect)
-
-    def process_event(self, event: pg.event.Event) -> None:
-        pass
-
-    def process_logic(self) -> None:
-        pass
+    def process_draw(self, screen: pg.Surface) -> None:
+        if not self.is_hidden:
+            screen.blit(self.image, self.rect)

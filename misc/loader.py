@@ -54,7 +54,7 @@ class LevelLoader:
         with open(os.path.join('maps', self.filename)) as f:
             self.__json = json.load(f)
 
-    def get_map_data(self) -> List[List[List[int]]]:
+    def get_map_data(self) -> List[List[int]]:
         return self.__json["map"]
 
     def get_movements_data(self) -> List[List[int]]:

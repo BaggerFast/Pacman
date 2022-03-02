@@ -1,50 +1,49 @@
 import pygame as pg
+from misc.interfaces import ILogical, IEventful
 
 
-class Cheat:
-    def __init__(self, game, cheat) -> None:
-        self.cheat_code = cheat[0]
-        self.function = cheat[1]
+class Cheat(ILogical):
+
+    def __init__(self, game, code, func):
+        self.cheat_code = code
+        self.function = func
         self.game = game
 
-    def run(self) -> None:
+    def process_logic(self) -> None:
+        self.game.sounds.cheat.play()
         self.function()
 
-    def check_enter_code(self, enter_code) -> bool:
-        if enter_code == self.cheat_code:
-            self.game.sounds.cheat.play()
-            self.run()
-            return True
-        return False
 
+class ControlCheats(ILogical, IEventful):
 
-class ControlCheats:
-    def __init__(self, game, cheat_codes) -> None:
-        self.cheats = []
-        for cheat in cheat_codes:
-            self.cheats.append(Cheat(game, cheat))
+    def __init__(self, cheats: list[Cheat]):
+        self.cheats: list[Cheat] = cheats
         self.timer = pg.time.get_ticks()
-        self.enter_code = ''
-        self.old_enter_code = ''
+        self.enter_code: str = ''
+        self.old_enter_code: str = ''
 
-    def update_timer(self) -> None:
+    def __update_timer(self) -> None:
         self.timer = pg.time.get_ticks()
 
-    def process_logic(self) -> None:
+    def __complete_cheat(self):
         for cheat in self.cheats:
-            if cheat.check_enter_code(self.enter_code):
+            if cheat.cheat_code == self.enter_code:
+                cheat.process_logic()
                 self.enter_code = ''
+                break
+
+    def __update_enter_code(self):
         if self.old_enter_code == self.enter_code and pg.time.get_ticks() - self.timer >= 1000:
             self.enter_code = ''
-            self.update_timer()
+            self.__update_timer()
         elif self.old_enter_code != self.enter_code:
-            self.update_timer()
+            self.__update_timer()
         self.old_enter_code = self.enter_code
 
-    def process_draw(self) -> None:
-        pass
+    def process_logic(self) -> None:
+        self.__complete_cheat()
+        self.__update_enter_code()
 
-    def process_event(self, event) -> None:
-        if event.type == pg.KEYDOWN:
-            if event.key in range(pg.K_a, pg.K_z + 1):
-                self.enter_code += chr(event.key)
+    def process_event(self, event: pg.event.Event) -> None:
+        if event.type == pg.KEYDOWN and event.key in range(pg.K_a, pg.K_z + 1):
+            self.enter_code += chr(event.key)
