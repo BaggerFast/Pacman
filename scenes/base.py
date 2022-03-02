@@ -1,4 +1,3 @@
-from collections import Generator
 import pygame as pg
 import scenes
 from misc.interfaces.igeneric_object import IGenericObject, IEventful, ILogical, IDrawable
@@ -17,6 +16,7 @@ class BaseScene(IGenericObject):
     # region Public
 
     # region Implementation of IGenericObject
+
     def process_event(self, event: pg.event.Event) -> None:
         for obj in self.objects:
             if isinstance(obj, IEventful):
@@ -39,11 +39,11 @@ class BaseScene(IGenericObject):
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self._scene_manager.pop()
 
-    def configurate(self):
+    # endregion
+
+    def configurate(self) -> None:
         self._create_objects()
         self._create_title()
-
-    # endregion
 
     def on_enter(self) -> None:
         pass
@@ -54,14 +54,16 @@ class BaseScene(IGenericObject):
     # endregion
 
     # region Private
+
     def _create_title(self) -> None:
         pass
 
-    def _button_init(self) -> Generator:
-        yield []
+    def _button_init(self):
+        yield None
 
     def _create_objects(self) -> None:
         buttons = list(self._button_init())
         if buttons:
             self.objects.append(ButtonController(self.game, buttons))
+
     # endregion

@@ -72,6 +72,7 @@ class SkinsScene(scenes.BaseScene):
         pos_regarding_buttons_x = self.button_pos_x + 45
         pos_regarding_buttons_y = self.button_pos_y - 6
         self.objects += list(creator())
+
     # endregion
 
     # region Private

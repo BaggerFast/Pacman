@@ -177,6 +177,7 @@ class Game:
         self.scene_manager.reset(scenes.MenuScene(self))
 
     # region Public
+
     def main_loop(self) -> None:
         while True:
             self.__process_all_events()
@@ -229,9 +230,11 @@ class Game:
     @property
     def resolution(self) -> tuple:
         return self.__resolution
+
     # endregion
 
     # region Private
+
     def __read_from_storage(self):
         self.settings = self.Settings(self.storage)
         self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
@@ -259,4 +262,5 @@ class Game:
         self.screen.fill(Color.BLACK)
         self.scene_manager.process_draw(self.screen)
         pg.display.flip()
+
     # endregion

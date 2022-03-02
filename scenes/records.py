@@ -18,7 +18,7 @@ class RecordsScene(scenes.BaseScene):
 
     # region Public
 
-    # region Implementation of IGenericObject
+    # region Implementation of BaseScene
 
     def additional_draw(self, screen: pg.Surface) -> None:
         if not self.medals_text:

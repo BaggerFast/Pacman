@@ -13,6 +13,9 @@ class EndScene(scenes.BaseScene):
         self.score = score
 
     # region Public
+
+    # region Implementation of BaseScene
+
     def configurate(self):
         self.__save_record()
         self.__unlock_level()
@@ -23,11 +26,15 @@ class EndScene(scenes.BaseScene):
 
     def on_exit(self) -> None:
         self.game.sounds.gameover.stop()
+
+    # endregion
+
     # endregion
 
     # region Private
 
     # region Implementation of BaseScene
+
     def _create_objects(self) -> None:
         super()._create_objects()
         self.objects += [self.__get_score_text, self.__get_highscore_text]
@@ -66,6 +73,7 @@ class EndScene(scenes.BaseScene):
             text_size=Font.BUTTON_TEXT_SIZE,
             colors=BUTTON_DEFAULT_COLORS
         )
+
     # endregion
 
     @property
@@ -95,4 +103,5 @@ class EndScene(scenes.BaseScene):
         self.game.maps.cur_id = next_level
         self.game.records.update_records()
         self._scene_manager.reset(scenes.MainScene(self.game))
+
     # endregion

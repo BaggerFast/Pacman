@@ -33,7 +33,7 @@ class MainScene(scenes.BaseScene):
 
     # region Public
 
-    # region Implementation of IGenericObject
+    # region Implementation of BaseScene
 
     def process_logic(self) -> None:
         if not self.game.sounds.intro.is_busy():

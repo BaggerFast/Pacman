@@ -15,17 +15,24 @@ class GameOverScene(scenes.BaseScene):
         self.score = score
 
     # region Public
+
+    # region Implementation of BaseScene
+
     def on_exit(self) -> None:
         self.game.sounds.gameover.stop()
 
     def on_enter(self) -> None:
         self.game.sounds.pacman.stop()
         self.game.sounds.gameover.play()
+
+    # endregion
+
     # endregion
 
     # region Private
 
     # region Implementation of BaseScene
+
     def _create_objects(self) -> None:
         super()._create_objects()
         self.objects += [self.__get_score_text, self.__get_highscore_text]
@@ -51,6 +58,7 @@ class GameOverScene(scenes.BaseScene):
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS
             )
+
     # endregion
 
     @property
@@ -64,4 +72,5 @@ class GameOverScene(scenes.BaseScene):
         text_highscore = Text(f'High score: {self.game.records.data[0]}',  20)
         text_highscore.move_center(self.game.width // 2, 165)
         return text_highscore
+
     # endregion

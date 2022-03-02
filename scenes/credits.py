@@ -22,7 +22,7 @@ class CreditsScene(scenes.BaseScene):
 
     # region Public
 
-    # region Implementation of IGenericObject
+    # region Implementation of BaseScene
 
     def additional_logic(self) -> None:
         if self.__students2:
@@ -36,10 +36,10 @@ class CreditsScene(scenes.BaseScene):
             self.game.sounds.credits.play()
         self.__process_students()
 
-    # endregion
-
     def on_exit(self) -> None:
         self.game.sounds.credits.stop()
+
+    # endregion
 
     # endregion
 
