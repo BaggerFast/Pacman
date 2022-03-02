@@ -38,6 +38,11 @@ class BaseScene(IGenericObject):
     def additional_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self._scene_manager.pop()
+
+    def configurate(self):
+        self._create_objects()
+        self._create_title()
+
     # endregion
 
     def on_enter(self) -> None:
@@ -45,6 +50,7 @@ class BaseScene(IGenericObject):
 
     def on_exit(self) -> None:
         pass
+
     # endregion
 
     # region Private
@@ -58,8 +64,4 @@ class BaseScene(IGenericObject):
         buttons = list(self._button_init())
         if buttons:
             self.objects.append(ButtonController(self.game, buttons))
-
-    def _configurate(self):
-        self._create_objects()
-        self._create_title()
     # endregion
