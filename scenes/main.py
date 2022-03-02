@@ -117,7 +117,7 @@ class MainScene(scenes.BaseScene):
     def _create_objects(self) -> None:
         self.game.sounds.siren.unpause()
         hp_cheat = ControlCheats([Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))])
-        self.text[-1].surface.set_alpha(0)
+        self.text[-1].set_alpha(0)
         self.pacman = Pacman(self.game, self.__player_position)
         self.objects.append(hp_cheat, self.__map, self.__seeds, self.fruit, self.pacman, self.score)
         self.__create_ghost()
@@ -161,7 +161,7 @@ class MainScene(scenes.BaseScene):
             for i in ['READY', 'GO!']:
                 text = Text(i, 30, font=Font.TITLE, rect=pg.Rect(20, 0, 20, 20))
                 text.move_center(self.game.width // 2, self.game.height // 2)
-                text.surface.set_alpha(0)
+                text.set_alpha(0)
                 self.objects.append(text)
                 yield text
         self.text = list(creator())
@@ -213,15 +213,15 @@ class MainScene(scenes.BaseScene):
 
         if self.state_text:
             if current_time - self.timer < self.intro_sound.sound.get_length() / 4 * 3:
-                self.text[0].surface.set_alpha(255)
+                self.text[0].set_alpha(255)
             else:
-                self.text[0].surface.set_alpha(0)
-                self.text[1].surface.set_alpha(255)
+                self.text[0].set_alpha(0)
+                self.text[1].set_alpha(255)
         else:
             if current_time - self.timer < self.intro_sound.sound.get_length() / 4 * 3:
-                self.text[0].surface.set_alpha(0)
+                self.text[0].set_alpha(0)
             else:
-                self.text[1].surface.set_alpha(0)
+                self.text[1].set_alpha(0)
 
     def __check_ghosts(self):
         for ghost in self.ghosts:

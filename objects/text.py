@@ -1,56 +1,63 @@
-from typing import Tuple
 import pygame as pg
-from misc.constants import Font
+from misc.constants import Font, Color
 from misc.interfaces import IDrawable
 from objects.base import BaseObject
 
 
 class Text(BaseObject, IDrawable):
-    def __init__(self, text: str = "", size: int = 0, rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0),
-                 color=pg.Color(255, 255, 255), font=Font.DEFAULT):
-
+    # todo documentation
+    def __init__(self, text: str = "", size: int = 5, rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0), color=Color.WHITE,
+                 font=Font.DEFAULT):
         BaseObject.__init__(self)
-        self.rect = rect
-        self.__pos = rect
-        self.size = size
-        self.__color = color
-        self.font = pg.font.Font(font, self.size)
+        self.rect: pg.Rect = rect
+        self.__size: int = size
+        self.__color: tuple[int] = color
+        self.__font = pg.font.Font(font, self.__size)
+
         self.__text: str
-        self.text = text
-        self.surface: pg.Surface
+        self.text: str = text
+
+        self.__surface: pg.Surface = self.__surface_prepare()
+
+    # region Public
 
     # region Implementation of IDrawable
 
-    def process_draw(self, screen) -> None:
-        screen.blit(self.surface, self.rect)
+    def process_draw(self, screen: pg.Surface) -> None:
+        if self.__surface.get_alpha() != 0:
+            screen.blit(self.__surface, self.rect)
 
     # endregion
 
-    @property
-    def pos(self):
-        return self.__pos
+    # region Properties
 
     @property
-    def text(self):
+    def text(self) -> str:
         return self.__text
 
-    @property
-    def color(self):
-        return self.color
+    # endregion
+
+    # region Setters
 
     @text.setter
-    def text(self, text: str):
-        self.__text = text if text else self.__text
-        self.surface = self.font.render(self.__text, False, self.__color)
+    def text(self, text: str) -> None:
+        self.__text = text
+        self.__surface = self.__surface_prepare()
+
         topleft = self.rect.topleft
-        self.rect = self.surface.get_rect()
+        self.rect = self.__surface.get_rect()
         self.rect.topleft = topleft
 
-    @color.setter
-    def color(self, color: pg.color):
-        self.color = color
-        self.surface = self.font.render(self.__text, False, self.__color)
+    # endregion
 
-    @pos.setter
-    def pos(self, pos: Tuple[int, int]):
-        self.__pos = pos
+    def set_alpha(self, value: int):
+        self.__surface.set_alpha(value)
+
+    # endregion
+
+    # region Private
+
+    def __surface_prepare(self) -> pg.Surface:
+        return self.__font.render(self.__text, False, self.__color)
+
+    # endregion

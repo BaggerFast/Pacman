@@ -108,7 +108,7 @@ class CreditsScene(scenes.BaseScene):
             elif student.rect.x != -105:
                 student.ttl += 1
                 student.move(student.ttl * student.speed + self.start_pos, student.rect.y)
-                student.surface.set_alpha(
+                student.set_alpha(
                     min(
                         255,
                         self.game.width - (
