@@ -4,8 +4,7 @@ from misc.interfaces import IGenericObject
 from scenes.base import BaseScene
 
 
-class SceneManager(IGenericObject):
-    __metaclass__ = SingletonMeta
+class SceneManager(metaclass=SingletonMeta):
 
     def __init__(self):
         self.scenes: list[BaseScene] = []
