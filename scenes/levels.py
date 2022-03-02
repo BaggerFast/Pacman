@@ -17,7 +17,7 @@ class LevelsScene(scenes.BaseScene):
 
     # region Public
 
-    # region Implementation of IGenericObject
+    # region Implementation of BaseScene
 
     def additional_event(self, event: pg.event.Event) -> None:
         actions = {
@@ -78,11 +78,11 @@ class LevelsScene(scenes.BaseScene):
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 
-    # endregion
-
     def _create_objects(self) -> None:
         self.preview = copy(self.game.maps.images[self.game.maps.cur_id])
         self.objects.append(self.preview)
         self.create_buttons()
+
+    # endregion
 
     # endregion

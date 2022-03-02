@@ -13,6 +13,10 @@ class Clyde(Base):
         self.shift_y = 1
         self.set_direction('up')
 
+    # region Public
+
+    # region Implementation of parent class
+
     def process_logic(self) -> None:
         if not self.is_invisible:
             super().process_logic()
@@ -26,6 +30,8 @@ class Clyde(Base):
                     self.set_direction("left")
                     self.is_in_home = False
                     self.collision = True
+
+    # endregion
 
     def ghosts_ai(self) -> None:
         super().ghosts_ai()
@@ -48,3 +54,5 @@ class Clyde(Base):
         }
         if difficult in data:
             self.set_power(*data[difficult])
+
+    # endregion

@@ -22,6 +22,24 @@ class ControlCheats(ILogical, IEventful):
         self.enter_code: str = ''
         self.old_enter_code: str = ''
 
+    # region Public
+
+    # region Implementation of ILogical, IEventful
+
+    def process_logic(self) -> None:
+        self.__complete_cheat()
+        self.__update_enter_code()
+
+    def process_event(self, event: pg.event.Event) -> None:
+        if event.type == pg.KEYDOWN and event.key in range(pg.K_a, pg.K_z + 1):
+            self.enter_code += chr(event.key)
+
+    # endregion
+
+    # endregion
+
+    # region Private
+
     def __update_timer(self) -> None:
         self.timer = pg.time.get_ticks()
 
@@ -40,10 +58,4 @@ class ControlCheats(ILogical, IEventful):
             self.__update_timer()
         self.old_enter_code = self.enter_code
 
-    def process_logic(self) -> None:
-        self.__complete_cheat()
-        self.__update_enter_code()
-
-    def process_event(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key in range(pg.K_a, pg.K_z + 1):
-            self.enter_code += chr(event.key)
+    # endregion

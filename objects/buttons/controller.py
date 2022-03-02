@@ -19,6 +19,22 @@ class ButtonController(IDrawable, IEventful):
         }
         self.kb = MenuKeyboard()
 
+    # region Public
+
+    # region Implementation of IDrawable, IEventful
+
+    def process_event(self, event: pg.event.Event) -> None:
+        self.kb.process_event(event)
+        self.process_button_events(event)
+        self.process_key_down(event)
+        self.process_mouse_motion(event)
+
+    def process_draw(self, screen: pg.Surface) -> None:
+        for button in self.buttons:
+            button.process_draw(screen)
+
+    # endregion
+
     def button_add(self, button: Button):
         self.buttons.append(button)
 
@@ -61,12 +77,4 @@ class ButtonController(IDrawable, IEventful):
         for button in self.buttons:
             button.process_event(event)
 
-    def process_event(self, event: pg.event.Event) -> None:
-        self.kb.process_event(event)
-        self.process_button_events(event)
-        self.process_key_down(event)
-        self.process_mouse_motion(event)
-
-    def process_draw(self, screen: pg.Surface) -> None:
-        for button in self.buttons:
-            button.process_draw(screen)
+    # endregion

@@ -3,9 +3,12 @@ from objects.buttons import Button
 
 
 class SettingButton(Button):
+
     def __init__(self, **args):
         self.name, self.var = args.pop("name"), args.pop("var")
         super().__init__(**args)
+
+    # region Public
 
     def update(self, var: str) -> None:
         if var in ["SOUND", "FUN"]:
@@ -21,3 +24,5 @@ class SettingButton(Button):
         self.update(self.var)
         self.text = f"{self.name} {'ON' if active_mode else 'OFF'}"
         self.colors = BUTTON_GREEN_COLORS if active_mode else BUTTON_RED_COLORS
+
+    # endregion

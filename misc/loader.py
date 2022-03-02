@@ -4,10 +4,23 @@ from typing import List, Tuple, Union
 
 
 class SeedLoader:
+
     def __init__(self, data) -> None:
         self.__json = data
         self.__seeds = []
         self.__prepare_seeds()
+
+    # region Public
+
+    def get_seed_data(self) -> List[bool]:
+        return self.__seeds
+
+    def get_energizer_data(self) -> List[Tuple[int, int]]:
+        return self.__json["big_dots_pos"]
+
+    # endregion
+
+    # region Private
 
     def __remove_seeds_under_ghost_area(self) -> None:
         for i in self.__json["not_dots_rect"]:
@@ -34,14 +47,11 @@ class SeedLoader:
         self.__remove_seeds_under_fruit()
         self.__remove_seeds_under_energizers()
 
-    def get_seed_data(self) -> List[bool]:
-        return self.__seeds
-
-    def get_energizer_data(self) -> List[Tuple[int, int]]:
-        return self.__json["big_dots_pos"]
+    # endregion
 
 
 class LevelLoader:
+
     def __init__(self, filename="1_map.json") -> None:
         self.filename = filename
         self.__load_map_json()
@@ -50,9 +60,7 @@ class LevelLoader:
         self.__seed_data = self.__seed_loader.get_seed_data()
         self.energizer_data = self.__seed_loader.get_energizer_data()
 
-    def __load_map_json(self) -> None:
-        with open(os.path.join('maps', self.filename)) as f:
-            self.__json = json.load(f)
+    # region Public
 
     def get_map_data(self) -> List[List[int]]:
         return self.__json["map"]
@@ -80,3 +88,13 @@ class LevelLoader:
 
     def get_cant_up_ghost_rect(self):
         return self.__json["cant_up_ghost_rect"]
+
+    # endregion
+
+    # region Private
+
+    def __load_map_json(self) -> None:
+        with open(os.path.join('maps', self.filename)) as f:
+            self.__json = json.load(f)
+
+    # endregion

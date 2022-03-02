@@ -6,6 +6,9 @@ from misc.constants.skin_names import SkinsNames
 
 
 class Field:
+
+    # region Public
+
     def dict(self):
         data = {}
         for key in self.__dict__.keys():
@@ -28,8 +31,11 @@ class Field:
                 else:
                     self.__dict__[key] = value[key]
 
+    # endregion
+
 
 class Storage(Field):
+
     class __Settings(Field):
         def __init__(self):
             self.SOUND = True
@@ -50,6 +56,8 @@ class Storage(Field):
         self.eaten_fruits = [0] * FRUITS_COUNT
         self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(len(game.maps))]
         self.load()
+
+    # region Public
 
     def save(self) -> None:
         self.settings.SOUND = self.game.settings.SOUND
@@ -75,3 +83,5 @@ class Storage(Field):
         create_file_if_not_exist(self.__storage_filepath, json.dumps(self.dict(), indent=2))
         with open(self.__storage_filepath, "r") as file:
             self.read_dict(json.load(file))
+
+    # endregion

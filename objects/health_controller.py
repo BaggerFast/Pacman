@@ -39,8 +39,6 @@ class HealthLogic(IEventful):
         return self.__cur_hp
 
     def get_damage(self, amount: int) -> None:
-        """
-        """
         if amount <= 0:
             raise Exception('damage must be positive')
         self.__cur_hp = self.__check_limits(self.__cur_hp - amount)

@@ -23,6 +23,23 @@ class Score(IDrawable, IEventful):
             EvenType.StopFearMode: self.__deactivate_fear_mode,
         }
 
+    def __int__(self):
+        return self.__value
+
+    def __add__(self, value):
+        self.__value += value
+        return self
+
+    def __iadd__(self, value):
+        return self + value
+
+    def __str__(self) -> str:
+        return str(self.__value)
+
+    # region Public
+
+    # region Implementation of IDrawable, IEventful
+
     def process_draw(self, screen: pg.Surface) -> None:
         self.text.text = f'{self.__value} {"Mb" if self.game.skins.current.name == SkinsNames.chrome else ""}'
         self.text.process_draw(screen)
@@ -31,21 +48,17 @@ class Score(IDrawable, IEventful):
         if event.type in self.__events:
             self.__events[event.type]()
 
-    def __int__(self): return self.__value
+    # endregion
 
     @property
     def score(self): return self.__value
 
-    def __add__(self, value):
-        self.__value += value
-        return self
-
-    def __iadd__(self, value): return self + value
-
-    def __str__(self): return str(self.__value)
-
     def eat_fruit(self, bonus) -> None:
         self + bonus * self.game.difficulty
+
+    # endregion
+
+    # region Private
 
     def __eat_energizer(self):
         self.fear_mode = True
@@ -59,4 +72,5 @@ class Score(IDrawable, IEventful):
         self + ((200 * self.game.difficulty ** 2) * 2 ** self.fear_count)
         self.fear_count += 1
 
+    # endregion
 

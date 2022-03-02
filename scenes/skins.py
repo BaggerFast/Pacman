@@ -48,8 +48,6 @@ class SkinsScene(scenes.BaseScene):
                 text = Text(str(self.game.eaten_fruits[i]), 10)
                 text.move_center(self.game.width // 8 - 10 + i * 25, 60)
                 yield text
-
-        # todo refix extend
         self.objects.append(*list(creator()))
 
     def create_fruits_and_text_for_skins(self) -> None:

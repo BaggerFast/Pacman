@@ -73,18 +73,9 @@ class Base(Character, IEventful, ABC):
         self.old_timer = pg.time.get_ticks()
         self.old_ai_timer = pg.time.get_ticks()
 
-    def behaviour_in_the_house(self):
-        # если он внутри дома и не может выйти то бегать вверх вниз
-        self.go()
-        if self.rect.centery >= self.start_pos[1] + 5:
-            self.set_direction('up')
-        elif self.rect.centery <= self.start_pos[1] - 5:
-            self.set_direction('down')
+    # region Public
 
-    def slow_corridor(self):
-        for rect in self.game.scene_manager.current.slow_ghost_rect:
-            if self.in_rect(rect):
-                self.deceleration_multiplier_with_rect = 2
+    # region Implementation of parent classes
 
     def process_logic(self) -> None:
         self.deceleration_multiplier_with_rect = 1
@@ -106,6 +97,35 @@ class Base(Character, IEventful, ABC):
                 self.step()
                 self.animator.timer_check()
         self.process_logic_iterator += 1
+
+    def process_event(self, event: pg.event.Event) -> None:
+        events = {
+            EvenType.FrightenedMode: self.toggle_mode_to_frightened
+        }
+        if event.type in events:
+            events[event.type]()
+
+    def process_draw(self, screen: pg.Surface) -> None:
+        if self.mode == GhostState.eaten:
+            self.gg_text.text = f'{200 * self.game.difficulty ** 2}' # * 2 ** self.game.score.fear_count2
+            self.gg_text.process_draw(screen)
+        if not self.is_invisible:
+            super().process_draw(screen)
+
+    # endregion
+
+    def behaviour_in_the_house(self):
+        # если он внутри дома и не может выйти то бегать вверх вниз
+        self.go()
+        if self.rect.centery >= self.start_pos[1] + 5:
+            self.set_direction('up')
+        elif self.rect.centery <= self.start_pos[1] - 5:
+            self.set_direction('down')
+
+    def slow_corridor(self):
+        for rect in self.game.scene_manager.current.slow_ghost_rect:
+            if self.in_rect(rect):
+                self.deceleration_multiplier_with_rect = 2
 
     def collision_check(self, pacman):
         return (self.two_cells_dis(self.rect.center, pacman.rect.center) < 3 and
@@ -217,21 +237,9 @@ class Base(Character, IEventful, ABC):
         self.animator = self.eaten_walk_anim
         self.acceleration_multiplier = 2
 
-    def process_event(self, event: pg.event.Event) -> None:
-        events = {
-            EvenType.FrightenedMode: self.toggle_mode_to_frightened
-        }
-        if event.type in events:
-            events[event.type]()
-
-    def process_draw(self, screen: pg.Surface) -> None:
-        if self.mode == GhostState.eaten:
-            self.gg_text.text = f'{200 * self.game.difficulty ** 2}' # * 2 ** self.game.score.fear_count2
-            self.gg_text.process_draw(screen)
-        if not self.is_invisible:
-            super().process_draw(screen)
-
     def set_power(self, frightened_time: int, chase_time: int, scatter_time: int):
         self.frightened_time = frightened_time
         self.chase_time = chase_time
         self.scatter_time = scatter_time
+
+    # endregion

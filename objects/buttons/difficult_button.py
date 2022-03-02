@@ -2,6 +2,7 @@ from objects.buttons import Button
 
 
 class DifficultyButton(Button):
+
     __difficulties = [
         "easy",
         "medium",
@@ -12,6 +13,8 @@ class DifficultyButton(Button):
         super().__init__(*args, **kwargs)
         self.update_text()
 
+    # region Public
+
     def click(self) -> None:
         self.game.sounds.click.play()
         self.game.settings.change_difficulty()
@@ -20,3 +23,5 @@ class DifficultyButton(Button):
 
     def update_text(self) -> None:
         self.text = self.__difficulties[self.game.settings.DIFFICULTY]
+
+    # endregion
