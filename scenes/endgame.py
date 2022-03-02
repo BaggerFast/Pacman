@@ -7,9 +7,12 @@ from objects.buttons import Button
 
 class EndScene(scenes.BaseScene):
 
+    # todo Game is used in __init__
     def __init__(self, game, score):
         super().__init__(game)
         self.score = score
+
+    # region Public
 
     # region Realization of methods
     def _create_objects(self) -> None:
@@ -50,6 +53,7 @@ class EndScene(scenes.BaseScene):
             text_size=Font.BUTTON_TEXT_SIZE,
             colors=BUTTON_DEFAULT_COLORS
         )
+    # endregion
 
     def configurate(self):
         self.__save_record()
@@ -61,7 +65,6 @@ class EndScene(scenes.BaseScene):
 
     def on_exit(self) -> None:
         self.game.sounds.gameover.stop()
-
     # endregion
 
     # region Private

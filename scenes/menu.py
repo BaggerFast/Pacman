@@ -20,6 +20,9 @@ class MenuScene(scenes.BaseScene):
         self.change_color()
         self.blur_preview()
 
+    # region Public
+
+    # region Realization of methods
     def _create_objects(self) -> None:
         image = ImageObject(self.preview, (0, 0))
 
@@ -35,27 +38,6 @@ class MenuScene(scenes.BaseScene):
         title.move_center(self.game.width // 2, 30)
 
         self.objects.append(title)
-
-    @property
-    def __level_indicator(self) -> Text:
-        indicator = Text(self.game.maps.level_name, 15, font=Font.TITLE)
-        indicator.move_center(self.game.width // 2, 60)
-        return indicator
-
-    def change_color(self) -> None:
-        for x in range(self.preview.get_width()):
-            for y in range(self.preview.get_height()):
-                if self.preview.get_at((x, y)) == Color.MAIN_MAP:
-                    self.preview.set_at((x, y), self.color)
-
-    def blur_preview(self) -> None:
-        blur_count = 5
-        rect = self.preview.get_rect()
-        surify = pg.image.tostring(self.preview, 'RGBA')
-        impil = Image.frombytes('RGBA', (rect.width, rect.height), surify)
-        piler = impil.resize(self.game.resolution). \
-            filter(ImageFilter.GaussianBlur(radius=blur_count))
-        self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
     def _button_init(self):
         names = [
@@ -76,3 +58,28 @@ class MenuScene(scenes.BaseScene):
                 center=(self.game.width // 2, 95 + i * 28),
                 text_size=Font.BUTTON_TEXT_SIZE
             )
+    # endregion
+
+    def change_color(self) -> None:
+        for x in range(self.preview.get_width()):
+            for y in range(self.preview.get_height()):
+                if self.preview.get_at((x, y)) == Color.MAIN_MAP:
+                    self.preview.set_at((x, y), self.color)
+
+    def blur_preview(self) -> None:
+        blur_count = 5
+        rect = self.preview.get_rect()
+        surify = pg.image.tostring(self.preview, 'RGBA')
+        impil = Image.frombytes('RGBA', (rect.width, rect.height), surify)
+        piler = impil.resize(self.game.resolution). \
+            filter(ImageFilter.GaussianBlur(radius=blur_count))
+        self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
+    # endregion
+
+    # region Private
+    @property
+    def __level_indicator(self) -> Text:
+        indicator = Text(self.game.maps.level_name, 15, font=Font.TITLE)
+        indicator.move_center(self.game.width // 2, 60)
+        return indicator
+    # endregion

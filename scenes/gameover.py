@@ -14,6 +14,8 @@ class GameOverScene(scenes.BaseScene):
         super().__init__(game)
         self.score = score
 
+    # region Public
+
     # region Realization of methods
     def _create_objects(self) -> None:
         super()._create_objects()
@@ -42,6 +44,14 @@ class GameOverScene(scenes.BaseScene):
             )
     # endregion
 
+    def on_exit(self) -> None:
+        self.game.sounds.gameover.stop()
+
+    def on_enter(self) -> None:
+        self.game.sounds.pacman.stop()
+        self.game.sounds.gameover.play()
+    # endregion
+
     # region Private
     @property
     def __get_score_text(self) -> Text:
@@ -54,11 +64,4 @@ class GameOverScene(scenes.BaseScene):
         text_highscore = Text(f'High score: {self.game.records.data[0]}',  20)
         text_highscore.move_center(self.game.width // 2, 165)
         return text_highscore
-
-    def on_exit(self) -> None:
-        self.game.sounds.gameover.stop()
-
-    def on_enter(self) -> None:
-        self.game.sounds.pacman.stop()
-        self.game.sounds.gameover.play()
     # endregion

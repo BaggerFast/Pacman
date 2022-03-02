@@ -16,6 +16,8 @@ class RecordsScene(scenes.BaseScene):
         self.__create_medals()
         self.__create_error_label()
 
+    # region Public
+
     # region Realization of methods
     def _create_objects(self) -> None:
         super()._create_objects()
@@ -34,6 +36,16 @@ class RecordsScene(scenes.BaseScene):
         title = Text('RECORDS', 32, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
+
+    def additional_draw(self, screen: pg.Surface) -> None:
+        if not self.medals_text:
+            self.__error_text.process_draw(screen)
+        else:
+            for i in range(len(self.medals_text)):
+                self.medals_text[i].process_draw(screen)
+                self.__medals[i].process_draw(screen)
+    # endregion
+
     # endregion
 
     # region Private
@@ -60,11 +72,3 @@ class RecordsScene(scenes.BaseScene):
                 yield image
         self.__medals = list(creator())
     # endregion
-
-    def additional_draw(self, screen: pg.Surface) -> None:
-        if not self.medals_text:
-            self.__error_text.process_draw(screen)
-        else:
-            for i in range(len(self.medals_text)):
-                self.medals_text[i].process_draw(screen)
-                self.__medals[i].process_draw(screen)

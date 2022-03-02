@@ -176,49 +176,7 @@ class Game:
 
         self.scene_manager.reset(scenes.MenuScene(self))
 
-    def __read_from_storage(self):
-        self.settings = self.Settings(self.storage)
-        self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
-        self.maps.cur_id = self.storage.last_level_id if self.storage.last_level_id in self.unlocked_levels else \
-            self.__def_level_id
-        self.unlocked_skins = self.skins.all_skins if self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
-        self.eaten_fruits = self.storage.eaten_fruits
-        self.highscores = self.storage.highscores
-
-    @property
-    def difficulty(self) -> int:
-        return self.settings.DIFFICULTY + 1
-
-    @property
-    def current_scene(self) -> scenes.BaseScene:
-        return self.scene_manager.current
-
-    @property
-    def resolution(self) -> tuple:
-        return self.__resolution
-
-    def __process_exit_events(self, event: pg.event.Event) -> None:
-        if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q):
-            self.exit_game()
-
-    # region Implementation of object method
-    def __process_all_events(self) -> None:
-        for event in pg.event.get():
-            self.__cheats.process_event(event)
-            self.__process_exit_events(event)
-            self.scene_manager.process_event(event)
-
-    def __process_all_logic(self) -> None:
-        self.__cheats.process_logic()
-        self.scene_manager.process_logic()
-
-    def __process_all_draw(self) -> None:
-        self.screen.fill(Color.BLACK)
-        self.scene_manager.process_draw(self.screen)
-        pg.display.flip()
-
-    # endregion
-
+    # region Public
     def main_loop(self) -> None:
         while True:
             self.__process_all_events()
@@ -259,3 +217,46 @@ class Game:
             self.eaten_fruits[fruit_id] += value
         else:
             raise Exception(f"id error. Fruit id: {fruit_id} doesn't exist")
+
+    @property
+    def difficulty(self) -> int:
+        return self.settings.DIFFICULTY + 1
+
+    @property
+    def current_scene(self) -> scenes.BaseScene:
+        return self.scene_manager.current
+
+    @property
+    def resolution(self) -> tuple:
+        return self.__resolution
+    # endregion
+
+    # region Private
+    def __read_from_storage(self):
+        self.settings = self.Settings(self.storage)
+        self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
+        self.maps.cur_id = self.storage.last_level_id if self.storage.last_level_id in self.unlocked_levels else \
+            self.__def_level_id
+        self.unlocked_skins = self.skins.all_skins if self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
+        self.eaten_fruits = self.storage.eaten_fruits
+        self.highscores = self.storage.highscores
+
+    def __process_exit_events(self, event: pg.event.Event) -> None:
+        if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q):
+            self.exit_game()
+
+    def __process_all_events(self) -> None:
+        for event in pg.event.get():
+            self.__cheats.process_event(event)
+            self.__process_exit_events(event)
+            self.scene_manager.process_event(event)
+
+    def __process_all_logic(self) -> None:
+        self.__cheats.process_logic()
+        self.scene_manager.process_logic()
+
+    def __process_all_draw(self) -> None:
+        self.screen.fill(Color.BLACK)
+        self.scene_manager.process_draw(self.screen)
+        pg.display.flip()
+    # endregion
