@@ -9,6 +9,8 @@ from objects.buttons import Button
 
 
 class CreditsScene(scenes.BaseScene):
+
+    # todo Name region
     __data = [
         "Смирнов Андрей",
         "Aleksandrov Daniil",
@@ -19,6 +21,7 @@ class CreditsScene(scenes.BaseScene):
         "Николайчев Павел",
     ]
 
+    # region Private
     def _create_objects(self) -> None:
         super()._create_objects()
         self.__on_screen = 0
@@ -43,6 +46,8 @@ class CreditsScene(scenes.BaseScene):
                      function=self.__skip_sound,
                      center=(self.game.width // 4 + 110, 250),
                      text_size=Font.BUTTON_TEXT_SIZE)
+
+    # endregion
 
     def __get_random_student_y(self) -> int:
         return randint(25, self.game.height - 75)

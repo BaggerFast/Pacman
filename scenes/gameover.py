@@ -8,10 +8,13 @@ from objects.buttons import Button
 
 
 class GameOverScene(scenes.BaseScene):
+
+    # todo Game is used in __init__
     def __init__(self, game, score):
         super().__init__(game)
         self.score = score
 
+    # region Realization of methods
     def _create_objects(self) -> None:
         super()._create_objects()
         self.objects += [self.__get_score_text, self.__get_highscore_text]
@@ -37,7 +40,9 @@ class GameOverScene(scenes.BaseScene):
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS
             )
+    # endregion
 
+    # region Private
     @property
     def __get_score_text(self) -> Text:
         text_score = Text(f'Score: {self.score}', 20)
@@ -56,3 +61,4 @@ class GameOverScene(scenes.BaseScene):
     def on_enter(self) -> None:
         self.game.sounds.pacman.stop()
         self.game.sounds.gameover.play()
+    # endregion

@@ -9,6 +9,7 @@ from scenes.base import BaseScene
 
 class PauseScene(BaseScene):
 
+    # region Realization of methods
     def _button_init(self) -> None:
         names = [
             MenuPreset("CONTINUE", self._scene_manager.pop),
@@ -31,3 +32,4 @@ class PauseScene(BaseScene):
         main_text = Text('PAUSE', 40, font=Font.TITLE)
         main_text.move_center(self.game.width // 2, 35)
         self.objects.append(main_text)
+    # endregion

@@ -11,6 +11,7 @@ from objects.map import rand_color
 
 class MenuScene(scenes.BaseScene):
 
+    # todo Game is used in __init__
     def __init__(self, game):
         super().__init__(game)
         self.preview = self.game.maps.full_surface

@@ -15,14 +15,14 @@ from objects.map import rand_color, Map
 
 
 class Game:
-    # todo переменовать регион
-    # region Инициализация pygame
+
+    # region Initialize pygame
     pg.display.init()
     pg.font.init()
     pg.mixer.init()
     # endregion
 
-    # region Заголовок окна и иконка приложения
+    # region Window title and icon
     pg.display.set_caption('PACMAN')
     pg.display.set_icon(pg.transform.scale(pg.image.load(get_image_path('ico.png')), (256, 256)))
     # endregion
@@ -201,8 +201,7 @@ class Game:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q):
             self.exit_game()
 
-    # todo переменовать регион
-    # region реализация интерфейсов обьектов
+    # region Implementation of object method
     def __process_all_events(self) -> None:
         for event in pg.event.get():
             self.__cheats.process_event(event)

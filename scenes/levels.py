@@ -9,11 +9,13 @@ from objects.buttons import ButtonController, LvlButton, Button
 class LevelsScene(scenes.BaseScene):
     __buttons_on_scene = 4
 
+    # todo Game is used in __init__
     def __init__(self, game):
         super().__init__(game)
         self.is_current = False
         self.__scroll = max(min(self.game.maps.cur_id, len(self.game.maps) - self.__buttons_on_scene), 0)
 
+    # region Realization of methods
     def _create_title(self) -> None:
         title = Text('SELECT LEVEL', 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
@@ -50,6 +52,7 @@ class LevelsScene(scenes.BaseScene):
         self.preview = copy(self.game.maps.images[self.game.maps.cur_id])
         self.objects.append(self.preview)
         self.create_buttons()
+    # endregion
 
     def update_scroll(self, index: int) -> None:
         self.__scroll = min(self.__scroll + index, len(self.game.maps) - self.__buttons_on_scene)
@@ -63,9 +66,9 @@ class LevelsScene(scenes.BaseScene):
         if event.type == pg.MOUSEWHEEL:
             self.update_scroll(-event.y)
             self.objects.clear()
-            self._configurate()
+            self.configurate()
         elif event.type == pg.KEYDOWN and event.key in actions.keys():
             actions[event.key]()
             self.objects.clear()
-            self._configurate()
+            self.configurate()
         super().additional_event(event)

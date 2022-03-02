@@ -10,11 +10,13 @@ from objects.buttons import Button
 class RecordsScene(scenes.BaseScene):
     medals = SpriteSheet(sprite_path=get_image_path('medal.png'), sprite_size=(16, 16))[0]
 
+    # todo Game is used in __init__
     def __init__(self, game):
         super().__init__(game)
         self.__create_medals()
         self.__create_error_label()
 
+    # region Realization of methods
     def _create_objects(self) -> None:
         super()._create_objects()
         self.__create_text_labels()
@@ -32,7 +34,9 @@ class RecordsScene(scenes.BaseScene):
         title = Text('RECORDS', 32, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
+    # endregion
 
+    # region Private
     def __create_error_label(self) -> None:
         self.__error_text = Text('NO RECORDS', 24, color=Color.RED)
         self.__error_text.move_center(self.game.width // 2, 100)
@@ -55,6 +59,7 @@ class RecordsScene(scenes.BaseScene):
                 image.scale(35, 35)
                 yield image
         self.__medals = list(creator())
+    # endregion
 
     def additional_draw(self, screen: pg.Surface) -> None:
         if not self.medals_text:

@@ -10,6 +10,7 @@ class SettingsScene(scenes.BaseScene):
     __volume_position = 150
     __difficulty_pos = 210
 
+    # region Realization of methods
     def _create_objects(self) -> None:
         super()._create_objects()
         volume_text = Text("VOLUME", 20)
@@ -81,3 +82,4 @@ class SettingsScene(scenes.BaseScene):
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE
         )
+    # endregion

@@ -11,7 +11,7 @@ class EndScene(scenes.BaseScene):
         super().__init__(game)
         self.score = score
 
-    # region реализация унаследованного класса
+    # region Realization of methods
     def _create_objects(self) -> None:
         super()._create_objects()
         self.objects += [self.__get_score_text, self.__get_highscore_text]
@@ -51,7 +51,7 @@ class EndScene(scenes.BaseScene):
             colors=BUTTON_DEFAULT_COLORS
         )
 
-    def _configurate(self):
+    def configurate(self):
         self.__save_record()
         self.__unlock_level()
 
@@ -64,7 +64,7 @@ class EndScene(scenes.BaseScene):
 
     # endregion
 
-    # region приватные методы
+    # region Private
     @property
     def __get_score_text(self) -> Text:
         text_score = Text(f'Score: {self.score}', 20)
