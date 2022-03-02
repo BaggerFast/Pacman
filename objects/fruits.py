@@ -59,7 +59,7 @@ class Fruit(BaseObject, IDrawable, ILogical):
 
     def process_logic(self):
         self.is_hidden = pg.time.get_ticks() - self.__start_time >= 9000
-        self.__eaten = not (pg.time.get_ticks() - self.__start_time >= 300)
+        self.__eaten = not pg.time.get_ticks() - self.__start_time >= 300
 
     def process_draw(self, screen: pg.Surface) -> None:
         self.__draw_fruit(screen)

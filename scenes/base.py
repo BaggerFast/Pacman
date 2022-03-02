@@ -1,3 +1,4 @@
+from collections import Generator
 import pygame as pg
 import scenes
 from misc.interfaces.igeneric_object import IGenericObject, IEventful, ILogical, IDrawable
@@ -5,17 +6,17 @@ from objects.buttons import ButtonController
 
 
 class BaseScene(IGenericObject):
+    # todo сделать регионы во всех сценах на англ
 
-    # todo Game is used in __init__
     def __init__(self, game):
         self.game = game
         self.screen: pg.Surface = self.game.screen
         self.objects: list = []
         self._scene_manager = scenes.SceneManager()
 
-    # region Public
+    # region публичные методы
 
-    # region Implemenation of object methods
+    # region реализация интерфейса
     def process_event(self, event: pg.event.Event) -> None:
         for obj in self.objects:
             if isinstance(obj, IEventful):
@@ -48,11 +49,11 @@ class BaseScene(IGenericObject):
 
     # endregion
 
-    # region Private
+    # region приватные методы
     def _create_title(self) -> None:
         pass
 
-    def _button_init(self):
+    def _button_init(self) -> Generator:
         yield []
 
     def _create_objects(self) -> None:
@@ -60,7 +61,7 @@ class BaseScene(IGenericObject):
         if buttons:
             self.objects.append(ButtonController(self.game, buttons))
 
-    def configurate(self):
+    def _configurate(self):
         self._create_objects()
         self._create_title()
     # endregion
