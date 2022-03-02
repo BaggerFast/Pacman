@@ -1,3 +1,5 @@
+import dataclasses
+from copy import copy
 from typing import List, Tuple
 import pygame as pg
 from misc.constants import CELL_SIZE
@@ -7,6 +9,33 @@ from misc.sprite_sheet import SpriteSheet
 from objects.base import BaseObject
 from .text import Text
 from .image import ImageObject
+
+
+class someFruit(IDrawable):
+
+    def __init__(self, image: pg.image, points: int, rect: pg.Rect):
+        self.__image = image
+        self.__rect = rect
+        self.points = points
+        self.is_hidden = False
+        self.is_eaten = False
+        self.__start_timer = None
+
+    @property
+    def rect(self):
+        return copy(self.__rect)
+
+    def process_draw(self, screen: pg.Surface) -> None:
+        if self.is_eaten:
+            Text(text=str(self.points), size=10, rect=self.rect).process_draw(screen)
+        if not self.is_hidden:
+            screen.blit(self.image, self.rect)
+
+    def process_logic(self) -> None:
+        if not self.start_timer:
+            self.start_timer = pg.time.get_ticks()
+        self.is_hidden = pg.time.get_ticks() - self.start_timer < 9000
+        self.is_eaten = pg.time.get_ticks() - self.start_timer < 300
 
 
 class Fruit(BaseObject, IDrawable, ILogical):
@@ -20,18 +49,30 @@ class Fruit(BaseObject, IDrawable, ILogical):
         self.rect = self.current_image.get_rect()
         self.move_center(*self.pos_from_cell(pos))
         self.is_hidden = False
-        self.__scores: List[int] = [100, 300, 500, 700, 1000, 2000, 3000, 5000]
+        self.__scores: List[int] = [100, 300, 500, 700, 1000, 2000, 3000]
         self.__eaten: bool = False
         self.__start_time = pg.time.get_ticks()
         self.__fruit_hud: List[ImageObject] = []
+
+        images = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
+        scores = (100, 300, 500, 700, 1000, 2000, 3000)
+        self.fruits = self.merge_score_and_image(images, scores)
+
+    def merge_score_and_image(self, sprite: tuple[pg.image], scores: tuple) -> tuple[someFruit]:
+        if not len(sprite) == len(scores):
+            raise IndexError('Длинна очков не совпадает с длинной фруктов')
+        tempFruits = []
+        for i in range(len(sprite)):
+            tempFruits.append(someFruit(sprite[i], scores[i]))
+        return tuple(tempFruits)
 
     # region Public
 
     # region Implementation of IDrawable, ILogical
 
-    def process_logic(self):
-        self.is_hidden = pg.time.get_ticks() - self.__start_time >= 9000
-        self.__eaten = not pg.time.get_ticks() - self.__start_time >= 300
+    def process_logic(self) -> None:
+        self.is_hidden = pg.time.get_ticks() - self.__start_time < 9000
+        self.__eaten = pg.time.get_ticks() - self.__start_time < 300
 
     def process_draw(self, screen: pg.Surface) -> None:
         self.__draw_fruit(screen)
@@ -72,7 +113,7 @@ class Fruit(BaseObject, IDrawable, ILogical):
         if self.__eaten:
             Text(text=str(self.__scores[self.__cur_index - 1] * self.game.difficulty),
                  size=10, rect=self.rect).process_draw(screen)
-        if self.is_hidden:
+        if not self.is_hidden:
             screen.blit(self.current_image, self.rect)
 
     def __change_image(self) -> None:
