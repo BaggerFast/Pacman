@@ -6,17 +6,17 @@ from objects.buttons import ButtonController
 
 
 class BaseScene(IGenericObject):
-    # todo сделать регионы во всех сценах на англ
 
+    # todo Game is used in __init__
     def __init__(self, game):
         self.game = game
         self.screen: pg.Surface = self.game.screen
         self.objects: list = []
         self._scene_manager = scenes.SceneManager()
 
-    # region публичные методы
+    # region Public
 
-    # region реализация интерфейса
+    # region Implementation of object methods
     def process_event(self, event: pg.event.Event) -> None:
         for obj in self.objects:
             if isinstance(obj, IEventful):
@@ -38,7 +38,6 @@ class BaseScene(IGenericObject):
     def additional_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             self._scene_manager.pop()
-
     # endregion
 
     def on_enter(self) -> None:
@@ -46,10 +45,9 @@ class BaseScene(IGenericObject):
 
     def on_exit(self) -> None:
         pass
-
     # endregion
 
-    # region приватные методы
+    # region Private
     def _create_title(self) -> None:
         pass
 
