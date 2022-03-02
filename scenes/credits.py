@@ -10,7 +10,6 @@ from objects.buttons import Button
 
 class CreditsScene(scenes.BaseScene):
 
-    # todo Name region
     __data = [
         "Смирнов Андрей",
         "Aleksandrov Daniil",

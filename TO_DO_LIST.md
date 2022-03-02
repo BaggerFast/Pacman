@@ -1,4 +1,12 @@
-## 2022-03-01
+## 2022-02-01
+
 ### Do it
--  rename regions in game.py
--  add regions in all scenes files
+
+- add regions for all files in objects and misc directory
+
+## 2022-03-01
+
+### Do it
+
+- rename regions in game.py
+- add regions in all scenes files
