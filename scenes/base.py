@@ -3,6 +3,7 @@ import pygame as pg
 import scenes
 from misc.interfaces.igeneric_object import IGenericObject, IEventful, ILogical, IDrawable
 from objects.buttons import ButtonController
+from objects.objects import Objects
 
 
 class BaseScene(IGenericObject):
@@ -11,7 +12,7 @@ class BaseScene(IGenericObject):
     def __init__(self, game):
         self.game = game
         self.screen: pg.Surface = self.game.screen
-        self.objects: list = []
+        self.objects = Objects()
         self._scene_manager = scenes.SceneManager()
 
     # region Public

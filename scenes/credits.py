@@ -1,7 +1,5 @@
 from random import randint
-
 import pygame as pg
-
 import scenes
 from misc.constants import Font
 from objects import Text

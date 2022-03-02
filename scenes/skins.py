@@ -49,7 +49,8 @@ class SkinsScene(scenes.BaseScene):
                 text.move_center(self.game.width // 8 - 10 + i * 25, 60)
                 yield text
 
-        self.objects += list(creator())
+        # todo refix extend
+        self.objects.append(*list(creator()))
 
     def create_fruits_and_text_for_skins(self) -> None:
         def creator():
@@ -71,7 +72,7 @@ class SkinsScene(scenes.BaseScene):
         index_pos_x = 20
         pos_regarding_buttons_x = self.button_pos_x + 45
         pos_regarding_buttons_y = self.button_pos_y - 6
-        self.objects += list(creator())
+        self.objects.append(*list(creator()))
     # endregion
 
     # region Private

@@ -6,7 +6,6 @@ from misc.constants import Font, event_append, EvenType
 from misc.constants.skin_names import SkinsNames
 from objects import SeedContainer, Text
 from objects.characters import *
-
 from objects.characters.ghosts.ghost_states import GhostState
 from objects.fruits import Fruit
 from objects.map import Map
@@ -113,14 +112,14 @@ class MainScene(scenes.BaseScene):
     # region Implementation of BaseScene
 
     def _create_title(self) -> None:
-        self.objects += [*self.__get_static_text, self.__get_hud]
+        self.objects.append(*self.__get_static_text, self.__get_hud)
 
     def _create_objects(self) -> None:
         self.game.sounds.siren.unpause()
         hp_cheat = ControlCheats([Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))])
         self.text[-1].surface.set_alpha(0)
         self.pacman = Pacman(self.game, self.__player_position)
-        self.objects += [hp_cheat, self.__map, self.__seeds, self.fruit, self.pacman, self.score]
+        self.objects.append(hp_cheat, self.__map, self.__seeds, self.fruit, self.pacman, self.score)
         self.__create_ghost()
         self.on_reset()
 
@@ -183,7 +182,7 @@ class MainScene(scenes.BaseScene):
         self.__prefered_ghost = self.pinky
         self.__count_prefered_ghost = 0
 
-        self.objects += self.ghosts
+        self.objects.append(*self.ghosts)
 
     def __process_collision(self) -> None:
         self.fruit.process_collision(self.pacman)

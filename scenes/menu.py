@@ -1,6 +1,5 @@
 import pygame as pg
 from PIL import ImageFilter, Image
-
 import scenes
 from misc.constants import VERSION
 from misc.constants.classes import MenuPreset, Font, Color
@@ -48,8 +47,8 @@ class MenuScene(scenes.BaseScene):
 
         ver = Text(VERSION, 8, font=Font.TITLE)
         ver.move(self.game.width - 50, 270)
-
-        self.objects += [image, ver, self.__level_indicator]
+        self.objects.append(image)
+        self.objects.append(image, ver, self.__level_indicator)
 
         super()._create_objects()
 

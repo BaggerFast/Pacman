@@ -32,7 +32,7 @@ class SettingsScene(scenes.BaseScene):
         volume_value = Text(f"{self.game.settings.VOLUME} %", 20)
         volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
 
-        self.objects += [volume_text, volume_value, self.title]
+        self.objects.append(volume_text, volume_value, self.title)
 
     def _button_init(self) -> None:
         yield SettingButton(

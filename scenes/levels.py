@@ -58,7 +58,7 @@ class LevelsScene(scenes.BaseScene):
         title.move_center(self.game.width // 2, 30)
         title2 = Text('Scroll - [q, e]', 15, font=Font.DEFAULT)
         title2.move_center(self.game.width // 2, 50)
-        self.objects += [title, title2]
+        self.objects.append(title, title2)
 
     def _button_init(self):
         for i in range(self.__scroll, self.__scroll + self.__buttons_on_scene):
