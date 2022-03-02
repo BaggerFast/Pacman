@@ -11,6 +11,7 @@ from objects.buttons import ButtonController, Button, SkinButton, BuyButton
 
 class SkinsScene(scenes.BaseScene):
 
+    # todo Game is used in __init__
     def __init__(self, game):
         super().__init__(game)
         self.skins = {
@@ -23,12 +24,22 @@ class SkinsScene(scenes.BaseScene):
         }
         self.fruit_images: list[str] = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
 
-    def _create_objects(self) -> None:
-        self.preview = copy(self.game.skins.current.image)
-        self.objects.append(self.preview)
-        self.create_buttons()
-        self.create_fruits_and_text_we_have()
-        self.create_fruits_and_text_for_skins()
+    # region Public
+
+    def create_buttons(self) -> None:
+        self.button_pos_x = self.game.width // 2 - 65
+        self.button_pos_y = 90
+        self.button_pos_multiply_y = 25
+        button_controller = ButtonController(self.game, list(self._button_init()))
+        # for button in button_controller.buttons:
+        #     if not type(button) in [SkinButton, BuyButton]:
+        #         return
+        #     if self.game.skins.current.name == buttons[index].value.name:
+        #         if not (buttons[index].text.startswith("-") or buttons[index].text.endswith("-")):
+        #             buttons[index].text = '-' + buttons[index].text + '-'
+        #     else:
+        #         buttons[index].text = buttons[index].text.strip('-')
+        self.objects.append(button_controller)
 
     def create_fruits_and_text_we_have(self) -> None:
         def creator():
@@ -42,7 +53,7 @@ class SkinsScene(scenes.BaseScene):
 
     def create_fruits_and_text_for_skins(self) -> None:
         def creator():
-            for index, skin in enumerate(self.skins.keys()):
+            for index, (skin_name, skin) in enumerate(self.skins.items()):
                 multiply_x = 0
                 if skin.is_unlocked:
                     continue
@@ -61,6 +72,18 @@ class SkinsScene(scenes.BaseScene):
         pos_regarding_buttons_x = self.button_pos_x + 45
         pos_regarding_buttons_y = self.button_pos_y - 6
         self.objects += list(creator())
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
+
+    def _create_objects(self) -> None:
+        self.preview = copy(self.game.skins.current.image)
+        self.objects.append(self.preview)
+        self.create_buttons()
+        self.create_fruits_and_text_we_have()
+        self.create_fruits_and_text_for_skins()
 
     def _create_title(self) -> None:
         title = Text('SELECT SKIN', 25, font=Font.TITLE)
@@ -97,17 +120,6 @@ class SkinsScene(scenes.BaseScene):
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE)
 
-    def create_buttons(self) -> None:
-        self.button_pos_x = self.game.width // 2 - 65
-        self.button_pos_y = 90
-        self.button_pos_multiply_y = 25
-        button_controller = ButtonController(self.game, list(self._button_init()))
-        # for button in button_controller.buttons:
-        #     if not type(button) in [SkinButton, BuyButton]:
-        #         return
-        #     if self.game.skins.current.name == buttons[index].value.name:
-        #         if not (buttons[index].text.startswith("-") or buttons[index].text.endswith("-")):
-        #             buttons[index].text = '-' + buttons[index].text + '-'
-        #     else:
-        #         buttons[index].text = buttons[index].text.strip('-')
-        self.objects.append(button_controller)
+    # endregion
+
+    # endregion

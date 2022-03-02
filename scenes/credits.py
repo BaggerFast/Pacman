@@ -9,6 +9,8 @@ from objects.buttons import Button
 
 
 class CreditsScene(scenes.BaseScene):
+
+    # todo Name region
     __data = [
         "Смирнов Андрей",
         "Aleksandrov Daniil",
@@ -18,6 +20,33 @@ class CreditsScene(scenes.BaseScene):
         "Дмитрий Пашков",
         "Николайчев Павел",
     ]
+
+    # region Public
+
+    # region Implementation of IGenericObject
+
+    def additional_logic(self) -> None:
+        if self.__students2:
+            self.__students2 = self.__data.copy()
+        elif len(self.__students) == len(self.__students2) and not self.__on_screen:
+            self.__students.clear()
+        elif pg.time.get_ticks() // 2 % 100 == 0 and not len(self.__students) == len(self.__students2):
+            self.__create_student()
+        if not self.game.sounds.credits.is_busy():
+            self.game.sounds.reload_sounds()
+            self.game.sounds.credits.play()
+        self.__process_students()
+
+    # endregion
+
+    def on_exit(self) -> None:
+        self.game.sounds.credits.stop()
+
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
 
     def _create_objects(self) -> None:
         super()._create_objects()
@@ -43,6 +72,8 @@ class CreditsScene(scenes.BaseScene):
                      function=self.__skip_sound,
                      center=(self.game.width // 4 + 110, 250),
                      text_size=Font.BUTTON_TEXT_SIZE)
+
+    # endregion
 
     def __get_random_student_y(self) -> int:
         return randint(25, self.game.height - 75)
@@ -92,21 +123,8 @@ class CreditsScene(scenes.BaseScene):
             self.objects.remove(self.__students[index])
             del self.__students[index]
 
-    def additional_logic(self) -> None:
-        if self.__students2:
-            self.__students2 = self.__data.copy()
-        elif len(self.__students) == len(self.__students2) and not self.__on_screen:
-            self.__students.clear()
-        elif pg.time.get_ticks() // 2 % 100 == 0 and not len(self.__students) == len(self.__students2):
-            self.__create_student()
-        if not self.game.sounds.credits.is_busy():
-            self.game.sounds.reload_sounds()
-            self.game.sounds.credits.play()
-        self.__process_students()
-
-    def on_exit(self) -> None:
-        self.game.sounds.credits.stop()
-
     def __skip_sound(self):
         self.game.sounds.reload_sounds()
         self.game.sounds.credits.play()
+
+    # endregion

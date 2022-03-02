@@ -7,11 +7,27 @@ from objects.buttons import Button
 
 class EndScene(scenes.BaseScene):
 
+    # todo Game is used in __init__
     def __init__(self, game, score):
         super().__init__(game)
         self.score = score
 
-    # region реализация унаследованного класса
+    # region Public
+    def configurate(self):
+        self.__save_record()
+        self.__unlock_level()
+
+    def on_enter(self) -> None:
+        self.game.sounds.siren.stop()
+        self.game.sounds.gameover.play()
+
+    def on_exit(self) -> None:
+        self.game.sounds.gameover.stop()
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
     def _create_objects(self) -> None:
         super()._create_objects()
         self.objects += [self.__get_score_text, self.__get_highscore_text]
@@ -50,21 +66,8 @@ class EndScene(scenes.BaseScene):
             text_size=Font.BUTTON_TEXT_SIZE,
             colors=BUTTON_DEFAULT_COLORS
         )
-
-    def configurate(self):
-        self.__save_record()
-        self.__unlock_level()
-
-    def on_enter(self) -> None:
-        self.game.sounds.siren.stop()
-        self.game.sounds.gameover.play()
-
-    def on_exit(self) -> None:
-        self.game.sounds.gameover.stop()
-
     # endregion
 
-    # region приватные методы
     @property
     def __get_score_text(self) -> Text:
         text_score = Text(f'Score: {self.score}', 20)

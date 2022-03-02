@@ -8,10 +8,24 @@ from objects.buttons import Button
 
 
 class GameOverScene(scenes.BaseScene):
+
+    # todo Game is used in __init__
     def __init__(self, game, score):
         super().__init__(game)
         self.score = score
 
+    # region Public
+    def on_exit(self) -> None:
+        self.game.sounds.gameover.stop()
+
+    def on_enter(self) -> None:
+        self.game.sounds.pacman.stop()
+        self.game.sounds.gameover.play()
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
     def _create_objects(self) -> None:
         super()._create_objects()
         self.objects += [self.__get_score_text, self.__get_highscore_text]
@@ -33,10 +47,11 @@ class GameOverScene(scenes.BaseScene):
                 rect=pg.Rect(0, 0, 180, 35),
                 text=menu_preset.header,
                 function=menu_preset.function,
-                center=(self.game.width // 2, 210+40*i),
+                center=(self.game.width // 2, 210 + 40 * i),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_DEFAULT_COLORS
             )
+    # endregion
 
     @property
     def __get_score_text(self) -> Text:
@@ -49,10 +64,4 @@ class GameOverScene(scenes.BaseScene):
         text_highscore = Text(f'High score: {self.game.records.data[0]}',  20)
         text_highscore.move_center(self.game.width // 2, 165)
         return text_highscore
-
-    def on_exit(self) -> None:
-        self.game.sounds.gameover.stop()
-
-    def on_enter(self) -> None:
-        self.game.sounds.pacman.stop()
-        self.game.sounds.gameover.play()
+    # endregion

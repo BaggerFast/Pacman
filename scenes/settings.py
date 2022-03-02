@@ -10,6 +10,20 @@ class SettingsScene(scenes.BaseScene):
     __volume_position = 150
     __difficulty_pos = 210
 
+    # region Public
+
+    @property
+    def title(self) -> Text:
+        text = Text("SETTINGS", 30, font=Font.TITLE)
+        text.move_center(self.game.width // 2, 30)
+        return text
+
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
+
     def _create_objects(self) -> None:
         super()._create_objects()
         volume_text = Text("VOLUME", 20)
@@ -19,12 +33,6 @@ class SettingsScene(scenes.BaseScene):
         volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
 
         self.objects += [volume_text, volume_value, self.title]
-
-    @property
-    def title(self) -> Text:
-        text = Text("SETTINGS", 30, font=Font.TITLE)
-        text.move_center(self.game.width // 2, 30)
-        return text
 
     def _button_init(self) -> None:
         yield SettingButton(
@@ -81,3 +89,7 @@ class SettingsScene(scenes.BaseScene):
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE
         )
+
+    # endregion
+
+    # endregion

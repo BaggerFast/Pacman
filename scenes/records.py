@@ -10,10 +10,31 @@ from objects.buttons import Button
 class RecordsScene(scenes.BaseScene):
     medals = SpriteSheet(sprite_path=get_image_path('medal.png'), sprite_size=(16, 16))[0]
 
+    # todo Game is used in __init__
     def __init__(self, game):
         super().__init__(game)
         self.__create_medals()
         self.__create_error_label()
+
+    # region Public
+
+    # region Implementation of IGenericObject
+
+    def additional_draw(self, screen: pg.Surface) -> None:
+        if not self.medals_text:
+            self.__error_text.process_draw(screen)
+        else:
+            for i in range(len(self.medals_text)):
+                self.medals_text[i].process_draw(screen)
+                self.__medals[i].process_draw(screen)
+
+    # endregion
+
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
 
     def _create_objects(self) -> None:
         super()._create_objects()
@@ -32,6 +53,8 @@ class RecordsScene(scenes.BaseScene):
         title = Text('RECORDS', 32, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.objects.append(title)
+
+    # endregion
 
     def __create_error_label(self) -> None:
         self.__error_text = Text('NO RECORDS', 24, color=Color.RED)
@@ -56,10 +79,4 @@ class RecordsScene(scenes.BaseScene):
                 yield image
         self.__medals = list(creator())
 
-    def additional_draw(self, screen: pg.Surface) -> None:
-        if not self.medals_text:
-            self.__error_text.process_draw(screen)
-        else:
-            for i in range(len(self.medals_text)):
-                self.medals_text[i].process_draw(screen)
-                self.__medals[i].process_draw(screen)
+    # endregion

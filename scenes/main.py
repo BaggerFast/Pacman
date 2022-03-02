@@ -15,6 +15,7 @@ from objects.score import Score
 
 class MainScene(scenes.BaseScene):
 
+    # todo Game is used in __init__
     def __init__(self, game):
         super().__init__(game)
         self.__load_from_map()
@@ -30,8 +31,100 @@ class MainScene(scenes.BaseScene):
         self.ghost_text_timer = pg.time.get_ticks()
         self.ghost_text_flag = False
 
+    # region Public
+
+    # region Implementation of IGenericObject
+
+    def process_logic(self) -> None:
+        if not self.game.sounds.intro.is_busy():
+            super().process_logic()
+            if not self.game.sounds.siren.is_busy():
+                self.game.sounds.siren.play()
+            self.__process_collision()
+            if self.pacman.animator != self.pacman.dead_anim:
+                self.__check_ghosts()
+            if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
+                self._create_objects()
+                self.__seeds_eaten = 0
+                self.__max_seeds_eaten_to_prefered_ghost = 7
+                for ghost in self.ghosts:
+                    ghost.work_counter = False
+            if self.__seeds_eaten == self.__max_seeds_eaten_to_prefered_ghost and self.__prefered_ghost is not None:
+                self.__prefered_ghost.is_can_leave_home = True
+                if self.__max_seeds_eaten_to_prefered_ghost == 7:
+                    self.__max_seeds_eaten_to_prefered_ghost = 17
+                elif self.__max_seeds_eaten_to_prefered_ghost == 17:
+                    self.__max_seeds_eaten_to_prefered_ghost = 32
+        else:
+            self.__start_label()
+            for ghost in self.ghosts:
+                ghost.update_ai_timer()
+                ghost.update_timer()
+        self.select_ghost_go()
+        if not self.ghost_text_flag:
+            return
+        if pg.time.get_ticks() - self.ghost_text_timer >= 1000:
+            # включить призраков обратно
+            for ghost in self.ghosts:
+                ghost.visible()
+                ghost.gg_text.text = ' '
+            self.ghost_text_flag = False
+
+    def additional_event(self, event: pg.event.Event) -> None:
+        data = {
+            EvenType.GameOver: lambda: self._scene_manager.reset(scenes.GameOverScene(self.game, self.score)),
+            EvenType.Win: lambda: self._scene_manager.reset(scenes.EndScene(self.game, self.score)),
+        }
+        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+            pg.mixer.pause()
+            self._scene_manager.append(scenes.PauseScene(self.game))
+        elif event.type in data:
+            data[event.type]()
+
+    # endregion
+
+    def select_ghost_go(self):
+        # todo prefered ghost 2
+        if self.__prefered_ghost and self.__prefered_ghost.can_leave_home:
+            # меняет призрака который будет выходить следующим
+            self.__count_prefered_ghost += 1
+            self.__not_prefered_ghosts.pop(0)
+            if self.__count_prefered_ghost < len(self.ghosts):
+                self.__prefered_ghost = self.ghosts[self.__count_prefered_ghost]
+            else:
+                self.__prefered_ghost = None
+
+        for ghost in self.__not_prefered_ghosts:
+            if ghost != self.__prefered_ghost:
+                ghost.update_timer()
+
+    @property
+    def movements_data(self):
+        return self.__movements_data
+
+    def on_reset(self) -> None:
+        self.game.sounds.intro.play()
+        self.game.sounds.reload_sounds()
+
+    # endregion
+
+    # region Private
+
+    # region Implementation of BaseScene
+
     def _create_title(self) -> None:
         self.objects += [*self.__get_static_text, self.__get_hud]
+
+    def _create_objects(self) -> None:
+        self.game.sounds.siren.unpause()
+        hp_cheat = ControlCheats([Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))])
+        self.text[-1].surface.set_alpha(0)
+        self.pacman = Pacman(self.game, self.__player_position)
+        self.objects += [hp_cheat, self.__map, self.__seeds, self.fruit, self.pacman, self.score]
+        self.__create_ghost()
+        self.on_reset()
+
+    # endregion
 
     @property
     def __get_static_text(self):
@@ -74,15 +167,6 @@ class MainScene(scenes.BaseScene):
                 yield text
         self.text = list(creator())
 
-    def _create_objects(self) -> None:
-        self.game.sounds.siren.unpause()
-        hp_cheat = ControlCheats([Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))])
-        self.text[-1].surface.set_alpha(0)
-        self.pacman = Pacman(self.game, self.__player_position)
-        self.objects += [hp_cheat, self.__map, self.__seeds, self.fruit, self.pacman, self.score]
-        self.__create_ghost()
-        self.on_reset()
-
     def __create_ghost(self):
         self.blinky = Blinky(self.game, self.__ghost_positions[3])
         self.pinky = Pinky(self.game, self.__ghost_positions[1])
@@ -100,21 +184,6 @@ class MainScene(scenes.BaseScene):
         self.__count_prefered_ghost = 0
 
         self.objects += self.ghosts
-
-    @property
-    def movements_data(self):
-        return self.__movements_data
-
-    def additional_event(self, event: pg.event.Event) -> None:
-        data = {
-            EvenType.GameOver: lambda: self._scene_manager.reset(scenes.GameOverScene(self.game, self.score)),
-            EvenType.Win: lambda: self._scene_manager.reset(scenes.EndScene(self.game, self.score)),
-        }
-        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            pg.mixer.pause()
-            self._scene_manager.append(scenes.PauseScene(self.game))
-        elif event.type in data:
-            data[event.type]()
 
     def __process_collision(self) -> None:
         self.fruit.process_collision(self.pacman)
@@ -167,57 +236,4 @@ class MainScene(scenes.BaseScene):
         self.game.sounds.siren.unpause()
         self.game.sounds.pellet.stop()
 
-    def select_ghost_go(self):
-        # todo prefered ghost 2
-        if self.__prefered_ghost and self.__prefered_ghost.can_leave_home:
-            # меняет призрака который будет выходить следующим
-            self.__count_prefered_ghost += 1
-            self.__not_prefered_ghosts.pop(0)
-            if self.__count_prefered_ghost < len(self.ghosts):
-                self.__prefered_ghost = self.ghosts[self.__count_prefered_ghost]
-            else:
-                self.__prefered_ghost = None
-
-        for ghost in self.__not_prefered_ghosts:
-            if ghost != self.__prefered_ghost:
-                ghost.update_timer()
-
-    def process_logic(self) -> None:
-        if not self.game.sounds.intro.is_busy():
-            super().process_logic()
-            if not self.game.sounds.siren.is_busy():
-                self.game.sounds.siren.play()
-            self.__process_collision()
-            if self.pacman.animator != self.pacman.dead_anim:
-                self.__check_ghosts()
-            if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
-                self._create_objects()
-                self.__seeds_eaten = 0
-                self.__max_seeds_eaten_to_prefered_ghost = 7
-                for ghost in self.ghosts:
-                    ghost.work_counter = False
-            if self.__seeds_eaten == self.__max_seeds_eaten_to_prefered_ghost and self.__prefered_ghost is not None:
-                self.__prefered_ghost.is_can_leave_home = True
-                if self.__max_seeds_eaten_to_prefered_ghost == 7:
-                    self.__max_seeds_eaten_to_prefered_ghost = 17
-                elif self.__max_seeds_eaten_to_prefered_ghost == 17:
-                    self.__max_seeds_eaten_to_prefered_ghost = 32
-        else:
-            self.__start_label()
-            for ghost in self.ghosts:
-                ghost.update_ai_timer()
-                ghost.update_timer()
-        self.select_ghost_go()
-        if not self.ghost_text_flag:
-            return
-        if pg.time.get_ticks() - self.ghost_text_timer >= 1000:
-            # включить призраков обратно
-            for ghost in self.ghosts:
-                ghost.visible()
-                ghost.gg_text.text = ' '
-            self.ghost_text_flag = False
-
-    def on_reset(self) -> None:
-        self.game.sounds.intro.play()
-        self.game.sounds.reload_sounds()
-
+    # endregion
