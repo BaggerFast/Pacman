@@ -1,4 +1,4 @@
-from .fruits import Fruit
+from .fruits import FruitController
 from .health_controller import HealthController
 from .image import ImageObject
 from .map import Map

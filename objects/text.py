@@ -24,8 +24,7 @@ class Text(BaseObject, IDrawable):
     # region Implementation of IDrawable
 
     def process_draw(self, screen: pg.Surface) -> None:
-        if self.__surface.get_alpha() != 0:
-            screen.blit(self.__surface, self.rect)
+        screen.blit(self.__surface, self.rect)
 
     # endregion
 

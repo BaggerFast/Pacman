@@ -1,5 +1,4 @@
-import dataclasses
-from copy import copy
+from enum import Enum, auto
 from typing import List, Tuple
 import pygame as pg
 from misc.constants import CELL_SIZE
@@ -7,118 +6,128 @@ from misc.interfaces import IDrawable, ILogical
 from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects.base import BaseObject
-from .text import Text
 from .image import ImageObject
+from .text import Text
 
 
-class someFruit(IDrawable):
+class FruitState(Enum):
+    wait = auto()
+    draw = auto()
+    eaten = auto()
+    static = auto()
 
-    def __init__(self, image: pg.image, points: int, rect: pg.Rect):
+
+class Fruit(IDrawable):
+
+    def __init__(self, image: pg.Surface, points: int, pos, index):
         self.__image = image
-        self.__rect = rect
-        self.points = points
-        self.is_hidden = False
-        self.is_eaten = False
+        self.__index = index
+        self.__rect = self.__image.get_rect()
+        self.move_center(*self.pos_from_cell(pos))
+        self.__points = points
+
+        self.__state = FruitState.wait
         self.__start_timer = None
 
-    @property
-    def rect(self):
-        return copy(self.__rect)
+        self.__text = Text(text=str(self.__points), size=10, rect=self.__rect)
+        self.__hud = ImageObject(self.__image, (130 + self.__index * 12, 270))
 
-    def process_draw(self, screen: pg.Surface) -> None:
-        if self.is_eaten:
-            Text(text=str(self.points), size=10, rect=self.rect).process_draw(screen)
-        if not self.is_hidden:
-            screen.blit(self.image, self.rect)
-
-    def process_logic(self) -> None:
-        if not self.start_timer:
-            self.start_timer = pg.time.get_ticks()
-        self.is_hidden = pg.time.get_ticks() - self.start_timer < 9000
-        self.is_eaten = pg.time.get_ticks() - self.start_timer < 300
-
-
-class Fruit(BaseObject, IDrawable, ILogical):
-
-    def __init__(self, game, pos: tuple):
-        BaseObject.__init__(self)
-        # todo delete game
-        self.game = game
-        self.images = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
-        self.__cur_index: int = 0
-        self.rect = self.current_image.get_rect()
-        self.move_center(*self.pos_from_cell(pos))
-        self.is_hidden = False
-        self.__scores: List[int] = [100, 300, 500, 700, 1000, 2000, 3000]
-        self.__eaten: bool = False
-        self.__start_time = pg.time.get_ticks()
-        self.__fruit_hud: List[ImageObject] = []
-
-        images = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
-        scores = (100, 300, 500, 700, 1000, 2000, 3000)
-        self.fruits = self.merge_score_and_image(images, scores)
-
-    def merge_score_and_image(self, sprite: tuple[pg.image], scores: tuple) -> tuple[someFruit]:
-        if not len(sprite) == len(scores):
-            raise IndexError('Длинна очков не совпадает с длинной фруктов')
-        tempFruits = []
-        for i in range(len(sprite)):
-            tempFruits.append(someFruit(sprite[i], scores[i]))
-        return tuple(tempFruits)
-
-    # region Public
-
-    # region Implementation of IDrawable, ILogical
-
-    def process_logic(self) -> None:
-        self.is_hidden = pg.time.get_ticks() - self.__start_time < 9000
-        self.__eaten = pg.time.get_ticks() - self.__start_time < 300
-
-    def process_draw(self, screen: pg.Surface) -> None:
-        self.__draw_fruit(screen)
-        for fruit in self.__fruit_hud:
-            fruit.process_draw(screen)
-
-    # endregion
+    def __set_state(self, states):
+        if self.__state != states:
+            self.__state = states
+            self.__start_timer = pg.time.get_ticks()
 
     @property
-    def current_image(self) -> pg.Surface:
-        return self.images[self.__cur_index]
+    def score(self):
+        return self.__points
 
-    def process_collision(self, obj: BaseObject):
-        """
-        :param obj: any class with pygame.rect
-        :return: is objects in collision (bool) and self type (str)
-        """
-        if not (self.is_hidden and self.rect.collidepoint(obj.rect.center)):
-            return
-        self.game.sounds.fruit.play()
-        self.is_hidden = False
-        self.__eaten = True
-        self.__start_time = pg.time.get_ticks()
-        self.game.store_fruit(self.__cur_index, 1 * self.game.difficulty)
+    def get_timer(self):
+        return pg.time.get_ticks() - self.__start_timer
 
-        self.game.current_scene.score.eat_fruit(self.__scores[self.__cur_index])
-        self.__change_image()
+    def process_draw(self, screen: pg.Surface) -> None:
+        data = {
+            FruitState.draw: lambda src: src.blit(self.__image, self.__rect),
+            FruitState.eaten: lambda src: self.__text.process_draw(src),
+            FruitState.static: lambda src: self.__hud.process_draw(src)
+        }
+        if self.__state in data.keys():
+            data[self.__state](screen)
+
+    def process_logic(self) -> None:
+        if self.__start_timer is None:
+            self.__start_timer = pg.time.get_ticks()
+        data = {
+            FruitState.wait: lambda: FruitState.draw if self.get_timer() >= 9000 else FruitState.wait,
+            FruitState.eaten: lambda: FruitState.eaten if self.get_timer() < 300 else FruitState.static
+        }
+        if self.__state in data.keys():
+            self.__set_state(data[self.__state]())
+
+    def collision(self, obj) -> bool:
+        if self.__state is FruitState.draw and self.__rect.collidepoint(obj.rect.center):
+            self.__set_state(FruitState.eaten)
+            return True
+        return False
 
     @staticmethod
     def pos_from_cell(cell: Tuple[int, int]) -> Tuple[int, int]:
         return cell[0] * CELL_SIZE + CELL_SIZE // 2, cell[1] * CELL_SIZE + 20 + CELL_SIZE // 2
 
+    def move_center(self, x: int, y: int) -> None:
+        self.__rect.centerx = x
+        self.__rect.centery = y
+
+
+class FruitController(IDrawable, ILogical):
+
+    def __init__(self, game, pos: tuple):
+        # todo delete game
+        self.game = game
+        self.__cur_index: int = 0
+        self.images = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
+        self.scores = (100, 300, 500, 700, 1000, 2000, 3000)
+        self.fruits = []
+        self.pos = pos
+        self.new_fruit()
+
+    def new_fruit(self):
+        if not len(self.images) == len(self.scores):
+            raise IndexError('Длинна очков не совпадает с длинной фруктов')
+        elif self.__cur_index not in range(0, len(self.scores)):
+            raise IndexError('Кол-во фруктов меньше предполагаемого')
+        self.fruits.append(
+            Fruit(self.images[self.__cur_index], self.scores[self.__cur_index], self.pos, self.__cur_index))
+
+    # region Public
+
+    # region Implementation of IDrawable, ILogical
+    def process_logic(self) -> None:
+        for fruit in self.fruits:
+            fruit.process_logic()
+
+    def process_draw(self, screen: pg.Surface) -> None:
+        for fruit in self.fruits:
+            fruit.process_draw(screen)
+
+    # endregion
+
+    @property
+    def current_image(self) -> Fruit:
+        return self.fruits[-1]
+
+    def process_collision(self, obj: BaseObject):
+        if self.current_image.collision(obj):
+            self.game.sounds.fruit.play()
+            self.game.store_fruit(self.__cur_index, 1 * self.game.difficulty)
+            self.game.current_scene.score.eat_fruit(self.current_image.score)
+            self.__change_image()
+
     # endregion
 
     # region Private
 
-    def __draw_fruit(self, screen: pg.Surface) -> None:
-        if self.__eaten:
-            Text(text=str(self.__scores[self.__cur_index - 1] * self.game.difficulty),
-                 size=10, rect=self.rect).process_draw(screen)
-        if not self.is_hidden:
-            screen.blit(self.current_image, self.rect)
-
     def __change_image(self) -> None:
-        self.__cur_index = (self.__cur_index + 1) % len(self.images)
-        self.rect = self.current_image.get_rect(center=self.rect.center)
-        self.__fruit_hud.append(ImageObject(self.images[self.__cur_index - 1], (130 + self.__cur_index * 12, 270)))
+        self.__cur_index += 1
+        self.new_fruit()
 
     # endregion
