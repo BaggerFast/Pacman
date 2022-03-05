@@ -11,30 +11,21 @@ class BaseScene(IGenericObject):
     def __init__(self, game):
         self.game = game
         self.screen: pg.Surface = self.game.screen
-        self.objects = Objects()
         self._scene_manager = scenes.SceneManager()
+        self.objects = Objects()
 
     # region Public
 
     # region Implementation of IGenericObject
 
     def process_event(self, event: pg.event.Event) -> None:
-        for obj in self.objects:
-            if isinstance(obj, IEventful):
-                obj.process_event(event)
-        self.additional_event(event)
+        self.objects.process_event(event)
 
     def process_logic(self) -> None:
-        for obj in self.objects:
-            if isinstance(obj, ILogical):
-                obj.process_logic()
-        self.additional_logic()
+        self.objects.process_logic()
 
     def process_draw(self, screen: pg.Surface) -> None:
-        for obj in self.objects:
-            if isinstance(obj, IDrawable):
-                obj.process_draw(screen)
-        self.additional_draw(screen)
+        self.objects.process_draw(screen)
 
     def additional_event(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:

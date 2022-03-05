@@ -1,3 +1,4 @@
+from enum import Enum, auto, IntEnum
 from typing import List, Union, Callable, Tuple
 import pygame as pg
 from misc.constants import Font, ButtonColor, BUTTON_DEFAULT_COLORS
@@ -5,10 +6,13 @@ from misc.interfaces import IDrawable, IEventful
 from objects.base import BaseObject
 
 
+class BtnStates(IntEnum):
+    INITIAL = 0
+    HOVER = 1
+    CLICK = 2
+
+
 class Button(BaseObject, IDrawable, IEventful):
-    STATE_INITIAL = 0
-    STATE_HOVER = 1
-    STATE_CLICK = 2
 
     def __init__(self, game, rect: Union[tuple, pg.Rect], text: str, function: Callable[[], None] = None,
                  colors: ButtonColor = BUTTON_DEFAULT_COLORS, center: Tuple[int, int] = None,
@@ -23,7 +27,7 @@ class Button(BaseObject, IDrawable, IEventful):
         self.__font = pg.font.Font(Font.DEFAULT, text_size)
         self.active = active
         self.__colors: ButtonColor = colors
-        self.state = self.STATE_INITIAL
+        self.state = BtnStates.INITIAL
         self.surfaces = self.prepare_surfaces()
         if center:
             self.move_center(*center)
@@ -53,9 +57,9 @@ class Button(BaseObject, IDrawable, IEventful):
         if event.type != pg.MOUSEMOTION:
             return
         if self.mouse_hover(event.pos):
-            if self.state != self.STATE_HOVER:
+            if self.state != BtnStates.HOVER:
                 self.select()
-        elif self.state != self.STATE_INITIAL:
+        elif self.state != BtnStates.INITIAL:
             self.deselect()
 
     def process_mouse_button_down(self, event: pg.event.Event) -> None:
@@ -67,7 +71,7 @@ class Button(BaseObject, IDrawable, IEventful):
     def process_mouse_button_up(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONUP or event.type == pg.MOUSEWHEEL:
             return
-        if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT and self.state != self.STATE_INITIAL:
+        if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT and self.state != BtnStates.INITIAL:
             self.deselect()
 
     def process_mouse_click(self, event: pg.event.Event):
@@ -113,13 +117,13 @@ class Button(BaseObject, IDrawable, IEventful):
         return surface
 
     def select(self) -> None:
-        self.state = self.STATE_HOVER
+        self.state = BtnStates.HOVER
 
     def deselect(self) -> None:
-        self.state = self.STATE_INITIAL
+        self.state = BtnStates.INITIAL
 
     def activate(self) -> None:
-        self.state = self.STATE_CLICK
+        self.state = BtnStates.CLICK
 
     def click(self) -> None:
         self.game.sounds.click.play()

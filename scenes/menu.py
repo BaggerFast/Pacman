@@ -47,7 +47,6 @@ class MenuScene(scenes.BaseScene):
 
         ver = Text(VERSION, 8, font=Font.TITLE)
         ver.move(self.game.width - 50, 270)
-        self.objects.append(image)
         self.objects.append(image, ver, self.__level_indicator)
 
         super()._create_objects()
@@ -86,4 +85,7 @@ class MenuScene(scenes.BaseScene):
         indicator.move_center(self.game.width // 2, 60)
         return indicator
 
+    def additional_event(self, event: pg.event.Event) -> None:
+        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+            pass
     # endregion

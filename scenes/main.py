@@ -7,7 +7,7 @@ from misc.constants.skin_names import SkinsNames
 from objects import SeedContainer, Text
 from objects.characters import *
 from objects.characters.ghosts.ghost_states import GhostState
-from objects.fruits import Fruit
+from objects.fruits import FruitController
 from objects.map import Map
 from objects.score import Score
 
@@ -26,7 +26,7 @@ class MainScene(scenes.BaseScene):
         self.__timer_reset_pacman = 0
         self.__seeds_eaten = 0
         self.__max_seeds_eaten_to_prefered_ghost = 7
-        self.fruit = Fruit(self.game, self.__fruit_position)
+        self.fruit = FruitController(self.game, self.__fruit_position)
         self.ghost_text_timer = pg.time.get_ticks()
         self.ghost_text_flag = False
 

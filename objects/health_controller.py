@@ -1,6 +1,6 @@
 import pygame as pg
 from misc.constants import EvenType, event_append
-from misc.interfaces import IDrawable, IEventful, ILogical
+from misc.interfaces import IEventful, IGenericObject
 from objects.image import ImageObject
 
 
@@ -56,7 +56,7 @@ class HealthLogic(IEventful):
             self.__events[event.type]()
 
 
-class HealthController(IDrawable, ILogical, IEventful):
+class HealthController(IGenericObject):
 
     def __init__(self, game, hp_count: int = 3, max_hp: int = 5):
         self.game = game

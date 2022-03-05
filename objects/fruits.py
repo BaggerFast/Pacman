@@ -95,8 +95,8 @@ class FruitController(IDrawable, ILogical):
             raise IndexError('Длинна очков не совпадает с длинной фруктов')
         elif self.__cur_index not in range(0, len(self.scores)):
             raise IndexError('Кол-во фруктов меньше предполагаемого')
-        self.fruits.append(
-            Fruit(self.images[self.__cur_index], self.scores[self.__cur_index], self.pos, self.__cur_index))
+        self.fruits.append(Fruit(self.images[self.__cur_index], self.scores[self.__cur_index],
+                                 self.pos, self.__cur_index))
 
     # region Public
 

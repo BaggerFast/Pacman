@@ -35,7 +35,7 @@ class GameOverScene(scenes.BaseScene):
 
     def _create_objects(self) -> None:
         super()._create_objects()
-        self.objects += [self.__get_score_text, self.__get_highscore_text]
+        self.objects.append(self.__get_score_text, self.__get_highscore_text)
 
     def _create_title(self) -> None:
         for i, text in enumerate(['GAME', 'OVER']):
@@ -60,7 +60,6 @@ class GameOverScene(scenes.BaseScene):
             )
 
     # endregion
-
     @property
     def __get_score_text(self) -> Text:
         text_score = Text(f'Score: {self.score}', 20)

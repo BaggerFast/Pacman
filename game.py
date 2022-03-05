@@ -12,6 +12,7 @@ from misc.path import get_image_path
 from misc.skins import Skins
 from misc.sound_controller import SoundController
 from objects.map import rand_color, Map
+from objects.objects import Objects
 
 
 class Game:
@@ -176,6 +177,8 @@ class Game:
 
         self.scene_manager.reset(scenes.MenuScene(self))
 
+        self.obj = Objects(self.scene_manager, self.__cheats)
+
     # region Public
 
     def main_loop(self) -> None:
@@ -217,7 +220,7 @@ class Game:
         if fruit_id in range(FRUITS_COUNT):
             self.eaten_fruits[fruit_id] += value
         else:
-            raise Exception(f"id error. Fruit id: {fruit_id} doesn't exist")
+            raise Exception(f"id error. FruitController id: {fruit_id} doesn't exist")
 
     @property
     def difficulty(self) -> int:
@@ -250,17 +253,15 @@ class Game:
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
-            self.__cheats.process_event(event)
+            self.obj.process_event(event)
             self.__process_exit_events(event)
-            self.scene_manager.process_event(event)
 
     def __process_all_logic(self) -> None:
-        self.__cheats.process_logic()
-        self.scene_manager.process_logic()
+        self.obj.process_logic()
 
     def __process_all_draw(self) -> None:
         self.screen.fill(Color.BLACK)
-        self.scene_manager.process_draw(self.screen)
+        self.obj.process_draw(self.screen)
         pg.display.flip()
 
     # endregion

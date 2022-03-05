@@ -1,9 +1,14 @@
 import pygame as pg
-from meta_classes import SingletonMeta
+from meta_classes.singleton_meta import Singleton
+from misc.interfaces import IGenericObject
 from scenes.base import BaseScene
 
 
-class SceneManager(metaclass=SingletonMeta):
+class FinalMeta(type(IGenericObject), type(Singleton)):
+    pass
+
+
+class SceneManager(IGenericObject, Singleton, metaclass=FinalMeta):
 
     def __init__(self):
         self.scenes: list[BaseScene] = []
@@ -24,12 +29,15 @@ class SceneManager(metaclass=SingletonMeta):
 
     def process_logic(self) -> None:
         self.current.process_logic()
+        self.current.additional_logic()
 
     def process_event(self, event) -> None:
         self.current.process_event(event)
+        self.current.additional_event(event)
 
     def process_draw(self, screen: pg.Surface) -> None:
         self.current.process_draw(screen)
+        self.current.additional_draw(screen)
 
     def append(self, scene: BaseScene) -> None:
         self.exit_scene()
