@@ -6,7 +6,7 @@ from game import Game
 
 def parse_exceptions():
     if not DEBUG:
-        with open(f"exception-{datetime.now().strftime('%m-%d-%Y-%H-%M-%S')}.log", "w") as file:
+        with open(f"logs/{datetime.now().strftime('%m-%d-%Y-%H-%M-%S')}.log", "w") as file:
             file.write(traceback.format_exc())
     else:
         print(traceback.print_exc())
