@@ -306,4 +306,3 @@ $RECYCLE.BIN/
 saves/*
 logs/*
 !.gitkeep
-misc/constants/variables.py

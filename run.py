@@ -1,3 +1,4 @@
+import os
 import traceback
 from datetime import datetime
 from misc.constants import DEBUG
@@ -5,11 +6,14 @@ from game import Game
 
 
 def parse_exceptions():
-    if not DEBUG:
-        with open(f"logs/{datetime.now().strftime('%m-%d-%Y-%H-%M-%S')}.log", "w") as file:
-            file.write(traceback.format_exc())
-    else:
+    if DEBUG:
         print(traceback.print_exc())
+        return
+    log_directory = 'logs'
+    if not os.path.exists(log_directory):
+        os.makedirs(log_directory)
+    with open(f"{log_directory}/{datetime.now().strftime('%d-%m-%Y-%H-%M-%S')}.log", "w") as file:
+        file.write(traceback.format_exc())
 
 
 def main():

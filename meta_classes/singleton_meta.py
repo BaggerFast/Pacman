@@ -1,4 +1,5 @@
 class SingletonMeta(type):
+    """meta class for Pattern Singleton"""
     _instance = None
 
     def __call__(cls, *args, **kwargs):
@@ -8,5 +9,6 @@ class SingletonMeta(type):
         return cls._instance
 
 
+# pylint: disable=R0903
 class Singleton(metaclass=SingletonMeta):
-    pass
+    """parent class for Pattern Singleton"""
