@@ -17,6 +17,6 @@ jobs:
         with:
           python-version: 3.9
       - name: Install dependencies
-        run: ls -la
-      - name: pylint
-        run: echo Hello, world!
+        run: pip install -r requirements.txt
+      - name: pycodestyle
+        run: pycodestyle .
