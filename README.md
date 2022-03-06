@@ -1,18 +1,17 @@
 # Проект "Pacman"
-
-<br><img src="https://github.com/BaggerFast/pacman/workflows/CI/badge.svg?">
+<img src="https://github.com/BaggerFast/pacman/workflows/CI/badge.svg?"><br>
 ### Цель
 Создать модифицированную копию игры Pacman
 
 ### Технологический стек:
-- python 3.6+
-- pygame 2.0.0
-- Pillow 8.0.1
+- python 3.9+
+- pygame 2.0.0+
+- Pillow 8.0.1+
 
 ### Инструкция по настройке проекта:
 1. Склонировать проект
 2. Открыть проект в PyCharm с наcтройками по умолчанию
-3. Создать виртуальное окружение (через settings -> project "DEFINE ME" -> project interpreter)
+3. Создать виртуальное окружение (через settings -> project "Pacman" -> project interpreter)
 4. Открыть терминал в PyCharm
 5. **Проверить, что виртуальное окружение активировано**.
 6. Обновить pip:
