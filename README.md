@@ -1,5 +1,7 @@
 # Проект "Pacman"
 
+Status of CI:<br>
+<img src="https://github.com/BaggerFast/pacman/workflows/CI/badge.svg?branch=master"><br>
 ### Цель
 Создать модифицированную копию игры Pacman
 
