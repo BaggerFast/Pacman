@@ -11,4 +11,3 @@ class GhostState(IntEnum):
     eaten = auto()
     frightened = auto()
     chase = auto()
-

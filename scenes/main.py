@@ -128,8 +128,7 @@ class MainScene(scenes.BaseScene):
     @property
     def __get_static_text(self):
         scores_label_text = Text(f'{"MEMORY" if self.game.skins.current.name == SkinsNames.chrome else "SCORE"}',
-            Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20)
-        )
+                                 Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20))
 
         high_scores_label_text = Text('HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20))
         return [scores_label_text, high_scores_label_text]
@@ -164,6 +163,7 @@ class MainScene(scenes.BaseScene):
                 text.set_alpha(0)
                 self.objects.append(text)
                 yield text
+
         self.text = list(creator())
 
     def __create_ghost(self):

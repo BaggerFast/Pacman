@@ -73,4 +73,3 @@ class Score(IDrawable, IEventful):
         self.fear_count += 1
 
     # endregion
-

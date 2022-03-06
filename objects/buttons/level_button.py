@@ -27,4 +27,3 @@ class LvlButton(Button):
         super().deselect()
 
     # endregion
-

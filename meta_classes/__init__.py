@@ -1,1 +1,1 @@
-from .singleton_meta import SingletonMeta
+from .singleton_meta import Singleton

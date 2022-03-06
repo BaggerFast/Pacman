@@ -13,7 +13,7 @@ class SkinButton(Button):
         self.game.sounds.click.play()
         self.game.skins.current = self.value
         self.select()
-        #self.game.scenes.current.update_button_text()
+        # self.game.scenes.current.update_button_text()
 
     def deselect(self) -> None:
         scene = self.game.scene_manager.current

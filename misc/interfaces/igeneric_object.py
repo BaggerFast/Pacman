@@ -4,7 +4,7 @@ from misc.interfaces import ILogical, IDrawable, IEventful
 
 
 class IGenericObject(IDrawable, ILogical, IEventful, ABC):
-
+    """Interface for objects with draw, event and logical functional"""
     @abstractmethod
     def process_event(self, event: pg.event.Event) -> None:
         pass

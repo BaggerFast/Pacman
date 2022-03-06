@@ -1,5 +1,6 @@
 import pygame as pg
-from meta_classes.singleton_meta import Singleton
+
+from meta_classes import Singleton
 from misc.interfaces import IGenericObject
 from scenes.base import BaseScene
 

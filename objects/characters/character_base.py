@@ -42,10 +42,10 @@ class Character(BaseObject, ILogical, IDrawable, ABC):
         for i in range(-1, 2):
             if self.animator.current_aura:
                 screen.blit(self.animator.current_aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
-                                                                   self.rect.centery - self.__aura.get_rect().height // 2))
+                                                         self.rect.centery - self.__aura.get_rect().height // 2))
             elif self.__aura:
                 screen.blit(self.__aura, (self.rect.centerx - self.__aura.get_rect().width // 2,
-                                                    self.rect.centery - self.__aura.get_rect().height // 2))
+                                          self.rect.centery - self.__aura.get_rect().height // 2))
             screen.blit(self.animator.current_image, (self.rect.x + self.game.width * i, self.rect.y))
 
     # endregion
@@ -80,7 +80,8 @@ class Character(BaseObject, ILogical, IDrawable, ABC):
         return self.movement_cell(self.get_cell())[direction]
 
     def in_center(self) -> bool:
-        return self.rect.centerx % CELL_SIZE == CELL_SIZE // 2 and (self.rect.centery - 20) % CELL_SIZE == CELL_SIZE // 2
+        return self.rect.centerx % CELL_SIZE == CELL_SIZE // 2 and (
+            self.rect.centery - 20) % CELL_SIZE == CELL_SIZE // 2
 
     def get_cell(self) -> Tuple[int, int]:
         return self.rect.centerx // CELL_SIZE, (self.rect.centery - 20) // CELL_SIZE

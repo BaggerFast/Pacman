@@ -107,7 +107,7 @@ class Base(Character, IEventful, ABC):
 
     def process_draw(self, screen: pg.Surface) -> None:
         if self.mode == GhostState.eaten:
-            self.gg_text.text = f'{200 * self.game.difficulty ** 2}' # * 2 ** self.game.score.fear_count2
+            self.gg_text.text = f'{200 * self.game.difficulty ** 2}'  # * 2 ** self.game.score.fear_count2
             self.gg_text.process_draw(screen)
         if not self.is_invisible:
             super().process_draw(screen)
