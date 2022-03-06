@@ -1,8 +1,6 @@
 from abc import ABC
 from typing import Tuple, List, Union
-
 import pygame as pg
-
 from misc import Animator
 from misc.animator import SpriteSheetAnimator
 from misc.constants import CELL_SIZE
@@ -97,4 +95,4 @@ class Character(BaseObject, ILogical, IDrawable, ABC):
     def pos_from_cell(cell: Tuple[int, int]) -> Tuple[int, int]:
         return cell[0] * CELL_SIZE + CELL_SIZE // 2, cell[1] * CELL_SIZE + 20 + CELL_SIZE // 2
 
-    # endregion
+# endregion
