@@ -1,5 +1,5 @@
 class SingletonMeta(type):
-    """meta class for Pattern Singleton"""
+    """metaclass for Pattern Singleton"""
     _instance = None
 
     def __call__(cls, *args, **kwargs):

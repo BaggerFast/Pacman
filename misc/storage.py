@@ -68,8 +68,10 @@ class Storage(Field):
         self.last_skin = self.game.skins.current.name
         self.eaten_fruits = self.game.eaten_fruits
 
-        self.unlocked_levels = self.unlocked_levels if not self.game.cheats_var.UNLOCK_LEVELS else self.game.storage.unlocked_levels
-        self.unlocked_skins = self.unlocked_skins if not self.game.cheats_var.UNLOCK_SKINS else self.game.storage.unlocked_skins
+        self.unlocked_levels = self.unlocked_levels if not self.game.cheats_var.UNLOCK_LEVELS \
+            else self.game.storage.unlocked_levels
+        self.unlocked_skins = self.unlocked_skins if not self.game.cheats_var.UNLOCK_SKINS \
+            else self.game.storage.unlocked_skins
 
         self.highscores = self.game.highscores
         self.save_to_file()

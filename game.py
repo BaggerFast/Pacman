@@ -47,14 +47,18 @@ class Game:
                     vars[arg.upper()] = True
 
         def unlock_skins(self):
-            self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.UNLOCK_SKINS else self.game.storage.unlocked_skins
+            self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.UNLOCK_SKINS \
+                else self.game.storage.unlocked_skins
             if isinstance(self.game.scene_manager.current, scenes.SkinsScene):
-                self.game.scene_manager.current._create_objects()
+                ...
+                # self.game.scene_manager.current._create_objects()
 
         def unlock_levels(self):
-            self.game.unlocked_levels = self.game.maps.keys() if self.game.cheats_var.UNLOCK_LEVELS else self.game.storage.unlocked_levels
+            self.game.unlocked_levels = self.game.maps.keys() if self.game.cheats_var.UNLOCK_LEVELS \
+                else self.game.storage.unlocked_levels
             if isinstance(self.game.scene_manager.current, scenes.LevelsScene):
-                self.game.scene_manager.current._create_objects()
+                ...
+                # self.game.scene_manager.current._create_objects()
 
     class Settings:
 
@@ -172,7 +176,8 @@ class Game:
 
         self.sounds = self.Music(self)
 
-        self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins else SkinsNames.default
+        self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins \
+            else SkinsNames.default
         self.records = HighScore(self)
 
         self.scene_manager.reset(scenes.MenuScene(self))
