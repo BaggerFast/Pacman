@@ -2,32 +2,34 @@ from typing import Union
 import pygame as pg
 from misc.constants import EvenType
 from misc.interfaces.igeneric_object import IDrawable, IEventful
-from misc.keyboards import MenuKeyboard
 from objects.buttons.button import Button
 
 
 class ButtonController(IDrawable, IEventful):
+    # todo refactor
+    CURRENT_BTN = (pg.K_SPACE, pg.K_RETURN)
+    NEXT_BTN = (pg.K_s, pg.K_DOWN)
+    PREV_BTN = (pg.K_w, pg.K_UP)
 
     def __init__(self, game, buttons):
         self.game = game
         self.buttons = buttons
         self.active_button_index = -1
         self.kb_actions = {
-            EvenType.NextBtn: lambda: self.select_button_checker(1),
-            EvenType.PreviousBtn: lambda: self.select_button_checker(-1),
-            EvenType.PressBtn: self.press_current_button,
+            self.NEXT_BTN: lambda: self.select_button_checker(1),
+            self.PREV_BTN: lambda: self.select_button_checker(-1),
+            self.CURRENT_BTN: self.press_current_button,
         }
-        self.kb = MenuKeyboard()
 
     # region Public
 
     # region Implementation of IDrawable, IEventful
 
     def process_event(self, event: pg.event.Event) -> None:
-        self.kb.process_event(event)
         self.process_button_events(event)
         self.process_key_down(event)
         self.process_mouse_motion(event)
+        self.__parse_keyboard(event)
 
     def process_draw(self, screen: pg.Surface) -> None:
         for button in self.buttons:
@@ -76,5 +78,17 @@ class ButtonController(IDrawable, IEventful):
     def process_button_events(self, event: pg.event.Event) -> None:
         for button in self.buttons:
             button.process_event(event)
+
+    # endregion
+
+    # Private
+
+    def __parse_keyboard(self, event):
+        if event.type != pg.KEYDOWN:
+            return
+        for key in self.kb_actions.keys():
+            if event.key in key:
+                self.kb_actions[key]()
+                return
 
     # endregion

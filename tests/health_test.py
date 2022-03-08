@@ -1,5 +1,4 @@
-from unittest import TestCase
-
+from unittest import TestCase, main
 from objects.health_controller import HealthLogic
 
 
@@ -33,3 +32,7 @@ class TestHealth(TestCase):
         hp = HealthLogic(1, 3)
         hp.get_damage(1)
         self.assertFalse(hp.alive)
+
+
+if __name__ == '__main__':
+    main()

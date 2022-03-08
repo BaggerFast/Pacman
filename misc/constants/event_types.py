@@ -20,15 +20,6 @@ class EvenType(IntEnum):
     StopFearMode = auto()
     FrightenedMode = auto()
 
-    GoUp = auto()
-    GoDown = auto()
-    GoLeft = auto()
-    GoRight = auto()
-
-    NextBtn = auto()
-    PreviousBtn = auto()
-    PressBtn = auto()
-
 
 def event_append(event: int):
     pg.event.post(pg.event.Event(event))

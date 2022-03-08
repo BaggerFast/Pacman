@@ -2,21 +2,32 @@ import pygame as pg
 
 from misc import Animator
 from misc.animator import SpriteSheetAnimator
-from misc.constants import EvenType
 from misc.interfaces.igeneric_object import IEventful
-from misc.keyboards import PacmanKeyboard
 from objects import HealthController
 from objects.characters.character_base import Character
 
 
 class Pacman(Character, IEventful):
+    RIGHT_KEYS = (pg.K_d, pg.K_RIGHT)
+    LEFT_KEYS = (pg.K_a, pg.K_LEFT)
+    UP_KEYS = (pg.K_w, pg.K_UP)
+    DOWN_KEYS = (pg.K_s, pg.K_DOWN)
 
     dir_action = {
-        EvenType.GoUp: (0, -1, 3),
-        EvenType.GoDown: (0, 1, 1),
-        EvenType.GoLeft: (-1, 0, 2),
-        EvenType.GoRight: (1, 0, 0)
+        RIGHT_KEYS: (1, 0, 0),
+        DOWN_KEYS: (0, 1, 1),
+        LEFT_KEYS: (-1, 0, 2),
+        UP_KEYS: (0, -1, 3),
     }
+
+    def parse_keyboard(self, event):
+        if event.type != pg.KEYDOWN or self.dead:
+            return
+        for key in self.dir_action.keys():
+            if event.key in key:
+                self.__feature_rotate = self.dir_action[key]
+                self.go()
+                return
 
     def __init__(self, game, start_pos: tuple[int, int]):
         self.__walk_anim: Animator = game.skins.current.walk
@@ -24,7 +35,6 @@ class Pacman(Character, IEventful):
         Character.__init__(self, game, self.__walk_anim, start_pos)
         self.hp = HealthController(self.game, 3)
         self.dead = False
-        self.kb = PacmanKeyboard()
         self.__feature_rotate = (0, 0, 0)
 
     # region Public
@@ -33,12 +43,9 @@ class Pacman(Character, IEventful):
 
     def process_event(self, event: pg.event.Event) -> None:
         self.hp.process_event(event)
-        if event.type in self.dir_action.keys() and not self.dead:
-            self.go()
-            self.__feature_rotate = self.dir_action[event.type]
+        self.parse_keyboard(event)
 
     def process_logic(self) -> None:
-        self.kb.process_logic()
         self.hp.process_logic()
         self.animator.timer_check()
         if self.dead:
