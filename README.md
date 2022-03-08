@@ -1,4 +1,7 @@
 # Проект "Pacman"
+
+[![Language](https://img.shields.io/badge/language-python-blue.svg?style=flat)](https://www.python.org)
+[![Module](https://img.shields.io/badge/module-pygame-brightgreen.svg?style=flat)](http://www.pygame.org/news.html)
 <img src="https://github.com/BaggerFast/pacman/workflows/CI/badge.svg?"><br>
 ### Цель
 Создать модифицированную копию игры Pacman
