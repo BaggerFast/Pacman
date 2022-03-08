@@ -38,7 +38,7 @@ class Seed(IDrawable):
         screen.blit(self.image, self.rect)
 
     def remove(self):
-        event_append(EvenType.EatSeed)
+        event_append(EvenType.EAT_SEED)
         if not self.game.sounds.seed.is_busy():
             self.game.sounds.seed.play()
 
@@ -51,7 +51,7 @@ class BigSeed(Seed):
         super().__init__(game, rect, self.animator.current_image)
 
     def remove(self):
-        event_append(EvenType.EatEnergizer)
+        event_append(EvenType.EAT_ENERGIZER)
         if not self.game.sounds.seed.is_busy():
             self.game.sounds.seed.play()
 
@@ -99,7 +99,7 @@ class SeedContainer(IDrawable):
 
     def process_collision(self, obj):
         if self.is_field_empty():
-            event_append(EvenType.Win)
+            event_append(EvenType.WIN)
             return
 
         self.__seed_remover(self.seed_bf, obj)

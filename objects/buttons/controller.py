@@ -86,7 +86,7 @@ class ButtonController(IDrawable, IEventful):
     def __parse_keyboard(self, event):
         if event.type != pg.KEYDOWN:
             return
-        for key in self.kb_actions.keys():
+        for key in self.kb_actions:
             if event.key in key:
                 self.kb_actions[key]()
                 return

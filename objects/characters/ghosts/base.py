@@ -100,7 +100,7 @@ class Base(Character, IEventful, ABC):
 
     def process_event(self, event: pg.event.Event) -> None:
         events = {
-            EvenType.FrightenedMode: self.toggle_mode_to_frightened
+            EvenType.FRIGHTENED_MODE: self.toggle_mode_to_frightened
         }
         if event.type in events:
             events[event.type]()
@@ -159,7 +159,7 @@ class Base(Character, IEventful, ABC):
         if pg.time.get_ticks() - self.ai_timer >= self.frightened_time - 2000:
             self.animator = self.frightened_walk_anim2
         if pg.time.get_ticks() - self.ai_timer >= self.frightened_time:
-            event_append(EvenType.StopFearMode)
+            event_append(EvenType.STOP_FEAR_MODE)
             self.update_ai_timer()
             self.deceleration_multiplier = 1
             self.animator = self.walk_anim

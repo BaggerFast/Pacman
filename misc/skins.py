@@ -105,7 +105,7 @@ class Skins:
 
     @property
     def all_skins(self) -> list:
-        return [key for key in self.__dict__.keys() if isinstance(self.__dict__[key], Skin)]
+        return [key for key, value in self.__dict__.items() if isinstance(value, Skin)]
 
     @property
     def current(self) -> Skin:

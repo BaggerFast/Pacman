@@ -71,8 +71,8 @@ class MainScene(scenes.BaseScene):
 
     def additional_event(self, event: pg.event.Event) -> None:
         data = {
-            EvenType.GameOver: lambda: self._scene_manager.reset(scenes.GameOverScene(self.game, self.score)),
-            EvenType.Win: lambda: self._scene_manager.reset(scenes.EndScene(self.game, self.score)),
+            EvenType.GAME_OVER: lambda: self._scene_manager.reset(scenes.GameOverScene(self.game, self.score)),
+            EvenType.WIN: lambda: self._scene_manager.reset(scenes.EndScene(self.game, self.score)),
         }
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
             pg.mixer.pause()
@@ -116,7 +116,7 @@ class MainScene(scenes.BaseScene):
 
     def _create_objects(self) -> None:
         self.game.sounds.siren.unpause()
-        hp_cheat = ControlCheats([Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HealthInc))])
+        hp_cheat = ControlCheats([Cheat(self.game, 'aezakmi', lambda: event_append(EvenType.HEALTH_INC))])
         self.text[-1].set_alpha(0)
         self.pacman = Pacman(self.game, self.__player_position)
         self.objects.append(hp_cheat, self.__map, self.__seeds, self.fruit, self.pacman, self.score)
@@ -193,14 +193,14 @@ class MainScene(scenes.BaseScene):
             if ghost.collision_check(self.pacman)[1]:
                 self.__timer_reset_pacman = pg.time.get_ticks()
                 if not self.pacman.dead:
-                    event_append(EvenType.HealthDec)
+                    event_append(EvenType.HEALTH_DEC)
                     self.pacman.death()
                 for ghost2 in self.ghosts:
                     ghost2.invisible()
             else:
                 if ghost.mode == GhostState.frightened:
                     ghost.invisible()
-                    event_append(EvenType.EatGhost)
+                    event_append(EvenType.EAT_GHOST)
                     self.ghost_text_flag = True
                     self.ghost_text_timer = pg.time.get_ticks()
                 ghost.toggle_mode_to_eaten()

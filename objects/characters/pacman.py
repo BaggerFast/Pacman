@@ -23,7 +23,7 @@ class Pacman(Character, IEventful):
     def parse_keyboard(self, event):
         if event.type != pg.KEYDOWN or self.dead:
             return
-        for key in self.dir_action.keys():
+        for key in self.dir_action:
             if event.key in key:
                 self.__feature_rotate = self.dir_action[key]
                 self.go()

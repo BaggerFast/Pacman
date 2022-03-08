@@ -26,8 +26,8 @@ class HealthLogic(IEventful):
         self.__cur_hp: int = self.__check_limits(hp_count)
         # todo health_events usability
         self.__events = {
-            EvenType.HealthInc: lambda: self.get_health(1),
-            EvenType.HealthDec: lambda: self.get_damage(1),
+            EvenType.HEALTH_INC: lambda: self.get_health(1),
+            EvenType.HEALTH_DEC: lambda: self.get_damage(1),
         }
 
     @property
@@ -68,7 +68,7 @@ class HealthController(IGenericObject):
         self.hp_view.hp_count = self.hp.count
         cheat = self.game.cheats_var.INFINITY_LIVES
         if all([not cheat, not self.hp.alive, not self.game.sounds.pacman.is_busy()]):
-            event_append(EvenType.GameOver)
+            event_append(EvenType.GAME_OVER)
 
     def process_event(self, event: pg.event.Event) -> None:
         self.hp.process_event(event)

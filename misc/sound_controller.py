@@ -4,12 +4,12 @@ import pygame as pg
 
 class SoundController:
 
-    def __init__(self, game, channel: int = 0, path: Union[str, pg.mixer.Sound] = '', volume: int = 1):
+    def __init__(self, game, channel: int = 0, path: str = '', volume: int = 1):
         # todo delete game
         self.game = game
         self.sound = pg.mixer.Sound(path)
-        self.volume = volume
         self.channel = pg.mixer.Channel(channel)
+        self.volume = volume
         self.update()
 
     # region Public

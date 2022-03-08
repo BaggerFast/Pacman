@@ -17,10 +17,10 @@ class Score(IDrawable, IEventful):
         self.text = Text(f'{self.__value}', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
 
         self.__events = {
-            EvenType.EatSeed: lambda: self + Points.POINT_PER_SEED * self.game.difficulty,
-            EvenType.EatEnergizer: self.__eat_energizer,
-            EvenType.EatGhost: self.__eat_ghost,
-            EvenType.StopFearMode: self.__deactivate_fear_mode,
+            EvenType.EAT_SEED: lambda: self + Points.POINT_PER_SEED * self.game.difficulty,
+            EvenType.EAT_ENERGIZER: self.__eat_energizer,
+            EvenType.EAT_GHOST: self.__eat_ghost,
+            EvenType.STOP_FEAR_MODE: self.__deactivate_fear_mode,
         }
 
     def __int__(self):
@@ -51,7 +51,8 @@ class Score(IDrawable, IEventful):
     # endregion
 
     @property
-    def score(self): return self.__value
+    def score(self):
+        return self.__value
 
     def eat_fruit(self, bonus) -> None:
         self + bonus * self.game.difficulty
@@ -62,7 +63,7 @@ class Score(IDrawable, IEventful):
 
     def __eat_energizer(self):
         self.fear_mode = True
-        event_append(EvenType.FrightenedMode)
+        event_append(EvenType.FRIGHTENED_MODE)
 
     def __deactivate_fear_mode(self) -> None:
         self.fear_mode = False

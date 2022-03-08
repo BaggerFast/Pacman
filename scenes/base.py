@@ -1,6 +1,6 @@
 import pygame as pg
 import scenes
-from misc.interfaces.igeneric_object import IGenericObject, IEventful, ILogical, IDrawable
+from misc.interfaces.igeneric_object import IGenericObject
 from objects.buttons import ButtonController
 from objects.objects import Objects
 

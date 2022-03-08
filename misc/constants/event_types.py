@@ -7,18 +7,18 @@ class EvenType(IntEnum):
     def _generate_next_value_(self, start, count, last_values):
         return pg.USEREVENT + count + 1
 
-    HealthInc = auto()
-    HealthDec = auto()
+    HEALTH_INC = auto()
+    HEALTH_DEC = auto()
 
-    EatSeed = auto()
-    EatGhost = auto()
-    EatEnergizer = auto()
+    EAT_SEED = auto()
+    EAT_GHOST = auto()
+    EAT_ENERGIZER = auto()
 
-    Win = auto()
-    GameOver = auto()
+    WIN = auto()
+    GAME_OVER = auto()
 
-    StopFearMode = auto()
-    FrightenedMode = auto()
+    STOP_FEAR_MODE = auto()
+    FRIGHTENED_MODE = auto()
 
 
 def event_append(event: int):

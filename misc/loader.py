@@ -57,8 +57,6 @@ class LevelLoader:
         self.__load_map_json()
         self.movements_map = self.get_movements_data()
         self.__seed_loader = SeedLoader(self.__json)
-        self.__seed_data = self.__seed_loader.get_seed_data()
-        self.energizer_data = self.__seed_loader.get_energizer_data()
 
     # region Public
 

@@ -27,7 +27,7 @@ class ImageObject(BaseObject, IDrawable):
     def parse_image(image):
         if isinstance(image, str):
             return pg.image.load(image).convert_alpha()
-        elif isinstance(image, pg.Surface):
+        if isinstance(image, pg.Surface):
             return image
 
     def scale(self, x, y) -> None:
