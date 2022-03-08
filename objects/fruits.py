@@ -1,5 +1,5 @@
 from enum import Enum, auto
-from typing import List, Tuple
+from typing import Tuple
 import pygame as pg
 from misc.constants import CELL_SIZE
 from misc.interfaces import IDrawable, ILogical
@@ -11,10 +11,10 @@ from .text import Text
 
 
 class FruitState(Enum):
-    wait = auto()
-    draw = auto()
-    eaten = auto()
-    static = auto()
+    WAIT = auto()
+    DRAW = auto()
+    EATEN = auto()
+    STATIC = auto()
 
 
 class Fruit(IDrawable):
@@ -26,7 +26,7 @@ class Fruit(IDrawable):
         self.move_center(*self.pos_from_cell(pos))
         self.__points = points
 
-        self.__state = FruitState.wait
+        self.__state = FruitState.WAIT
         self.__start_timer = None
 
         self.__text = Text(text=str(self.__points), size=10, rect=self.__rect)
@@ -46,26 +46,26 @@ class Fruit(IDrawable):
 
     def process_draw(self, screen: pg.Surface) -> None:
         data = {
-            FruitState.draw: lambda src: src.blit(self.__image, self.__rect),
-            FruitState.eaten: lambda src: self.__text.process_draw(src),
-            FruitState.static: lambda src: self.__hud.process_draw(src)
+            FruitState.DRAW: lambda src: src.blit(self.__image, self.__rect),
+            FruitState.EATEN: lambda src: self.__text.process_draw(src),
+            FruitState.STATIC: lambda src: self.__hud.process_draw(src)
         }
-        if self.__state in data.keys():
+        if self.__state in data:
             data[self.__state](screen)
 
     def process_logic(self) -> None:
         if self.__start_timer is None:
             self.__start_timer = pg.time.get_ticks()
         data = {
-            FruitState.wait: lambda: FruitState.draw if self.get_timer() >= 9000 else FruitState.wait,
-            FruitState.eaten: lambda: FruitState.eaten if self.get_timer() < 300 else FruitState.static
+            FruitState.WAIT: lambda: FruitState.DRAW if self.get_timer() >= 9000 else FruitState.WAIT,
+            FruitState.EATEN: lambda: FruitState.EATEN if self.get_timer() < 300 else FruitState.STATIC
         }
-        if self.__state in data.keys():
+        if self.__state in data:
             self.__set_state(data[self.__state]())
 
     def collision(self, obj) -> bool:
-        if self.__state is FruitState.draw and self.__rect.collidepoint(obj.rect.center):
-            self.__set_state(FruitState.eaten)
+        if self.__state is FruitState.DRAW and self.__rect.collidepoint(obj.rect.center):
+            self.__set_state(FruitState.EATEN)
             return True
         return False
 
@@ -93,7 +93,7 @@ class FruitController(IDrawable, ILogical):
     def new_fruit(self):
         if not len(self.images) == len(self.scores):
             raise IndexError('Длинна очков не совпадает с длинной фруктов')
-        elif self.__cur_index not in range(0, len(self.scores)):
+        if self.__cur_index not in range(0, len(self.scores)):
             raise IndexError('Кол-во фруктов меньше предполагаемого')
         self.fruits.append(Fruit(self.images[self.__cur_index], self.scores[self.__cur_index],
                                  self.pos, self.__cur_index))
