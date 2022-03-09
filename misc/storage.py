@@ -4,34 +4,33 @@ from misc.constants import HIGHSCORES_COUNT, FRUITS_COUNT
 from misc.constants.skin_names import SkinsNames
 
 
-class Field:
+class JsonField:
 
     # region Public
 
-    def dict(self):
+    def serialization_to_dict(self):
         data = {}
         for key in self.__dict__:
-            if isinstance(self.__dict__[key], Field):
-                data[key] = self.__dict__[key].dict()
+            if isinstance(self.__dict__[key], JsonField):
+                data[key] = self.__dict__[key].serialization_to_dict()
             elif not key.startswith('_'):
                 data[key] = self.__dict__[key]
         return data
 
-    def read_dict(self, value: dict):
+    def sync_with_dict(self, value: dict):
         for key in self.__dict__:
             if key not in value:
                 continue
-            if isinstance(self.__dict__[key], Field):
-                self.__dict__[key].read_dict(value[key])
+            if isinstance(self.__dict__[key], JsonField):
+                self.__dict__[key].sync_with_dict(value[key])
             else:
                 self.__dict__[key] = value[key]
 
     # endregion
 
 
-class Storage(Field):
-
-    class __Settings(Field):
+class Storage(JsonField):
+    class __Settings(JsonField):
         def __init__(self):
             self.SOUND = True
             self.FUN = False
@@ -72,13 +71,13 @@ class Storage(Field):
         self.save_to_file()
 
     def save_to_file(self):
-        string = json.dumps(self.dict(), indent=2)
+        string = json.dumps(self.serialization_to_dict(), indent=2)
         with open(self.__storage_filepath, "w") as file:
             file.write(string)
 
     def load(self) -> None:
-        create_file_if_not_exist(self.__storage_filepath, json.dumps(self.dict(), indent=2))
+        create_file_if_not_exist(self.__storage_filepath, json.dumps(self.serialization_to_dict(), indent=2))
         with open(self.__storage_filepath, "r") as file:
-            self.read_dict(json.load(file))
+            self.sync_with_dict(json.load(file))
 
     # endregion
