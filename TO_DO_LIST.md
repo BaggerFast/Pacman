@@ -2,7 +2,7 @@
 
 ### Do it
 
-- CI (github actions)
+- CI (GitHub actions)
 - Configure pylint and pycodestyle
 
 ## 06-03-2022
@@ -13,7 +13,7 @@
   - https://www.youtube.com/watch?v=UnKa_t-M_kM
 - redesign the import system
   - special attention to scenes and pylint
-- rename some variables, сlass and etc.
+- rename some variables, class and etc.
   - be careful, use shift + f6
 - sort files more correctly into folders - before that,
   - coordinate the structure with me

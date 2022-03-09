@@ -1,5 +1,4 @@
 import json
-
 from misc import create_file_if_not_exist, get_path
 from misc.constants import HIGHSCORES_COUNT, FRUITS_COUNT
 from misc.constants.skin_names import SkinsNames
@@ -11,25 +10,21 @@ class Field:
 
     def dict(self):
         data = {}
-        for key in self.__dict__.keys():
-            if key == 'game':
-                continue
-            if hasattr(self.__dict__[key], 'dict'):
+        for key in self.__dict__:
+            if isinstance(self.__dict__[key], Field):
                 data[key] = self.__dict__[key].dict()
-            else:
-                if hasattr(self.__dict__[key], '__dict__') and not key.startswith('_'):
-                    data[key] = self.__dict__[key].__dict__
-                else:
-                    data[key] = self.__dict__[key]
+            elif not key.startswith('_'):
+                data[key] = self.__dict__[key]
         return data
 
-    def read_dict(self, value):
-        for key in self.__dict__.keys():
-            if key in value.keys():
-                if hasattr(self.__dict__[key], 'dict'):
-                    self.__dict__[key].read_dict(value[key])
-                else:
-                    self.__dict__[key] = value[key]
+    def read_dict(self, value: dict):
+        for key in self.__dict__:
+            if key not in value:
+                continue
+            if isinstance(self.__dict__[key], Field):
+                self.__dict__[key].read_dict(value[key])
+            else:
+                self.__dict__[key] = value[key]
 
     # endregion
 
@@ -46,7 +41,7 @@ class Storage(Field):
     __storage_filepath = get_path('saves/storage.json')
 
     def __init__(self, game) -> None:
-        self.game = game
+        self.__game = game
         # todo delete game
         self.last_level_id = 0
         self.last_skin = SkinsNames.default
@@ -60,20 +55,20 @@ class Storage(Field):
     # region Public
 
     def save(self) -> None:
-        self.settings.SOUND = self.game.settings.SOUND
-        self.settings.FUN = self.game.settings.FUN
-        self.settings.VOLUME = self.game.settings.VOLUME
-        self.settings.DIFFICULTY = self.game.settings.DIFFICULTY
-        self.last_level_id = self.game.maps.cur_id
-        self.last_skin = self.game.skins.current.name
-        self.eaten_fruits = self.game.eaten_fruits
+        self.settings.SOUND = self.__game.settings.SOUND
+        self.settings.FUN = self.__game.settings.FUN
+        self.settings.VOLUME = self.__game.settings.VOLUME
+        self.settings.DIFFICULTY = self.__game.settings.DIFFICULTY
+        self.last_level_id = self.__game.maps.cur_id
+        self.last_skin = self.__game.skins.current.name
+        self.eaten_fruits = self.__game.eaten_fruits
 
-        self.unlocked_levels = self.unlocked_levels if not self.game.cheats_var.UNLOCK_LEVELS \
-            else self.game.storage.unlocked_levels
-        self.unlocked_skins = self.unlocked_skins if not self.game.cheats_var.UNLOCK_SKINS \
-            else self.game.storage.unlocked_skins
+        self.unlocked_levels = self.unlocked_levels if not self.__game.cheats_var.UNLOCK_LEVELS \
+            else self.__game.storage.unlocked_levels
+        self.unlocked_skins = self.unlocked_skins if not self.__game.cheats_var.UNLOCK_SKINS \
+            else self.__game.storage.unlocked_skins
 
-        self.highscores = self.game.highscores
+        self.highscores = self.__game.highscores
         self.save_to_file()
 
     def save_to_file(self):
