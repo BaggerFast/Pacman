@@ -14,7 +14,7 @@ class Text(BaseObject, IDrawable):
         self.__color: tuple[int] = color
         self.__font = pg.font.Font(font, self.__size)
 
-        self.__text: str
+        self.__text: str = ''
         self.text: str = text
 
         self.__surface: pg.Surface = self.__surface_prepare()

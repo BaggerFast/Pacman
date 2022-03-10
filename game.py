@@ -3,12 +3,11 @@ from random import choice
 from typing import List
 import pygame as pg
 import scenes
-from misc import HighScore, get_list_path, LevelLoader, Storage, ControlCheats
+from misc import HighScore, LevelLoader, Storage, ControlCheats, PathManager
 from misc.cheat_codes import Cheat
 from misc.constants import Color, FRUITS_COUNT
 from misc.constants.classes import Sounds
 from misc.constants.skin_names import SkinsNames
-from misc.path import get_image_path
 from misc.skins import Skins
 from misc.sound_controller import SoundController
 from objects.map import rand_color, Map
@@ -25,7 +24,7 @@ class Game:
 
     # region Window title and icon
     pg.display.set_caption('PACMAN')
-    pg.display.set_icon(pg.transform.scale(pg.image.load(get_image_path('ico.png')), (256, 256)))
+    pg.display.set_icon(pg.transform.scale(pg.image.load(PathManager.get_image_path('ico.png')), (256, 256)))
     # endregion
 
     map_color = rand_color()
@@ -119,7 +118,7 @@ class Game:
         def __init__(self, game):
             self.game = game
             self.cur_id = 0
-            self.levels: list = get_list_path("maps", ext='json')
+            self.levels: list = PathManager.get_list_path("maps", ext='json')
             self.images = list(self.prerender_surfaces())
 
         def __len__(self):

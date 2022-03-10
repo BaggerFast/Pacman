@@ -1,9 +1,10 @@
 from copy import copy
 from random import randint, choice
 import pygame as pg
+
+from misc import PathManager
 from misc.constants import Color
 from misc.interfaces import IDrawable
-from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
 
@@ -32,8 +33,8 @@ class Map(IDrawable):
         self.color = map_color
         self.map_data = map_data
         self.tile_size = 8
-        self.sprite_sheet = SpriteSheet(sprite_path=get_image_path('map.png'), sprite_size=(self.tile_size,
-                                                                                            self.tile_size))
+        self.sprite_sheet = SpriteSheet(sprite_path=PathManager.get_image_path('map.png'), sprite_size=(self.tile_size,
+                                                                                                        self.tile_size))
         self.start_x, self.start_y = 0, 0
         self.surface = self.load_surface()
         self.surface_for_draw = self.surface_recolor()

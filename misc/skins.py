@@ -3,11 +3,10 @@ from typing import Union, Dict
 
 import pygame as pg
 
-from misc import Animator
+from misc import Animator, PathManager
 from misc.animator import SpriteSheetAnimator
 from misc.constants.classes import Sounds
 from misc.constants.skin_names import SkinsNames
-from misc.path import get_image_path
 from misc.sound_controller import SoundController
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
@@ -20,8 +19,8 @@ class Skin:
         self.name: str = skin_name
         self.skin_cost: dict = cost
         self.game = game
-        self.__walk = SpriteSheetAnimator(SpriteSheet(get_image_path(f'pacman/{path}/walk.png'), (13, 13)))
-        self.__dead = Animator(SpriteSheet(get_image_path(f'pacman/{path}/dead.png'), (15, 15))[0],
+        self.__walk = SpriteSheetAnimator(SpriteSheet(PathManager.get_image_path(f'pacman/{path}/walk.png'), (13, 13)))
+        self.__dead = Animator(SpriteSheet(PathManager.get_image_path(f'pacman/{path}/dead.png'), (15, 15))[0],
                                time_out=125, repeat=False)
         self.__image = self.prerender_surface()
 

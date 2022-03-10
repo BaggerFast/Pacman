@@ -1,15 +1,14 @@
 from typing import NamedTuple, Callable
 import pygame as pg
-from meta_classes import Singleton
-from misc.path import get_path, get_list_path
+from misc.path import PathManager
 
 
 def load_sound(name: str):
-    return pg.mixer.Sound(get_path(f'assets/sounds/{name}'))
+    return pg.mixer.Sound(PathManager.get_path(f'assets/sounds/{name}'))
 
 
 def load_list_sounds(name: str):
-    return [pg.mixer.Sound(path) for path in get_list_path(f'assets/sounds/{name}', ext='ogg')]
+    return [pg.mixer.Sound(path) for path in PathManager.get_list_path(f'assets/sounds/{name}', ext='ogg')]
 
 
 class Sounds:
@@ -100,8 +99,8 @@ class Points:
 
 
 class Font:
-    TITLE = get_path('assets/fonts/title.ttf')
-    DEFAULT = get_path('assets/fonts/default.ttf')
+    TITLE = PathManager.get_path('assets/fonts/title.ttf')
+    DEFAULT = PathManager.get_path('assets/fonts/default.ttf')
     # todo refactor
     MAIN_SCENE_SIZE = 10
     BUTTON_TEXT_SIZE = 24

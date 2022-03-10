@@ -1,5 +1,7 @@
 import json
-from misc import create_file_if_not_exist, get_path
+import os
+
+from misc import PathManager
 from misc.constants import HIGHSCORES_COUNT, FRUITS_COUNT
 from misc.constants.skin_names import SkinsNames
 
@@ -30,6 +32,7 @@ class JsonField:
 
 
 class Storage(JsonField):
+
     class __Settings(JsonField):
         def __init__(self):
             self.SOUND = True
@@ -37,7 +40,7 @@ class Storage(JsonField):
             self.VOLUME = 100
             self.DIFFICULTY = 0
 
-    __storage_filepath = get_path('saves/storage.json')
+    __storage_filepath = PathManager.get_path('saves/storage.json')
 
     def __init__(self, game) -> None:
         self.__game = game
@@ -49,7 +52,7 @@ class Storage(JsonField):
         self.settings = self.__Settings()
         self.eaten_fruits = [0] * FRUITS_COUNT
         self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(len(game.maps))]
-        self.load()
+        self.load_from_file()
 
     # region Public
 
@@ -70,14 +73,18 @@ class Storage(JsonField):
         self.highscores = self.__game.highscores
         self.save_to_file()
 
+    # todo separation of logic
     def save_to_file(self):
         string = json.dumps(self.serialization_to_dict(), indent=2)
         with open(self.__storage_filepath, "w") as file:
             file.write(string)
 
-    def load(self) -> None:
-        create_file_if_not_exist(self.__storage_filepath, json.dumps(self.serialization_to_dict(), indent=2))
-        with open(self.__storage_filepath, "r") as file:
-            self.sync_with_dict(json.load(file))
+    def load_from_file(self) -> None:
+        if os.path.exists(self.__storage_filepath):
+            with open(self.__storage_filepath, "r") as file:
+                self.sync_with_dict(json.load(file))
+            return
+        with open(self.__storage_filepath, 'w') as f:
+            f.write(json.dumps(self.serialization_to_dict(), indent=2))
 
     # endregion

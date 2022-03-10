@@ -1,9 +1,8 @@
 import pygame as pg
 
-from misc import Animator
+from misc import Animator, PathManager
 from misc.constants import EvenType, event_append, CELL_SIZE, SkinsNames
 from misc.interfaces import IDrawable
-from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 
 
@@ -47,7 +46,7 @@ class BigSeed(Seed):
     def __init__(self, game, rect):
         # todo delete game
         path = 'big_seed.png' if game.skins.current.name != SkinsNames.chrome else "big_seed_google.png"
-        self.animator = SeedAnimator(SpriteSheet(get_image_path(path), (9, 9))[0])
+        self.animator = SeedAnimator(SpriteSheet(PathManager.get_image_path(path), (9, 9))[0])
         super().__init__(game, rect, self.animator.current_image)
 
     def remove(self):
@@ -63,7 +62,7 @@ class SeedContainer(IDrawable):
 
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
         self.game = game
-        self.__ram_img = pg.image.load(get_image_path("ram.png"))
+        self.__ram_img = pg.image.load(PathManager.get_image_path("ram.png"))
         self.__x = x
         self.__y = y
         self.seed_bf = list(self.seed_buffer(seed_data))

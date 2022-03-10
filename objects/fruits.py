@@ -1,9 +1,10 @@
 from enum import Enum, auto
 from typing import Tuple
 import pygame as pg
+
+from misc import PathManager
 from misc.constants import CELL_SIZE
 from misc.interfaces import IDrawable, ILogical
-from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects.base import BaseObject
 from .image import ImageObject
@@ -84,7 +85,7 @@ class FruitController(IDrawable, ILogical):
         # todo delete game
         self.game = game
         self.__cur_index: int = 0
-        self.images = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
+        self.images = SpriteSheet(PathManager.get_image_path('fruits.png'), (14, 14))[0]
         self.scores = (100, 300, 500, 700, 1000, 2000, 3000)
         self.fruits = []
         self.pos = pos

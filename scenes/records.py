@@ -1,14 +1,14 @@
 import pygame as pg
 import scenes
+from misc import PathManager
 from misc.constants import Color, Font
-from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject, Text
 from objects.buttons import Button
 
 
 class RecordsScene(scenes.BaseScene):
-    medals = SpriteSheet(sprite_path=get_image_path('medal.png'), sprite_size=(16, 16))[0]
+    medals = SpriteSheet(sprite_path=PathManager.get_image_path('medal.png'), sprite_size=(16, 16))[0]
 
     # todo Game is used in __init__
     def __init__(self, game):

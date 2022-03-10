@@ -1,9 +1,9 @@
 from copy import copy
 import pygame as pg
 import scenes
+from misc import PathManager
 from misc.constants import Font, BUTTON_SKIN_BUY
 from misc.constants.skin_names import SkinsNames
-from misc.path import get_image_path
 from misc.sprite_sheet import SpriteSheet
 from objects import Text, ImageObject
 from objects.buttons import ButtonController, Button, SkinButton, BuyButton
@@ -22,7 +22,7 @@ class SkinsScene(scenes.BaseScene):
             SkinsNames.windows: self.game.skins.windows,
             SkinsNames.chrome: self.game.skins.chrome,
         }
-        self.fruit_images: list[str] = SpriteSheet(get_image_path('fruits.png'), (14, 14))[0]
+        self.fruit_images: list[str] = SpriteSheet(PathManager.get_image_path('fruits.png'), (14, 14))[0]
 
     # region Public
 
