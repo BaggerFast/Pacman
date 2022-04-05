@@ -23,4 +23,4 @@ jobs:
       - name: Pycodestyle
         run: pycodestyle .
       - name: Pylint
-        run: pylint **/*.py
+        run: pylint **/*.py --fail-under 8
