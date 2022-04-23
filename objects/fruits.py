@@ -1,17 +1,19 @@
-from enum import Enum, auto
-from typing import Tuple
 import pygame as pg
 
+from enum import auto, IntEnum
+from typing import Tuple
+
+from objects.base import BaseObject
 from misc import PathManager
 from misc.constants import CELL_SIZE
 from misc.interfaces import IDrawable, ILogical
 from misc.sprite_sheet import SpriteSheet
-from objects.base import BaseObject
+
 from .image import ImageObject
 from .text import Text
 
 
-class FruitState(Enum):
+class FruitState(IntEnum):
     WAIT = auto()
     DRAW = auto()
     EATEN = auto()
@@ -91,14 +93,6 @@ class FruitController(IDrawable, ILogical):
         self.pos = pos
         self.new_fruit()
 
-    def new_fruit(self):
-        if not len(self.images) == len(self.scores):
-            raise IndexError('Длинна очков не совпадает с длинной фруктов')
-        if self.__cur_index not in range(0, len(self.scores)):
-            raise IndexError('Кол-во фруктов меньше предполагаемого')
-        self.fruits.append(Fruit(self.images[self.__cur_index], self.scores[self.__cur_index],
-                                 self.pos, self.__cur_index))
-
     # region Public
 
     # region Implementation of IDrawable, ILogical
@@ -111,6 +105,14 @@ class FruitController(IDrawable, ILogical):
             fruit.process_draw(screen)
 
     # endregion
+
+    def new_fruit(self):
+        if not len(self.images) == len(self.scores):
+            raise IndexError('Длинна очков не совпадает с длинной фруктов')
+        if self.__cur_index not in range(0, len(self.scores)):
+            raise IndexError('Кол-во фруктов меньше предполагаемого')
+        self.fruits.append(Fruit(self.images[self.__cur_index], self.scores[self.__cur_index],
+                                 self.pos, self.__cur_index))
 
     @property
     def current_image(self) -> Fruit:

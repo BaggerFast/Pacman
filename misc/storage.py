@@ -19,12 +19,12 @@ class JsonField:
                 data[key] = self.__dict__[key]
         return data
 
-    def sync_with_dict(self, value: dict):
+    def deserialization_from_dict(self, value: dict):
         for key in self.__dict__:
             if key not in value:
                 continue
             if isinstance(self.__dict__[key], JsonField):
-                self.__dict__[key].sync_with_dict(value[key])
+                self.__dict__[key].deserialization_from_dict(value[key])
             else:
                 self.__dict__[key] = value[key]
 
@@ -82,7 +82,7 @@ class Storage(JsonField):
     def load_from_file(self) -> None:
         if os.path.exists(self.__storage_filepath):
             with open(self.__storage_filepath, "r") as file:
-                self.sync_with_dict(json.load(file))
+                self.deserialization_from_dict(json.load(file))
             return
         with open(self.__storage_filepath, 'w') as f:
             f.write(json.dumps(self.serialization_to_dict(), indent=2))

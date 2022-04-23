@@ -96,7 +96,7 @@ class Base(Character, IEventful, ABC):
             for _ in range(self.acceleration_multiplier):
                 self.ghosts_ai()
                 self.step()
-                self.animator.timer_check()
+                self.animator.process_logic()
         self.process_logic_iterator += 1
 
     def process_event(self, event: pg.event.Event) -> None:

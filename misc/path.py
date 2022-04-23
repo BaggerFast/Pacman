@@ -1,21 +1,25 @@
 import os
 from typing import List
+from config.settings import Dir
 
 
 class PathManager:
-    ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
+
+    @staticmethod
+    def get_path(path: str) -> str:
+        return os.path.join(Dir.BASE, path)
 
     @classmethod
-    def get_path(cls, path) -> str:
-        return os.path.join(*[cls.ROOT_DIR] + path.lower().replace('\\', '/').split('/'))
+    def get_asset_path(cls, path) -> str:
+        return os.path.join(Dir.ASSET, path)
 
     @classmethod
     def get_image_path(cls, path) -> str:
-        return cls.get_path(f'assets/images/{path}')
+        return os.path.join(Dir.IMAGE, path)
 
     @classmethod
     def get_list_path(cls, path: str, ext: str) -> List[str]:
         path = cls.get_path(path)
         pathes = [f for f in os.listdir(path) if f.endswith(f'.{ext.strip(".")}')]
         pathes.sort(key=lambda x: x.split(f'.{ext.strip(".")}'))
-        return [os.path.join(*[path, f]) for f in pathes]
+        return [os.path.join(path, f) for f in pathes]

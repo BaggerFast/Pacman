@@ -1,5 +1,5 @@
 import time
-from misc.constants import DEBUG
+from config.settings import DEBUG
 
 
 def check_execution_time(func):

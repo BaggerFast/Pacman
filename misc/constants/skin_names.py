@@ -1,7 +1,4 @@
-from typing import NamedTuple
-
-
-class SkinsNames(NamedTuple):
+class SkinsNames:
     pokeball = "pokeball"
     windows = "windows"
     half_life = "half_life"

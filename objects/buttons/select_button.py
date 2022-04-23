@@ -11,4 +11,4 @@ class SelectButton(Button):
         self.game.sounds.click.play()
         self.select()
         self.game.settings.change_volume(self.value)
-        self.game.scene_manager.scenes[-1].volume_value.text = f"{self.game.settings.VOLUME} %"
+        # self.game.scene_manager.scenes[-1].volume_value.text = f"{self.game.settings.VOLUME} %"

@@ -1,7 +1,7 @@
 import os
 import traceback
 from datetime import datetime
-from misc.constants import DEBUG
+from config.settings import DEBUG
 from game import Game
 
 

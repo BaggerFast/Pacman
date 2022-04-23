@@ -43,8 +43,8 @@ class ImageObject(BaseObject, IDrawable):
         self.rect.topleft = topleft
 
     def rotate(self, angle) -> None:
-        self.image = pg.transform.rotate(self.image, angle)
         topleft = self.rect.topleft
+        self.image = pg.transform.rotate(self.image, angle)
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
 

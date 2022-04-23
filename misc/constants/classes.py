@@ -1,10 +1,13 @@
+import os
 from typing import NamedTuple, Callable
 import pygame as pg
+
+from config.settings import Dir
 from misc.path import PathManager
 
 
 def load_sound(name: str):
-    return pg.mixer.Sound(PathManager.get_path(f'assets/sounds/{name}'))
+    return pg.mixer.Sound(os.path.join(Dir.SOUND, name))
 
 
 def load_list_sounds(name: str):
@@ -36,38 +39,8 @@ class Sounds:
     GAMEOVER = load_list_sounds('gameover')
     INTRO = load_list_sounds("intro")
     SIREN = load_list_sounds("siren")
-    CREDITS = load_list_sounds('credits')
     VALVE_SOUNDS = load_list_sounds('valve_skin')
     WINDOWS_SOUNDS = load_list_sounds('windows_skin')
-
-
-# class Sounds3(metaclass=SingletonMeta):
-#     class Ch:
-#         # todo fix channels
-#         pacman = 1
-#         intro = 2
-#         game_over = menu = 3
-#         siren = 4
-#         eatable = 5
-#         pellet = 6
-#
-#     def __init__(self):
-#         self.CLICK = load_sound('navigation.ogg')
-#         self.SEED = load_sound('munch.ogg')
-#         self.SEED_FUN = load_sound('leader.ogg')
-#         self.FRUIT = load_sound('eat_fruit.ogg')
-#         self.GHOST = load_sound('eat_ghost.ogg')
-#         self.POC_INTRO = load_sound('pokemon_intro.ogg')
-#         self.INTERMISSION = load_sound('intermission.ogg')
-#         self.PELLET = load_sound('power_pellet.ogg')
-#         self.CHEAT = load_sound('cheat.ogg')
-#         self.DEAD = load_list_sounds('death')
-#         self.GAMEOVER = load_list_sounds('gameover')
-#         self.INTRO = load_list_sounds("intro")
-#         self.SIREN = load_list_sounds("siren")
-#         self.CREDITS = load_list_sounds('credits')
-#         self.VALVE_SOUNDS = load_list_sounds('valve_skin')
-#         self.WINDOWS_SOUNDS = load_list_sounds('windows_skin')
 
 
 class Color(NamedTuple):
@@ -92,20 +65,13 @@ class Color(NamedTuple):
     TRANSPERENT = pg.Color(0, 0, 0, 0)
 
 
-class Points:
-    POINT_PER_SEED = 10
-    POINT_PER_ENERGIZER = 50
-    POINT_PER_FRUIT = 40
-
-
-class Font:
-    TITLE = PathManager.get_path('assets/fonts/title.ttf')
-    DEFAULT = PathManager.get_path('assets/fonts/default.ttf')
-    # todo refactor
+class Font(NamedTuple):
+    TITLE = PathManager.get_asset_path('fonts/title.ttf')
+    DEFAULT = PathManager.get_asset_path('fonts/default.ttf')
     MAIN_SCENE_SIZE = 10
+    CREDITS_SCENE_SIZE = 14
     BUTTON_TEXT_SIZE = 24
     BUTTON_FOR_SKINS_TEXT_SIZE = 16
-    CREDITS_SCENE_SIZE = 14
 
 
 class MenuPreset(NamedTuple):

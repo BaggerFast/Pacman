@@ -1,8 +1,6 @@
 from copy import copy
 from typing import Union, Dict
-
 import pygame as pg
-
 from misc import Animator, PathManager
 from misc.animator import SpriteSheetAnimator
 from misc.constants.classes import Sounds
@@ -89,19 +87,16 @@ class Skins:
         self.game = game
 
         self.default = Skin(self.game, 'default', {0: 0, 1: 0}, SkinsNames.default)
-        self.half_life = HalfLife(self.game, 'half_life', {1: 14, 2: 10}, SkinsNames.half_life)
-        self.pokeball = PokeBall(self.game, 'pokeball', {2: 12, 3: 8}, SkinsNames.pokeball)
         self.edge = Skin(self.game, 'edge', {3: 10, 4: 7}, SkinsNames.edge)
         self.chrome = Skin(self.game, 'chrome', {4: 7, 5: 6}, SkinsNames.chrome)
+
+        self.half_life = HalfLife(self.game, 'half_life', {1: 14, 2: 10}, SkinsNames.half_life)
+        self.pokeball = PokeBall(self.game, 'pokeball', {2: 12, 3: 8}, SkinsNames.pokeball)
         self.windows = Windows(self.game, 'windows', {6: 5, 5: 4}, SkinsNames.windows)
 
         self.__current = self.default
 
     # region Public
-
-    def prerender_surfaces(self) -> Dict[str, pg.Surface]:
-        return {key: self.__dict__[key].image for key in self.all_skins}
-
     @property
     def all_skins(self) -> list:
         return [key for key, value in self.__dict__.items() if isinstance(value, Skin)]
@@ -112,9 +107,9 @@ class Skins:
 
     @current.setter
     def current(self, value: Union[str, Skin]):
-        if isinstance(value, str):
-            self.__current = self.__dict__[value]
-        elif isinstance(value, Skin):
+        if isinstance(value, Skin):
             self.__current = value
+        elif hasattr(self, value):
+            self.__current = getattr(self, value)
 
     # endregion

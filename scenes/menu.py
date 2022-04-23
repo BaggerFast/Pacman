@@ -1,11 +1,11 @@
 import pygame as pg
 from PIL import ImageFilter, Image
 import scenes
-from misc.constants import VERSION
+from config.settings import VERSION
 from misc.constants.classes import MenuPreset, Font, Color
 from objects import Text, ImageObject
 from objects.buttons import Button
-from objects.map import rand_color
+from objects.map import rand_color, Map
 
 
 class MenuScene(scenes.BaseScene):
@@ -14,8 +14,7 @@ class MenuScene(scenes.BaseScene):
     def __init__(self, game):
         super().__init__(game)
         self.preview = self.game.maps.full_surface
-        self.color = rand_color()
-        self.game.map_color = self.color
+        Map.color = rand_color()
         self.change_color()
         self.blur_preview()
 
@@ -25,7 +24,7 @@ class MenuScene(scenes.BaseScene):
         for x in range(self.preview.get_width()):
             for y in range(self.preview.get_height()):
                 if self.preview.get_at((x, y)) == Color.MAIN_MAP:
-                    self.preview.set_at((x, y), self.color)
+                    self.preview.set_at((x, y), Map.color)
 
     def blur_preview(self) -> None:
         blur_count = 5
@@ -64,7 +63,6 @@ class MenuScene(scenes.BaseScene):
             MenuPreset("SKINS", lambda: self._scene_manager.append(scenes.SkinsScene(self.game))),
             MenuPreset("RECORDS", lambda: self._scene_manager.append(scenes.RecordsScene(self.game))),
             MenuPreset("SETTINGS", lambda: self._scene_manager.append(scenes.SettingsScene(self.game))),
-            MenuPreset("CREDITS", lambda: self._scene_manager.append(scenes.CreditsScene(self.game))),
             MenuPreset("EXIT", self.game.exit_game),
         ]
         for i, menu_preset in enumerate(names):

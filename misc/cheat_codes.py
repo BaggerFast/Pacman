@@ -20,7 +20,7 @@ class ControlCheats(ILogical, IEventful):
         self.cheats: list[Cheat] = cheats
         self.timer = pg.time.get_ticks()
         self.enter_code: str = ''
-        self.old_enter_code: str = ''
+        self.previous_enter_code: str = ''
 
     # region Public
 
@@ -45,17 +45,18 @@ class ControlCheats(ILogical, IEventful):
 
     def __complete_cheat(self):
         for cheat in self.cheats:
-            if cheat.cheat_code == self.enter_code:
-                cheat.process_logic()
-                self.enter_code = ''
-                break
+            if cheat.cheat_code != self.enter_code:
+                continue
+            cheat.process_logic()
+            self.enter_code = ''
+            return
 
     def __update_enter_code(self):
-        if self.old_enter_code == self.enter_code and pg.time.get_ticks() - self.timer >= 1000:
+        if self.previous_enter_code == self.enter_code and pg.time.get_ticks() - self.timer >= 1000:
             self.enter_code = ''
             self.__update_timer()
-        elif self.old_enter_code != self.enter_code:
+        elif self.previous_enter_code != self.enter_code:
             self.__update_timer()
-        self.old_enter_code = self.enter_code
+        self.previous_enter_code = self.enter_code
 
     # endregion

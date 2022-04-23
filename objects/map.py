@@ -9,7 +9,6 @@ from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
 
 
-# todo move rand_color
 def rand_color():
     max_states = 7
     min_val = 200
@@ -29,15 +28,16 @@ def rand_color():
 
 class Map(IDrawable):
 
-    def __init__(self, map_color, map_data):
-        self.color = map_color
+    color = rand_color()
+
+    def __init__(self, map_data):
+
         self.map_data = map_data
         self.tile_size = 8
         self.sprite_sheet = SpriteSheet(sprite_path=PathManager.get_image_path('map.png'), sprite_size=(self.tile_size,
                                                                                                         self.tile_size))
-        self.start_x, self.start_y = 0, 0
-        self.surface = self.load_surface()
-        self.surface_for_draw = self.surface_recolor()
+        self.surface = self.__load_surface()
+        self.surface_for_draw = self.__surface_recolor()
 
     # region Public
 
@@ -48,23 +48,19 @@ class Map(IDrawable):
 
     # endregion
 
-    def surface_recolor(self):
+    def __surface_recolor(self) -> pg.Surface:
         srf = copy(self.surface)
         for x in range(srf.get_width()):
             for y in range(srf.get_height()):
                 if srf.get_at((x, y)) == Color.MAIN_MAP:
-                    srf.set_at((x, y), self.color)
+                    srf.set_at((x, y), Map.color)
         return srf
 
-    def load_surface(self):
+    def __load_surface(self) -> pg.Surface:
         surface = pg.Surface((len(self.map_data[0]) * self.tile_size, len(self.map_data) * self.tile_size))
-        y = 0
-        for row in self.map_data:
-            x = 0
-            for tile in row:
+        for y, row in enumerate(self.map_data):
+            for x, tile in enumerate(row):
                 surface.blit(self.sprite_sheet[0][tile - 1], (x * self.tile_size, y * self.tile_size))
-                x += 1
-            y += 1
         return surface
 
     def prerender_map_surface(self) -> pg.Surface:

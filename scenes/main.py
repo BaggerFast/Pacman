@@ -148,7 +148,7 @@ class MainScene(scenes.BaseScene):
         self.__fruit_position = self.__loader.get_fruit_position()
         self.slow_ghost_rect = self.__loader.get_slow_ghost_rect()
         self.cant_up_ghost_rect = self.__loader.get_cant_up_ghost_rect()
-        self.__map = Map(self.game.map_color, self.__map_data)
+        self.__map = Map(self.__map_data)
 
     def __create_sounds(self):
         self.timer = 0

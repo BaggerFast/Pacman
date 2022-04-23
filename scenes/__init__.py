@@ -1,5 +1,4 @@
 from .base import BaseScene
-from .credits import CreditsScene
 from .endgame import EndScene
 from .gameover import GameOverScene
 from .levels import LevelsScene

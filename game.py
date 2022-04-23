@@ -1,8 +1,6 @@
 import sys
 from random import choice
-from typing import List
 import pygame as pg
-import scenes
 from misc import HighScore, LevelLoader, Storage, ControlCheats, PathManager
 from misc.cheat_codes import Cheat
 from misc.constants import Color, FRUITS_COUNT
@@ -12,6 +10,7 @@ from misc.skins import Skins
 from misc.sound_controller import SoundController
 from objects.map import rand_color, Map
 from objects.objects import Objects
+from scenes import SceneManager, MenuScene, BaseScene
 
 
 class Game:
@@ -27,37 +26,35 @@ class Game:
     pg.display.set_icon(pg.transform.scale(pg.image.load(PathManager.get_image_path('ico.png')), (256, 256)))
     # endregion
 
-    map_color = rand_color()
-
     class Cheats:
 
-        def __init__(self, game):
-            self.UNLOCK_SKINS = False
-            self.UNLOCK_LEVELS = False
-            self.INFINITY_LIVES = False
-            self.GHOSTS_COLLISION = False
-            self.game: Game = game
-            self.parse_args()
+        UNLOCK_SKINS = False
+        UNLOCK_LEVELS = False
+        INFINITY_LIVES = False
+        GHOSTS_COLLISION = False
 
-        def parse_args(self):
-            vars = self.__dict__
+        def __init__(self):
+            self.__configure_args()
+
+        def __configure_args(self):
             for arg in sys.argv[1:]:
-                if arg.upper() in vars.keys():
-                    vars[arg.upper()] = True
+                arg = arg.upper()
+                if hasattr(self, arg):
+                    setattr(self, arg, True)
 
-        def unlock_skins(self):
-            self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.UNLOCK_SKINS \
-                else self.game.storage.unlocked_skins
-            if isinstance(self.game.scene_manager.current, scenes.SkinsScene):
-                ...
-                # self.game.scene_manager.current._create_objects()
-
-        def unlock_levels(self):
-            self.game.unlocked_levels = self.game.maps.keys() if self.game.cheats_var.UNLOCK_LEVELS \
-                else self.game.storage.unlocked_levels
-            if isinstance(self.game.scene_manager.current, scenes.LevelsScene):
-                ...
-                # self.game.scene_manager.current._create_objects()
+        # def unlock_skins(self):
+        #     self.game.unlocked_skins = self.game.skins.all_skins if self.game.cheats_var.UNLOCK_SKINS \
+        #         else self.game.storage.unlocked_skins
+        #     if isinstance(self.game.scene_manager.current, scenes.SkinsScene):
+        #         ...
+        #         # self.game.scene_manager.current._create_objects()
+        #
+        # def unlock_levels(self):
+        #     self.game.unlocked_levels = self.game.maps.keys() if self.game.cheats_var.UNLOCK_LEVELS \
+        #         else self.game.storage.unlocked_levels
+        #     if isinstance(self.game.scene_manager.current, scenes.LevelsScene):
+        #         ...
+        #         # self.game.scene_manager.current._create_objects()
 
     class Settings:
 
@@ -83,7 +80,6 @@ class Game:
         def base_preset(self):
             self.click = SoundController(self.game, Sounds.Ch.menu, Sounds.CLICK)
             self.menu = SoundController(self.game, Sounds.Ch.menu, Sounds.INTERMISSION)
-            self.credits = SoundController(self.game, Sounds.Ch.menu, choice(Sounds.CREDITS))
             self.siren = SoundController(self.game, Sounds.Ch.siren, choice(Sounds.SIREN))
             self.pellet = SoundController(self.game, Sounds.Ch.pellet, Sounds.PELLET)
             self.ghost = SoundController(self.game, Sounds.Ch.eatable, Sounds.GHOST)
@@ -139,10 +135,7 @@ class Game:
         def __load_from_map(self, level_id: int = 0) -> None:
             self.__loader = LevelLoader(self.levels[level_id])
             self.__map_data = self.__loader.get_map_data()
-            self.__map = Map(self.game.map_color, self.__map_data)
-
-        def keys(self) -> List[int]:
-            return list(range(len(self)))
+            self.__map = Map(self.__map_data)
 
         def prerender_surfaces(self):
             for level_id in range(len(self.levels)):
@@ -161,10 +154,10 @@ class Game:
         self.animate_timer: int = 0
         self.storage = Storage(self)
         self.skins = Skins(self)
-        self.cheats_var = self.Cheats(self)
+        self.cheats_var = self.Cheats()
         self.__read_from_storage()
 
-        self.scene_manager = scenes.SceneManager()
+        self.scene_manager = SceneManager()
 
         self.__cheats = ControlCheats([
             Cheat(self, 'skins', self.cheats_var.UNLOCK_SKINS),
@@ -179,7 +172,7 @@ class Game:
             else SkinsNames.default
         self.records = HighScore(self)
 
-        self.scene_manager.reset(scenes.MenuScene(self))
+        self.scene_manager.reset(MenuScene(self))
 
         self.obj = Objects(self.scene_manager, self.__cheats)
 
@@ -200,7 +193,7 @@ class Game:
         """
         :param level_id: level id
         """
-        if level_id in self.maps.keys():
+        if level_id in range(len(self.maps)):
             if not self.cheats_var.UNLOCK_LEVELS and level_id not in self.unlocked_levels:
                 self.unlocked_levels.append(level_id)
         else:
@@ -231,7 +224,7 @@ class Game:
         return self.settings.DIFFICULTY + 1
 
     @property
-    def current_scene(self) -> scenes.BaseScene:
+    def current_scene(self) -> BaseScene:
         return self.scene_manager.current
 
     @property

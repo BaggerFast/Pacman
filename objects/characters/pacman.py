@@ -47,7 +47,7 @@ class Pacman(Character, IEventful):
 
     def process_logic(self) -> None:
         self.hp.process_logic()
-        self.animator.timer_check()
+        self.animator.process_logic()
         if self.dead:
             return
         if self.in_center():
