@@ -6,7 +6,7 @@ class SpriteSheet:
     def __init__(self, sprite_path: str, sprite_size: tuple = None):
         self.__all_frames = self.__get_all_frames(pg.image.load(sprite_path), sprite_size[0], sprite_size[1])
 
-    def __getitem__(self, item: int):
+    def __getitem__(self, item: int) -> pg.image:
         return self.__all_frames[item]
 
     def __len__(self):

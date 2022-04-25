@@ -186,7 +186,7 @@ class Game:
             self.__clock.tick(self.__FPS)
 
     def exit_game(self) -> None:
-        self.storage.save()
+        self.storage.save(self)
         sys.exit(0)
 
     def unlock_level(self, level_id: int = 0) -> None:
@@ -214,10 +214,7 @@ class Game:
         :param fruit_id: fruit id
         :param value: count of fruits
         """
-        if fruit_id in range(FRUITS_COUNT):
-            self.eaten_fruits[fruit_id] += value
-        else:
-            raise Exception(f"id error. FruitController id: {fruit_id} doesn't exist")
+        self.eaten_fruits[fruit_id] += value
 
     @property
     def difficulty(self) -> int:
@@ -237,12 +234,16 @@ class Game:
 
     def __read_from_storage(self):
         self.settings = self.Settings(self.storage)
+        # self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
+
+        # todo fix json loader
         self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
         self.maps.cur_id = self.storage.last_level_id if self.storage.last_level_id in self.unlocked_levels else \
             self.__def_level_id
-        self.unlocked_skins = self.skins.all_skins if self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
-        self.eaten_fruits = self.storage.eaten_fruits
         self.highscores = self.storage.highscores
+        self.eaten_fruits = self.storage.eaten_fruits
+
+        self.unlocked_skins = self.skins.all_skins if self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
 
     def __process_exit_events(self, event: pg.event.Event) -> None:
         if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q):

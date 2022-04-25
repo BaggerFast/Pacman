@@ -45,7 +45,7 @@ class SkinsScene(scenes.BaseScene):
         def creator():
             for i, fruit_img in enumerate(self.fruit_images):
                 yield ImageObject(fruit_img, (self.game.width // 8 - 9 + i * 25, 60))
-                text = Text(str(self.game.eaten_fruits[i]), 10)
+                text = Text(f'{self.game.eaten_fruits[i]}', 10)
                 text.move_center(self.game.width // 8 - 10 + i * 25, 60)
                 yield text
         self.objects.append(*list(creator()))
