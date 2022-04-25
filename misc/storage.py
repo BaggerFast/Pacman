@@ -40,18 +40,17 @@ class Storage(JsonField):
             self.VOLUME = 100
             self.DIFFICULTY = 0
 
-    __storage_filepath = PathManager.get_path('saves/storage.json')
+    __storage_filepath = PathManager.get_path('storage.json')
 
     def __init__(self, game) -> None:
         self.__game = game
         # todo delete game
         self.last_level_id = 0
         self.last_skin = SkinsNames.default
-        self.unlocked_levels = [0]
+        self.levels = [{0: []}]
         self.unlocked_skins = [SkinsNames.default]
         self.settings = self.__Settings()
-        self.eaten_fruits = [0] * FRUITS_COUNT
-        self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(len(game.maps))]
+        self.eaten_fruits = []
         self.load_from_file()
 
     # region Public

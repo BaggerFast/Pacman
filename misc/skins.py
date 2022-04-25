@@ -1,6 +1,5 @@
 from copy import copy
 from typing import Union, Dict
-import pygame as pg
 from misc import Animator, PathManager
 from misc.animator import SpriteSheetAnimator
 from misc.constants.classes import Sounds

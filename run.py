@@ -1,8 +1,8 @@
 import os
 import traceback
 from datetime import datetime
-from config.settings import DEBUG
 from game import Game
+from config.settings import DEBUG
 
 
 def parse_exceptions():

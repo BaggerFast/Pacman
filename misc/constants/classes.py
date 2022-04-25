@@ -1,7 +1,6 @@
 import os
 from typing import NamedTuple, Callable
 import pygame as pg
-
 from config.settings import Dir
 from misc.path import PathManager
 

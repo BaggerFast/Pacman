@@ -1,5 +1,6 @@
 import pygame as pg
 
+from config.settings import Keyboard
 from misc import Animator
 from misc.animator import SpriteSheetAnimator
 from misc.interfaces.igeneric_object import IEventful
@@ -8,16 +9,12 @@ from objects.characters.character_base import Character
 
 
 class Pacman(Character, IEventful):
-    RIGHT_KEYS = (pg.K_d, pg.K_RIGHT)
-    LEFT_KEYS = (pg.K_a, pg.K_LEFT)
-    UP_KEYS = (pg.K_w, pg.K_UP)
-    DOWN_KEYS = (pg.K_s, pg.K_DOWN)
 
     dir_action = {
-        RIGHT_KEYS: (1, 0, 0),
-        DOWN_KEYS: (0, 1, 1),
-        LEFT_KEYS: (-1, 0, 2),
-        UP_KEYS: (0, -1, 3),
+        Keyboard.RIGHT: (1, 0, 0),
+        Keyboard.DOWN: (0, 1, 1),
+        Keyboard.LEFT: (-1, 0, 2),
+        Keyboard.UP: (0, -1, 3),
     }
 
     def parse_keyboard(self, event):
