@@ -20,13 +20,13 @@ class RecordsScene(scenes.BaseScene):
 
     # region Implementation of BaseScene
 
-    def additional_draw(self, screen: pg.Surface) -> None:
-        if not self.medals_text:
-            self.__error_text.process_draw(screen)
-        else:
-            for i in range(len(self.medals_text)):
-                self.medals_text[i].process_draw(screen)
-                self.__medals[i].process_draw(screen)
+    # def additional_draw(self, screen: pg.Surface) -> None:
+    #     if not self.medals_text:
+    #         self.__error_text.process_draw(screen)
+    #     else:
+    #         for i in range(len(self.medals_text)):
+    #             self.medals_text[i].process_draw(screen)
+    #             self.__medals[i].process_draw(screen)
 
     # endregion
 
@@ -67,9 +67,6 @@ class RecordsScene(scenes.BaseScene):
                 if self.game.records.data[i] <= 0:
                     break
                 yield Text(str(self.game.records.data[i]), 30, pg.Rect(60, 55 + 35 * i, 0, 0), text_color)
-
-        self.game.records.update_records()
-        self.medals_text = list(creator())
 
     def __create_medals(self) -> None:
         def creator():

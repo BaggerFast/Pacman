@@ -16,13 +16,11 @@ class EndScene(scenes.BaseScene):
 
     # region Implementation of BaseScene
 
-    def configurate(self):
-        self.__save_record()
-        self.__unlock_level()
-
     def on_enter(self) -> None:
         self.game.sounds.siren.stop()
         self.game.sounds.gameover.play()
+        self.__save_record()
+        self.__unlock_level()
 
     def on_exit(self) -> None:
         self.game.sounds.gameover.stop()
@@ -45,15 +43,6 @@ class EndScene(scenes.BaseScene):
         self.objects.append(text)
 
     def _button_init(self) -> None:
-        yield Button(
-            game=self.game,
-            rect=pg.Rect(0, 0, 180, 35),
-            function=self.__next_level,
-            text='NEXT LEVEL',
-            center=(self.game.width // 2, 210),
-            text_size=Font.BUTTON_TEXT_SIZE,
-            colors=BUTTON_DEFAULT_COLORS
-        )
         if not self.game.maps.is_last_level():
             yield Button(
                 game=self.game,
@@ -95,8 +84,7 @@ class EndScene(scenes.BaseScene):
 
     def __unlock_level(self) -> None:
         if not self.game.maps.is_last_level():
-            next_level = self.game.maps.cur_id + 1
-            self.game.unlock_level(next_level)
+            self.game.unlock_level(self.game.maps.cur_id + 1)
 
     def __next_level(self) -> None:
         next_level = self.game.maps.cur_id + 1

@@ -33,7 +33,7 @@ class BaseScene(IGenericObject):
 
     # endregion
 
-    def configurate(self) -> None:
+    def configure(self) -> None:
         self._create_objects()
         self._create_title()
 

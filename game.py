@@ -1,15 +1,19 @@
 import sys
-from random import choice
 import pygame as pg
+from random import choice
+
 from misc import HighScore, LevelLoader, Storage, ControlCheats, PathManager
 from misc.cheat_codes import Cheat
-from misc.constants import Color, FRUITS_COUNT
+from misc.constants import Color
 from misc.constants.classes import Sounds
 from misc.constants.skin_names import SkinsNames
+from misc.serializers.storage import StorageSetup
 from misc.skins import Skins
 from misc.sound_controller import SoundController
-from objects.map import rand_color, Map
+
+from objects.map import Map
 from objects.objects import Objects
+
 from scenes import SceneManager, MenuScene, BaseScene
 
 
@@ -55,21 +59,6 @@ class Game:
         #     if isinstance(self.game.scene_manager.current, scenes.LevelsScene):
         #         ...
         #         # self.game.scene_manager.current._create_objects()
-
-    class Settings:
-
-        def __init__(self, storage):
-            self.SOUND = storage.settings.SOUND
-            self.FUN = storage.settings.FUN
-            self.VOLUME = storage.settings.VOLUME
-            self.DIFFICULTY = storage.settings.DIFFICULTY
-
-        def change_volume(self, num: int):
-            self.VOLUME = max(self.VOLUME + num, 0)
-            self.VOLUME = min(self.VOLUME, 100)
-
-        def change_difficulty(self):
-            self.DIFFICULTY = (self.DIFFICULTY + 1) % 3
 
     class Music:
 
@@ -153,6 +142,8 @@ class Game:
         self.time_out: int = 125
         self.animate_timer: int = 0
         self.storage = Storage(self)
+        StorageSetup(self.storage).load_from_file()
+
         self.skins = Skins(self)
         self.cheats_var = self.Cheats()
         self.__read_from_storage()
@@ -168,7 +159,7 @@ class Game:
 
         self.sounds = self.Music(self)
 
-        self.skins.current = self.storage.last_skin if self.storage.last_skin in self.unlocked_skins \
+        self.skins.current = self.storage.last.skin if self.storage.last.skin in self.unlocked_skins \
             else SkinsNames.default
         self.records = HighScore(self)
 
@@ -186,19 +177,23 @@ class Game:
             self.__clock.tick(self.__FPS)
 
     def exit_game(self) -> None:
-        self.storage.save(self)
+        StorageSetup(self.storage).save_to_file()
         sys.exit(0)
 
+    # todo levels ans skins
     def unlock_level(self, level_id: int = 0) -> None:
         """
         :param level_id: level id
         """
-        if level_id in range(len(self.maps)):
-            if not self.cheats_var.UNLOCK_LEVELS and level_id not in self.unlocked_levels:
-                self.unlocked_levels.append(level_id)
-        else:
+        if level_id not in range(len(self.maps)):
             raise Exception(f"id error. Map id: {level_id} doesn't exist")
+        if not self.cheats_var.UNLOCK_LEVELS:
+            try:
+                self.unlocked_levels[level_id]
+            except IndexError:
+                self.unlocked_levels.append([])
 
+    # todo skins
     def unlock_skin(self, skin_name: str = 0) -> None:
         """
         :param skin_name: skin name
@@ -232,21 +227,19 @@ class Game:
 
     # region Private
 
-    def __read_from_storage(self):
-        self.settings = self.Settings(self.storage)
-        # self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
-
-        # todo fix json loader
-        self.unlocked_levels = self.maps.keys() if self.cheats_var.UNLOCK_LEVELS else self.storage.unlocked_levels
-        self.maps.cur_id = self.storage.last_level_id if self.storage.last_level_id in self.unlocked_levels else \
-            self.__def_level_id
-        self.highscores = self.storage.highscores
+    def __read_from_storage(self) -> None:
+        self.settings = self.storage.settings
         self.eaten_fruits = self.storage.eaten_fruits
 
-        self.unlocked_skins = self.skins.all_skins if self.cheats_var.UNLOCK_SKINS else self.storage.unlocked_skins
+        self.unlocked_levels = self.storage.unlocked.levels
+        self.maps.cur_id = self.storage.last.level_id
+
+        self.unlocked_skins = self.storage.unlocked.skins
 
     def __process_exit_events(self, event: pg.event.Event) -> None:
-        if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q):
+        ctr_q = event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
+
+        if event.type == pg.QUIT or ctr_q:
             self.exit_game()
 
     def __process_all_events(self) -> None:

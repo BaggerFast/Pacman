@@ -1,4 +1,4 @@
-from misc.constants import FRUITS_COUNT
+from misc.constants import FRUITS_COUNT, SkinsNames
 
 
 class SerializerField:
@@ -13,7 +13,6 @@ class SerializerField:
                 data[key] = key_var.serialize_to_dict()
                 continue
             data[key] = key_var
-        print(self.__dict__)
         return data
 
     def deserialize_from_dict(self, value: dict):
@@ -35,6 +34,12 @@ class SettingsSerializer(SerializerField):
         self.FUN = False
         self.VOLUME = 100
         self.DIFFICULTY = 0
+
+    def change_volume(self, num: int):
+        self.VOLUME = min(max(self.VOLUME + num, 0), 100)
+
+    def change_difficulty(self):
+        self.DIFFICULTY = (self.DIFFICULTY+1) % 3
 
 
 class EatenFruitsSerializer(SerializerField):
@@ -63,5 +68,16 @@ class EatenFruitsSerializer(SerializerField):
     def __len__(self):
         return len(self.__fruits)
 
-    def __str__(self):
-        print(self.__fruits)
+
+class UnlockedSerializer(SerializerField):
+
+    def __init__(self):
+        self.skins = [SkinsNames.default]
+        self.levels = [[]]
+
+
+class LastSerializer(SerializerField):
+
+    def __init__(self):
+        self.level_id = 0
+        self.skin = SkinsNames.default

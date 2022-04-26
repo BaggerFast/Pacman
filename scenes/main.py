@@ -135,7 +135,7 @@ class MainScene(scenes.BaseScene):
 
     @property
     def __get_hud(self):
-        return Text(str(self.game.records.data[0]), Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 8, 20, 20))
+        return Text(f'{0}', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 8, 20, 20))
 
     def __load_from_map(self):
         self.__loader = LevelLoader(self.game.maps.levels[self.game.maps.cur_id])

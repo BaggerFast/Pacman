@@ -42,7 +42,7 @@ class SceneManager(IGenericObject, Singleton, metaclass=FinalMeta):
 
     def append(self, scene: BaseScene) -> None:
         self.exit_scene()
-        scene.configurate()
+        scene.configure()
         self.scenes.append(scene)
         self.current.on_enter()
 

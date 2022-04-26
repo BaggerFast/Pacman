@@ -27,11 +27,11 @@ class LevelsScene(scenes.BaseScene):
         if event.type == pg.MOUSEWHEEL:
             self.update_scroll(-event.y)
             self.objects.clear()
-            self.configurate()
+            self.configure()
         elif event.type == pg.KEYDOWN and event.key in actions.keys():
             actions[event.key]()
             self.objects.clear()
-            self.configurate()
+            self.configure()
         super().additional_event(event)
 
     # endregion
@@ -69,7 +69,7 @@ class LevelsScene(scenes.BaseScene):
                 text=f'LEVEL {i + 1}',
                 center=(self.game.width // 2 - 55, (85 + 40 * (i - self.__scroll))),
                 text_size=Font.BUTTON_TEXT_SIZE - 4,
-                active=i in self.game.unlocked_levels)
+                active=i in range(len(self.game.unlocked_levels)))
         yield Button(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
