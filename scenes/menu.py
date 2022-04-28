@@ -79,7 +79,7 @@ class MenuScene(scenes.BaseScene):
 
     @property
     def __level_indicator(self) -> Text:
-        indicator = Text(self.game.maps.level_name, 15, font=Font.TITLE)
+        indicator = Text(str(self.game.maps), 15, font=Font.TITLE)
         indicator.move_center(self.game.width // 2, 60)
         return indicator
 

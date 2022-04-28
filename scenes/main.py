@@ -10,6 +10,7 @@ from objects.characters.ghosts.ghost_states import GhostState
 from objects.fruits import FruitController
 from objects.map import Map
 from objects.score import Score
+from serializers import SettingsSerializer, LevelSerializer
 
 
 class MainScene(scenes.BaseScene):
@@ -130,12 +131,13 @@ class MainScene(scenes.BaseScene):
         scores_label_text = Text(f'{"MEMORY" if self.game.skins.current.name == SkinsNames.chrome else "SCORE"}',
                                  Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20))
 
-        high_scores_label_text = Text('HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20))
+        high_scores_label_text = Text(f'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20))
         return [scores_label_text, high_scores_label_text]
 
     @property
     def __get_hud(self):
-        return Text(f'{0}', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 8, 20, 20))
+        return Text(f'{LevelSerializer().get_current_records(True)}', Font.MAIN_SCENE_SIZE,
+                    rect=pg.Rect(130, 8, 20, 20))
 
     def __load_from_map(self):
         self.__loader = LevelLoader(self.game.maps.levels[self.game.maps.cur_id])
@@ -175,7 +177,7 @@ class MainScene(scenes.BaseScene):
         self.ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
 
         for ghost in self.ghosts:
-            ghost.set_difficult(self.game.settings.DIFFICULTY)
+            ghost.set_difficult(SettingsSerializer().DIFFICULTY)
 
         # todo prefered ghost 1
         self.__not_prefered_ghosts = self.ghosts.copy()

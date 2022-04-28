@@ -1,5 +1,5 @@
 from copy import copy
-from typing import Union, Dict
+from typing import Union
 from misc import Animator, PathManager
 from misc.animator import SpriteSheetAnimator
 from misc.constants.classes import Sounds
@@ -7,6 +7,7 @@ from misc.constants.skin_names import SkinsNames
 from misc.sound_controller import SoundController
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject
+from serializers import SkinSerializer
 
 
 class Skin:
@@ -20,12 +21,11 @@ class Skin:
         self.__dead = Animator(SpriteSheet(PathManager.get_image_path(f'pacman/{path}/dead.png'), (15, 15))[0],
                                time_out=125, repeat=False)
         self.__image = self.prerender_surface()
-
     # region Public
 
     @property
     def is_unlocked(self):
-        return self.name in self.game.unlocked_skins
+        return self.name in SkinSerializer().unlocked
 
     @property
     def walk(self):

@@ -7,6 +7,7 @@ from misc.constants.skin_names import SkinsNames
 from misc.sprite_sheet import SpriteSheet
 from objects import Text, ImageObject
 from objects.buttons import ButtonController, Button, SkinButton, BuyButton
+from serializers import EatenFruitsSerializer, SkinSerializer
 
 
 class SkinsScene(scenes.BaseScene):
@@ -30,7 +31,7 @@ class SkinsScene(scenes.BaseScene):
         self.button_pos_x = self.game.width // 2 - 65
         self.button_pos_y = 90
         self.button_pos_multiply_y = 25
-        button_controller = ButtonController(self.game, list(self._button_init()))
+        button_controller = ButtonController(list(self._button_init()))
         # for button in button_controller.buttons:
         #     if not type(button) in [SkinButton, BuyButton]:
         #         return
@@ -45,7 +46,7 @@ class SkinsScene(scenes.BaseScene):
         def creator():
             for i, fruit_img in enumerate(self.fruit_images):
                 yield ImageObject(fruit_img, (self.game.width // 8 - 9 + i * 25, 60))
-                text = Text(f'{self.game.eaten_fruits[i]}', 10)
+                text = Text(f'{EatenFruitsSerializer()[i]}', 10)
                 text.move_center(self.game.width // 8 - 10 + i * 25, 60)
                 yield text
         self.objects.append(*list(creator()))
@@ -99,7 +100,7 @@ class SkinsScene(scenes.BaseScene):
                     value=skin,
                     center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
                     text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                    active=skin.name in self.game.unlocked_skins
+                    active=skin.name in SkinSerializer().unlocked
                 )
             else:
                 yield BuyButton(

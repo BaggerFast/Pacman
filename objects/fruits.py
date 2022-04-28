@@ -121,7 +121,8 @@ class FruitController(IDrawable, ILogical):
     def process_collision(self, obj: BaseObject):
         if self.current_image.collision(obj):
             self.game.sounds.fruit.play()
-            self.game.store_fruit(self.__cur_index, 1 * self.game.difficulty)
+            # todo eaten fruits save
+            # self.game.store_fruit(self.__cur_index, 1 * self.game.difficulty)
             self.game.current_scene.score.eat_fruit(self.current_image.score)
             self.__change_image()
 

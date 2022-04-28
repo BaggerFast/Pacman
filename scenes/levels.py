@@ -45,7 +45,7 @@ class LevelsScene(scenes.BaseScene):
         for button in buttons:
             if hasattr(button, "value") and self.game.maps.cur_id == button.value[0]:
                 button.text = '-' + button.text + '-'
-        self.objects.append(ButtonController(self.game, buttons))
+        self.objects.append(ButtonController(buttons))
 
     # endregion
 

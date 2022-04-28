@@ -1,7 +1,8 @@
+from meta_classes import Singleton
 from misc.constants import FRUITS_COUNT, SkinsNames
 
 
-class SerializerField:
+class BaseSerializer(Singleton):
 
     # region Public
 
@@ -9,7 +10,7 @@ class SerializerField:
         data = {}
         for key in sorted(self.__dict__):
             key_var = getattr(self, key)
-            if isinstance(key_var, SerializerField):
+            if isinstance(key_var, BaseSerializer):
                 data[key] = key_var.serialize_to_dict()
                 continue
             data[key] = key_var
@@ -17,8 +18,10 @@ class SerializerField:
 
     def deserialize_from_dict(self, value: dict):
         for key in value:
+            if not hasattr(self, key):
+                continue
             key_var = getattr(self, key)
-            if isinstance(key_var, SerializerField):
+            if isinstance(key_var, BaseSerializer):
                 key_var.deserialize_from_dict(value[key])
                 setattr(self, key, key_var)
                 continue
@@ -27,7 +30,7 @@ class SerializerField:
     # endregion
 
 
-class SettingsSerializer(SerializerField):
+class SettingsSerializer(BaseSerializer):
 
     def __init__(self):
         self.SOUND = True
@@ -42,7 +45,7 @@ class SettingsSerializer(SerializerField):
         self.DIFFICULTY = (self.DIFFICULTY+1) % 3
 
 
-class EatenFruitsSerializer(SerializerField):
+class EatenFruitsSerializer(BaseSerializer):
 
     def __init__(self):
         self.__fruits = []
@@ -69,15 +72,33 @@ class EatenFruitsSerializer(SerializerField):
         return len(self.__fruits)
 
 
-class UnlockedSerializer(SerializerField):
+class SkinSerializer(BaseSerializer):
 
     def __init__(self):
-        self.skins = [SkinsNames.default]
-        self.levels = [[]]
+        self.current = SkinsNames.default
+        self.unlocked = [SkinsNames.default]
 
 
-class LastSerializer(SerializerField):
+class LevelSerializer(BaseSerializer):
 
     def __init__(self):
-        self.level_id = 0
-        self.skin = SkinsNames.default
+        self.current = 0
+        self.unlocked = [[]]
+
+    def get_current_records(self, total: bool = False) -> list[int]:
+        if total:
+            return self.unlocked[self.current][0] if self.unlocked[self.current][0] else 0
+        return self.unlocked[self.current]
+
+    def update_current_records(self, score: int) -> None:
+        self.unlocked[self.current].append(score)
+        self.unlocked[self.current] = sorted(set(self.unlocked[self.current]), reverse=True)[:5]
+
+
+class StorageSerializer(BaseSerializer):
+
+    def __init__(self, game) -> None:
+        self.settings = SettingsSerializer()
+        self.skins = SkinSerializer()
+        self.levels = LevelSerializer()
+        self.eaten_fruits = EatenFruitsSerializer()

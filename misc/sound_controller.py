@@ -1,6 +1,8 @@
 from typing import Union
 import pygame as pg
 
+from serializers import SettingsSerializer
+
 
 class SoundController:
 
@@ -15,7 +17,8 @@ class SoundController:
     # region Public
 
     def update(self) -> None:
-        self.volume = 0 if not self.game.settings.SOUND else self.game.settings.VOLUME / 100
+        settings = SettingsSerializer()
+        self.volume = 0 if not settings.SOUND else settings.VOLUME / 100
         self.sound.set_volume(self.volume)
 
     def play(self) -> None:

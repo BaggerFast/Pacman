@@ -1,4 +1,5 @@
 from objects.buttons import Button
+from serializers import EatenFruitsSerializer
 
 
 class BuyButton(Button):
@@ -12,7 +13,7 @@ class BuyButton(Button):
         flag = True
         self.select()
         for key in self.value.skin_cost.keys():
-            flag = self.game.eaten_fruits[key] > self.value.skin_cost[key]
+            flag = EatenFruitsSerializer()[key] > self.value.skin_cost[key]
         if not flag:
             return
         for key in self.value.skin_cost.keys():

@@ -8,8 +8,7 @@ from objects.buttons.button import Button
 
 class ButtonController(IDrawable, IEventful):
     # todo refactor
-    def __init__(self, game, buttons: list[Button]):
-        self.game = game
+    def __init__(self, buttons: list[Button]):
         self.buttons: list[Button] = buttons
         self.active_button_index: int = -1
         self.kb_actions = {

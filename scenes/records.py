@@ -1,3 +1,5 @@
+from typing import NamedTuple
+
 import pygame as pg
 import scenes
 from misc import PathManager
@@ -5,28 +7,37 @@ from misc.constants import Color, Font
 from misc.sprite_sheet import SpriteSheet
 from objects import ImageObject, Text
 from objects.buttons import Button
+from serializers import LevelSerializer
+
+
+class Medal(NamedTuple):
+    SPRITE: ImageObject
+    TEXT: Text
+
+    def process_draw(self, screen):
+        self.SPRITE.process_draw(screen)
+        self.TEXT.process_draw(screen)
 
 
 class RecordsScene(scenes.BaseScene):
-    medals = SpriteSheet(sprite_path=PathManager.get_image_path('medal.png'), sprite_size=(16, 16))[0]
+    medals_sprite = SpriteSheet(sprite_path=PathManager.get_image_path('medal.png'), sprite_size=(16, 16))[0]
 
-    # todo Game is used in __init__
     def __init__(self, game):
         super().__init__(game)
         self.__create_medals()
-        self.__create_error_label()
 
     # region Public
 
     # region Implementation of BaseScene
 
-    # def additional_draw(self, screen: pg.Surface) -> None:
-    #     if not self.medals_text:
-    #         self.__error_text.process_draw(screen)
-    #     else:
-    #         for i in range(len(self.medals_text)):
-    #             self.medals_text[i].process_draw(screen)
-    #             self.__medals[i].process_draw(screen)
+    def additional_draw(self, screen: pg.Surface) -> None:
+        if not self.__medals:
+            error_text = Text('NO RECORDS', 24, color=Color.RED)
+            error_text.move_center(self.game.width // 2, 100)
+            error_text.process_draw(screen)
+            return
+        for medal in self.__medals:
+            medal.process_draw(screen)
 
     # endregion
 
@@ -35,10 +46,6 @@ class RecordsScene(scenes.BaseScene):
     # region Private
 
     # region Implementation of BaseScene
-
-    def _create_objects(self) -> None:
-        super()._create_objects()
-        self.__create_text_labels()
 
     def _button_init(self) -> None:
         yield Button(
@@ -56,24 +63,20 @@ class RecordsScene(scenes.BaseScene):
 
     # endregion
 
-    def __create_error_label(self) -> None:
-        self.__error_text = Text('NO RECORDS', 24, color=Color.RED)
-        self.__error_text.move_center(self.game.width // 2, 100)
+    def __create_medals(self):
+        text_colors = [Color.GOLD, Color.SILVER, Color.BRONZE, Color.WHITE, Color.WHITE]
+        self.__medals = []
+        LevelSerializer().update_current_records(95)
+        high_scores = LevelSerializer().get_current_records()
+        for i in range(len(self.medals_sprite)):
+            if i > len(high_scores) - 1:
+                return
 
-    def __create_text_labels(self) -> None:
-        def creator():
-            text_colors = [Color.GOLD, Color.SILVER, Color.BRONZE, Color.WHITE, Color.WHITE]
-            for i, text_color in enumerate(text_colors):
-                if self.game.records.data[i] <= 0:
-                    break
-                yield Text(str(self.game.records.data[i]), 30, pg.Rect(60, 55 + 35 * i, 0, 0), text_color)
+            image = ImageObject(self.medals_sprite[i], (16, 55 + 35 * i))
+            image.scale(35, 35)
 
-    def __create_medals(self) -> None:
-        def creator():
-            for i in range(len(self.medals)):
-                image = ImageObject(self.medals[i], (16, 55 + 35 * i))
-                image.scale(35, 35)
-                yield image
-        self.__medals = list(creator())
+            text_color = Color.WHITE if i > len(text_colors) + 1 else text_colors[i]
+            text = Text(f'{high_scores[i]}', 30, pg.Rect(60, 55 + 35 * i, 0, 0), text_color)
+            self.__medals.append(Medal(image, text))
 
     # endregion

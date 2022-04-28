@@ -1,11 +1,13 @@
 from misc.constants import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from objects.buttons import Button
+from serializers import SettingsSerializer
 
 
 class SettingButton(Button):
 
     def __init__(self, **args):
         self.name, self.var = args.pop("name"), args.pop("var")
+        self.__settings = SettingsSerializer()
         super().__init__(**args)
 
     # region Public
@@ -17,10 +19,10 @@ class SettingButton(Button):
     def click(self) -> None:
         self.game.sounds.click.play()
         self.select()
-        if not hasattr(self.game.settings, self.var):
+        if not hasattr(self.__settings, self.var):
             return
-        active_mode = not getattr(self.game.settings, self.var)
-        setattr(self.game.settings, self.var, active_mode)
+        active_mode = not getattr(self.__settings, self.var)
+        setattr(self.__settings, self.var, active_mode)
         self.update(self.var)
         self.text = f"{self.name} {'ON' if active_mode else 'OFF'}"
         self.colors = BUTTON_GREEN_COLORS if active_mode else BUTTON_RED_COLORS

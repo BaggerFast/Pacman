@@ -1,15 +1,15 @@
 import sys
 import pygame as pg
 from random import choice
-
-from misc import HighScore, LevelLoader, Storage, ControlCheats, PathManager
+from misc import LevelLoader, ControlCheats, PathManager
 from misc.cheat_codes import Cheat
 from misc.constants import Color
 from misc.constants.classes import Sounds
 from misc.constants.skin_names import SkinsNames
-from misc.serializers.storage import StorageSetup
 from misc.skins import Skins
 from misc.sound_controller import SoundController
+
+from serializers import StorageSerializer, SettingsSerializer, SkinSerializer, SerializerLoader, LevelSerializer
 
 from objects.map import Map
 from objects.objects import Objects
@@ -18,7 +18,6 @@ from scenes import SceneManager, MenuScene, BaseScene
 
 
 class Game:
-
     # region Initialize pygame
     pg.display.init()
     pg.font.init()
@@ -91,7 +90,7 @@ class Game:
                 self.intro = SoundController(self.game, Sounds.Ch.intro, Sounds.INTRO[0])
 
         def reload_sounds(self):
-            self.fun = self.game.settings.FUN
+            self.fun = SettingsSerializer().FUN
             self.preset_for_fun()
             self.base_preset()
             if self.fun:
@@ -100,26 +99,20 @@ class Game:
 
     class Maps:
 
-        def __init__(self, game):
-            self.game = game
-            self.cur_id = 0
+        def __init__(self):
             self.levels: list = PathManager.get_list_path("maps", ext='json')
             self.images = list(self.prerender_surfaces())
 
         def __len__(self):
             return len(self.levels)
 
+        def __str__(self):
+            return f'Level: {LevelSerializer().current + 1}'
+
         @property
         def full_surface(self):
-            self.__load_from_map(self.cur_id)
+            self.__load_from_map(LevelSerializer().current)
             return self.__map.prerender_map_surface()
-
-        def is_last_level(self) -> bool:
-            return self.cur_id + 1 < len(self)
-
-        @property
-        def level_name(self):
-            return f'level {self.cur_id + 1}'
 
         def __load_from_map(self, level_id: int = 0) -> None:
             self.__loader = LevelLoader(self.levels[level_id])
@@ -132,17 +125,20 @@ class Game:
                 yield self.__map.prerender_map_image_scaled()
 
     __resolution = width, height = 224, 285
+    screen = pg.display.set_mode(__resolution, pg.SCALED)
     __FPS: int = 60
     __def_level_id = 0
-    screen = pg.display.set_mode(__resolution, pg.SCALED)
+    __game_over = False
 
     def __init__(self):
-        self.maps = self.Maps(self)
+        self.maps = self.Maps()
         self.__clock = pg.time.Clock()
         self.time_out: int = 125
         self.animate_timer: int = 0
-        self.storage = Storage(self)
-        StorageSetup(self.storage).load_from_file()
+        self.storage = StorageSerializer(self)
+
+        self.storage_loader = SerializerLoader(self.storage)
+        self.storage_loader.load_from_file()
 
         self.skins = Skins(self)
         self.cheats_var = self.Cheats()
@@ -159,9 +155,8 @@ class Game:
 
         self.sounds = self.Music(self)
 
-        self.skins.current = self.storage.last.skin if self.storage.last.skin in self.unlocked_skins \
+        self.skins.current = self.storage.skins.current if self.storage.skins.current in self.storage.skins.unlocked \
             else SkinsNames.default
-        self.records = HighScore(self)
 
         self.scene_manager.reset(MenuScene(self))
 
@@ -170,15 +165,15 @@ class Game:
     # region Public
 
     def main_loop(self) -> None:
-        while True:
+        while not self.__game_over:
             self.__process_all_events()
             self.__process_all_logic()
             self.__process_all_draw()
             self.__clock.tick(self.__FPS)
+        self.storage_loader.save_to_file()
 
     def exit_game(self) -> None:
-        StorageSetup(self.storage).save_to_file()
-        sys.exit(0)
+        self.__game_over = True
 
     # todo levels ans skins
     def unlock_level(self, level_id: int = 0) -> None:
@@ -199,8 +194,8 @@ class Game:
         :param skin_name: skin name
         """
         if skin_name in self.skins.all_skins:
-            if not self.cheats_var.UNLOCK_SKINS and skin_name not in self.unlocked_skins:
-                self.unlocked_skins.append(skin_name)
+            if not self.cheats_var.UNLOCK_SKINS and skin_name not in self.storage.skins.unlocked:
+                self.storage.skins.unlocked.append(skin_name)
         else:
             raise Exception(f"Name error. Skin name: {skin_name} doesn't exist")
 
@@ -209,11 +204,11 @@ class Game:
         :param fruit_id: fruit id
         :param value: count of fruits
         """
-        self.eaten_fruits[fruit_id] += value
+        self.storage.eaten_fruits[fruit_id] += value
 
     @property
     def difficulty(self) -> int:
-        return self.settings.DIFFICULTY + 1
+        return self.storage.settings.DIFFICULTY + 1
 
     @property
     def current_scene(self) -> BaseScene:
@@ -228,13 +223,8 @@ class Game:
     # region Private
 
     def __read_from_storage(self) -> None:
-        self.settings = self.storage.settings
-        self.eaten_fruits = self.storage.eaten_fruits
-
-        self.unlocked_levels = self.storage.unlocked.levels
-        self.maps.cur_id = self.storage.last.level_id
-
-        self.unlocked_skins = self.storage.unlocked.skins
+        self.unlocked_levels = self.storage.levels.unlocked
+        self.maps.cur_id = self.storage.levels.current
 
     def __process_exit_events(self, event: pg.event.Event) -> None:
         ctr_q = event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q

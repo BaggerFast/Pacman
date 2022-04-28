@@ -3,12 +3,14 @@ import scenes
 from misc.constants import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS, Font
 from objects import Text
 from objects.buttons import SettingButton, SelectButton, DifficultyButton, Button
+from serializers import SettingsSerializer
 
 
 class SettingsScene(scenes.BaseScene):
 
     __volume_position = 150
     __difficulty_pos = 210
+    __settings = SettingsSerializer()
 
     # region Public
 
@@ -29,7 +31,7 @@ class SettingsScene(scenes.BaseScene):
         volume_text = Text("VOLUME", 20)
         volume_text.move_center(self.game.width // 2, self.__volume_position)
 
-        volume_value = Text(f"{self.game.settings.VOLUME} %", 20)
+        volume_value = Text(f"{self.__settings.VOLUME} %", 20)
         volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
 
         self.objects.append(volume_text, volume_value, self.title)
@@ -38,20 +40,20 @@ class SettingsScene(scenes.BaseScene):
         yield SettingButton(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 35),
-            text=f"SOUND {'ON' if self.game.settings.SOUND else 'OFF'}",
+            text=f"SOUND {'ON' if self.__settings.SOUND else 'OFF'}",
             center=(self.game.width // 2, 75),
             text_size=Font.BUTTON_TEXT_SIZE,
-            colors=BUTTON_GREEN_COLORS if self.game.settings.SOUND else BUTTON_RED_COLORS,
+            colors=BUTTON_GREEN_COLORS if self.__settings.SOUND else BUTTON_RED_COLORS,
             var="SOUND",
             name="SOUND")
 
         yield SettingButton(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 35),
-            text=f"FUN {'ON' if self.game.settings.FUN else 'OFF'}",
+            text=f"FUN {'ON' if self.__settings.FUN else 'OFF'}",
             center=(self.game.width // 2, 75 + 40),
             text_size=Font.BUTTON_TEXT_SIZE,
-            colors=BUTTON_GREEN_COLORS if self.game.settings.FUN else BUTTON_RED_COLORS,
+            colors=BUTTON_GREEN_COLORS if self.__settings.FUN else BUTTON_RED_COLORS,
             var="FUN",
             name="FUN",
             active=True

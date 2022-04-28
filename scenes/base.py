@@ -56,6 +56,6 @@ class BaseScene(IGenericObject):
     def _create_objects(self) -> None:
         buttons = list(self._button_init())
         if buttons:
-            self.objects.append(ButtonController(self.game, buttons))
+            self.objects.append(ButtonController(buttons))
 
     # endregion
