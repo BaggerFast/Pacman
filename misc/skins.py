@@ -12,9 +12,9 @@ from serializers import SkinSerializer
 
 class Skin:
 
-    def __init__(self, game, path: str, cost: dict, skin_name: str = SkinsNames.default):
+    def __init__(self, game, path: str, cost: dict, skin_name=SkinsNames.DEFAULT):
         # todo delete game
-        self.name: str = skin_name
+        self.name: str = skin_name.name
         self.skin_cost: dict = cost
         self.game = game
         self.__walk = SpriteSheetAnimator(SpriteSheet(PathManager.get_image_path(f'pacman/{path}/walk.png'), (13, 13)))
@@ -53,52 +53,47 @@ class Skin:
 class HalfLife(Skin):
 
     def sound_preset(self):
-        self.game.sounds.siren = SoundController(self.game, Sounds.Ch.siren, Sounds.VALVE_SOUNDS[0])
-        self.game.sounds.intro = SoundController(self.game, Sounds.Ch.intro, Sounds.VALVE_SOUNDS[1])
-        self.game.sounds.seed = SoundController(self.game, Sounds.Ch.eatable, Sounds.VALVE_SOUNDS[2])
-        self.game.sounds.ghost = SoundController(self.game, Sounds.Ch.eatable, Sounds.VALVE_SOUNDS[3])
-        self.game.sounds.pellet = SoundController(self.game, Sounds.Ch.pellet, Sounds.VALVE_SOUNDS[4])
-        self.game.sounds.fruit = SoundController(self.game, Sounds.Ch.eatable, Sounds.VALVE_SOUNDS[5])
-        self.game.sounds.pacman = SoundController(self.game, Sounds.Ch.pacman, Sounds.VALVE_SOUNDS[6])
+        self.game.sounds.siren = SoundController(Sounds.Ch.siren, Sounds.VALVE_SOUNDS[0])
+        self.game.sounds.intro = SoundController(Sounds.Ch.intro, Sounds.VALVE_SOUNDS[1])
+        self.game.sounds.seed = SoundController(Sounds.Ch.eatable, Sounds.VALVE_SOUNDS[2])
+        self.game.sounds.ghost = SoundController(Sounds.Ch.eatable, Sounds.VALVE_SOUNDS[3])
+        self.game.sounds.pellet = SoundController(Sounds.Ch.pellet, Sounds.VALVE_SOUNDS[4])
+        self.game.sounds.fruit = SoundController(Sounds.Ch.eatable, Sounds.VALVE_SOUNDS[5])
+        self.game.sounds.pacman = SoundController(Sounds.Ch.pacman, Sounds.VALVE_SOUNDS[6])
 
 
 class Windows(Skin):
 
     def sound_preset(self):
-        self.game.sounds.intro = SoundController(self.game, Sounds.Ch.intro, Sounds.WINDOWS_SOUNDS[0])
-        self.game.sounds.pacman = SoundController(self.game, Sounds.Ch.pacman, Sounds.WINDOWS_SOUNDS[1])
-        self.game.sounds.seed = SoundController(self.game, Sounds.Ch.eatable, Sounds.WINDOWS_SOUNDS[2])
-        self.game.sounds.gameover = SoundController(self.game, Sounds.Ch.game_over, Sounds.WINDOWS_SOUNDS[3])
-        self.game.sounds.ghost = SoundController(self.game, Sounds.Ch.eatable, Sounds.WINDOWS_SOUNDS[4])
-        self.game.sounds.fruit = SoundController(self.game, Sounds.Ch.eatable, Sounds.WINDOWS_SOUNDS[5])
+        self.game.sounds.intro = SoundController(Sounds.Ch.intro, Sounds.WINDOWS_SOUNDS[0])
+        self.game.sounds.pacman = SoundController(Sounds.Ch.pacman, Sounds.WINDOWS_SOUNDS[1])
+        self.game.sounds.seed = SoundController(Sounds.Ch.eatable, Sounds.WINDOWS_SOUNDS[2])
+        self.game.sounds.gameover = SoundController(Sounds.Ch.game_over, Sounds.WINDOWS_SOUNDS[3])
+        self.game.sounds.ghost = SoundController(Sounds.Ch.eatable, Sounds.WINDOWS_SOUNDS[4])
+        self.game.sounds.fruit = SoundController(Sounds.Ch.eatable, Sounds.WINDOWS_SOUNDS[5])
 
 
 class PokeBall(Skin):
 
     def sound_preset(self):
-        self.game.sounds.intro = SoundController(self.game, Sounds.Ch.intro, Sounds.POC_INTRO)
+        self.game.sounds.intro = SoundController(Sounds.Ch.intro, Sounds.POC_INTRO)
 
 
 class Skins:
 
     def __init__(self, game):
         # todo delete game
-        self.game = game
+        self.default = Skin(game, 'default', {0: 0, 1: 0}, SkinsNames.DEFAULT)
+        self.edge = Skin(game, 'edge', {3: 10, 4: 7}, SkinsNames.EDGE)
+        self.chrome = Skin(game, 'chrome', {4: 7, 5: 6}, SkinsNames.CHROME)
 
-        self.default = Skin(self.game, 'default', {0: 0, 1: 0}, SkinsNames.default)
-        self.edge = Skin(self.game, 'edge', {3: 10, 4: 7}, SkinsNames.edge)
-        self.chrome = Skin(self.game, 'chrome', {4: 7, 5: 6}, SkinsNames.chrome)
-
-        self.half_life = HalfLife(self.game, 'half_life', {1: 14, 2: 10}, SkinsNames.half_life)
-        self.pokeball = PokeBall(self.game, 'pokeball', {2: 12, 3: 8}, SkinsNames.pokeball)
-        self.windows = Windows(self.game, 'windows', {6: 5, 5: 4}, SkinsNames.windows)
+        self.half_life = HalfLife(game, 'half_life', {1: 14, 2: 10}, SkinsNames.HALF_LIFE)
+        self.pokeball = PokeBall(game, 'pokeball', {2: 12, 3: 8}, SkinsNames.POKEMON)
+        self.windows = Windows(game, 'windows', {6: 5, 5: 4}, SkinsNames.WINDOWS)
 
         self.__current = self.default
 
     # region Public
-    @property
-    def all_skins(self) -> list:
-        return [key for key, value in self.__dict__.items() if isinstance(value, Skin)]
 
     @property
     def current(self) -> Skin:

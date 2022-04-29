@@ -30,12 +30,12 @@ class Map(IDrawable):
 
     color = rand_color()
 
-    def __init__(self, map_data):
+    def __init__(self, map_data: list):
 
         self.map_data = map_data
         self.tile_size = 8
-        self.sprite_sheet = SpriteSheet(sprite_path=PathManager.get_image_path('map.png'), sprite_size=(self.tile_size,
-                                                                                                        self.tile_size))
+        self.sprite_sheet = SpriteSheet(sprite_path=PathManager.get_image_path('map.png'),
+                                        sprite_size=(self.tile_size, self.tile_size))
         self.surface = self.__load_surface()
         self.surface_for_draw = self.__surface_recolor()
 
@@ -43,7 +43,7 @@ class Map(IDrawable):
 
     # region Implementation of IDrawable
 
-    def process_draw(self, screen: pg.Surface):
+    def process_draw(self, screen: pg.Surface) -> None:
         screen.blit(self.surface_for_draw, (0, 20))
 
     # endregion

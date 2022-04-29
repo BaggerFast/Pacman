@@ -52,10 +52,9 @@ class SeedLoader:
 
 class LevelLoader:
 
-    def __init__(self, filename="1_map.json") -> None:
-        self.filename = filename
-        self.__load_map_json()
-        self.movements_map = self.get_movements_data()
+    def __init__(self, filename: str) -> None:
+        with open(os.path.join('maps', filename)) as f:
+            self.__json = json.load(f)
         self.__seed_loader = SeedLoader(self.__json)
 
     # region Public
@@ -86,13 +85,5 @@ class LevelLoader:
 
     def get_cant_up_ghost_rect(self):
         return self.__json["cant_up_ghost_rect"]
-
-    # endregion
-
-    # region Private
-
-    def __load_map_json(self) -> None:
-        with open(os.path.join('maps', self.filename)) as f:
-            self.__json = json.load(f)
 
     # endregion

@@ -1,5 +1,5 @@
 from objects.buttons import Button
-from serializers import EatenFruitsSerializer
+from serializers import EatenFruitsSerializer, SkinSerializer
 
 
 class BuyButton(Button):
@@ -18,5 +18,5 @@ class BuyButton(Button):
             return
         for key in self.value.skin_cost.keys():
             self.game.store_fruit(key, -self.value.skin_cost[key])
-        self.game.unlock_skin(self.value.name)
+        SkinSerializer().unlock_skin(self.value)
         # self.game.scenes.current._create_objects()

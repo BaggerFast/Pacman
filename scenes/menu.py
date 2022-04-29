@@ -6,6 +6,7 @@ from misc.constants.classes import MenuPreset, Font, Color
 from objects import Text, ImageObject
 from objects.buttons import Button
 from objects.map import rand_color, Map
+from serializers import LevelSerializer
 
 
 class MenuScene(scenes.BaseScene):
@@ -57,14 +58,14 @@ class MenuScene(scenes.BaseScene):
         self.objects.append(title)
 
     def _button_init(self):
-        names = [
+        names = (
             MenuPreset("PLAY", lambda: self._scene_manager.reset(scenes.MainScene(self.game))),
             MenuPreset("LEVELS", lambda: self._scene_manager.append(scenes.LevelsScene(self.game))),
             MenuPreset("SKINS", lambda: self._scene_manager.append(scenes.SkinsScene(self.game))),
             MenuPreset("RECORDS", lambda: self._scene_manager.append(scenes.RecordsScene(self.game))),
             MenuPreset("SETTINGS", lambda: self._scene_manager.append(scenes.SettingsScene(self.game))),
             MenuPreset("EXIT", self.game.exit_game),
-        ]
+        )
         for i, menu_preset in enumerate(names):
             yield Button(
                 game=self.game,
@@ -79,7 +80,7 @@ class MenuScene(scenes.BaseScene):
 
     @property
     def __level_indicator(self) -> Text:
-        indicator = Text(str(self.game.maps), 15, font=Font.TITLE)
+        indicator = Text(f'{LevelSerializer()}', 15, font=Font.TITLE)
         indicator.move_center(self.game.width // 2, 60)
         return indicator
 

@@ -21,7 +21,7 @@ class MainScene(scenes.BaseScene):
         self.__load_from_map()
         self.__create_sounds()
         self.__create_start_anim()
-        self.score = Score(self.game)
+        self.score = Score()
         self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
 
         self.__timer_reset_pacman = 0
@@ -128,7 +128,7 @@ class MainScene(scenes.BaseScene):
 
     @property
     def __get_static_text(self):
-        scores_label_text = Text(f'{"MEMORY" if self.game.skins.current.name == SkinsNames.chrome else "SCORE"}',
+        scores_label_text = Text(f'{"MEMORY" if self.game.skins.current.name == SkinsNames.CHROME else "SCORE"}',
                                  Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 0, 20, 20))
 
         high_scores_label_text = Text(f'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20))
@@ -140,7 +140,7 @@ class MainScene(scenes.BaseScene):
                     rect=pg.Rect(130, 8, 20, 20))
 
     def __load_from_map(self):
-        self.__loader = LevelLoader(self.game.maps.levels[self.game.maps.cur_id])
+        self.__loader = LevelLoader(LevelSerializer().current)
         self.__map_data = self.__loader.get_map_data()
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()
@@ -177,7 +177,7 @@ class MainScene(scenes.BaseScene):
         self.ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
 
         for ghost in self.ghosts:
-            ghost.set_difficult(SettingsSerializer().DIFFICULTY)
+            ghost.set_difficult(SettingsSerializer().difficulty)
 
         # todo prefered ghost 1
         self.__not_prefered_ghosts = self.ghosts.copy()

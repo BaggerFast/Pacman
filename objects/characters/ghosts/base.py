@@ -12,6 +12,7 @@ from misc.sprite_sheet import SpriteSheet
 from objects import Text
 from objects.characters.character_base import Character
 from objects.characters.ghosts.ghost_states import GhostState
+from serializers import SettingsSerializer
 
 
 class Base(Character, IEventful, ABC):
@@ -108,7 +109,7 @@ class Base(Character, IEventful, ABC):
 
     def process_draw(self, screen: pg.Surface) -> None:
         if self.mode == GhostState.eaten:
-            self.gg_text.text = f'{200 * self.game.difficulty ** 2}'  # * 2 ** self.game.score.fear_count2
+            self.gg_text.text = f'{200 * (SettingsSerializer().difficulty + 1) ** 2}'  # * 2 ** self.game.score.fear_count2
             self.gg_text.process_draw(screen)
         if not self.is_invisible:
             super().process_draw(screen)

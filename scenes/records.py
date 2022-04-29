@@ -66,7 +66,6 @@ class RecordsScene(scenes.BaseScene):
     def __create_medals(self):
         text_colors = [Color.GOLD, Color.SILVER, Color.BRONZE, Color.WHITE, Color.WHITE]
         self.__medals = []
-        LevelSerializer().update_current_records(95)
         high_scores = LevelSerializer().get_current_records()
         for i in range(len(self.medals_sprite)):
             if i > len(high_scores) - 1:

@@ -16,12 +16,12 @@ class SkinsScene(scenes.BaseScene):
     def __init__(self, game):
         super().__init__(game)
         self.skins = {
-            SkinsNames.default: self.game.skins.default,
-            SkinsNames.edge: self.game.skins.edge,
-            SkinsNames.pokeball: self.game.skins.pokeball,
-            SkinsNames.half_life: self.game.skins.half_life,
-            SkinsNames.windows: self.game.skins.windows,
-            SkinsNames.chrome: self.game.skins.chrome,
+            SkinsNames.DEFAULT: self.game.skins.default,
+            SkinsNames.EDGE: self.game.skins.edge,
+            SkinsNames.POKEMON: self.game.skins.pokeball,
+            SkinsNames.HALF_LIFE: self.game.skins.half_life,
+            SkinsNames.WINDOWS: self.game.skins.windows,
+            SkinsNames.CHROME: self.game.skins.chrome,
         }
         self.fruit_images: list[str] = SpriteSheet(PathManager.get_image_path('fruits.png'), (14, 14))[0]
 
@@ -96,22 +96,21 @@ class SkinsScene(scenes.BaseScene):
                 yield SkinButton(
                     game=self.game,
                     rect=pg.Rect(0, 0, 90, 25),
-                    text=skin_name,
+                    text=skin_name.name,
                     value=skin,
                     center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
                     text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                    active=skin.name in SkinSerializer().unlocked
                 )
-            else:
-                yield BuyButton(
-                    game=self.game,
-                    rect=pg.Rect(0, 0, 90, 25),
-                    text=skin_name,
-                    value=skin,
-                    center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
-                    text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                    colors=BUTTON_SKIN_BUY
-                )
+                continue
+            yield BuyButton(
+                game=self.game,
+                rect=pg.Rect(0, 0, 90, 25),
+                text=skin_name.name,
+                value=skin,
+                center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
+                text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
+                colors=BUTTON_SKIN_BUY
+            )
         yield Button(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),

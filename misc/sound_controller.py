@@ -1,4 +1,3 @@
-from typing import Union
 import pygame as pg
 
 from serializers import SettingsSerializer
@@ -6,9 +5,7 @@ from serializers import SettingsSerializer
 
 class SoundController:
 
-    def __init__(self, game, channel: int = 0, path: str = '', volume: int = 1):
-        # todo delete game
-        self.game = game
+    def __init__(self, channel: int = 0, path: str = '', volume: int = 1):
         self.sound = pg.mixer.Sound(path)
         self.channel = pg.mixer.Channel(channel)
         self.volume = volume
@@ -17,8 +14,7 @@ class SoundController:
     # region Public
 
     def update(self) -> None:
-        settings = SettingsSerializer()
-        self.volume = 0 if not settings.SOUND else settings.VOLUME / 100
+        self.volume = 0 if not SettingsSerializer().sound else SettingsSerializer().volume / 100
         self.sound.set_volume(self.volume)
 
     def play(self) -> None:

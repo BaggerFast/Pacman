@@ -7,10 +7,7 @@ from serializers import SettingsSerializer
 
 
 class SettingsScene(scenes.BaseScene):
-
     __volume_position = 150
-    __difficulty_pos = 210
-    __settings = SettingsSerializer()
 
     # region Public
 
@@ -31,30 +28,30 @@ class SettingsScene(scenes.BaseScene):
         volume_text = Text("VOLUME", 20)
         volume_text.move_center(self.game.width // 2, self.__volume_position)
 
-        volume_value = Text(f"{self.__settings.VOLUME} %", 20)
-        volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
+        self.volume_value = Text(f"{SettingsSerializer().volume} %", 20)
+        self.volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
 
-        self.objects.append(volume_text, volume_value, self.title)
+        self.objects.append(volume_text, self.volume_value, self.title)
 
     def _button_init(self) -> None:
         yield SettingButton(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 35),
-            text=f"SOUND {'ON' if self.__settings.SOUND else 'OFF'}",
+            text=f"SOUND {'ON' if SettingsSerializer().sound else 'OFF'}",
             center=(self.game.width // 2, 75),
             text_size=Font.BUTTON_TEXT_SIZE,
-            colors=BUTTON_GREEN_COLORS if self.__settings.SOUND else BUTTON_RED_COLORS,
-            var="SOUND",
+            colors=BUTTON_GREEN_COLORS if SettingsSerializer().sound else BUTTON_RED_COLORS,
+            var="sound",
             name="SOUND")
 
         yield SettingButton(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 35),
-            text=f"FUN {'ON' if self.__settings.FUN else 'OFF'}",
+            text=f"FUN {'ON' if SettingsSerializer().fun else 'OFF'}",
             center=(self.game.width // 2, 75 + 40),
             text_size=Font.BUTTON_TEXT_SIZE,
-            colors=BUTTON_GREEN_COLORS if self.__settings.FUN else BUTTON_RED_COLORS,
-            var="FUN",
+            colors=BUTTON_GREEN_COLORS if SettingsSerializer().fun else BUTTON_RED_COLORS,
+            var="fun",
             name="FUN",
             active=True
         )
@@ -77,7 +74,7 @@ class SettingsScene(scenes.BaseScene):
         yield DifficultyButton(
             game=self.game,
             rect=pg.Rect(0, 0, 120, 35),
-            center=(self.game.width // 2, self.__difficulty_pos),
+            center=(self.game.width // 2, 210),
             text_size=Font.BUTTON_TEXT_SIZE,
             active=True,
             text=''

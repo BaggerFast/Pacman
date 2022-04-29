@@ -3,6 +3,7 @@ import scenes
 from misc.constants import Font, BUTTON_DEFAULT_COLORS
 from objects import Text
 from objects.buttons import Button
+from serializers import LevelSerializer
 
 
 class EndScene(scenes.BaseScene):
@@ -84,7 +85,7 @@ class EndScene(scenes.BaseScene):
 
     def __unlock_level(self) -> None:
         if not self.game.maps.is_last_level():
-            self.game.unlock_level(self.game.maps.cur_id + 1)
+            LevelSerializer().unlock_next_level()
 
     def __next_level(self) -> None:
         next_level = self.game.maps.cur_id + 1

@@ -45,7 +45,7 @@ class Seed(IDrawable):
 class BigSeed(Seed):
     def __init__(self, game, rect):
         # todo delete game
-        path = 'big_seed.png' if game.skins.current.name != SkinsNames.chrome else "big_seed_google.png"
+        path = 'big_seed.png' if game.skins.current.name != SkinsNames.CHROME else "big_seed_google.png"
         self.animator = SeedAnimator(SpriteSheet(PathManager.get_image_path(path), (9, 9))[0])
         super().__init__(game, rect, self.animator.current_image)
 

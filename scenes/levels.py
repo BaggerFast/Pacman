@@ -4,6 +4,7 @@ import scenes
 from misc.constants import Font
 from objects import Text
 from objects.buttons import ButtonController, LvlButton, Button
+from serializers import LevelSerializer
 
 
 class LevelsScene(scenes.BaseScene):
@@ -69,7 +70,7 @@ class LevelsScene(scenes.BaseScene):
                 text=f'LEVEL {i + 1}',
                 center=(self.game.width // 2 - 55, (85 + 40 * (i - self.__scroll))),
                 text_size=Font.BUTTON_TEXT_SIZE - 4,
-                active=i in range(len(self.game.unlocked_levels)))
+                active=i in range(len(LevelSerializer().unlocked)))
         yield Button(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),

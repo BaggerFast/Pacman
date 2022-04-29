@@ -2,22 +2,21 @@ import pygame as pg
 from misc.constants import EvenType, SkinsNames, event_append, Font
 from misc.interfaces import IDrawable, IEventful
 from objects.text import Text
+from serializers import SettingsSerializer, SkinSerializer
 
 
 class Score(IDrawable, IEventful):
     base_pos = (5, 270)
     shift = 20
 
-    def __init__(self, game):
-        # todo delete game
-        self.game = game
+    def __init__(self):
         self.__value = 0
         self.fear_mode = False
         self.fear_count = 0
         self.text = Text(f'{self.__value}', Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
 
         self.__events = {
-            EvenType.EAT_SEED: lambda: self + 10 * self.game.difficulty,
+            EvenType.EAT_SEED: lambda: self + 10 * SettingsSerializer().difficulty,
             EvenType.EAT_ENERGIZER: self.__eat_energizer,
             EvenType.EAT_GHOST: self.__eat_ghost,
             EvenType.STOP_FEAR_MODE: self.__deactivate_fear_mode,
@@ -41,7 +40,7 @@ class Score(IDrawable, IEventful):
     # region Implementation of IDrawable, IEventful
 
     def process_draw(self, screen: pg.Surface) -> None:
-        self.text.text = f'{self.__value} {"Mb" if self.game.skins.current.name == SkinsNames.chrome else ""}'
+        self.text.text = f'{self.__value} {"Mb" if SkinSerializer().current == SkinsNames.CHROME else ""}'
         self.text.process_draw(screen)
 
     def process_event(self, event: pg.event.Event) -> None:
@@ -55,7 +54,7 @@ class Score(IDrawable, IEventful):
         return self.__value
 
     def eat_fruit(self, bonus) -> None:
-        self + bonus * self.game.difficulty
+        self + bonus * SettingsSerializer().difficulty
 
     # endregion
 
@@ -70,7 +69,7 @@ class Score(IDrawable, IEventful):
         self.fear_count = 0
 
     def __eat_ghost(self) -> None:
-        self + ((200 * self.game.difficulty ** 2) * 2 ** self.fear_count)
+        self + ((200 * SettingsSerializer().difficulty ** 2) * 2 ** self.fear_count)
         self.fear_count += 1
 
     # endregion

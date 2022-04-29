@@ -17,11 +17,11 @@ class DifficultyButton(Button):
 
     def click(self) -> None:
         self.game.sounds.click.play()
-        SettingsSerializer().change_difficulty()
+        SettingsSerializer().difficulty += 1
         self.update_text()
         self.select()
 
     def update_text(self) -> None:
-        self.text = self.__difficulties[SettingsSerializer().DIFFICULTY]
+        self.text = self.__difficulties[SettingsSerializer().difficulty]
 
     # endregion

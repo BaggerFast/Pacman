@@ -1,7 +1,10 @@
-class SkinsNames:
-    pokeball = "pokeball"
-    windows = "windows"
-    half_life = "half_life"
-    chrome = "chrome"
-    default = "default"
-    edge = 'edge'
+from enum import Enum, auto
+
+
+class SkinsNames(Enum):
+    POKEMON = auto()
+    WINDOWS = auto()
+    HALF_LIFE = auto()
+    CHROME = auto()
+    DEFAULT = auto()
+    EDGE = auto()
