@@ -1,5 +1,4 @@
 import json
-import os
 from typing import List, Tuple, Union
 
 
@@ -53,7 +52,7 @@ class SeedLoader:
 class LevelLoader:
 
     def __init__(self, filename: str) -> None:
-        with open(os.path.join('maps', filename)) as f:
+        with open(filename) as f:
             self.__json = json.load(f)
         self.__seed_loader = SeedLoader(self.__json)
 

@@ -1,6 +1,11 @@
 import sys
+
 import pygame as pg
 from random import choice
+
+from pygame.threads import Thread
+
+from constants import Constant
 from misc import LevelLoader, ControlCheats, PathManager
 from misc.cheat_codes import Cheat
 from misc.constants import Color
@@ -129,14 +134,12 @@ class Game:
             return images
 
     __resolution = width, height = 224, 285
-    __FPS: int = 60
     __game_over = False
 
     screen = pg.display.set_mode(__resolution, pg.SCALED)
 
     def __init__(self):
         self.maps = self.MapLoader()
-        self.__clock = pg.time.Clock()
         self.time_out: int = 125
         self.animate_timer: int = 0
 
@@ -170,12 +173,30 @@ class Game:
         self.__game_over = True
 
     def main_loop(self) -> None:
+        clock = pg.time.Clock()
+        frequency = 120000
+        time = pg.time.get_ticks()
+
         while not self.__game_over:
             self.__process_all_events()
-            self.__process_all_logic()
-            self.__process_all_draw()
-            self.__clock.tick(self.__FPS)
-        self.storage_loader.serialize_obj()
+            logic = Thread(target=self.__process_all_logic, daemon=True)
+            draw = Thread(target=self.__process_all_draw, daemon=True)
+            logic.start()
+            draw.start()
+            if pg.time.get_ticks() - time >= frequency:
+                self.storage_loader.serialize_obj()
+                time = pg.time.get_ticks()
+            logic.join()
+            draw.join()
+            clock.tick(Constant.FPS)
+
+    def __process_all_logic(self) -> None:
+        self.obj.process_logic()
+
+    def __process_all_draw(self) -> None:
+        self.screen.fill(Color.BLACK)
+        self.obj.process_draw(self.screen)
+        pg.display.flip()
 
     # todo fix
     def store_fruit(self, fruit_id: int = 0, value: int = 0) -> None:
@@ -207,13 +228,5 @@ class Game:
         for event in pg.event.get():
             self.obj.process_event(event)
             self.__process_exit_events(event)
-
-    def __process_all_logic(self) -> None:
-        self.obj.process_logic()
-
-    def __process_all_draw(self) -> None:
-        self.screen.fill(Color.BLACK)
-        self.obj.process_draw(self.screen)
-        pg.display.flip()
 
     # endregion

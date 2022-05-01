@@ -1,6 +1,6 @@
 import pygame as pg
 import scenes
-from misc import ControlCheats, LevelLoader
+from misc import ControlCheats, LevelLoader, PathManager
 from misc.cheat_codes import Cheat
 from misc.constants import Font, event_append, EvenType
 from misc.constants.skin_names import SkinsNames
@@ -140,7 +140,7 @@ class MainScene(scenes.BaseScene):
                     rect=pg.Rect(130, 8, 20, 20))
 
     def __load_from_map(self):
-        self.__loader = LevelLoader(LevelSerializer().current)
+        self.__loader = LevelLoader(PathManager.get_path(f'maps/{LevelSerializer().current}.json'))
         self.__map_data = self.__loader.get_map_data()
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()

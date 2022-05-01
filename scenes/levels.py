@@ -14,7 +14,7 @@ class LevelsScene(scenes.BaseScene):
     def __init__(self, game):
         super().__init__(game)
         self.is_current = False
-        self.__scroll = max(min(self.game.maps.cur_id, len(self.game.maps) - self.__buttons_on_scene), 0)
+        self.__scroll = max(min(LevelSerializer().current, len(self.game.maps) - self.__buttons_on_scene), 0)
 
     # region Public
 
@@ -44,7 +44,7 @@ class LevelsScene(scenes.BaseScene):
     def create_buttons(self) -> None:
         buttons = list(self._button_init())
         for button in buttons:
-            if hasattr(button, "value") and self.game.maps.cur_id == button.value[0]:
+            if hasattr(button, "value") and LevelSerializer().current == button.value[0]:
                 button.text = '-' + button.text + '-'
         self.objects.append(ButtonController(buttons))
 
@@ -80,7 +80,7 @@ class LevelsScene(scenes.BaseScene):
             text_size=Font.BUTTON_TEXT_SIZE)
 
     def _create_objects(self) -> None:
-        self.preview = copy(self.game.maps.images[self.game.maps.cur_id])
+        self.preview = copy(self.game.maps.images[LevelSerializer().current])
         self.objects.append(self.preview)
         self.create_buttons()
 

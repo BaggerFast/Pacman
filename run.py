@@ -5,6 +5,7 @@ from game import Game
 from config.settings import DEBUG
 
 
+
 def parse_exceptions():
     if DEBUG:
         print(traceback.print_exc())
@@ -22,7 +23,6 @@ def main():
         game.main_loop()
     except Exception:
         parse_exceptions()
-
 
 if __name__ == '__main__':
     main()
