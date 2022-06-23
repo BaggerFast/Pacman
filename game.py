@@ -14,7 +14,7 @@ from misc.constants.skin_names import SkinsNames
 from misc.skins import Skins
 from misc.sound_controller import SoundController
 
-from serializers import StorageSerializer, SettingsSerializer, SkinSerializer, SerializerLoader, LevelSerializer
+from serializers import StorageSerializer, SettingsSerializer, LevelSerializer
 
 from objects.map import Map
 from objects.objects import Objects
@@ -179,15 +179,11 @@ class Game:
 
         while not self.__game_over:
             self.__process_all_events()
-            logic = Thread(target=self.__process_all_logic, daemon=True)
-            draw = Thread(target=self.__process_all_draw, daemon=True)
-            logic.start()
-            draw.start()
+            self.__process_all_logic()
+            self.__process_all_draw()
             if pg.time.get_ticks() - time >= frequency:
                 self.storage_loader.serialize_obj()
                 time = pg.time.get_ticks()
-            logic.join()
-            draw.join()
             clock.tick(Constant.FPS)
 
     def __process_all_logic(self) -> None:

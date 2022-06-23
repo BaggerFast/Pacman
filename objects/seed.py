@@ -1,7 +1,8 @@
 import pygame as pg
 
 from misc import Animator, PathManager
-from misc.constants import EvenType, event_append, CELL_SIZE, SkinsNames
+from misc.constants import EvenType, event_append, SkinsNames
+from config.settings import CELL_SIZE
 from misc.interfaces import IDrawable
 from misc.sprite_sheet import SpriteSheet
 

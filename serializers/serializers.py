@@ -1,7 +1,8 @@
 from copy import deepcopy, copy
 
 from meta_classes import Singleton
-from misc.constants import FRUITS_COUNT, SkinsNames
+from misc.constants import SkinsNames
+from config.settings import FRUITS_COUNT
 
 
 class JsonSerializer:
@@ -68,7 +69,7 @@ class SettingsSerializer(SerDes):
     @difficulty.setter
     def difficulty(self, value: int):
         if not isinstance(value, int):
-            raise Exception('Значение Сложности звук может быть только целым числом')
+            raise Exception('Значение Сложности может быть только целым числом')
         self.__difficulty = value % 3
 
     # endregion
@@ -132,15 +133,6 @@ class LevelSerializer(SerDes):
         return f'Level: {self.current+1}'
 
 
-class StorageSerializer(SerDes):
-
-    def __init__(self) -> None:
-        self.settings = SettingsSerializer()
-        self.skins = SkinSerializer()
-        self.levels = LevelSerializer()
-        self.eaten_fruits = EatenFruitsSerializer()
-
-
 class SkinSerializer(SerDes):
 
     def __init__(self):
@@ -164,3 +156,10 @@ class SkinSerializer(SerDes):
         self.__current = skin.name if skin.name in self.__unlocked else SkinsNames.DEFAULT.name
 
 
+class StorageSerializer(SerDes):
+
+    def __init__(self) -> None:
+        self.settings = SettingsSerializer()
+        self.skins = SkinSerializer()
+        self.levels = LevelSerializer()
+        self.eaten_fruits = EatenFruitsSerializer()

@@ -5,7 +5,7 @@ from typing import Tuple
 
 from objects.base import BaseObject
 from misc.path import PathManager
-from misc.constants import CELL_SIZE
+from config.settings import CELL_SIZE
 from misc.interfaces import IDrawable, ILogical
 from misc.sprite_sheet import SpriteSheet
 

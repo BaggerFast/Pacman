@@ -16,7 +16,7 @@ class SerializerLoader(BaseLoader):
 
     def serialize_obj(self) -> None:
         if not isinstance(self._storage, JsonSerializer):
-            raise Exception(f'Попытка серилиазовать обьект {type(self._storage)}')
+            raise Exception(f'Попытка серилиазовать объект {type(self._storage)}')
 
         try:
             os.mkdir(self._storage_filepath.split('/')[0])
@@ -31,7 +31,7 @@ class DeserializerLoader(BaseLoader):
 
     def deserialize_file(self) -> None:
         if not isinstance(self._storage, JsonDeserializer):
-            raise Exception(f'Попытка десериализовать обьект {type(self._storage)}')
+            raise Exception(f'Попытка десериализовать объект {type(self._storage)}')
         if os.path.exists(self._storage_filepath):
             with open(self._storage_filepath, "r") as file:
                 self._storage.deserialize(json.load(file))

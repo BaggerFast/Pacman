@@ -3,4 +3,3 @@ from .button import BUTTON_GREEN_COLORS, ButtonStateColor, BUTTON_RED_COLORS, BU
 from .classes import Color, Font
 from .event_types import EvenType, event_append
 from .skin_names import SkinsNames
-from .variables import CELL_SIZE, FRUITS_COUNT, HIGHSCORES_COUNT

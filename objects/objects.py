@@ -25,35 +25,35 @@ class Objects(IGenericObject):
     # region Implementation of IGenericObject
 
     def process_draw(self, screen: pg.Surface) -> None:
-        for obj in self.__obj:
-            if isinstance(obj, IDrawable):
-                obj.process_draw(screen)
-                obj.additional_draw(screen)
+        filtered = filter(lambda x: isinstance(x, IDrawable), self.__obj)
+        for obj in filtered:
+            obj.process_draw(screen)
+            obj.additional_draw(screen)
 
     def process_event(self, event: pg.event.Event) -> None:
-        for obj in self.__obj:
-            if isinstance(obj, IEventful):
-                obj.process_event(event)
-                obj.additional_event(event)
+        filtered = filter(lambda x: isinstance(x, IEventful), self.__obj)
+        for obj in filtered:
+            obj.process_event(event)
+            obj.additional_event(event)
 
     def process_logic(self) -> None:
-        for obj in self.__obj:
-            if isinstance(obj, ILogical):
-                obj.process_logic()
-                obj.additional_logic()
+        filtered = filter(lambda x: isinstance(x, ILogical), self.__obj)
+        for obj in filtered:
+            obj.process_logic()
+            obj.additional_logic()
 
     # endregion
 
     def append(self, *args) -> None:
         self.__obj.extend(self.__parse_list(args))
 
+    def clear(self) -> None:
+        self.__obj.clear()
+
     def __getitem__(self, index: int):
         return self.__obj[index]
 
     def __len__(self) -> int:
         return len(self.__obj)
-
-    def clear(self) -> None:
-        self.__obj.clear()
 
     # endregion

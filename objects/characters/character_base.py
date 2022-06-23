@@ -3,7 +3,7 @@ from typing import Tuple, List, Union
 import pygame as pg
 from misc import Animator
 from misc.animator import SpriteSheetAnimator
-from misc.constants import CELL_SIZE
+from config.settings import CELL_SIZE
 from misc.interfaces.igeneric_object import IDrawable, ILogical
 from objects.base import BaseObject
 

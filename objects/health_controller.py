@@ -24,7 +24,6 @@ class HealthLogic(IEventful):
             raise Exception
         self.__max_hp: int = max_hp
         self.__cur_hp: int = self.__check_limits(hp_count)
-        # todo health_events usability
         self.__events = {
             EvenType.HEALTH_INC: lambda: self.get_health(1),
             EvenType.HEALTH_DEC: lambda: self.get_damage(1),
@@ -64,7 +63,6 @@ class HealthController(IGenericObject):
         self.hp_view = HealthView(self.game.skins.current.walk.sheet[0][3], (5, 270), 20)
 
     def process_logic(self) -> None:
-        # todo health alive usability
         self.hp_view.hp_count = self.hp.count
         cheat = self.game.cheats_var.INFINITY_LIVES
         if all([not cheat, not self.hp.alive, not self.game.sounds.pacman.is_busy()]):

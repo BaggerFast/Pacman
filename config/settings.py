@@ -1,12 +1,14 @@
 import os
 import sys
 import pygame as pg
-
 from typing import Final
 from abc import ABC
 
-VERSION = '1.0.3'
-DEBUG = 'debug' in sys.argv
+VERSION: Final = '1.0.3'
+DEBUG: Final = 'debug' in sys.argv
+
+CELL_SIZE: int = 8
+FRUITS_COUNT: int = 8
 
 
 class Dir(ABC):
@@ -14,6 +16,7 @@ class Dir(ABC):
     ASSET: Final = os.path.join(BASE, 'assets')
     IMAGE: Final = os.path.join(ASSET, 'images')
     SOUND: Final = os.path.join(ASSET, 'sounds')
+    LOG: Final = os.path.join(BASE, 'logs')
 
 
 class Keyboard(ABC):

@@ -7,69 +7,68 @@ from objects.buttons.button import Button
 
 
 class ButtonController(IDrawable, IEventful):
-    # todo refactor
+
     def __init__(self, buttons: list[Button]):
         self.buttons: list[Button] = buttons
         self.active_button_index: int = -1
         self.kb_actions = {
-            Keyboard.DOWN: lambda: self.select_button_checker(1),
-            Keyboard.UP: lambda: self.select_button_checker(-1),
-            Keyboard.ENTER: self.press_current_button,
+            Keyboard.DOWN: self.move_down,
+            Keyboard.UP: self.move_up,
+            Keyboard.ENTER: self.press_cur_btn,
         }
 
     # region Public
 
     # region Implementation of IDrawable, IEventful
 
-    def process_event(self, event: pg.event.Event) -> None:
-        self.process_button_events(event)
-        self.process_mouse_motion(event)
-        self.__parse_keyboard(event)
-
     def process_draw(self, screen: pg.Surface) -> None:
         for button in self.buttons:
             button.process_draw(screen)
 
-    # endregion
+    def process_event(self, event: pg.event.Event) -> None:
+        self.buttons_process_event(event)
+        self.mouse_process_event(event)
+        self.__parse_keyboard(event)
 
-    def deselect_current_button(self) -> None:
-        self.buttons[self.active_button_index].deselect()
-
-    def select_current_button(self) -> None:
-        self.buttons[self.active_button_index].select()
-
-    def select_button_checker(self, index: int) -> None:
-        active_button_index = (self.active_button_index + index) % len(self.buttons)
-        if self.buttons[active_button_index].active:
-            self.deselect_current_button()
-            self.active_button_index = active_button_index
-            self.select_current_button()
-
-    def press_current_button(self) -> None:
-        self.buttons[self.active_button_index].activate()
-        self.buttons[self.active_button_index].click()
-
-    def get_button_under_mouse(self, pos) -> Union[int, None]:
-        for index, button in enumerate(self.buttons):
-            if button.rect.collidepoint(pos):
-                return index
-
-    def process_mouse_motion(self, event: pg.event.Event) -> None:
-        if event.type != pg.MOUSEMOTION:
-            return
-        index = self.get_button_under_mouse(event.pos)
-        if index:
-            self.active_button_index = index
-
-    def process_button_events(self, event: pg.event.Event) -> None:
+    def buttons_process_event(self, event: pg.event.Event) -> None:
         for button in self.buttons:
             button.process_event(event)
 
+    def mouse_process_event(self, event: pg.event.Event) -> None:
+        if event.type != pg.MOUSEMOTION:
+            return
+        for index, button in enumerate(self.buttons):
+            if button.rect.collidepoint(event.pos):
+                self.active_button_index = index
+                return
+
     # endregion
 
-    # Private
+    def deselect_cur_btn(self) -> None:
+        self.buttons[self.active_button_index].deselect()
 
-    def __parse_keyboard(self, event):
+    def select_cur_btn(self) -> None:
+        self.buttons[self.active_button_index].select()
+
+    def press_cur_btn(self) -> None:
+        self.buttons[self.active_button_index].activate()
+        self.buttons[self.active_button_index].click()
+
+    def move_up(self):
+        self.deselect_cur_btn()
+        self.active_button_index = (self.active_button_index - 1) % len(self.buttons)
+        self.select_cur_btn()
+
+    def move_down(self):
+        self.deselect_cur_btn()
+        self.active_button_index = (self.active_button_index + 1) % len(self.buttons)
+        self.select_cur_btn()
+
+    # endregion
+
+    # region Private
+
+    def __parse_keyboard(self, event) -> None:
         if event.type != pg.KEYDOWN:
             return
         for key in self.kb_actions:

@@ -17,8 +17,7 @@ class SkinButton(Button):
 
     def deselect(self) -> None:
         scene = self.game.scene_manager.current
-        if not scene.is_current:
-            scene.preview.image = self.game.skins.current.image.image
+        scene.preview.image = self.game.skins.current.image.image
         super().deselect()
 
     def select(self) -> None:

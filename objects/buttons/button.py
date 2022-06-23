@@ -1,4 +1,4 @@
-from enum import Enum, auto, IntEnum
+from enum import IntEnum
 from typing import List, Union, Callable, Tuple
 import pygame as pg
 from misc.constants import Font, ButtonColor, BUTTON_DEFAULT_COLORS
@@ -14,14 +14,20 @@ class BtnStates(IntEnum):
 
 class Button(BaseObject, IDrawable, IEventful):
 
-    def __init__(self, game, rect: Union[tuple, pg.Rect], text: str, function: Callable[[], None] = None,
-                 colors: ButtonColor = BUTTON_DEFAULT_COLORS, center: Tuple[int, int] = None,
-                 text_size: int = 60, active: bool = True) -> None:
+    def __init__(self,
+                 game,
+                 rect: Union[tuple, pg.Rect],
+                 text: str,
+                 function: Callable[[], None] = None,
+                 colors: ButtonColor = BUTTON_DEFAULT_COLORS,
+                 center: Tuple[int, int] = None,
+                 text_size: int = 60,
+                 active: bool = True
+                 ):
         BaseObject.__init__(self)
         # todo delete game
         self.game = game
         self.rect = rect
-        self.is_hidden = False
         self.function = function
         self.__text = text
         self.__font = pg.font.Font(Font.DEFAULT, text_size)
@@ -39,26 +45,24 @@ class Button(BaseObject, IDrawable, IEventful):
     def process_event(self, event: pg.event.Event) -> None:
         if not self.active:
             return
-        self.process_mouse_motion(event)
         self.process_mouse_button_down(event)
         self.process_mouse_button_up(event)
         self.process_mouse_click(event)
+        self.process_mouse_motion(event)
 
     def process_draw(self, screen: pg.Surface) -> None:
-        if not self.is_hidden:
-            screen.blit(self.surfaces[self.state], self.rect.topleft)
+        screen.blit(self.surfaces[self.state], self.rect.topleft)
 
     # endregion
 
     def mouse_hover(self, pos: Tuple[Union[int, float], Union[int, float]]) -> bool:
-        return bool(self.rect.collidepoint(pos)) and self.active
+        return self.rect.collidepoint(pos) and self.active
 
     def process_mouse_motion(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEMOTION:
             return
         if self.mouse_hover(event.pos):
-            if self.state != BtnStates.HOVER:
-                self.select()
+            self.select()
         elif self.state != BtnStates.INITIAL:
             self.deselect()
 
@@ -74,10 +78,11 @@ class Button(BaseObject, IDrawable, IEventful):
         if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT and self.state != BtnStates.INITIAL:
             self.deselect()
 
-    def process_mouse_click(self, event: pg.event.Event):
-        if event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
-            if self.rect.collidepoint(event.pos):
-                self.click()
+    def process_mouse_click(self, event: pg.event.Event) -> None:
+        if not (event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL):
+            return
+        if self.rect.collidepoint(event.pos):
+            self.click()
 
     @property
     def colors(self):
