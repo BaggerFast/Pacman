@@ -11,4 +11,4 @@ class SingletonMeta(type):
 
 # pylint: disable=R0903
 class Singleton(metaclass=SingletonMeta):
-    """Parent class for Pattern Singleton"""
+    """Easy use of SingletonMeta"""

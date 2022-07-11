@@ -1,11 +1,9 @@
 import sys
-
 import pygame as pg
+
 from random import choice
 
-from pygame.threads import Thread
-
-from constants import Constant
+from config.settings import FPS
 from misc import LevelLoader, ControlCheats, PathManager
 from misc.cheat_codes import Cheat
 from misc.constants import Color
@@ -184,7 +182,7 @@ class Game:
             if pg.time.get_ticks() - time >= frequency:
                 self.storage_loader.serialize_obj()
                 time = pg.time.get_ticks()
-            clock.tick(Constant.FPS)
+            clock.tick(FPS)
 
     def __process_all_logic(self) -> None:
         self.obj.process_logic()

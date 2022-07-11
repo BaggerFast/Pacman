@@ -10,7 +10,9 @@ class ButtonController(IDrawable, IEventful):
 
     def __init__(self, buttons: list[Button]):
         self.buttons: list[Button] = buttons
+
         self.active_button_index: int = -1
+
         self.kb_actions = {
             Keyboard.DOWN: self.move_down,
             Keyboard.UP: self.move_up,

@@ -25,7 +25,7 @@ class Sounds:
         eatable = 5
         pellet = 6
 
-    CLICK = load_sound('navigation.ogg')
+    CLICK = load_sound('ui/navigation.ogg')
     SEED = load_sound('munch.ogg')
     SEED_FUN = load_sound('leader.ogg')
     FRUIT = load_sound('eat_fruit.ogg')
@@ -60,7 +60,7 @@ class Color(NamedTuple):
     MAIN_MAP = pg.Color(33, 33, 255)
     DARK_RED = pg.Color(125, 0, 0)
     DARK_GREEN = pg.Color(0, 125, 0)
-    HALF_TRANSPERENT = pg.Color(0, 0, 0, 40)
+    HALF_TRANSPERENT = pg.Color(0, 0, 0, 0)
     TRANSPERENT = pg.Color(0, 0, 0, 0)
 
 

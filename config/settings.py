@@ -7,8 +7,9 @@ from abc import ABC
 VERSION: Final = '1.0.3'
 DEBUG: Final = 'debug' in sys.argv
 
-CELL_SIZE: int = 8
-FRUITS_COUNT: int = 8
+CELL_SIZE: Final = 8
+FRUITS_COUNT: Final = 8
+FPS: Final = 60
 
 
 class Dir(ABC):

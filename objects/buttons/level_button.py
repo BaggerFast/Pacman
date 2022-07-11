@@ -1,4 +1,3 @@
-import scenes
 from objects.buttons import Button
 
 
