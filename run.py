@@ -1,27 +1,26 @@
-import os
-import traceback
-from datetime import datetime
-from game import Game
-from config.settings import DEBUG, Dir
+from pacman import Game
+from loguru import logger
+
+from pacman.scenes import SceneManager
 
 
-def parse_exceptions():
-    if DEBUG:
-        print(traceback.print_exc())
-        return
-    if not os.path.exists(Dir.LOG):
-        os.makedirs(Dir.LOG)
-    with open(f"{Dir.LOG}/{datetime.now().strftime('%d-%m-%Y-%H-%M-%S')}.log", "w") as file:
-        file.write(traceback.format_exc())
+def logger_setup():
+    logger.add('logs/log.log', format="{time} {level} {message}", level='INFO', rotation='1 day', compression="zip")
 
 
+def singleton_init():
+    SceneManager()
+
+
+@logger.catch(message='Critical problem')
 def main():
-    try:
-        game = Game()
-        game.main_loop()
-    except Exception:
-        parse_exceptions()
+    logger.info('Game start')
+    singleton_init()
+    game = Game()
+    game.main_loop()
+    logger.info('Game finished')
 
 
 if __name__ == '__main__':
+    logger_setup()
     main()
