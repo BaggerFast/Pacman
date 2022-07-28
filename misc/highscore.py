@@ -1,10 +1,7 @@
-import os.path
-
-from misc import HIGHSCORES_COUNT, List
+from misc.constants import HIGHSCORES_COUNT
 
 
 class HighScore:
-    __json_filename = os.path.join('saves', 'records.json')
 
     def __init__(self, game) -> None:
         self.game = game
@@ -15,7 +12,7 @@ class HighScore:
         self.__data = sorted(self.highscores[self.__level_id])
 
     @property
-    def highscores(self) -> List[List[int]]:
+    def highscores(self) -> list[list[int]]:
         return self.game.highscores
 
     @highscores.setter

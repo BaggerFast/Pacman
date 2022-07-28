@@ -1,2 +1,4 @@
-pygame
-Pillow
+pygame~=2.1.2
+Pillow~=9.2.0
+
+loguru~=0.6.0

@@ -1,7 +1,8 @@
-from misc import Points
+from .constants import Points
 
 
 class Score:
+
     def __init__(self) -> None:
         self.__score = 0
         self.fear_mode = False
