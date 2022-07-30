@@ -2,6 +2,8 @@ import os
 from typing import Final
 
 
+# todo finish refactor
+
 class PathManager:
     ROOT: Final = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     ASSET: Final = os.path.join(ROOT, 'assets')

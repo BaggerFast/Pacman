@@ -2,6 +2,7 @@ from .button import Button
 
 
 class LvlButton(Button):
+
     def __init__(self, **args):
         self.value = args.pop("value")
         super().__init__(**args)

@@ -3,9 +3,9 @@ import pygame as pg
 from misc import PathManager
 
 
-class Sound:
+# todo finish refactor
 
-    # todo sound
+class Sound:
 
     def __init__(self, sound: str, channel: int = 0, volume: int = 1):
         self.sound = pg.mixer.Sound(PathManager.get_sound(sound))

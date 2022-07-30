@@ -1,11 +1,11 @@
 import pygame as pg
 
-from misc.constants import Font, BUTTON_TRANSPERENT_COLORS
+from misc.constants import Font
 from pacman.objects import Text
-from .base import Scene
+from .base_scene import Scene
 from ..buttons.button import Button
 from ..buttons.manager import ButtonManager
-from ..buttons.scene_button import SceneButton
+from ..buttons.util import BTN_TRANSPERENT_COLORS
 
 
 class GameWinScene(Scene):
@@ -30,7 +30,7 @@ class GameWinScene(Scene):
                 self.__next_level, 'NEXT LEVEL',
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_TRANSPERENT_COLORS
+                colors=BTN_TRANSPERENT_COLORS
             )
             if self.__is_last_level() else SceneButton(
                 game=self.game,
@@ -39,7 +39,7 @@ class GameWinScene(Scene):
                 scene=(self.game.scenes.MENU, False),
                 center=(self.game.width // 2, 210),
                 text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_TRANSPERENT_COLORS
+                colors=BTN_TRANSPERENT_COLORS
             ),
             SceneButton(
                 game=self.game,
@@ -48,7 +48,7 @@ class GameWinScene(Scene):
                 scene=(self.game.scenes.MENU, False),
                 center=(self.game.width // 2, 250),
                 text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_TRANSPERENT_COLORS
+                colors=BTN_TRANSPERENT_COLORS
             )
         ]
         self.objects.append(ButtonManager(self.game, buttons))

@@ -16,7 +16,7 @@ class JsonSerializer:
             data[key] = key_var
         return data
 
-    def serialize_to_file(self, path: str = 'saves/save.json') -> None:
+    def serialize_to_file(self, path: str = 'save.json') -> None:
         path = PathManager.get(path)
         with open(path, 'w') as f:
             f.write(json.dumps(self.serialize(), indent=2))
@@ -34,7 +34,7 @@ class JsonDeserializer:
                 continue
             setattr(self, key, data[key])
 
-    def deserialize_from_file(self, path: str = 'saves/save.json') -> None:
+    def deserialize_from_file(self, path: str = 'save.json') -> None:
         if os.path.exists(path):
             with open(path, "r") as file:
                 self.deserialize(json.load(file))

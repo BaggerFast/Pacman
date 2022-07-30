@@ -1,100 +1,80 @@
-from typing import List, Union, Callable, Tuple
 import pygame as pg
-from misc.constants import Color, BUTTON_DEFAULT_COLORS, ButtonColor, Font
-from pacman.objects.base import DrawableObject
+
+from typing import List, Union, Callable, Tuple
+from misc.constants import Font
+from misc.misc import Font_hint
+from pacman.buttons.util import BtnState, BTN_DEFAULT_COLORS, ButtonColor
+
+# todo delete Game
+from pacman.objects import DrawableObject
 
 
-class BaseButton(DrawableObject):
-    def __init__(self, game, geometry: pg.Rect, function: Callable[[], None]) -> None:
+# todo finish refactor
+
+class Button(DrawableObject):
+
+    def __init__(self, game, text: str, geometry: Union[tuple, pg.Rect], function: Callable = None,
+                 colors: ButtonColor = BTN_DEFAULT_COLORS,
+                 center: Tuple[int, int] = None,
+                 font: Font_hint = pg.font.Font(Font.DEFAULT, 24),
+                 ) -> None:
+
         super().__init__(game)
         self.rect = geometry
         self.function = function
-
-    def process_event(self, event: pg.event.Event) -> None:
-        if event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
-            if self.rect.collidepoint(event.pos):
-                self.click()
-
-    def process_draw(self) -> None:
-        if not self.is_hidden:
-            pg.draw.rect(self.game.screen, Color.WHITE, self.rect)
-
-    def click(self) -> None:
-        self.function()
-
-
-class Button(BaseButton):
-    STATE_INITIAL = 0
-    STATE_HOVER = 1
-    STATE_CLICK = 2
-
-    def __init__(
-        self,
-        game,
-        geometry: Union[tuple, pg.Rect],
-        function: Callable[[], None] = None,
-        text: str = 'Define me',
-        colors: ButtonColor = BUTTON_DEFAULT_COLORS,
-        center: Tuple[int, int] = None,
-        text_size: int = 60,
-        font=Font.DEFAULT,
-        active: bool = True,
-    ) -> None:
-
-        super().__init__(game, geometry, function)
         self.__text = text
-        self.font = pg.font.Font(font, text_size)
-        self.active = active
-        self.__colors: ButtonColor = colors
-        self.deselect()
+        self.__font = font
+        self._colors = colors
+        self.state = BtnState.INITIAL
         self.surfaces = self.prepare_surfaces()
-        self.left_button_pressed = False
+
         if center:
             self.move_center(*center)
 
-    def mouse_hover(self, pos: Tuple[Union[int, float], Union[int, float]]) -> bool:
-        return bool(self.rect.collidepoint(pos)) and self.active
+    def mouse_hover(self, pos: tuple[int, int]) -> bool:
+        return bool(self.rect.collidepoint(pos))
+
+    def process_mouse_click(self, event: pg.event.Event) -> None:
+        if not (event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL):
+            return
+        if self.rect.collidepoint(event.pos):
+            self.click()
 
     def process_mouse_motion(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEMOTION:
             return
         if self.mouse_hover(event.pos):
-            if not self.left_button_pressed and self.state != self.STATE_HOVER:
-                self.select()
-        elif self.state != self.STATE_INITIAL:
+            self.select()
+        elif self.state != BtnState.INITIAL:
             self.deselect()
 
     def process_mouse_button_down(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONDOWN or event.type == pg.MOUSEWHEEL:
             return
-        if event.button == pg.BUTTON_LEFT:
-            self.left_button_pressed = True
         if self.mouse_hover(event.pos):
             self.activate()
-            self.game.sounds.click.play()
 
     def process_mouse_button_up(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONUP or event.type == pg.MOUSEWHEEL:
             return
-        if event.button == pg.BUTTON_LEFT:
-            self.left_button_pressed = False
-        if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT and self.state != self.STATE_INITIAL:
+        if not (event.button == pg.BUTTON_LEFT and self.state != BtnState.INITIAL):
+            return
+        if self.mouse_hover(event.pos):
             self.deselect()
 
     def process_event(self, event: pg.event.Event) -> None:
-        if self.active:
-            self.process_mouse_motion(event)
-            self.process_mouse_button_down(event)
-            self.process_mouse_button_up(event)
-            super().process_event(event)
+        self.process_mouse_button_down(event)
+        self.process_mouse_button_up(event)
+        self.process_mouse_click(event)
+        self.process_mouse_motion(event)
 
     @property
     def colors(self):
-        return self.__colors
+        return self._colors
 
     @colors.setter
     def colors(self, colors: ButtonColor):
-        self.__colors = colors
+        self._colors = colors
         self.surfaces = self.prepare_surfaces()
 
     @property
@@ -106,9 +86,9 @@ class Button(BaseButton):
         self.__text = text
         self.surfaces = self.prepare_surfaces()
 
-    def prepare_surfaces(self) -> List[pg.Surface]:
+    def prepare_surfaces(self) -> list[pg.Surface]:
         surfaces = []
-        for index in range(len(self.__colors.get_members_list())):
+        for index in range(len(self._colors.get_members_list())):
             surfaces.append(self.prepare_surface(index))
         return surfaces
 
@@ -117,24 +97,27 @@ class Button(BaseButton):
         surface = surface.convert_alpha()
         zero_rect = surface.get_rect()
 
-        text_surface = self.font.render(self.text, False, self.__colors[state_index].text)
+        text_surface = self.__font.render(self.text, False, self._colors[state_index].text)
         zero_text_rect = text_surface.get_rect()
         zero_text_rect.center = zero_rect.center
 
-        pg.draw.rect(surface, self.__colors[state_index].background, zero_rect, 0)
+        pg.draw.rect(surface, self._colors[state_index].background, zero_rect, 0)
         surface.blit(text_surface, zero_text_rect)
 
         return surface
 
     def process_draw(self) -> None:
         if not self.is_hidden:
-            self.game.screen.blit(self.surfaces[self.state], self.rect.topleft)
+            self.game.screen.blit(self.surfaces[self.state - 1], self.rect.topleft)
 
     def select(self) -> None:
-        self.state = self.STATE_HOVER
+        self.state = BtnState.HOVER
 
     def deselect(self) -> None:
-        self.state = self.STATE_INITIAL
+        self.state = BtnState.INITIAL
 
     def activate(self) -> None:
-        self.state = self.STATE_CLICK
+        self.state = BtnState.CLICK
+
+    def click(self) -> None:
+        self.function()

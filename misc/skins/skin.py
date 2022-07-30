@@ -2,23 +2,25 @@ from copy import copy
 
 from misc import PathManager
 from misc.animator import Animator
+from misc.skins import SkinNames
+from misc.storage import SkinStorage
 from pacman.objects import ImageObject
 
 
 class Skin:
 
-    def __init__(self, game, skin_name: str = "default"):
+    def __init__(self, game, skin_name: SkinNames, cost):
         self.name = skin_name
-        self.skin_cost = {}
+        self.skin_cost = cost
         self.__game = game,
-        self.__walk = Animator(PathManager.get_list(f'{PathManager.IMAGE}/pacman/{self.name}/walk', ext='png'))
-        self.__dead = Animator(PathManager.get_list(f'{PathManager.IMAGE}/pacman/{self.name}/dead', ext='png'),
+        self.__walk = Animator(PathManager.get_list(f'{PathManager.IMAGE}/pacman/{self.name.name}/walk', ext='png'))
+        self.__dead = Animator(PathManager.get_list(f'{PathManager.IMAGE}/pacman/{self.name.name}/dead', ext='png'),
                                100, False, True)
         self.__image = self.prerender_surface()
 
     @property
     def is_unlocked(self):
-        return self.name in self.__game.unlocked_skins
+        return SkinStorage().is_unlock(self.name)
 
     @property
     def walk(self):
@@ -33,6 +35,6 @@ class Skin:
         return self.__image
 
     def prerender_surface(self) -> ImageObject:
-        image = ImageObject(self.__game, f'pacman/{self.name}/walk/1.png', (145, 125))
+        image = ImageObject(self.__game, f'pacman/{self.name.name}/walk/1.png', (145, 125))
         image.scale(70, 70)
         return image

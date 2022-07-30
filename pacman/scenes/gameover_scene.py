@@ -1,8 +1,9 @@
 import pygame as pg
 
-from misc.constants import Font, BUTTON_TRANSPERENT_COLORS
-from .base import Scene
+from misc.constants import Font
+from .base_scene import Scene
 from ..buttons import ButtonManager
+from ..buttons.util import BTN_TRANSPERENT_COLORS
 from ..objects import Text
 
 
@@ -28,14 +29,14 @@ class GameLoseScene(Scene):
         }
         buttons = []
         for i in range(len(names)):
-            buttons.append(self.SceneButton(
+            buttons.append(SceneButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 35),
                 text=names[i][0],
                 scene=(names[i][1], names[i][2]),
-                center=(self.game.width // 2, 210+40*i),
+                center=(self.game.width // 2, 210 + 40 * i),
                 text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_TRANSPERENT_COLORS
+                colors=BTN_TRANSPERENT_COLORS
             ))
         self.objects.append(ButtonManager(self.game, buttons))
 

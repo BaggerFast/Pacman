@@ -1,9 +1,9 @@
 import pygame as pg
 
 from misc import PathManager, LevelLoader, Score
-from misc.constants import Sounds, Color
+from misc.constants import Sounds, Color, UNLOCK_LEVELS, UNLOCK_SKINS, FRUITS_COUNT
 from misc.misc import load_image
-from misc.scene_manager import SceneManager
+from pacman.scenes.manager import SceneManager
 from misc.skins.manager import Skins
 from misc.sound_manager import Sound
 from misc.storage import SettingStorage, MainStorage
@@ -64,40 +64,8 @@ class Game:
 
     # todo delete scenes from game
 
-    class Scenes:
-
-        def __init__(self):
-            self.PAUSE = PauseScene
-            self.MENU = MenuScene
-            self.MAIN = MainScene
-            self.GAMEOVER = GameLoseScene
-            self.LEVELS = LevelScene
-            self.RECORDS = RecordsScene
-            self.ENDGAME = GameWinScene
-            self.SKINS = SkinScene
-            self.SETTINGS = SettingsScene
-            self.__current = None
-
-        @property
-        def current(self):
-            return self.__current
-
-        def set(self, scene, reset: bool = False, surface: bool = False) -> None:
-            """
-            :param scene: NEXT scene (contains in game.scenes.*)
-            :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
-            :param surface: if surface == True background of new scene equal CURRENT scene with BLUR
-            IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
-            """
-            scene.prev_scene = self.__current
-            if self.__current is not None and not surface:
-                self.__current.on_deactivate()
-            self.__current = scene
-            if reset:
-                self.__current.on_reset()
-            self.__current.on_activate()
-
     class Maps:
+
         def __init__(self, game):
             self.game = game
             self.levels = []
@@ -152,7 +120,7 @@ class Game:
         self.time_out = 125
         self.animate_timer = 4
 
-        self.scenes = self.Scenes()
+        self.scenes = None
         self.skins = Skins(self)
         self.score = Score()
 
@@ -162,10 +130,6 @@ class Game:
         # self.records = HighScore(self)
 
         SceneManager().append(MenuScene(self))
-
-    @property
-    def current_scene(self):
-        return SceneManager().current
 
     @property
     def size(self):
@@ -179,10 +143,10 @@ class Game:
     def __process_all_events(self) -> None:
         for event in pg.event.get():
             self.__process_exit_events(event)
-            SceneManager().current.process_event(event)
+            SceneManager().current.event_handler(event)
 
     def __process_all_logic(self) -> None:
-        SceneManager().current.process_logic()
+        SceneManager().current.update()
 
     def __process_all_draw(self) -> None:
         exceptions = [PauseScene, GameLoseScene, GameWinScene]
@@ -198,7 +162,7 @@ class Game:
             # surface = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
             # self.screen.blit(surface, (0, 0))
-        SceneManager().current.process_draw()
+        SceneManager().current.render()
 
         pg.display.flip()
 

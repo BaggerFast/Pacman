@@ -1,4 +1,4 @@
-from pacman.game import Game
+from pacman import Game
 
 
 def main():

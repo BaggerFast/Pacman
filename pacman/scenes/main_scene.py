@@ -6,15 +6,14 @@ from misc.storage import SettingStorage
 from pacman.objects import Text, ImageObject, Pacman, SeedContainer, Map
 from pacman.objects.fruits import Fruit
 from pacman.objects.ghosts import *
-from .base import Scene
+from .base_scene import BaseScene
 
 
-class MainScene(Scene):
+class MainScene(BaseScene):
 
     def create_static_objects(self):
         self.__load_from_map()
         self.__create_sounds()
-        self.__create_static_text()
         self.__create_start_anim()
         self.__create_hud()
         self.__create_health()
@@ -36,17 +35,18 @@ class MainScene(Scene):
         self.__hp_hud = []
         self.__prepare_lives_meter()
 
-    def __create_static_text(self):
-        self.__scores_label_text = Text(
+    # region New
+
+    def _create_objects(self) -> None:
+        yield Text(
             self.game, 'MEMORY' if self.game.skins.current.name == "chrome" else 'SCORE', Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(10, 0, 20, 20)
         )
+        yield Text(self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20))
 
-        self.__high_scores_label_text = Text(
-            self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)
-        )
-        self.static_objects.append(self.__scores_label_text)
-        self.static_objects.append(self.__high_scores_label_text)
+        yield Pacman(self.game, self.__player_position)
+
+    # endregion
 
     def __load_from_map(self):
         self.__loader = LevelLoader(self.game.maps.levels[self.game.maps.cur_id])
@@ -86,7 +86,7 @@ class MainScene(Scene):
 
     def create_objects(self) -> None:
         self.objects = []
-        self.game.sounds.siren.unpause()
+        # self.game.sounds.siren.unpause()
         # self.cheats = CheatManager([Cheat('aezakmi', self.add_hp)])
         # self.objects.append(self.cheats)
         self.text[len(self.text) - 1].surface.set_alpha(0)
@@ -290,7 +290,6 @@ class MainScene(Scene):
                 self.ghost_text_flag = False
 
     def additional_draw(self) -> None:
-        super().additional_draw()
         for hp in self.__hp_hud:
             hp.process_draw()
 
@@ -303,8 +302,8 @@ class MainScene(Scene):
 
     def on_activate(self) -> None:
         self.game.sounds.intro.unpause()
-        if self.pacman.animator != self.pacman.dead_anim:
-            self.game.sounds.siren.unpause()
+        # if self.pacman.animator != self.pacman.dead_anim:
+        #     self.game.sounds.siren.unpause()
         for ghost in self.__ghosts:
             if ghost.mode == "Frightened":
                 if self.game.sounds.pellet.is_busy():

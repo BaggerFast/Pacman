@@ -3,9 +3,10 @@ from copy import copy
 import pygame as pg
 
 from misc import PathManager
-from misc.constants import Font, BUTTON_SKIN_BUY
-from .base import Scene
+from misc.constants import Font
+from .base_scene import Scene
 from ..buttons import ButtonManager
+from ..buttons.util import BTN_SKIN_BUY
 from ..objects import ImageObject, Text
 
 
@@ -92,7 +93,7 @@ class SkinScene(Scene):
                     value=self.skins[i],
                     center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
                     text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                    colors=BUTTON_SKIN_BUY
+                    colors=BTN_SKIN_BUY
                 ))
 
         buttons.append(self.SceneButton(

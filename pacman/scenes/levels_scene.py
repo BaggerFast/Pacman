@@ -3,8 +3,8 @@ import pygame as pg
 
 from misc.constants import Font
 from pacman.objects import Text
-from .base import Scene
-from ..buttons import SceneButton, ButtonManager
+from .base_scene import Scene
+from ..buttons import ButtonManager
 
 
 class LevelScene(Scene):

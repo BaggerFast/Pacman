@@ -1,11 +1,11 @@
 import pygame as pg
+from pacman.scenes.manager import SceneManager
 
 
 class Scene:
 
     def __init__(self, game) -> None:
         self.game = game
-        self.prev_scene = None
         self.screen: pg.Surface = self.game.screen
         self.objects: list = []
         self.static_objects = []
@@ -38,7 +38,7 @@ class Scene:
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.game.scenes.set(self.game.scenes.MENU)
+            SceneManager().pop()
 
     def additional_logic(self) -> None:
         pass
@@ -61,3 +61,45 @@ class Scene:
 
     def recreate(self) -> None:
         self.__init__(self.game)
+
+
+class BaseScene:
+
+    def __init__(self, game):
+        self.game = game
+        self.screen: pg.Surface = self.game.screen
+        self.objects = []
+        self.recreate()
+
+    def update(self):
+        for obj in self.objects:
+            obj.process_logic()
+
+    def render(self):
+        for obj in self.objects:
+            obj.process_draw()
+
+    def event_handler(self, event: pg.event.Event) -> None:
+        for obj in self.objects:
+            obj.process_event(event)
+
+    def recreate(self):
+        self._setup_logic()
+        if obj := list(self._create_objects()):
+            self.objects.extend(obj)
+
+    def on_enter(self) -> None:
+        pass
+
+    def on_exit(self) -> None:
+        pass
+
+    # region Private
+
+    def _setup_logic(self) -> None:
+        pass
+
+    def _create_objects(self) -> None:
+        pass
+
+    # endregion

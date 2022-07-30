@@ -6,7 +6,6 @@ from misc.path_manager import PathManager
 # todo sound
 
 class Sounds:
-    pg.mixer.init()
 
     @staticmethod
     def load_list_sounds(name: str):

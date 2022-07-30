@@ -24,6 +24,12 @@ class SettingStorage(SerDes, Singleton):
             raise Exception('Значение уровня звук может быть только целым числом')
         self.__volume = min(max(value, 0), 100)
 
+    def swap_sound(self):
+        self.sound = not self.sound
+
+    def swap_fun(self):
+        self.fun = not self.fun
+
     # endregion
 
     # region Difficulty

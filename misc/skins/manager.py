@@ -1,6 +1,8 @@
 import pygame as pg
 
+from misc.skins import SkinNames
 from misc.skins.skin import Skin
+from pacman.scenes.manager import SceneManager
 
 
 class Skins:
@@ -9,36 +11,19 @@ class Skins:
         """
         param must be named like folder with skins
         """
-        self.__skins_cost = {"default": {0: 0, 1: 0},
-                             "half_life": {1: 14, 2: 10},
-                             "windows": {2: 12, 3: 8},
-                             "pokeball": {3: 10, 4: 7},
-                             "edge": {4: 7, 5: 6},
-                             "chrome": {6: 5, 7: 4}}
         self.__game = game
-        self.default = Skin(self.__game)
-        self.half_life = None
-        self.pokeball = None
-        self.edge = None
-        self.chrome = None
-        self.windows = None
-        self.load_skins()
+        self.default = Skin(self.__game, SkinNames.DEFAULT, {0: 0, 1: 0})
+        self.half_life = Skin(self.__game, SkinNames.HALF_LIFE, {1: 14, 2: 10})
+        self.pokeball = Skin(self.__game, SkinNames.POKEBALL, {2: 12, 3: 8})
+        self.edge = Skin(self.__game, SkinNames.EDGE, {4: 7, 5: 6})
+        self.chrome = Skin(self.__game, SkinNames.CHROME, {6: 5, 7: 4})
+        self.windows = Skin(self.__game, SkinNames.WINDOWS, {3: 10, 4: 7})
 
         self.__current = self.default
         self.__prerenders = self.prerender_surfaces()
 
-    @property
-    def skins_cost(self):
-        return self.__skins_cost
-
     def prerender_surfaces(self) -> dict[str, pg.Surface]:
         return {key: self.__dict__[key].image for key in self.all_skins}
-
-    def load_skins(self) -> None:
-        for key in self.__dict__.keys():
-            if not key.startswith("_"):
-                self.__dict__[key] = Skin(self.__game, key)
-                self.__dict__[key].skin_cost = self.__skins_cost[key]
 
     @property
     def prerenders(self):
