@@ -4,6 +4,7 @@ import pygame as pg
 
 from misc import PathManager
 from misc.constants import Color
+from misc.patterns.entities import RenderEntity
 from pacman.objects import DrawableObject, ImageObject
 from settings import CELL_SIZE
 
@@ -29,7 +30,7 @@ def rand_color():
     return color
 
 
-class Map(DrawableObject):
+class Map(DrawableObject, RenderEntity):
     tile_names = [
         "space",
         "fat_up_wall", "fat_left_corner",
@@ -96,7 +97,7 @@ class Map(DrawableObject):
         return surface
 
     def prerender_map_image_scaled(self) -> ImageObject:
-        image = ImageObject(self.game, self.prerender_map_surface(), (110, 96))
+        image = ImageObject(self.prerender_map_surface(), (110, 96))
         image.smoothscale(100, 100)
 
         for x in range(image.image.get_width()):
@@ -105,11 +106,5 @@ class Map(DrawableObject):
                     image.image.set_at((x, y), (0, 0, min(image.image.get_at((x, y))[2] * 5, 255), 255))
         return image
 
-    def process_draw(self) -> None:
-        self.game.screen.blit(self.surface, (self.x, self.y))
-
-    def process_event(self, event: pg.event.Event) -> None:
-        pass
-
-    def process_logic(self) -> None:
-        pass
+    def render(self, screen: pg.Surface) -> None:
+        screen.blit(self.surface, (self.x, self.y))

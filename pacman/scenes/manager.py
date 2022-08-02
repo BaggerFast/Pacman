@@ -30,7 +30,7 @@ class SceneManager(Singleton):
         # self.current.additional_event(event)
 
     def process_draw(self, screen: pg.Surface) -> None:
-        self.current.process_draw()
+        self.current.render()
         self.current.additional_draw()
 
     def append(self, scene) -> None:

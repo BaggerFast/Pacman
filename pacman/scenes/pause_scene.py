@@ -13,7 +13,7 @@ from ..objects import Text
 class PauseScene(BaseScene):
 
     def _create_objects(self) -> None:
-        yield Text(self.game, 'PAUSE', 40, font=Font.TITLE).move_center(self.game.width // 2, 35)
+        yield Text('PAUSE', 40, font=Font.TITLE).move_center(self.game.width // 2, 35)
         yield self.__get_btn_manager()
 
     def __get_btn_manager(self):
@@ -25,16 +25,14 @@ class PauseScene(BaseScene):
             MenuPreset("RESTART", lambda: sc.reset(MainScene(self.game))),
             MenuPreset("MENU", lambda: sc.reset(MenuScene(self.game))),
         ]
-        buttons = []
-        for i, (name, func) in enumerate(data):
-            buttons.append(
-                Button(
-                    game=self.game,
-                    geometry=pg.Rect(0, 0, 180, 40),
-                    text=name,
-                    function=func,
-                    center=(self.game.width // 2, 100 + 45 * i),
-                    colors=BTN_TRANSPERENT_COLORS
-                )
+        buttons = [
+            Button(
+                geometry=pg.Rect(0, 0, 180, 40),
+                text=name,
+                function=func,
+                center=(self.game.width // 2, 100 + 45 * i),
+                colors=BTN_TRANSPERENT_COLORS
             )
-        return ButtonManager(self.game, buttons)
+            for i, (name, func) in enumerate(data)
+        ]
+        return ButtonManager(buttons)

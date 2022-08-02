@@ -1,5 +1,5 @@
 from typing import NamedTuple, Callable
-
+import pygame as pg
 from pacman.objects import ImageObject, Text
 
 
@@ -12,6 +12,6 @@ class Medal(NamedTuple):
     SPRITE: ImageObject
     TEXT: Text
 
-    def process_draw(self, screen):
-        self.SPRITE.process_draw()
-        self.TEXT.process_draw()
+    def render(self, screen: pg.Surface) -> None:
+        self.SPRITE.render(screen)
+        self.TEXT.render(screen)

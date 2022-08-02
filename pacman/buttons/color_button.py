@@ -13,7 +13,8 @@ from .util import BTN_DEFAULT_COLORS, ButtonColor, BTN_GREEN_COLORS, BTN_RED_COL
 
 class ColorButton(Button):
 
-    def __init__(self, game, text: str,
+    def __init__(self,
+                 text: str,
                  geometry: Union[tuple, pg.Rect],
                  status: bool,
                  function: Callable = None,
@@ -21,7 +22,7 @@ class ColorButton(Button):
                  center: Tuple[int, int] = None,
                  font: Font_hint = pg.font.Font(Font.DEFAULT, 24)
                  ):
-        super().__init__(game, text, geometry, function, colors, center, font)
+        super().__init__(text, geometry, function, colors, center, font)
         self.status = status
         self.setup_colors()
 

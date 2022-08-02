@@ -12,12 +12,12 @@ class Skins:
         param must be named like folder with skins
         """
         self.__game = game
-        self.default = Skin(self.__game, SkinNames.DEFAULT, {0: 0, 1: 0})
-        self.half_life = Skin(self.__game, SkinNames.HALF_LIFE, {1: 14, 2: 10})
-        self.pokeball = Skin(self.__game, SkinNames.POKEBALL, {2: 12, 3: 8})
-        self.edge = Skin(self.__game, SkinNames.EDGE, {4: 7, 5: 6})
-        self.chrome = Skin(self.__game, SkinNames.CHROME, {6: 5, 7: 4})
-        self.windows = Skin(self.__game, SkinNames.WINDOWS, {3: 10, 4: 7})
+        self.default = Skin(SkinNames.DEFAULT, {0: 0, 1: 0})
+        self.half_life = Skin(SkinNames.HALF_LIFE, {1: 14, 2: 10})
+        self.pokeball = Skin(SkinNames.POKEBALL, {2: 12, 3: 8})
+        self.edge = Skin(SkinNames.EDGE, {4: 7, 5: 6})
+        self.chrome = Skin(SkinNames.CHROME, {6: 5, 7: 4})
+        self.windows = Skin(SkinNames.WINDOWS, {3: 10, 4: 7})
 
         self.__current = self.default
         self.__prerenders = self.prerender_surfaces()

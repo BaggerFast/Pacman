@@ -3,8 +3,8 @@ from enum import Enum, auto
 
 class SkinNames(Enum):
     DEFAULT = auto()
-    CHROME = auto()
-    HALF_LIFE = auto()
-    POKEBALL = auto()
-    WINDOWS = auto()
     EDGE = auto()
+    POKEBALL = auto()
+    CHROME = auto()
+    WINDOWS = auto()
+    HALF_LIFE = auto()

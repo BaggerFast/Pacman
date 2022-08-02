@@ -12,7 +12,7 @@ from pacman.scenes import *
 from settings import FPS
 
 
-class Game:
+class CHESS:
     # region Pygame init
 
     pg.display.init()
@@ -162,8 +162,7 @@ class Game:
             # surface = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
             # self.screen.blit(surface, (0, 0))
-        SceneManager().current.render()
-
+        SceneManager().current.render(self.screen)
         pg.display.flip()
 
     def main_loop(self) -> None:

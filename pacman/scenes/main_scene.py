@@ -291,7 +291,7 @@ class MainScene(BaseScene):
 
     def additional_draw(self) -> None:
         for hp in self.__hp_hud:
-            hp.process_draw()
+            hp.render()
 
     def additional_logic(self) -> None:
         self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"

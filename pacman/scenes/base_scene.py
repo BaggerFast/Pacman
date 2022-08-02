@@ -1,4 +1,5 @@
 import pygame as pg
+from misc.patterns.entities import PoolEntity
 from pacman.scenes.manager import SceneManager
 
 
@@ -23,7 +24,7 @@ class Scene:
 
     def process_draw(self) -> None:
         for item in self.objects:
-            item.process_draw()
+            item.render()
         self.additional_draw()
 
     def create_static_objects(self) -> None:
@@ -45,7 +46,7 @@ class Scene:
 
     def additional_draw(self) -> None:
         for item in self.static_objects:
-            item.process_draw()
+            item.render()
 
     def on_deactivate(self) -> None:
         pass
@@ -67,26 +68,22 @@ class BaseScene:
 
     def __init__(self, game):
         self.game = game
-        self.screen: pg.Surface = self.game.screen
-        self.objects = []
+        self.objects = PoolEntity()
         self.recreate()
 
     def update(self):
-        for obj in self.objects:
-            obj.process_logic()
+        self.objects.update()
 
-    def render(self):
-        for obj in self.objects:
-            obj.process_draw()
+    def render(self, screen: pg.Surface):
+        self.objects.render(screen)
 
     def event_handler(self, event: pg.event.Event) -> None:
-        for obj in self.objects:
-            obj.process_event(event)
+        self.objects.event_handler(event)
 
     def recreate(self):
         self._setup_logic()
-        if obj := list(self._create_objects()):
-            self.objects.extend(obj)
+        if obj := self._create_objects():
+            self.objects.append(*list(obj))
 
     def on_enter(self) -> None:
         pass

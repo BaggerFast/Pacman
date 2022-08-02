@@ -1,8 +1,9 @@
 import pygame as pg
 
-from typing import List, Union, Callable, Tuple
+from typing import Callable
 from misc.constants import Font
 from misc.misc import Font_hint
+from misc.patterns.entities import EventEntity, RenderEntity
 from pacman.buttons.util import BtnState, BTN_DEFAULT_COLORS, ButtonColor
 
 # todo delete Game
@@ -11,15 +12,17 @@ from pacman.objects import DrawableObject
 
 # todo finish refactor
 
-class Button(DrawableObject):
+class Button(DrawableObject, EventEntity, RenderEntity):
 
-    def __init__(self, game, text: str, geometry: Union[tuple, pg.Rect], function: Callable = None,
+    def __init__(self,
+                 text: str,
+                 geometry: tuple | pg.Rect,
+                 function: Callable = None,
                  colors: ButtonColor = BTN_DEFAULT_COLORS,
-                 center: Tuple[int, int] = None,
-                 font: Font_hint = pg.font.Font(Font.DEFAULT, 24),
-                 ) -> None:
+                 center: tuple[int, int] = None,
+                 font: Font_hint = pg.font.Font(Font.DEFAULT, 24)) -> None:
 
-        super().__init__(game)
+        super().__init__()
         self.rect = geometry
         self.function = function
         self.__text = text
@@ -62,7 +65,10 @@ class Button(DrawableObject):
         if self.mouse_hover(event.pos):
             self.deselect()
 
-    def process_event(self, event: pg.event.Event) -> None:
+    def render(self, screen: pg.Surface) -> None:
+        screen.blit(self.surfaces[self.state - 1], self.rect.topleft)
+
+    def event_handler(self, event: pg.event.Event) -> None:
         self.process_mouse_button_down(event)
         self.process_mouse_button_up(event)
         self.process_mouse_click(event)
@@ -105,10 +111,6 @@ class Button(DrawableObject):
         surface.blit(text_surface, zero_text_rect)
 
         return surface
-
-    def process_draw(self) -> None:
-        if not self.is_hidden:
-            self.game.screen.blit(self.surfaces[self.state - 1], self.rect.topleft)
 
     def select(self) -> None:
         self.state = BtnState.HOVER

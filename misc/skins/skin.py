@@ -9,10 +9,9 @@ from pacman.objects import ImageObject
 
 class Skin:
 
-    def __init__(self, game, skin_name: SkinNames, cost):
+    def __init__(self, skin_name: SkinNames, cost):
         self.name = skin_name
-        self.skin_cost = cost
-        self.__game = game,
+        self.skin_cost = cost,
         self.__walk = Animator(PathManager.get_list(f'{PathManager.IMAGE}/pacman/{self.name.name}/walk', ext='png'))
         self.__dead = Animator(PathManager.get_list(f'{PathManager.IMAGE}/pacman/{self.name.name}/dead', ext='png'),
                                100, False, True)
@@ -35,6 +34,6 @@ class Skin:
         return self.__image
 
     def prerender_surface(self) -> ImageObject:
-        image = ImageObject(self.__game, f'pacman/{self.name.name}/walk/1.png', (145, 125))
+        image = ImageObject(f'pacman/{self.name.name}/walk/1.png', (145, 125))
         image.scale(70, 70)
         return image

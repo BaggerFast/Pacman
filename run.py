@@ -1,9 +1,18 @@
-from pacman import Game
+from loguru import logger
+
+from pacman import CHESS
 
 
+# region important
+
+
+@logger.catch(message='Critical problem')
 def main():
-    game = Game()
+    game = CHESS()
     game.main_loop()
+
+
+# endregion
 
 
 if __name__ == '__main__':

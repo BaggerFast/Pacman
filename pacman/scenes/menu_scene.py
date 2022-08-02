@@ -20,10 +20,10 @@ class MenuScene(BaseScene):
         self.blur()
 
     def _create_objects(self) -> None:
-        yield ImageObject(self.game, self.preview, (0, 0))
+        yield ImageObject(self.preview, (0, 0))
         yield self.__get_btn_manager()
-        yield Text(self.game, 'PACMAN', 36, font=Font.TITLE).move_center(self.game.width // 2, 30)
-        yield Text(self.game, str(LevelStorage()), 15, font=Font.TITLE).move_center(self.game.width // 2, 60)
+        yield Text('PACMAN', 36, font=Font.TITLE).move_center(self.game.width // 2, 30)
+        yield Text(f'{LevelStorage()}', 15, font=Font.TITLE).move_center(self.game.width // 2, 60)
 
     def __get_btn_manager(self):
         from . import MainScene, LevelScene, SkinScene, RecordsScene, SettingsScene
@@ -37,19 +37,17 @@ class MenuScene(BaseScene):
             MenuPreset("EXIT", self.game.exit_game),
         ]
 
-        buttons = []
-        for i, preset in enumerate(names):
-            buttons.append(
-                Button(
-                    game=self.game,
-                    geometry=pg.Rect(0, 0, 180, 26),
-                    text=preset.name,
-                    function=preset.func,
-                    center=(self.game.width // 2, 95 + i * 28),
-                    colors=BTN_MENU
-                )
+        buttons = [
+            Button(
+                geometry=pg.Rect(0, 0, 180, 26),
+                text=preset.name,
+                function=preset.func,
+                center=(self.game.width // 2, 95 + i * 28),
+                colors=BTN_MENU
             )
-        return ButtonManager(self.game, buttons)
+            for i, preset in enumerate(names)
+        ]
+        return ButtonManager(buttons)
 
     def change_color(self):
         for x in range(self.preview.get_width()):
