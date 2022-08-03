@@ -1,6 +1,6 @@
 import pygame as pg
 
-from misc import PathManager, load_image
+from misc import load_image
 
 
 class SpriteSheet:
@@ -18,8 +18,8 @@ class SpriteSheet:
     def __get_all_frames(img: pg.image, x, y) -> tuple:
         if not (x and y):
             raise Exception('sprite_size не может быть равен 0')
-        frames = []
-        for _y in range(img.get_height() // y):
-            local = [img.subsurface((_x * x, y * _y, x, y)) for _x in range(img.get_width() // x)]
-            frames.append(tuple(local))
+        frames = [
+            [img.subsurface((_x * x, y * _y, x, y)) for _x in range(img.get_width() // x)]
+            for _y in range(img.get_height() // y)
+        ]
         return tuple(frames)

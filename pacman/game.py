@@ -12,7 +12,7 @@ from pacman.scenes import *
 from settings import FPS
 
 
-class CHESS:
+class Game:
     # region Pygame init
 
     pg.display.init()
@@ -82,10 +82,6 @@ class CHESS:
         def full_surface(self):
             self.__load_from_map(self.cur_id)
             return self.__map.prerender_map_surface()
-
-        @staticmethod
-        def level_name(level_id: int = 0):
-            return f"level_{level_id + 1}"
 
         def __load_from_map(self, level_id: int = 0) -> None:
             self.__loader = LevelLoader(self.levels[level_id])

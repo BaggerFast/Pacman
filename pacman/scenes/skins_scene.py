@@ -1,17 +1,17 @@
 import pygame as pg
 from misc.constants import Font
-from misc.storage import SkinStorage
-from .base_scene import Scene, BaseScene
+from .base_scene import BaseScene
 from .manager import SceneManager
 from .util import MenuPreset
 from ..buttons import ButtonManager, Button
-from ..objects import ImageObject, Text
+from ..objects import Text
 
 
 class SkinScene(BaseScene):
 
     def _create_objects(self) -> None:
         yield Text('SELECT SKIN', 25, font=Font.TITLE).move_center(self.game.width // 2, 30)
+        yield Text('MONEY: 50', 15).move_center(self.game.width // 2, 60)
         yield self.__get_btn_manager()
 
     def __get_btn_manager(self):

@@ -20,7 +20,7 @@ class Button(DrawableObject, EventEntity, RenderEntity):
                  function: Callable = None,
                  colors: ButtonColor = BTN_DEFAULT_COLORS,
                  center: tuple[int, int] = None,
-                 font: Font_hint = pg.font.Font(Font.DEFAULT, 24)) -> None:
+                 font: Font_hint = pg.font.Font(Font.DEFAULT, 21)) -> None:
 
         super().__init__()
         self.rect = geometry

@@ -34,6 +34,8 @@ class SettingsScene(BaseScene):
         def down_volume():
             SettingStorage().volume -= 5
 
+        font = pg.font.Font(Font.DEFAULT, 45)
+
         buttons = [
             ColorButton(
                 geometry=pg.Rect(0, 0, 180, 40),
@@ -52,12 +54,14 @@ class SettingsScene(BaseScene):
             Button(
                 geometry=pg.Rect(0, 0, 40, 35),
                 text='-',
+                font=font,
                 function=down_volume,
                 center=(self.game.width // 2 - 60, self.__volume_position + 30),
             ),
             Button(
                 geometry=pg.Rect(0, 0, 40, 35),
                 text='+',
+                font=font,
                 function=up_volume,
                 center=(self.game.width // 2 + 65, self.__volume_position + 30),
             ),

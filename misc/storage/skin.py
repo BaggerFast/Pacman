@@ -27,3 +27,6 @@ class SkinStorage(SerDes, Singleton):
         if skins.name not in self.__unlocked:
             raise Exception
         self.__current = skins.name
+
+    def __str__(self):
+        return f'Skin:{self.__current.lower()}'

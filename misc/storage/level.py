@@ -31,4 +31,4 @@ class LevelStorage(SerDes, Singleton):
         self.__unlocked.append([])
 
     def __str__(self):
-        return f'Level: {self.current + 1}'
+        return f'Level:{self.current + 1}'

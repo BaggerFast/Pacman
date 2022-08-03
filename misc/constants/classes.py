@@ -58,7 +58,7 @@ class Points:
 
 class Font:
     TITLE: Final = PathManager.get_asset('fonts/title.ttf')
-    DEFAULT: Final = PathManager.get_asset('fonts/default.ttf')
+    DEFAULT: Final = PathManager.get_asset('fonts/mono.otf')
     MAIN_SCENE_SIZE = 10
     BUTTON_TEXT_SIZE = 24
     BUTTON_FOR_SKINS_TEXT_SIZE = 16
