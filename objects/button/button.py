@@ -1,6 +1,7 @@
-from datetime import time, datetime
 from typing import List, Union, Callable, Tuple
 import pygame as pg
+
+from data_core.enums import BtnStateEnum
 from misc import Color, Font, ButtonColor, BUTTON_DEFAULT_COLORS
 from objects.base import DrawableObject
 
@@ -25,23 +26,18 @@ class BaseButton(DrawableObject):
 
 
 class Button(BaseButton):
-    STATE_INITIAL = 0
-    STATE_HOVER = 1
-    STATE_CLICK = 2
-
     def __init__(
         self,
         game,
         geometry: Union[tuple, pg.Rect],
         function: Callable[[], None] = None,
-        text: str = 'Define me',
+        text: str = "Define me",
         colors: ButtonColor = BUTTON_DEFAULT_COLORS,
         center: Tuple[int, int] = None,
         text_size: int = 60,
         font=Font.DEFAULT,
         active: bool = True,
-    ) -> None:
-
+    ):
         super().__init__(game, geometry, function)
         self.__text = text
         self.font = pg.font.Font(font, text_size)
@@ -60,9 +56,9 @@ class Button(BaseButton):
         if event.type != pg.MOUSEMOTION:
             return
         if self.mouse_hover(event.pos):
-            if not self.left_button_pressed and self.state != self.STATE_HOVER:
+            if not self.left_button_pressed and self.state != BtnStateEnum.HOVER:
                 self.select()
-        elif self.state != self.STATE_INITIAL:
+        elif self.state != BtnStateEnum.INITIAL:
             self.deselect()
 
     def process_mouse_button_down(self, event: pg.event.Event) -> None:
@@ -79,7 +75,7 @@ class Button(BaseButton):
             return
         if event.button == pg.BUTTON_LEFT:
             self.left_button_pressed = False
-        if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT and self.state != self.STATE_INITIAL:
+        if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT and self.state != BtnStateEnum.INITIAL:
             self.deselect()
 
     def process_event(self, event: pg.event.Event) -> None:
@@ -129,13 +125,13 @@ class Button(BaseButton):
 
     def process_draw(self) -> None:
         if not self.is_hidden:
-            self.game.screen.blit(self.surfaces[self.state], self.rect.topleft)
+            self.game.screen.blit(self.surfaces[self.state.value], self.rect.topleft)
 
     def select(self) -> None:
-        self.state = self.STATE_HOVER
+        self.state = BtnStateEnum.HOVER
 
     def deselect(self) -> None:
-        self.state = self.STATE_INITIAL
+        self.state = BtnStateEnum.INITIAL
 
     def activate(self) -> None:
-        self.state = self.STATE_CLICK
+        self.state = BtnStateEnum.CLICK

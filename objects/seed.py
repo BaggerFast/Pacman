@@ -11,10 +11,7 @@ class SeedContainer(DrawableObject):
         self.__y = y
         self.__seeds = seed_data
         self.__energizers = energizer_data
-        self.__color = {
-            -1: Color.WHITE,
-            1: Color.BLACK
-        }
+        self.__color = {-1: Color.WHITE, 1: Color.BLACK}
         self.__index_color = 1
         self.__seeds_on_field = 0
         for row in range(len(self.__seeds)):
@@ -36,20 +33,38 @@ class SeedContainer(DrawableObject):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col]:
                     if self.game.skins.current.name == "chrome":
-                        self.game.screen.blit(self.__ram_img, (self.x + col * CELL_SIZE + CELL_SIZE // 2 - 6,
-                                                               self.y + row * CELL_SIZE + CELL_SIZE // 2 - 6))
+                        self.game.screen.blit(
+                            self.__ram_img,
+                            (
+                                self.x + col * CELL_SIZE + CELL_SIZE // 2 - 6,
+                                self.y + row * CELL_SIZE + CELL_SIZE // 2 - 6,
+                            ),
+                        )
                     else:
-                        pg.draw.circle(self.game.screen, Color.WHITE, (self.x + col * CELL_SIZE + CELL_SIZE // 2,
-                                                                       self.y + row * CELL_SIZE + CELL_SIZE // 2), 1)
+                        pg.draw.circle(
+                            self.game.screen,
+                            Color.WHITE,
+                            (
+                                self.x + col * CELL_SIZE + CELL_SIZE // 2,
+                                self.y + row * CELL_SIZE + CELL_SIZE // 2,
+                            ),
+                            1,
+                        )
 
     def __draw_energizers(self) -> None:
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.game.animate_timer = pg.time.get_ticks()
             self.__index_color *= -1
         for energizer in self.__energizers:
-            pg.draw.circle(self.game.screen, self.__color[self.__index_color],
-                           (self.x + energizer[0] * CELL_SIZE + CELL_SIZE // 2,
-                            self.y + energizer[1] * CELL_SIZE + CELL_SIZE // 2), 4)
+            pg.draw.circle(
+                self.game.screen,
+                self.__color[self.__index_color],
+                (
+                    self.x + energizer[0] * CELL_SIZE + CELL_SIZE // 2,
+                    self.y + energizer[1] * CELL_SIZE + CELL_SIZE // 2,
+                ),
+                4,
+            )
 
     def process_draw(self) -> None:
         self.__draw_seeds()

@@ -1,23 +1,23 @@
+from typing import Tuple
 import pygame as pg
+
 from misc import INFINITY_LIVES
 from misc.path import get_path
 from objects.character_base import Character
 
-from typing import Tuple
-
 
 class Pacman(Character):
-    action = {
-        pg.K_w: 'up',
-        pg.K_a: 'left',
-        pg.K_s: 'down',
-        pg.K_d: 'right'
-    }
+    action = {pg.K_w: "up", pg.K_a: "left", pg.K_s: "down", pg.K_d: "right"}
 
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
         self.__walk_anim = game.skins.current.walk
         self.__dead_anim = game.skins.current.dead
-        super().__init__(game, self.__walk_anim, start_pos, get_path('aura', 'png', 'images', 'pacman', game.skins.current.name))
+        super().__init__(
+            game,
+            self.__walk_anim,
+            start_pos,
+            get_path("aura", "png", "images", "pacman", game.skins.current.name),
+        )
         self.dead = False
         self.__feature_rotate = "none"
 

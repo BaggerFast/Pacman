@@ -1,6 +1,5 @@
+from typing import NamedTuple
 import pygame as pg
-from typing import NamedTuple, Union, List
-
 from misc.path import get_path, get_list_path
 
 
@@ -12,19 +11,18 @@ class Sounds:
         list: list
 
     pg.mixer.init()
-    CLICK = Tuple(pg.mixer.Sound(get_path('navigation', 'ogg', 'sounds'))).mixer
-    SEED = Tuple(pg.mixer.Sound(get_path('munch', 'ogg', 'sounds'))).mixer
-    SEED_FUN = Tuple(pg.mixer.Sound(get_path('leader', 'ogg', 'sounds'))).mixer
-    FRUIT = Tuple(pg.mixer.Sound(get_path('eat_fruit', 'ogg', 'sounds'))).mixer
-    GHOST = Tuple(pg.mixer.Sound(get_path('eat_ghost', 'ogg', 'sounds'))).mixer
-    POC_INTRO = Tuple(pg.mixer.Sound(get_path("pocemon_intro", 'ogg', 'sounds'))).mixer
-    INTERMISSION = Tuple(pg.mixer.Sound(get_path('intermission', 'ogg', 'sounds'))).mixer
-    PELLET = Tuple(pg.mixer.Sound(get_path('power_pellet', 'ogg', 'sounds'))).mixer
-    DEAD = TupleList(get_list_path('ogg', 'sounds', 'death')).list
-    GAMEOVER = TupleList(get_list_path('ogg', 'sounds', 'gameover')).list
-    INTRO = TupleList(get_list_path('ogg', 'sounds', 'intro')).list
-    SIREN = TupleList(get_list_path('ogg', 'sounds', 'siren')).list
-
+    CLICK = Tuple(pg.mixer.Sound(get_path("navigation", "ogg", "sounds"))).mixer
+    SEED = Tuple(pg.mixer.Sound(get_path("munch", "ogg", "sounds"))).mixer
+    SEED_FUN = Tuple(pg.mixer.Sound(get_path("leader", "ogg", "sounds"))).mixer
+    FRUIT = Tuple(pg.mixer.Sound(get_path("eat_fruit", "ogg", "sounds"))).mixer
+    GHOST = Tuple(pg.mixer.Sound(get_path("eat_ghost", "ogg", "sounds"))).mixer
+    POC_INTRO = Tuple(pg.mixer.Sound(get_path("pocemon_intro", "ogg", "sounds"))).mixer
+    INTERMISSION = Tuple(pg.mixer.Sound(get_path("intermission", "ogg", "sounds"))).mixer
+    PELLET = Tuple(pg.mixer.Sound(get_path("power_pellet", "ogg", "sounds"))).mixer
+    DEAD = TupleList(get_list_path("ogg", "sounds", "death")).list
+    GAMEOVER = TupleList(get_list_path("ogg", "sounds", "gameover")).list
+    INTRO = TupleList(get_list_path("ogg", "sounds", "intro")).list
+    SIREN = TupleList(get_list_path("ogg", "sounds", "siren")).list
 
 
 class Color(NamedTuple):
@@ -32,16 +30,16 @@ class Color(NamedTuple):
         color: pg.Color
         alpha: int = 0
 
-    RED = Tuple(pg.Color('red')).color
-    BLUE = Tuple(pg.Color('blue')).color
-    GREEN = Tuple(pg.Color('green')).color
-    BLACK = Tuple(pg.Color('black')).color
-    WHITE = Tuple(pg.Color('white')).color
-    ORANGE = Tuple(pg.Color('orange')).color
-    YELLOW = Tuple(pg.Color('yellow')).color
-    GOLD = Tuple(pg.Color('gold')).color
-    GRAY = Tuple(pg.Color('gray50')).color
-    DARK_GRAY = Tuple(pg.Color('gray26')).color
+    RED = Tuple(pg.Color("red")).color
+    BLUE = Tuple(pg.Color("blue")).color
+    GREEN = Tuple(pg.Color("green")).color
+    BLACK = Tuple(pg.Color("black")).color
+    WHITE = Tuple(pg.Color("white")).color
+    ORANGE = Tuple(pg.Color("orange")).color
+    YELLOW = Tuple(pg.Color("yellow")).color
+    GOLD = Tuple(pg.Color("gold")).color
+    GRAY = Tuple(pg.Color("gray50")).color
+    DARK_GRAY = Tuple(pg.Color("gray26")).color
     SILVER = Tuple(pg.Color(192, 192, 192)).color
     BRONZE = Tuple(pg.Color(205, 127, 50)).color
     WOODEN = Tuple(pg.Color(101, 67, 33)).color
@@ -65,10 +63,10 @@ class Points:
 class Font:
     class Tuple(NamedTuple):
         size: int = 0
-        font: str = ''
+        font: str = ""
 
-    TITLE = Tuple(font=get_path('title', 'ttf', 'fonts')).font
-    DEFAULT = Tuple(font=get_path('default', 'ttf', 'fonts')).font
+    TITLE = Tuple(font=get_path("title", "ttf", "fonts")).font
+    DEFAULT = Tuple(font=get_path("default", "ttf", "fonts")).font
     MAIN_SCENE_SIZE = Tuple(size=10).size
     BUTTON_TEXT_SIZE = Tuple(size=24).size
     BUTTON_FOR_SKINS_TEXT_SIZE = Tuple(size=16).size

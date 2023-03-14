@@ -9,7 +9,6 @@ from scenes import base
 
 
 class Scene(base.Scene):
-
     def create_static_objects(self):
         self.__load_from_map()
         self.__create_sounds()
@@ -37,13 +36,13 @@ class Scene(base.Scene):
 
     def __create_static_text(self):
         self.__scores_label_text = Text(
-            self.game, 'MEMORY' if self.game.skins.current.name == "chrome" else 'SCORE', Font.MAIN_SCENE_SIZE,
-            rect=pg.Rect(10, 0, 20, 20)
+            self.game,
+            "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE",
+            Font.MAIN_SCENE_SIZE,
+            rect=pg.Rect(10, 0, 20, 20),
         )
 
-        self.__high_scores_label_text = Text(
-            self.game, 'HIGHSCORE', Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)
-        )
+        self.__high_scores_label_text = Text(self.game, "HIGHSCORE", Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20))
         self.static_objects.append(self.__scores_label_text)
         self.static_objects.append(self.__high_scores_label_text)
 
@@ -63,9 +62,11 @@ class Scene(base.Scene):
     def __prepare_lives_meter(self) -> None:
         self.__hp_hud = []
         for i in range(int(self.hp)):
-            hp_image = ImageObject(self.game,
-                                   get_path('1', 'png', 'images', 'pacman', self.game.skins.current.name, 'walk'),
-                                   (5 + i * 20, 270))
+            hp_image = ImageObject(
+                self.game,
+                get_path("1", "png", "images", "pacman", self.game.skins.current.name, "walk"),
+                (5 + i * 20, 270),
+            )
             hp_image.rotate(180)
             self.__hp_hud.append(hp_image)
 
@@ -74,9 +75,15 @@ class Scene(base.Scene):
         self.intro_sound = self.game.sounds.intro
 
     def __create_start_anim(self):
-        self.text = ['READY', 'GO!']
+        self.text = ["READY", "GO!"]
         for i in range(2):
-            self.text[i] = Text(self.game, self.text[i], 30, font=Font.TITLE, rect=pg.Rect(20, 0, 20, 20))
+            self.text[i] = Text(
+                self.game,
+                self.text[i],
+                30,
+                font=Font.TITLE,
+                rect=pg.Rect(20, 0, 20, 20),
+            )
             self.text[i].move_center(self.game.width // 2, self.game.height // 2)
             self.text[i].surface.set_alpha(0)
             self.static_objects.append(self.text[i])
@@ -85,7 +92,7 @@ class Scene(base.Scene):
     def create_objects(self) -> None:
         self.objects = []
         self.game.sounds.siren.unpause()
-        self.cheats = ControlCheats([['aezakmi', self.add_hp]])
+        self.cheats = ControlCheats([["aezakmi", self.add_hp]])
         self.objects.append(self.cheats)
         self.text[len(self.text) - 1].surface.set_alpha(0)
         self.__create_map()
@@ -119,12 +126,7 @@ class Scene(base.Scene):
             self.inky = Inky(self.game, self.__ghost_positions[0], 2000, 80000, 1000)
             self.clyde = Clyde(self.game, self.__ghost_positions[2], 2000, 0, 0)
 
-        self.__ghosts = [
-            self.blinky,
-            self.pinky,
-            self.inky,
-            self.clyde
-        ]
+        self.__ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
 
         self.__not_prefered_ghosts = self.__ghosts.copy()
         self.__prefered_ghost = self.pinky
@@ -135,17 +137,20 @@ class Scene(base.Scene):
             self.objects.append(ghost.gg_text)
 
     def __create_hud(self):
-        self.__high_scores_value_text = Text(self.game,
-                                             str(self.game.records.data[-1]),
-                                             Font.MAIN_SCENE_SIZE,
-                                             rect=pg.Rect(130, 8, 20, 20))
+        self.__high_scores_value_text = Text(
+            self.game,
+            str(self.game.records.data[-1]),
+            Font.MAIN_SCENE_SIZE,
+            rect=pg.Rect(130, 8, 20, 20),
+        )
         self.static_objects.append(self.__high_scores_value_text)
 
         self.__scores_value_text = Text(
             self.game,
             str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(self.game.score),
             Font.MAIN_SCENE_SIZE,
-            rect=pg.Rect(10, 8, 20, 20))
+            rect=pg.Rect(10, 8, 20, 20),
+        )
         self.static_objects.append(self.__scores_value_text)
 
     @property
@@ -181,8 +186,8 @@ class Scene(base.Scene):
                     for ghost2 in self.__ghosts:
                         ghost2.invisible()
                 else:
-                    if ghost.mode == 'Frightened':
-                        ghost.gg_text.text = str(200 * 2 ** self.game.score.fear_count)
+                    if ghost.mode == "Frightened":
+                        ghost.gg_text.text = str(200 * 2**self.game.score.fear_count)
                         for ghost2 in self.__ghosts:
                             ghost.invisible()
                         self.game.score.eat_ghost()
@@ -225,7 +230,7 @@ class Scene(base.Scene):
     def __check_ghosts(self):
         flag = False
         for ghost in self.__ghosts:
-            if ghost.mode == 'Frightened':
+            if ghost.mode == "Frightened":
                 flag = True
         if flag:
             self.game.sounds.siren.pause()
@@ -239,8 +244,7 @@ class Scene(base.Scene):
         if not self.game.sounds.intro.get_busy():
             self.text[0].surface.set_alpha(0)
             self.text[1].surface.set_alpha(0)
-            if self.pacman.dead_anim.anim_finished and int(self.hp) < 1 \
-                and not self.game.sounds.pacman.get_busy():
+            if self.pacman.dead_anim.anim_finished and int(self.hp) < 1 and not self.game.sounds.pacman.get_busy():
                 self.template = self.screen.copy()
                 self.game.timer = pg.time.get_ticks() / 1000
                 self.game.scenes.set(self.game.scenes.GAMEOVER)
@@ -284,7 +288,7 @@ class Scene(base.Scene):
             if pg.time.get_ticks() - self.ghost_text_timer >= 1000:
                 for ghost in self.__ghosts:
                     ghost.visible()
-                    ghost.gg_text.text = ' '
+                    ghost.gg_text.text = " "
                 self.ghost_text_flag = False
 
     def additional_draw(self) -> None:
@@ -294,9 +298,9 @@ class Scene(base.Scene):
 
     def additional_logic(self) -> None:
         self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"
-        self.__scores_value_text.text = str(
-            self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(
-            self.game.score)
+        self.__scores_value_text.text = (
+            str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(self.game.score)
+        )
         self.__prepare_lives_meter()
 
     def on_activate(self) -> None:

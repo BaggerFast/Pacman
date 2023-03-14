@@ -45,7 +45,7 @@ class Scene(base.Scene):
         self.__create_title()
 
     def __create_title(self) -> None:
-        title = Text(self.game, 'SELECT LEVEL', 25, font=Font.TITLE)
+        title = Text(self.game, "SELECT LEVEL", 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
 
@@ -58,24 +58,28 @@ class Scene(base.Scene):
                     game=self.game,
                     geometry=pg.Rect(0, 0, 100, 40),
                     value=(i, self.game.maps.images[i]),
-                    text='LEVEL' + str(i + 1),
+                    text="LEVEL" + str(i + 1),
                     center=(self.game.width // 2 - 55, (85 + 40 * counter)),
-                    text_size=Font.BUTTON_TEXT_SIZE-4,
-                    active=i in self.game.unlocked_levels)
+                    text_size=Font.BUTTON_TEXT_SIZE - 4,
+                    active=i in self.game.unlocked_levels,
+                )
             )
             counter += 1
-        buttons.append(self.SceneButton(
-            game=self.game,
-            geometry=pg.Rect(0, 0, 180, 40),
-            text='MENU',
-            scene=(self.game.scenes.MENU, False),
-            center=(self.game.width // 2, 250),
-            text_size=Font.BUTTON_TEXT_SIZE))
+        buttons.append(
+            self.SceneButton(
+                game=self.game,
+                geometry=pg.Rect(0, 0, 180, 40),
+                text="MENU",
+                scene=(self.game.scenes.MENU, False),
+                center=(self.game.width // 2, 250),
+                text_size=Font.BUTTON_TEXT_SIZE,
+            )
+        )
 
         for index in range(len(buttons)):
             if hasattr(buttons[index], "value"):
                 if self.game.maps.cur_id == buttons[index].value[0]:
-                    buttons[index].text = '-' + buttons[index].text + '-'
+                    buttons[index].text = "-" + buttons[index].text + "-"
 
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
@@ -101,7 +105,7 @@ class Scene(base.Scene):
             self.scroll_threshold()
             self.create_objects()
         elif event.type == pg.KEYDOWN:
-            if event.key == pg.K_e or event.key == pg.K_q:
+            if event.key in (pg.K_e, pg.K_q):
                 if event.key == pg.K_e:
                     self.__scroll += 1
                 elif event.key == pg.K_q:

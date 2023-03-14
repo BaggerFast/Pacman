@@ -21,19 +21,25 @@ def rand_color():
         color = (0, 0, randint(min_val, max_val))
     else:
         excluded_color = randint(0, 2)
-        color = (randint(min_val, max_val) if excluded_color != 0 else 0,
-                 randint(min_val, max_val) if excluded_color != 1 else 0,
-                 randint(min_val, max_val) if excluded_color != 2 else 0)
+        color = (
+            randint(min_val, max_val) if excluded_color != 0 else 0,
+            randint(min_val, max_val) if excluded_color != 1 else 0,
+            randint(min_val, max_val) if excluded_color != 2 else 0,
+        )
     return color
 
 
 class Map(DrawableObject):
     tile_names = [
         "space",
-        "fat_up_wall", "fat_left_corner",
-        "fat_y_corner", "up_wall",
-        "left_corner", "ghost_left_corner",
-        "ghost_door", "ghost_door_wall_left"
+        "fat_up_wall",
+        "fat_left_corner",
+        "fat_y_corner",
+        "up_wall",
+        "left_corner",
+        "ghost_left_corner",
+        "ghost_door",
+        "ghost_door_wall_left",
     ]
     tiles = []
 
@@ -51,7 +57,7 @@ class Map(DrawableObject):
     def __load_tiles(self) -> None:
         self.tiles = []
         for i in self.tile_names:
-            tile_path = get_path(i, 'png', 'images', 'map')
+            tile_path = get_path(i, "png", "images", "map")
             tile = pg.image.load(tile_path)
             self.tiles.append(tile)
 
@@ -101,7 +107,9 @@ class Map(DrawableObject):
         for x in range(image.image.get_width()):
             for y in range(image.image.get_height()):
                 if image.image.get_at((x, y))[2] > 0:
-                    image.image.set_at((x, y), (0, 0, min(image.image.get_at((x, y))[2] * 5, 255), 255))  # Set the color of the pixel.
+                    image.image.set_at(
+                        (x, y), (0, 0, min(image.image.get_at((x, y))[2] * 5, 255), 255)
+                    )  # Set the color of the pixel.
         return image
 
     def process_draw(self) -> None:

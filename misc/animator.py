@@ -4,7 +4,14 @@ import pygame as pg
 class Animator:
     __time_out = 50
 
-    def __init__(self, path_to_images: list, time_out: int = 50, is_rotation: bool = True, repeat: bool = False, aura: str = None):
+    def __init__(
+        self,
+        path_to_images: list,
+        time_out: int = 50,
+        is_rotation: bool = True,
+        repeat: bool = False,
+        aura: str = None,
+    ):
         self.is_rotation = is_rotation
         self.__animate_timer = 0
         self.__time_out = time_out

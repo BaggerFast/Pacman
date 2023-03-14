@@ -1,6 +1,6 @@
 import pygame as pg
 from objects import ButtonController, Button, Text
-from scenes import base, levels
+from scenes import base
 from misc import BUTTON_TRANSPERENT_COLORS, Font
 
 
@@ -21,41 +21,46 @@ class Scene(base.Scene):
 
     def create_buttons(self) -> None:
         buttons = [
-            Button(
-                self.game, pg.Rect(0, 0, 180, 35),
-                self.__next_level, 'NEXT LEVEL',
-                center=(self.game.width // 2, 210),
-                text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_TRANSPERENT_COLORS
-            )
-            if self.__is_last_level() else self.SceneButton(
-                game=self.game,
-                geometry=pg.Rect(0, 0, 180, 35),
-                text='EXIT',
-                scene=(self.game.scenes.MENU, False),
-                center=(self.game.width // 2, 210),
-                text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_TRANSPERENT_COLORS
+            (
+                Button(
+                    self.game,
+                    pg.Rect(0, 0, 180, 35),
+                    self.__next_level,
+                    "NEXT LEVEL",
+                    center=(self.game.width // 2, 210),
+                    text_size=Font.BUTTON_TEXT_SIZE,
+                    colors=BUTTON_TRANSPERENT_COLORS,
+                )
+                if self.__is_last_level()
+                else self.SceneButton(
+                    game=self.game,
+                    geometry=pg.Rect(0, 0, 180, 35),
+                    text="EXIT",
+                    scene=(self.game.scenes.MENU, False),
+                    center=(self.game.width // 2, 210),
+                    text_size=Font.BUTTON_TEXT_SIZE,
+                    colors=BUTTON_TRANSPERENT_COLORS,
+                )
             ),
             self.SceneButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 35),
-                text='MENU',
+                text="MENU",
                 scene=(self.game.scenes.MENU, False),
                 center=(self.game.width // 2, 250),
                 text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_TRANSPERENT_COLORS
-            )
+                colors=BUTTON_TRANSPERENT_COLORS,
+            ),
         ]
         self.objects.append(ButtonController(self.game, buttons))
 
     def __create_score_text(self) -> None:
-        self.__text_score = Text(self.game, f'Score: {self.game.score}', 20)
+        self.__text_score = Text(self.game, f"Score: {self.game.score}", 20)
         self.__text_score.move_center(self.game.width // 2, 135)
         self.objects.append(self.__text_score)
 
     def __create_highscore_text(self) -> None:
-        self.__text_highscore = Text(self.game, f'High score: {self.game.records.data[-1]}', 20)
+        self.__text_highscore = Text(self.game, f"High score: {self.game.records.data[-1]}", 20)
         self.__text_highscore.move_center(self.game.width // 2, 165)
         self.objects.append(self.__text_highscore)
 

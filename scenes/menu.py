@@ -1,11 +1,9 @@
-from random import randint
-
 import pygame as pg
 from PIL import ImageFilter, Image
 from objects.map import rand_color
 from objects import ButtonController, Text, ImageObject
 from scenes import base
-from misc import Font, BUTTON_TRANSPERENT_COLORS, Color, BUTTON_MENU
+from misc import Font, Color, BUTTON_MENU
 
 
 class Scene(base.Scene):
@@ -24,24 +22,28 @@ class Scene(base.Scene):
         for x in range(self.preview.get_width()):
             for y in range(self.preview.get_height()):
                 if self.preview.get_at((x, y)) == Color.MAIN_MAP:
-                    self.preview.set_at((x, y), self.color)  # Set the color of the pixel
+                    self.preview.set_at((x, y), self.color)
 
     def blur(self):
         blur_count = 5
         rect = self.preview.get_rect()
-        surify = pg.image.tostring(self.preview, 'RGBA')
-        impil = Image.frombytes('RGBA', (rect.width, rect.height), surify)
-        piler = impil.resize(self.game.size).\
-            filter(ImageFilter.GaussianBlur(radius=blur_count))
+        surify = pg.image.tostring(self.preview, "RGBA")
+        impil = Image.frombytes("RGBA", (rect.width, rect.height), surify)
+        piler = impil.resize(self.game.size).filter(ImageFilter.GaussianBlur(radius=blur_count))
         self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
     def create_title(self) -> None:
-        title = Text(self.game, 'PACMAN', 36, font=Font.TITLE)
+        title = Text(self.game, "PACMAN", 36, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
 
     def __create_indicator(self) -> None:
-        self.__indicator = Text(self.game, self.game.maps.level_name(self.game.maps.cur_id).replace('_', ' '), 15, font=Font.TITLE)
+        self.__indicator = Text(
+            self.game,
+            self.game.maps.level_name(self.game.maps.cur_id).replace("_", " "),
+            15,
+            font=Font.TITLE,
+        )
         self.__indicator.move_center(self.game.width // 2, 60)
         self.objects.append(self.__indicator)
 
@@ -52,7 +54,7 @@ class Scene(base.Scene):
             2: ("SKINS", self.game.scenes.SKINS, False),
             3: ("RECORDS", self.game.scenes.RECORDS, False),
             4: ("SETTINGS", self.game.scenes.SETTINGS, False),
-            5: ("EXIT", self.game.exit_game, None)
+            5: ("EXIT", self.game.exit_game, None),
         }
         buttons = []
         for i in range(len(names)):
@@ -64,7 +66,7 @@ class Scene(base.Scene):
                     scene=(names[i][1], names[i][2]),
                     center=(self.game.width // 2, 95 + i * 28),
                     text_size=Font.BUTTON_TEXT_SIZE,
-                    colors=BUTTON_MENU
+                    colors=BUTTON_MENU,
                 )
             )
         self.objects.append(ButtonController(self.game, buttons))

@@ -51,7 +51,7 @@ class LevelLoader:
         self.energizer_data = self.__seed_loader.get_energizer_data()
 
     def __load_map_json(self) -> None:
-        with open(os.path.join('maps', self.filename)) as f:
+        with open(os.path.join("maps", self.filename)) as f:
             self.__json = json.load(f)
 
     def get_map_data(self) -> List[List[List[int]]]:

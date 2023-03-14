@@ -18,19 +18,20 @@ class Scene(base.Scene):
         back_button = self.SceneButton(
             game=self.game,
             geometry=pg.Rect(0, 0, 180, 40),
-            text='MENU',
+            text="MENU",
             scene=(self.game.scenes.MENU, False),
             center=(self.game.width // 2, 250),
-            text_size=Font.BUTTON_TEXT_SIZE)
+            text_size=Font.BUTTON_TEXT_SIZE,
+        )
         self.objects.append(ButtonController(self.game, [back_button]))
 
     def __create_title(self) -> None:
-        title = Text(self.game, 'RECORDS', 32, font=Font.TITLE)
+        title = Text(self.game, "RECORDS", 32, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
 
     def __create_error_label(self) -> None:
-        self.__error_text = Text(self.game, 'NO RECORDS', 24, color=Color.RED)
+        self.__error_text = Text(self.game, "NO RECORDS", 24, color=Color.RED)
         self.__error_text.move_center(self.game.width // 2, 100)
 
     def __create_text_labels(self) -> None:
@@ -39,13 +40,27 @@ class Scene(base.Scene):
         text_colors = [Color.GOLD, Color.SILVER, Color.BRONZE, Color.WHITE, Color.WHITE]
         y = 4
         for i in range(5):
-            self.medals_text.append(Text(self.game, str(self.game.records.data[y]), 30, pg.Rect(60, 55+35*i, 0, 0), text_colors[i]))
+            self.medals_text.append(
+                Text(
+                    self.game,
+                    str(self.game.records.data[y]),
+                    30,
+                    pg.Rect(60, 55 + 35 * i, 0, 0),
+                    text_colors[i],
+                )
+            )
             y -= 1
 
     def __create_medals(self) -> None:
         self.__medals = []
         for i in range(5):
-            self.__medals.append(ImageObject(self.game, get_path(str(i), 'png', 'images', 'medal'), (16, 55+35*i)))
+            self.__medals.append(
+                ImageObject(
+                    self.game,
+                    get_path(str(i), "png", "images", "medal"),
+                    (16, 55 + 35 * i),
+                )
+            )
             self.__medals[i].scale(35, 35)
 
     def additional_draw(self) -> None:

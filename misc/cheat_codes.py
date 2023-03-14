@@ -1,7 +1,5 @@
 import pygame as pg
 
-import misc
-
 
 class Cheat:
     def __init__(self, cheat) -> None:
@@ -24,8 +22,8 @@ class ControlCheats:
         for cheat in cheat_codes:
             self.cheats.append(Cheat(cheat))
         self.timer = pg.time.get_ticks()
-        self.enter_code = ''
-        self.old_enter_code = ''
+        self.enter_code = ""
+        self.old_enter_code = ""
 
     def update_timer(self) -> None:
         self.timer = pg.time.get_ticks()
@@ -33,20 +31,20 @@ class ControlCheats:
     def process_logic(self) -> None:
         for cheat in self.cheats:
             if cheat.check_enter_code(self.enter_code):
-                self.enter_code = ''
+                self.enter_code = ""
         if self.old_enter_code == self.enter_code and pg.time.get_ticks() - self.timer >= 1000:
-            self.enter_code = ''
+            self.enter_code = ""
             self.update_timer()
         elif self.old_enter_code != self.enter_code:
             self.update_timer()
         self.old_enter_code = self.enter_code
 
     def process_draw(self) -> None:
-        '''
+        """
         Даня если ты это читаешь или ещё кто то извиняюсь сердешно это нужно что бы код не падал,
         потому что я читы закидываю в объекты,
         можно конечно переопределить процесс ивент и в процесс логик закинуть функции но я не знаю решайте сами
-        '''
+        """
         pass
 
     def process_event(self, event) -> None:

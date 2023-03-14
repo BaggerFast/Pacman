@@ -8,4 +8,3 @@ from . import records
 from . import endgame
 from . import skins
 from . import settings
-

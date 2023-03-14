@@ -1,6 +1,6 @@
 import os
 
-ROOT_DIR = os.path.dirname(os.path.abspath('run.py'))
+ROOT_DIR = os.path.dirname(os.path.abspath("run.py"))
 
 
 def get_path(filename: str, extension: str, *folder: str) -> str:
@@ -11,7 +11,7 @@ def get_path(filename: str, extension: str, *folder: str) -> str:
     :return: возращает полный путь файла строкой
     """
     folder = [i.lower() for i in folder]
-    extension = '.' + extension.lower()
+    extension = "." + extension.lower()
     filename = filename.lower() + extension
     return os.path.join(*[ROOT_DIR] + list(folder) + [filename])
 
@@ -33,7 +33,7 @@ def get_list_path(extension: str, *folder: str) -> list:
     data = []
     folder = [i.lower() for i in folder]
     frames_count = get_files_count(os.path.join(*[ROOT_DIR] + list(folder)))
-    extension = '.' + extension.lower()
+    extension = "." + extension.lower()
     for i in range(frames_count):
         filename = str(i) + extension
         data.append(os.path.join(*[ROOT_DIR] + list(folder) + [filename]))
@@ -46,6 +46,6 @@ def create_file_if_not_exist(filepath: str, data: str = "") -> None:
     :param data: string which will written in file if it doesn't exist
     """
     if not os.path.exists(filepath):
-        file = open(filepath, 'w')
+        file = open(filepath, "w")
         file.write(data)
         file.close()

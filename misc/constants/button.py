@@ -64,35 +64,35 @@ class ButtonColor(NamedTuple):
 BUTTON_DEFAULT_COLORS = ButtonColor(
     static=ButtonStateColor(text=Color.GRAY, background=Color.BLACK),
     hover=ButtonStateColor(text=Color.WHITE, background=Color.JET),
-    click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK)
+    click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK),
 )
 
 BUTTON_TRANSPERENT_COLORS = ButtonColor(
     static=ButtonStateColor(text=Color.WHITE, background=Color.TRANSPERENT),
     hover=ButtonStateColor(text=Color.WHITE, background=Color.HALF_TRANSPERENT),
-    click=ButtonStateColor(text=Color.WHITE, background=Color.JET)
+    click=ButtonStateColor(text=Color.WHITE, background=Color.JET),
 )
 
 BUTTON_GREEN_COLORS = ButtonColor(
     static=ButtonStateColor(text=Color.WHITE, background=Color.DARK_GREEN),
     hover=ButtonStateColor(text=Color.WHITE, background=Color.GREEN),
-    click=ButtonStateColor(text=Color.WHITE, background=Color.DARK_GREEN)
+    click=ButtonStateColor(text=Color.WHITE, background=Color.DARK_GREEN),
 )
 
 BUTTON_RED_COLORS = ButtonColor(
     static=ButtonStateColor(text=Color.WHITE, background=Color.DARK_RED),
     hover=ButtonStateColor(text=Color.WHITE, background=Color.RED),
-    click=ButtonStateColor(text=Color.WHITE, background=Color.DARK_RED)
+    click=ButtonStateColor(text=Color.WHITE, background=Color.DARK_RED),
 )
 
 BUTTON_SKIN_BUY = ButtonColor(
     static=ButtonStateColor(text=Color.YELLOW, background=Color.BLACK),
     hover=ButtonStateColor(text=Color.WHITE, background=Color.JET),
-    click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK)
+    click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK),
 )
 
 BUTTON_MENU = ButtonColor(
     static=ButtonStateColor(text=Color.GRAY, background=Color.TRANSPERENT),
     hover=ButtonStateColor(text=Color.WHITE, background=Color.TRANSPERENT),
-    click=ButtonStateColor(text=Color.WHITE, background=Color.JET)
+    click=ButtonStateColor(text=Color.WHITE, background=Color.JET),
 )

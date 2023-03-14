@@ -1,12 +1,25 @@
 from random import choice
+from typing import List
 
 import pygame as pg
 from PIL import Image, ImageFilter
 
 from misc import Sounds
 from misc.sound_controller import SoundController
-from misc import Color, HighScore, get_path, Score, UNLOCK_LEVELS, List, get_list_path, UNLOCK_SKINS, FRUITS_COUNT, \
-    LevelLoader, Skins, Storage, DEBUG
+from misc import (
+    Color,
+    HighScore,
+    get_path,
+    Score,
+    UNLOCK_LEVELS,
+    get_list_path,
+    UNLOCK_SKINS,
+    FRUITS_COUNT,
+    LevelLoader,
+    Skins,
+    Storage,
+    DEBUG,
+)
 from objects import Map
 from scenes import *
 
@@ -36,8 +49,13 @@ class Game:
             else:
                 self.pacman = SoundController(game, sound=pg.mixer.Sound(Sounds.DEAD[0]))
                 self.seed = SoundController(game, channel=4, sound=pg.mixer.Sound(Sounds.SEED))
-                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(Sounds.INTRO[0]
-                                                                                   if not game.skins.current == game.skins.pokeball else Sounds.POC_INTRO))
+                self.intro = SoundController(
+                    game,
+                    channel=1,
+                    sound=pg.mixer.Sound(
+                        Sounds.INTRO[0] if not game.skins.current == game.skins.pokeball else Sounds.POC_INTRO
+                    ),
+                )
                 self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
 
         def reload_sounds(self, game):
@@ -50,8 +68,13 @@ class Game:
             else:
                 self.pacman = SoundController(game, sound=pg.mixer.Sound(Sounds.DEAD[0]))
                 self.seed = SoundController(game, channel=4, sound=pg.mixer.Sound(Sounds.SEED))
-                self.intro = SoundController(game, channel=1, sound=pg.mixer.Sound(
-                    Sounds.INTRO[0] if not game.skins.current == game.skins.pokeball else Sounds.POC_INTRO))
+                self.intro = SoundController(
+                    game,
+                    channel=1,
+                    sound=pg.mixer.Sound(
+                        Sounds.INTRO[0] if not game.skins.current == game.skins.pokeball else Sounds.POC_INTRO
+                    ),
+                )
                 self.gameover = SoundController(game, channel=2, sound=pg.mixer.Sound(Sounds.GAMEOVER[0]))
 
     class Scenes:
@@ -129,11 +152,20 @@ class Game:
             return images
 
     __size = width, height = 224, 285
-    __icon = pg.transform.scale(pg.image.load(get_path('ico', 'png', 'images', )), (256, 256))
+    __icon = pg.transform.scale(
+        pg.image.load(
+            get_path(
+                "ico",
+                "png",
+                "images",
+            )
+        ),
+        (256, 256),
+    )
     __FPS = 60
     __def_level_id = 0
     __def_skin = "default"
-    pg.display.set_caption('PACMAN')
+    pg.display.set_caption("PACMAN")
     pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
@@ -152,7 +184,9 @@ class Game:
 
         self.sounds = self.Music(self)
 
-        self.skins.current = self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
+        self.skins.current = (
+            self.__storage.last_skin if self.__storage.last_skin in self.unlocked_skins else self.__def_skin
+        )
         self.records = HighScore(self)
         self.scenes = self.Scenes(self)
         self.scenes.set(self.scenes.MENU)
@@ -160,8 +194,11 @@ class Game:
     def read_from_storage(self):
         self.__storage = Storage(self)
         self.unlocked_levels = self.maps.keys() if UNLOCK_LEVELS else self.__storage.unlocked_levels
-        self.maps.cur_id = int(self.__storage.last_level_id) if int(
-            self.__storage.last_level_id) in self.unlocked_levels else self.__def_level_id
+        self.maps.cur_id = (
+            int(self.__storage.last_level_id)
+            if int(self.__storage.last_level_id) in self.unlocked_levels
+            else self.__def_level_id
+        )
         self.unlocked_skins = self.skins.all_skins if UNLOCK_SKINS else self.__storage.unlocked_skins
         self.eaten_fruits = self.__storage.eaten_fruits
         self.highscores = self.__storage.highscores
@@ -220,12 +257,12 @@ class Game:
         else:
             blur_count = 10
             current_time = pg.time.get_ticks() / 1000
-            surify = pg.image.tostring(self.scenes.MAIN.template, 'RGBA')
-            impil = Image.frombytes('RGBA', self.__size, surify)
+            surify = pg.image.tostring(self.scenes.MAIN.template, "RGBA")
+            impil = Image.frombytes("RGBA", self.__size, surify)
             piler = impil.filter(
-                ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count)))
-            surface = pg.image.fromstring(
-                piler.tobytes(), piler.size, piler.mode).convert()
+                ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count))
+            )
+            surface = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
             self.screen.blit(surface, (0, 0))
 
         self.scenes.current.process_draw()
@@ -242,7 +279,7 @@ class Game:
     def exit_game(self) -> None:
         self.save_to_storage()
         self.__game_over = True
-        print('Bye bye')
+        print("Bye bye")
 
     def unlock_level(self, level_id: int = 0) -> None:
         """

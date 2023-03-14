@@ -8,12 +8,7 @@ from scenes import base
 
 class Scene(base.Scene):
     class DifficultyButton(Button):
-
-        __dificulties = {
-            0: "easy",
-            1: "medium",
-            2: "hard"
-        }
+        __dificulties = {0: "easy", 1: "medium", 2: "hard"}
 
         def __init__(self, **args):
             super().__init__(**args)
@@ -84,7 +79,10 @@ class Scene(base.Scene):
         self.static_objects.append(self.volume_text)
 
         self.volume_value = Text(self.game, str(self.game.settings.VOLUME) + "%", 20)
-        self.volume_value.move_center(self.game.width // 2, self.__volume_position + 30, )
+        self.volume_value.move_center(
+            self.game.width // 2,
+            self.__volume_position + 30,
+        )
         self.static_objects.append(self.volume_value)
         self.create_title()
 
@@ -107,18 +105,18 @@ class Scene(base.Scene):
             self.SelectButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 40, 35),
-                text='-',
+                text="-",
                 center=(self.game.width // 2 - 60, self.__volume_position + 30),
-                value=-5
+                value=-5,
             )
         )
         self.buttons.append(
             self.SelectButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 40, 35),
-                text='+',
+                text="+",
                 center=(self.game.width // 2 + 65, self.__volume_position + 30),
-                value=5
+                value=5,
             )
         )
         if self.prev_scene == self.game.scenes.MENU:
@@ -127,17 +125,17 @@ class Scene(base.Scene):
                     game=self.game,
                     geometry=pg.Rect(0, 0, 120, 35),
                     center=(self.game.width // 2, self.__difficulty_pos),
-                    text_size=Font.BUTTON_TEXT_SIZE
+                    text_size=Font.BUTTON_TEXT_SIZE,
                 )
             )
         self.buttons.append(
             self.SceneButton(
                 game=self.game,
                 geometry=pg.Rect(0, 0, 180, 40),
-                text='BACK',
+                text="BACK",
                 scene=(self.prev_scene, False),
                 center=(self.game.width // 2, 250),
-                text_size=Font.BUTTON_TEXT_SIZE
+                text_size=Font.BUTTON_TEXT_SIZE,
             )
         )
 

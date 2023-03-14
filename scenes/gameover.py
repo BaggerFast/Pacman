@@ -12,7 +12,7 @@ class Scene(base.Scene):
         self.__create_highscore_text()
 
     def create_title(self) -> None:
-        text = ['GAME', 'OVER']
+        text = ["GAME", "OVER"]
         for i in range(2):
             text[i] = Text(self.game, text[i], 40, font=Font.TITLE)
             text[i].move_center(self.game.width // 2, 30 + i * 40)
@@ -25,24 +25,26 @@ class Scene(base.Scene):
         }
         buttons = []
         for i in range(len(names)):
-            buttons.append(self.SceneButton(
-                game=self.game,
-                geometry=pg.Rect(0, 0, 180, 35),
-                text=names[i][0],
-                scene=(names[i][1], names[i][2]),
-                center=(self.game.width // 2, 210+40*i),
-                text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_TRANSPERENT_COLORS
-            ))
+            buttons.append(
+                self.SceneButton(
+                    game=self.game,
+                    geometry=pg.Rect(0, 0, 180, 35),
+                    text=names[i][0],
+                    scene=(names[i][1], names[i][2]),
+                    center=(self.game.width // 2, 210 + 40 * i),
+                    text_size=Font.BUTTON_TEXT_SIZE,
+                    colors=BUTTON_TRANSPERENT_COLORS,
+                )
+            )
         self.objects.append(ButtonController(self.game, buttons))
 
     def __create_score_text(self) -> None:
-        self.__text_score = Text(self.game, f'Score: {self.game.score}', 20)
+        self.__text_score = Text(self.game, f"Score: {self.game.score}", 20)
         self.__text_score.move_center(self.game.width // 2, 135)
         self.objects.append(self.__text_score)
 
     def __create_highscore_text(self) -> None:
-        self.__text_highscore = Text(self.game, f'High score: {self.game.records.data[-1]}', 20)
+        self.__text_highscore = Text(self.game, f"High score: {self.game.records.data[-1]}", 20)
         self.__text_highscore.move_center(self.game.width // 2, 165)
         self.objects.append(self.__text_highscore)
 

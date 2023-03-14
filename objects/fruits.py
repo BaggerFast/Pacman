@@ -2,7 +2,7 @@ import pygame as pg
 from random import randint
 from typing import Tuple
 
-from misc.constants import Points, CELL_SIZE, Sounds
+from misc.constants import CELL_SIZE
 from misc.path import get_list_path, get_path
 from misc.animator import Animator
 from objects.base import DrawableObject
@@ -14,7 +14,7 @@ class Fruit(DrawableObject):
         self.game = game
         super().__init__(game)
         self.screen = game.screen
-        self.__anim = Animator(get_list_path('png', 'images', 'fruit'), False, False)
+        self.__anim = Animator(get_list_path("png", "images", "fruit"), False, False)
         self.__image = self.__anim.current_image
         self.rect = self.__anim.current_image.get_rect()
         self.move_center(*self.pos_from_cell(pos))
@@ -30,14 +30,22 @@ class Fruit(DrawableObject):
 
     def __draw_fruit(self):
         if self.__eaten:
-            Text(game=self.game, text=str(self.__scores[self.__anim.get_cur_index()-1]), size=10, rect=self.rect).process_draw()
+            Text(
+                game=self.game,
+                text=str(self.__scores[self.__anim.get_cur_index() - 1]),
+                size=10,
+                rect=self.rect,
+            ).process_draw()
 
         if self.__drawing:
             self.screen.blit(self.__anim.current_image, self.rect)
 
         for i in range(self.__anim.get_cur_index(), 0, -1):
-            ImageObject(self.game, get_path(str(i-1), 'png', 'images', 'fruit'),
-                        (130 + (i-1) * 12, 270)).process_draw()
+            ImageObject(
+                self.game,
+                get_path(str(i - 1), "png", "images", "fruit"),
+                (130 + (i - 1) * 12, 270),
+            ).process_draw()
 
     def __creating_scores(self):
         if len(self.__scores) < self.__anim.get_len_anim():
@@ -57,7 +65,9 @@ class Fruit(DrawableObject):
     def __check_time(self):
         if pg.time.get_ticks() - self.__start_time >= 9000:  # 9000
             self.__drawing = True
-            self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index()-1]
+            self.__score_to_eat = (
+                int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index() - 1]
+            )
         if pg.time.get_ticks() - self.__start_time >= 300:
             self.__eaten = None
 
@@ -70,14 +80,14 @@ class Fruit(DrawableObject):
         :return: is objects in collision (bool) and self type (str)
         """
         if self.__drawing:
-            if (self.rect.x == min(object.rect.left, object.rect.right)) \
-                    and (self.rect.y == object.rect.y):
+            if (self.rect.x == min(object.rect.left, object.rect.right)) and (self.rect.y == object.rect.y):
                 self.game.sounds.fruit.play()
                 self.__drawing = False
                 self.__start_time = pg.time.get_ticks()
                 self.__eaten = True
-                self.__score_to_eat = int(self.game.score) + self.__eat_timer + self.__scores[
-                    self.__anim.get_cur_index()]
+                self.__score_to_eat = (
+                    int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index()]
+                )
                 self.game.store_fruit(self.__anim.get_cur_index(), 1)
                 self.game.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
                 self.__change_image()
@@ -92,4 +102,7 @@ class Fruit(DrawableObject):
 
     @staticmethod
     def pos_from_cell(cell: Tuple[int, int]) -> Tuple[int, int]:
-        return cell[0] * CELL_SIZE + CELL_SIZE // 2, cell[1] * CELL_SIZE + 20 + CELL_SIZE // 2
+        return (
+            cell[0] * CELL_SIZE + CELL_SIZE // 2,
+            cell[1] * CELL_SIZE + 20 + CELL_SIZE // 2,
+        )

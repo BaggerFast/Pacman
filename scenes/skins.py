@@ -9,7 +9,7 @@ from misc import Font, get_list_path, BUTTON_SKIN_BUY
 
 class Scene(base.Scene):
     class SkinButton(Button):
-        def __init__(self, **args) -> object:
+        def __init__(self, **args):
             self.value = args.pop("value")
             super().__init__(**args)
 
@@ -31,7 +31,7 @@ class Scene(base.Scene):
             super().select()
 
     class BuyButton(Button):
-        def __init__(self, **args) -> object:
+        def __init__(self, **args):
             self.value = args.pop("value")
             super().__init__(**args)
 
@@ -66,17 +66,17 @@ class Scene(base.Scene):
 
     def create_static_objects(self) -> None:
         self.is_current = False
-        self.fruit_images = get_list_path('png', 'images', 'fruit')
+        self.fruit_images = get_list_path("png", "images", "fruit")
         self.__create_title()
 
     def create_objects(self) -> None:
         self.skins = {
-            0: ('PACMAN', self.game.skins.default),
-            1: ('HALF-LIFE', self.game.skins.half_life),
-            2: ('WINDOWS', self.game.skins.windows),
-            3: ('POKEBALL', self.game.skins.pokeball),
-            4: ('EDGE', self.game.skins.edge),
-            5: ('CHROME', self.game.skins.chrome),
+            0: ("PACMAN", self.game.skins.default),
+            1: ("HALF-LIFE", self.game.skins.half_life),
+            2: ("WINDOWS", self.game.skins.windows),
+            3: ("POKEBALL", self.game.skins.pokeball),
+            4: ("EDGE", self.game.skins.edge),
+            5: ("CHROME", self.game.skins.chrome),
         }
         self.objects = []
         self.preview = copy(self.game.skins.current.image)
@@ -87,7 +87,11 @@ class Scene(base.Scene):
 
     def create_fruits_and_text_we_have(self) -> None:
         for index in range(len(self.fruit_images)):
-            fruit = ImageObject(self.game, self.fruit_images[index], (self.game.width // 8 - 9 + index * 25, 60))
+            fruit = ImageObject(
+                self.game,
+                self.fruit_images[index],
+                (self.game.width // 8 - 9 + index * 25, 60),
+            )
             self.objects.append(fruit)
             text = Text(self.game, str(self.game.eaten_fruits[index]), 10)
             text.move_center(self.game.width // 8 - 10 + index * 25, 60)
@@ -102,18 +106,25 @@ class Scene(base.Scene):
             multiply_x = 0
             if not self.skins[index][1].is_unlocked:
                 for i in self.skins[index][1].skin_cost:
-                    fruit = ImageObject(self.game, self.fruit_images[i], (
-                        pos_regarding_buttons_x + index_pos_x * multiply_x,
-                        pos_regarding_buttons_y + index_pos_y * index))
+                    fruit = ImageObject(
+                        self.game,
+                        self.fruit_images[i],
+                        (
+                            pos_regarding_buttons_x + index_pos_x * multiply_x,
+                            pos_regarding_buttons_y + index_pos_y * index,
+                        ),
+                    )
                     text = Text(self.game, str(self.skins[index][1].skin_cost[i]), 10)
-                    text.move_center(pos_regarding_buttons_x + index_pos_x * multiply_x,
-                                     pos_regarding_buttons_y + index_pos_y * index)
+                    text.move_center(
+                        pos_regarding_buttons_x + index_pos_x * multiply_x,
+                        pos_regarding_buttons_y + index_pos_y * index,
+                    )
                     self.objects.append(fruit)
                     self.objects.append(text)
                     multiply_x += 1
 
     def __create_title(self) -> None:
-        title = Text(self.game, 'SELECT SKIN', 25, font=Font.TITLE)
+        title = Text(self.game, "SELECT SKIN", 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
 
@@ -125,32 +136,46 @@ class Scene(base.Scene):
         self.button_pos_multiply_y = 25
         for i in range(len(self.skins)):
             if self.skins[i][1].is_unlocked:
-                buttons.append(self.SkinButton(
-                    game=self.game,
-                    geometry=pg.Rect(0, 0, 90, 25),
-                    text=self.skins[i][0],
-                    value=self.skins[i][1],
-                    center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
-                    text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                    active=self.skins[i][1].name in self.game.unlocked_skins))
+                buttons.append(
+                    self.SkinButton(
+                        game=self.game,
+                        geometry=pg.Rect(0, 0, 90, 25),
+                        text=self.skins[i][0],
+                        value=self.skins[i][1],
+                        center=(
+                            self.button_pos_x,
+                            self.button_pos_y + i * self.button_pos_multiply_y,
+                        ),
+                        text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
+                        active=self.skins[i][1].name in self.game.unlocked_skins,
+                    )
+                )
             else:
-                buttons.append(self.BuyButton(
-                    game=self.game,
-                    geometry=pg.Rect(0, 0, 90, 25),
-                    text=self.skins[i][0],
-                    value=self.skins[i],
-                    center=(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y),
-                    text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                    colors=BUTTON_SKIN_BUY
-                ))
+                buttons.append(
+                    self.BuyButton(
+                        game=self.game,
+                        geometry=pg.Rect(0, 0, 90, 25),
+                        text=self.skins[i][0],
+                        value=self.skins[i],
+                        center=(
+                            self.button_pos_x,
+                            self.button_pos_y + i * self.button_pos_multiply_y,
+                        ),
+                        text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
+                        colors=BUTTON_SKIN_BUY,
+                    )
+                )
 
-        buttons.append(self.SceneButton(
-            game=self.game,
-            geometry=pg.Rect(0, 0, 180, 40),
-            text='MENU',
-            scene=(self.game.scenes.MENU, False),
-            center=(self.game.width // 2, 250),
-            text_size=Font.BUTTON_TEXT_SIZE))
+        buttons.append(
+            self.SceneButton(
+                game=self.game,
+                geometry=pg.Rect(0, 0, 180, 40),
+                text="MENU",
+                scene=(self.game.scenes.MENU, False),
+                center=(self.game.width // 2, 250),
+                text_size=Font.BUTTON_TEXT_SIZE,
+            )
+        )
 
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
@@ -162,6 +187,6 @@ class Scene(base.Scene):
             if hasattr(buttons[index], "value") and hasattr(buttons[index].value, "name"):
                 if self.game.skins.current.name == buttons[index].value.name:
                     if not (buttons[index].text.startswith("-") or buttons[index].text.endswith("-")):
-                        buttons[index].text = '-' + buttons[index].text + '-'
+                        buttons[index].text = "-" + buttons[index].text + "-"
                 else:
-                    buttons[index].text = buttons[index].text.strip('-')
+                    buttons[index].text = buttons[index].text.strip("-")

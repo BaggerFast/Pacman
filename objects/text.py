@@ -7,12 +7,15 @@ from objects import DrawableObject
 
 
 class Text(DrawableObject):
-    def __init__(self, game, text: str = "",
-                 size: int = 0,
-                 rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0),
-                 color=pg.Color(255, 255, 255),
-                 font=Font.DEFAULT):
-
+    def __init__(
+        self,
+        game,
+        text: str = "",
+        size: int = 0,
+        rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0),
+        color=pg.Color(255, 255, 255),
+        font=Font.DEFAULT,
+    ):
         super().__init__(game)
         self.rect = rect
         self.__pos = rect

@@ -1,10 +1,11 @@
 import os.path
+from typing import List
 
-from misc import HIGHSCORES_COUNT, List
+from misc import HIGHSCORES_COUNT
 
 
 class HighScore:
-    __json_filename = os.path.join('saves', 'records.json')
+    __json_filename = os.path.join("saves", "records.json")
 
     def __init__(self, game) -> None:
         self.game = game

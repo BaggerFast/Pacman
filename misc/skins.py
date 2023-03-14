@@ -12,10 +12,9 @@ class Skins:
             self.name = skin_name
             self.skin_cost = {}
             self.__game = game
-            self.__walk = Animator(get_list_path('png', 'images', 'pacman', self.name, 'walk'))
-            self.__dead = Animator(get_list_path('png', 'images', 'pacman', self.name, 'dead'), 100, False, True)
+            self.__walk = Animator(get_list_path("png", "images", "pacman", self.name, "walk"))
+            self.__dead = Animator(get_list_path("png", "images", "pacman", self.name, "dead"), 100, False, True)
             self.__image = self.prerender_surface()
-
 
         @property
         def is_unlocked(self):
@@ -34,7 +33,11 @@ class Skins:
             return self.__image
 
         def prerender_surface(self) -> pg.Surface:
-            image = ImageObject(self.__game, pg.image.load(get_path('1', 'png', 'images', 'pacman', self.name, 'walk')), (145, 125))
+            image = ImageObject(
+                self.__game,
+                pg.image.load(get_path("1", "png", "images", "pacman", self.name, "walk")),
+                (145, 125),
+            )
             image.scale(70, 70)
             return image
 
@@ -42,12 +45,14 @@ class Skins:
         """
         param must be named like folder with skin
         """
-        self.__skins_cost = {"default": {0: 0, 1: 0},
-                             "half_life": {1: 14, 2: 10},
-                             "windows": {2: 12, 3: 8},
-                             "pokeball": {3: 10, 4: 7},
-                             "edge": {4: 7, 5: 6},
-                             "chrome": {6: 5, 7: 4}}
+        self.__skins_cost = {
+            "default": {0: 0, 1: 0},
+            "half_life": {1: 14, 2: 10},
+            "windows": {2: 12, 3: 8},
+            "pokeball": {3: 10, 4: 7},
+            "edge": {4: 7, 5: 6},
+            "chrome": {6: 5, 7: 4},
+        }
         self.__game = game
         self.default = self.Skin(self.__game)
         self.half_life = None

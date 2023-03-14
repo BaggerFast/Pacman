@@ -18,7 +18,7 @@ DEFINE ME
     ```bash
     pip install --upgrade pip
     ```
-7. Установить в виртуальное окружение необходимые пакеты: 
+7. Установить в виртуальное окружение необходимые пакеты:
     ```bash
     pip install -r requirements.txt
     ```

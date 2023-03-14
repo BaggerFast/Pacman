@@ -9,10 +9,10 @@ class Field:
     def dict(self):
         data = {}
         for key in self.__dict__.keys():
-            if hasattr(self.__dict__[key], 'dict'):
+            if hasattr(self.__dict__[key], "dict"):
                 data[key] = self.__dict__[key].dict()
             else:
-                if hasattr(self.__dict__[key], '__dict__'):
+                if hasattr(self.__dict__[key], "__dict__"):
                     data[key] = self.__dict__[key].__dict__
                 else:
                     data[key] = self.__dict__[key]
@@ -21,7 +21,7 @@ class Field:
     def read_dict(self, value):
         for key in self.__dict__.keys():
             if key in value.keys():
-                if hasattr(self.__dict__[key], 'dict'):
+                if hasattr(self.__dict__[key], "dict"):
                     self.__dict__[key].read_dict(value[key])
                 else:
                     self.__dict__[key] = value[key]
