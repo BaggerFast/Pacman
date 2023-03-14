@@ -78,7 +78,7 @@ class Scene(base.Scene):
         self.game.records.update_records()
         self.game.scenes.set(self.game.scenes.MAIN, reset=True)
 
-    def __is_last_level(self):
+    def __is_last_level(self) -> bool:
         return (self.game.maps.cur_id + 1) < self.game.maps.count
 
     def on_activate(self) -> None:

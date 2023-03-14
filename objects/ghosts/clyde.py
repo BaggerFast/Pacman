@@ -1,6 +1,5 @@
 from typing import Tuple
 from .base import Base
-import pygame as pg
 
 
 class Clyde(Base):
@@ -21,18 +20,19 @@ class Clyde(Base):
         self.set_direction("up")
 
     def process_logic(self) -> None:
-        if not self.is_invisible:
-            super().process_logic()
-            if self.is_in_home and self.can_leave_home():
+        if self.is_invisible:
+            return
+        super().process_logic()
+        if self.is_in_home and self.can_leave_home():
+            self.set_direction("left")
+            self.go()
+            scene = self.game.current_scene
+            if self.rect.centerx == scene.pinky.start_pos[0]:
+                self.set_direction("up")
+            if self.rect.centery == scene.blinky.start_pos[1]:
                 self.set_direction("left")
-                self.go()
-                scene = self.game.current_scene
-                if self.rect.centerx == scene.pinky.start_pos[0]:
-                    self.set_direction("up")
-                if self.rect.centery == scene.blinky.start_pos[1]:
-                    self.set_direction("left")
-                    self.is_in_home = False
-                    self.collision = True
+                self.is_in_home = False
+                self.collision = True
 
     def ghosts_ai(self) -> None:
         super().ghosts_ai()

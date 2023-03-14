@@ -110,12 +110,6 @@ class Base(Character):
         self.is_in_home = True
         self.work_counter = True
         self.set_direction("left")
-        """
-            'Chase',
-            'Scatter',
-            'Frightened'
-            'Eaten'
-        """
         self.mode = "Scatter"
         self.gg_text = Text(
             self.game,
@@ -147,7 +141,7 @@ class Base(Character):
         if not self.is_invisible and self.mode != "Frightened":
             self.animator = self.animations[self.rotate]
         if not self.process_logic_iterator % self.deceleration_multiplier_with_rect:
-            for i in range(self.acceleration_multiplier):
+            for _ in range(self.acceleration_multiplier):
                 self.ghosts_ai()
                 self.step()
                 self.animator.timer_check()
@@ -196,14 +190,6 @@ class Base(Character):
             for rect in self.game.current_scene.cant_up_ghost_rect:
                 if self.in_rect(rect):
                     cell[3] = False
-            """
-            rotate
-
-            0:
-            1:
-            2:
-            3:
-            """
             if self.mode != "Frightened":
                 min_dis = 10000000000000
                 for i in range(4):

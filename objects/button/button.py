@@ -1,8 +1,9 @@
 from typing import List, Union, Callable, Tuple
 import pygame as pg
 
+from data_core import Colors
 from data_core.enums import BtnStateEnum
-from misc import Color, Font, ButtonColor, BUTTON_DEFAULT_COLORS
+from misc import Font, ButtonColor, BUTTON_DEFAULT_COLORS
 from objects.base import DrawableObject
 
 
@@ -19,7 +20,7 @@ class BaseButton(DrawableObject):
 
     def process_draw(self) -> None:
         if not self.is_hidden:
-            pg.draw.rect(self.game.screen, Color.WHITE, self.rect)
+            pg.draw.rect(self.game.screen, Colors.WHITE, self.rect)
 
     def click(self) -> None:
         self.function()

@@ -4,12 +4,11 @@ from typing import List
 import pygame as pg
 from PIL import Image, ImageFilter
 
+from data_core import Colors
 from misc import Sounds
 from misc.sound_controller import SoundController
 from misc import (
-    Color,
     HighScore,
-    get_path,
     Score,
     UNLOCK_LEVELS,
     get_list_path,
@@ -18,7 +17,6 @@ from misc import (
     LevelLoader,
     Skins,
     Storage,
-    DEBUG,
 )
 from objects import Map
 from scenes import *
@@ -95,12 +93,6 @@ class Game:
             return self.__current
 
         def set(self, scene: base.Scene, reset: bool = False, surface: bool = False) -> None:
-            """
-            :param scene: NEXT scene (contains in game.scenes.*)
-            :param reset: if reset == True will call on_reset() of NEXT scene (see Base.Scene)
-            :param surface: if surface == True background of new scene equal CURRENT scene with BLUR
-            IMPORTANT: it calls on_deactivate() on CURRENT scene and on_activate() on NEXT scene
-            """
             scene.prev_scene = self.__current
             if self.__current is not None and not surface:
                 self.__current.on_deactivate()
@@ -152,27 +144,16 @@ class Game:
             return images
 
     __size = width, height = 224, 285
-    __icon = pg.transform.scale(
-        pg.image.load(
-            get_path(
-                "ico",
-                "png",
-                "images",
-            )
-        ),
-        (256, 256),
-    )
+
     __FPS = 60
     __def_level_id = 0
     __def_skin = "default"
-    pg.display.set_caption("PACMAN")
-    pg.display.set_icon(__icon)
 
     def __init__(self) -> None:
+        self.__game_over = False
         self.maps = self.Maps(self)
         self.screen = pg.display.set_mode(self.__size, pg.SCALED)
         self.__clock = pg.time.Clock()
-        self.__game_over = False
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
@@ -226,34 +207,37 @@ class Game:
     def size(self):
         return self.__size
 
-    @staticmethod
-    def __exit_button_pressed(event: pg.event.Event) -> bool:
-        return event.type == pg.QUIT
+    # region Exit
 
     @staticmethod
     def __exit_hotkey_pressed(event: pg.event.Event) -> bool:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
 
     def __process_exit_events(self, event: pg.event.Event) -> None:
-        if Game.__exit_button_pressed(event) or Game.__exit_hotkey_pressed(event):
+        if event.type == pg.QUIT or Game.__exit_hotkey_pressed(event):
             self.exit_game()
+
+    def exit_game(self) -> None:
+        self.save_to_storage()
+        self.__game_over = True
+        print("Bye bye")
+
+    # endregion
+
+    # region Game Loop
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
-            if DEBUG and event.type != pg.MOUSEMOTION:
-                print(event)
-
             self.__process_exit_events(event)
             self.scenes.current.process_event(event)
 
     def __process_all_logic(self) -> None:
-        self.__FPS = 60 if self.skins.current.name != "edge" else 30
         self.scenes.current.process_logic()
 
     def __process_all_draw(self) -> None:
         exceptions = [self.scenes.PAUSE, self.scenes.GAMEOVER, self.scenes.ENDGAME]
         if self.scenes.current not in exceptions:
-            self.screen.fill(Color.BLACK)
+            self.screen.fill(Colors.BLACK)
         else:
             blur_count = 10
             current_time = pg.time.get_ticks() / 1000
@@ -264,9 +248,7 @@ class Game:
             )
             surface = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
             self.screen.blit(surface, (0, 0))
-
         self.scenes.current.process_draw()
-
         pg.display.flip()
 
     def main_loop(self) -> None:
@@ -276,15 +258,9 @@ class Game:
             self.__process_all_draw()
             self.__clock.tick(self.__FPS)
 
-    def exit_game(self) -> None:
-        self.save_to_storage()
-        self.__game_over = True
-        print("Bye bye")
+    # endregion
 
     def unlock_level(self, level_id: int = 0) -> None:
-        """
-        :param level_id: level id
-        """
         if level_id in self.maps.keys():
             if not UNLOCK_LEVELS and level_id not in self.unlocked_levels:
                 self.unlocked_levels.append(level_id)
@@ -292,9 +268,6 @@ class Game:
             raise Exception(f"id error. Map id: {level_id} doesn't exist")
 
     def unlock_skin(self, skin_name: str = 0) -> None:
-        """
-        :param skin_name: skin name
-        """
         if skin_name in self.skins.all_skins:
             if not UNLOCK_SKINS and skin_name not in self.unlocked_skins:
                 self.unlocked_skins.append(skin_name)
@@ -302,10 +275,6 @@ class Game:
             raise Exception(f"Name error. Skin name: {skin_name} doesn't exist")
 
     def store_fruit(self, fruit_id: int = 0, value: int = 0) -> None:
-        """
-        :param fruit_id: fruit id
-        :param value: count of fruits
-        """
         if fruit_id in range(FRUITS_COUNT):
             self.eaten_fruits[fruit_id] += value
         else:

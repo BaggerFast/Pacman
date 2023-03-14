@@ -12,7 +12,6 @@ class HighScore:
         self.__level_id = self.game.maps.cur_id
         for _ in range(len(self.highscores), self.game.maps.count):
             self.highscores.append([0 for _ in range(HIGHSCORES_COUNT)])
-
         self.__data = sorted(self.highscores[self.__level_id])
 
     @property

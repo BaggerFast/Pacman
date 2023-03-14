@@ -1,5 +1,7 @@
 import pygame as pg
-from misc import Color, Font, get_path
+
+from data_core import Colors
+from misc import Font, get_path
 from objects import ButtonController, ImageObject, Text
 from scenes import base
 
@@ -31,13 +33,13 @@ class Scene(base.Scene):
         self.static_objects.append(title)
 
     def __create_error_label(self) -> None:
-        self.__error_text = Text(self.game, "NO RECORDS", 24, color=Color.RED)
+        self.__error_text = Text(self.game, "NO RECORDS", 24, color=Colors.RED)
         self.__error_text.move_center(self.game.width // 2, 100)
 
     def __create_text_labels(self) -> None:
         self.game.records.update_records()
         self.medals_text = []
-        text_colors = [Color.GOLD, Color.SILVER, Color.BRONZE, Color.WHITE, Color.WHITE]
+        text_colors = [Colors.GOLD, Colors.SILVER, Colors.BRONZE, Colors.WHITE, Colors.WHITE]
         y = 4
         for i in range(5):
             self.medals_text.append(

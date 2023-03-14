@@ -42,9 +42,6 @@ class Skins:
             return image
 
     def __init__(self, game):
-        """
-        param must be named like folder with skin
-        """
         self.__skins_cost = {
             "default": {0: 0, 1: 0},
             "half_life": {1: 14, 2: 10},

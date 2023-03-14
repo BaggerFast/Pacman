@@ -1,23 +1,24 @@
 import inspect
 from typing import NamedTuple
 import pygame as pg
-from misc.constants.classes import Color
+
+from data_core import Colors
 
 
 class ButtonStateColor(NamedTuple):
-    text: pg.Color = Color.WHITE
-    background: pg.Color = Color.BLACK
+    text: pg.Color = Colors.WHITE
+    background: pg.Color = Colors.BLACK
 
     @staticmethod
     def get_members_list() -> list:
-        members = inspect.getmembers(BUTTON_DEFAULT_COLORS, lambda member: type(member) == pg.Color)
+        members = inspect.getmembers(BUTTON_DEFAULT_COLORS, lambda member: isinstance(member, pg.Color))
         return [item[0] for item in members]
 
 
 class ButtonColor(NamedTuple):
-    static: ButtonStateColor = ButtonStateColor(background=Color.RED)
-    hover: ButtonStateColor = ButtonStateColor(background=Color.BLUE)
-    click: ButtonStateColor = ButtonStateColor(background=Color.GREEN)
+    static: ButtonStateColor = ButtonStateColor(background=Colors.RED)
+    hover: ButtonStateColor = ButtonStateColor(background=Colors.BLUE)
+    click: ButtonStateColor = ButtonStateColor(background=Colors.GREEN)
 
     def init_section(self, name: str, data: dict) -> None:
         section = self.__getattribute__(name)
@@ -62,37 +63,37 @@ class ButtonColor(NamedTuple):
 
 
 BUTTON_DEFAULT_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Color.GRAY, background=Color.BLACK),
-    hover=ButtonStateColor(text=Color.WHITE, background=Color.JET),
-    click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK),
+    static=ButtonStateColor(text=Colors.GRAY, background=Colors.BLACK),
+    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.JET),
+    click=ButtonStateColor(text=Colors.BLACK, background=Colors.BLACK),
 )
 
 BUTTON_TRANSPERENT_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Color.WHITE, background=Color.TRANSPERENT),
-    hover=ButtonStateColor(text=Color.WHITE, background=Color.HALF_TRANSPERENT),
-    click=ButtonStateColor(text=Color.WHITE, background=Color.JET),
+    static=ButtonStateColor(text=Colors.WHITE, background=Colors.TRANSPARENT),
+    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.HALF_TRANSPARENT),
+    click=ButtonStateColor(text=Colors.WHITE, background=Colors.JET),
 )
 
 BUTTON_GREEN_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Color.WHITE, background=Color.DARK_GREEN),
-    hover=ButtonStateColor(text=Color.WHITE, background=Color.GREEN),
-    click=ButtonStateColor(text=Color.WHITE, background=Color.DARK_GREEN),
+    static=ButtonStateColor(text=Colors.WHITE, background=Colors.DARK_GREEN),
+    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.GREEN),
+    click=ButtonStateColor(text=Colors.WHITE, background=Colors.DARK_GREEN),
 )
 
 BUTTON_RED_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Color.WHITE, background=Color.DARK_RED),
-    hover=ButtonStateColor(text=Color.WHITE, background=Color.RED),
-    click=ButtonStateColor(text=Color.WHITE, background=Color.DARK_RED),
+    static=ButtonStateColor(text=Colors.WHITE, background=Colors.DARK_RED),
+    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.RED),
+    click=ButtonStateColor(text=Colors.WHITE, background=Colors.DARK_RED),
 )
 
 BUTTON_SKIN_BUY = ButtonColor(
-    static=ButtonStateColor(text=Color.YELLOW, background=Color.BLACK),
-    hover=ButtonStateColor(text=Color.WHITE, background=Color.JET),
-    click=ButtonStateColor(text=Color.BLACK, background=Color.BLACK),
+    static=ButtonStateColor(text=Colors.YELLOW, background=Colors.BLACK),
+    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.JET),
+    click=ButtonStateColor(text=Colors.BLACK, background=Colors.BLACK),
 )
 
 BUTTON_MENU = ButtonColor(
-    static=ButtonStateColor(text=Color.GRAY, background=Color.TRANSPERENT),
-    hover=ButtonStateColor(text=Color.WHITE, background=Color.TRANSPERENT),
-    click=ButtonStateColor(text=Color.WHITE, background=Color.JET),
+    static=ButtonStateColor(text=Colors.GRAY, background=Colors.TRANSPARENT),
+    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.TRANSPARENT),
+    click=ButtonStateColor(text=Colors.WHITE, background=Colors.JET),
 )

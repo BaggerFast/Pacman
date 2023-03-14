@@ -40,14 +40,8 @@ class ControlCheats:
         self.old_enter_code = self.enter_code
 
     def process_draw(self) -> None:
-        """
-        Даня если ты это читаешь или ещё кто то извиняюсь сердешно это нужно что бы код не падал,
-        потому что я читы закидываю в объекты,
-        можно конечно переопределить процесс ивент и в процесс логик закинуть функции но я не знаю решайте сами
-        """
         pass
 
     def process_event(self, event) -> None:
-        if event.type == pg.KEYDOWN:
-            if event.key in range(pg.K_a, pg.K_z + 1):
-                self.enter_code += event.unicode
+        if event.type == pg.KEYDOWN and event.key in range(pg.K_a, pg.K_z + 1):
+            self.enter_code += event.unicode

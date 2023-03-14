@@ -1,5 +1,7 @@
 import pygame as pg
-from misc import CELL_SIZE, Color, HIGH_CALORIE_SEEDS, get_path
+
+from data_core import Colors
+from misc import CELL_SIZE, HIGH_CALORIE_SEEDS, get_path
 from objects import DrawableObject
 
 
@@ -11,7 +13,7 @@ class SeedContainer(DrawableObject):
         self.__y = y
         self.__seeds = seed_data
         self.__energizers = energizer_data
-        self.__color = {-1: Color.WHITE, 1: Color.BLACK}
+        self.__color = {-1: Colors.WHITE, 1: Colors.BLACK}
         self.__index_color = 1
         self.__seeds_on_field = 0
         for row in range(len(self.__seeds)):
@@ -43,7 +45,7 @@ class SeedContainer(DrawableObject):
                     else:
                         pg.draw.circle(
                             self.game.screen,
-                            Color.WHITE,
+                            Colors.WHITE,
                             (
                                 self.x + col * CELL_SIZE + CELL_SIZE // 2,
                                 self.y + row * CELL_SIZE + CELL_SIZE // 2,

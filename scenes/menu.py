@@ -1,9 +1,11 @@
 import pygame as pg
 from PIL import ImageFilter, Image
+
+from data_core import Colors
 from objects.map import rand_color
 from objects import ButtonController, Text, ImageObject
 from scenes import base
-from misc import Font, Color, BUTTON_MENU
+from misc import Font, BUTTON_MENU
 
 
 class Scene(base.Scene):
@@ -21,7 +23,7 @@ class Scene(base.Scene):
     def change_color(self):
         for x in range(self.preview.get_width()):
             for y in range(self.preview.get_height()):
-                if self.preview.get_at((x, y)) == Color.MAIN_MAP:
+                if self.preview.get_at((x, y)) == Colors.MAIN_MAP:
                     self.preview.set_at((x, y), self.color)
 
     def blur(self):
