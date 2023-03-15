@@ -1,8 +1,8 @@
 from typing import Tuple
 import pygame as pg
 
+from data_core import PathManager
 from misc import INFINITY_LIVES
-from misc.path import get_path
 from objects.character_base import Character
 
 
@@ -13,10 +13,7 @@ class Pacman(Character):
         self.__walk_anim = game.skins.current.walk
         self.__dead_anim = game.skins.current.dead
         super().__init__(
-            game,
-            self.__walk_anim,
-            start_pos,
-            get_path("aura", "png", "images", "pacman", game.skins.current.name),
+            game, self.__walk_anim, start_pos, PathManager.get_image_path(f"pacman/{game.skins.current.name}/aura")
         )
         self.dead = False
         self.__feature_rotate = "none"

@@ -1,7 +1,7 @@
 import pygame as pg
 
-from data_core import Colors
-from misc import Font, get_path
+from data_core import Colors, PathManager
+from misc import Font
 from objects import ButtonController, ImageObject, Text
 from scenes import base
 
@@ -59,7 +59,7 @@ class Scene(base.Scene):
             self.__medals.append(
                 ImageObject(
                     self.game,
-                    get_path(str(i), "png", "images", "medal"),
+                    PathManager.get_image_path(f"medal/{i}"),
                     (16, 55 + 35 * i),
                 )
             )

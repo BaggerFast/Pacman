@@ -2,7 +2,8 @@ from copy import copy
 from typing import Union, Dict
 import pygame as pg
 
-from misc import Animator, get_list_path, get_path
+from data_core import PathManager, Dirs
+from misc import Animator
 from objects import ImageObject
 
 
@@ -12,8 +13,12 @@ class Skins:
             self.name = skin_name
             self.skin_cost = {}
             self.__game = game
-            self.__walk = Animator(get_list_path("png", "images", "pacman", self.name, "walk"))
-            self.__dead = Animator(get_list_path("png", "images", "pacman", self.name, "dead"), 100, False, True)
+            self.__walk = Animator(
+                PathManager.get_list_path(f"{Dirs.IMAGE}/pacman/{self.name}/walk", ext="png"),
+            )
+            self.__dead = Animator(
+                PathManager.get_list_path(f"{Dirs.IMAGE}/pacman/{self.name}/dead", ext="png"),
+                100, False, True)
             self.__image = self.prerender_surface()
 
         @property
@@ -35,7 +40,7 @@ class Skins:
         def prerender_surface(self) -> pg.Surface:
             image = ImageObject(
                 self.__game,
-                pg.image.load(get_path("1", "png", "images", "pacman", self.name, "walk")),
+                pg.image.load(PathManager.get_image_path(f"pacman/{self.name}/walk/1")),
                 (145, 125),
             )
             image.scale(70, 70)

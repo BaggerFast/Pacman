@@ -22,7 +22,4 @@ class DrawableObject:
         pass
 
     def process_draw(self) -> None:
-        """
-        Use self.game.screen for drawing, padawan
-        """
         pass

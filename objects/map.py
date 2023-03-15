@@ -2,8 +2,8 @@ from random import randint
 
 import pygame as pg
 
-from data_core import Colors, PathManager, Dirs
-from misc import CELL_SIZE, get_path
+from data_core import Colors, PathManager
+from misc import CELL_SIZE
 from objects import DrawableObject, ImageObject
 
 

@@ -1,14 +1,14 @@
 import pygame as pg
 
-from data_core import Colors
-from misc import CELL_SIZE, HIGH_CALORIE_SEEDS, get_path
+from data_core import Colors, PathManager
+from misc import CELL_SIZE, HIGH_CALORIE_SEEDS
 from objects import DrawableObject
 
 
 class SeedContainer(DrawableObject):
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
         super().__init__(game)
-        self.__ram_img = pg.image.load(get_path("ram", "png", "images"))
+        self.__ram_img = pg.image.load(PathManager.get_image_path("ram"))
         self.__x = x
         self.__y = y
         self.__seeds = seed_data

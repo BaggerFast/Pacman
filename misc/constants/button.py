@@ -69,7 +69,7 @@ BUTTON_DEFAULT_COLORS = ButtonColor(
 )
 
 BUTTON_TRANSPERENT_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Colors.WHITE, background=Colors.TRANSPARENT),
+    static=ButtonStateColor(text=Colors.GRAY, background=Colors.TRANSPARENT),
     hover=ButtonStateColor(text=Colors.WHITE, background=Colors.HALF_TRANSPARENT),
     click=ButtonStateColor(text=Colors.WHITE, background=Colors.JET),
 )

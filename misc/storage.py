@@ -2,7 +2,8 @@ import json
 import os
 from json import JSONDecodeError
 
-from misc import ROOT_DIR, create_file_if_not_exist, FRUITS_COUNT, HIGHSCORES_COUNT
+from data_core import Dirs
+from misc import FRUITS_COUNT, HIGHSCORES_COUNT
 
 
 class Field:
@@ -35,7 +36,7 @@ class Storage(Field):
             self.VOLUME = 100
             self.DIFFICULTY = 0
 
-    __storage_filepath = os.path.join(ROOT_DIR, "saves", "storage.json")
+    __storage_filepath = os.path.join(Dirs.ROOT, "storage.json")
 
     def __init__(self, game) -> None:
         self.last_level_id = 0
@@ -53,11 +54,12 @@ class Storage(Field):
             file.write(string)
 
     def load(self) -> None:
-        create_file_if_not_exist(self.__storage_filepath, json.dumps(self.dict(), indent=2))
-        with open(self.__storage_filepath, "r") as file:
-            try:
-                json_dict = json.load(file)
+        try:
+            with open(self.__storage_filepath, "r") as f:
+                json_dict = json.load(f)
                 self.read_dict(json_dict)
-            except JSONDecodeError:
-                pass
-        self.save()
+        except FileNotFoundError or JSONDecodeError:
+            with open(self.__storage_filepath, "w") as f:
+                json.dump(self.dict(), f, indent=2)
+        finally:
+            self.save()

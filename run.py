@@ -1,15 +1,17 @@
 import sys
 import pygame as pg
+
+from data_core import PathManager
 from game import Game
-from misc import get_path
 
 
 def pg_setup():
-    __icon = pg.transform.scale(pg.image.load(get_path("ico", "png", "images")), (256, 256))
+    icon_path = PathManager.get_image_path("ico")
+    icon = pg.transform.scale(pg.image.load(icon_path), (256, 256))
     pg.font.init()
     pg.mixer.init()
     pg.display.init()
-    pg.display.set_icon(__icon)
+    pg.display.set_icon(icon)
     pg.display.set_caption("PACMAN")
 
 

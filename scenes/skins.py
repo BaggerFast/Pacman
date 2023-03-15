@@ -2,9 +2,10 @@ from copy import copy
 
 import pygame as pg
 
+from data_core import PathManager, Dirs
 from objects import ButtonController, Text, Button, ImageObject
 from scenes import base
-from misc import Font, get_list_path, BUTTON_SKIN_BUY
+from misc import Font, BUTTON_SKIN_BUY
 
 
 class Scene(base.Scene):
@@ -66,7 +67,7 @@ class Scene(base.Scene):
 
     def create_static_objects(self) -> None:
         self.is_current = False
-        self.fruit_images = get_list_path("png", "images", "fruit")
+        self.fruit_images = PathManager.get_list_path(f"{Dirs.IMAGE}/fruit", ext="png")
         self.__create_title()
 
     def create_objects(self) -> None:

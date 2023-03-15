@@ -2,8 +2,8 @@ import pygame as pg
 from random import randint
 from typing import Tuple
 
+from data_core import PathManager, Dirs
 from misc.constants import CELL_SIZE
-from misc.path import get_list_path, get_path
 from misc.animator import Animator
 from objects.base import DrawableObject
 from objects import Text, ImageObject
@@ -14,7 +14,9 @@ class Fruit(DrawableObject):
         self.game = game
         super().__init__(game)
         self.screen = game.screen
-        self.__anim = Animator(get_list_path("png", "images", "fruit"), False, False)
+        self.__anim = Animator(
+            PathManager.get_list_path(f"{Dirs.IMAGE}/fruit", ext="png"),
+            False, False)
         self.__image = self.__anim.current_image
         self.rect = self.__anim.current_image.get_rect()
         self.move_center(*self.pos_from_cell(pos))
@@ -43,7 +45,7 @@ class Fruit(DrawableObject):
         for i in range(self.__anim.get_cur_index(), 0, -1):
             ImageObject(
                 self.game,
-                get_path(str(i - 1), "png", "images", "fruit"),
+                PathManager.get_image_path(f"fruit/{i-1}"),
                 (130 + (i - 1) * 12, 270),
             ).process_draw()
 

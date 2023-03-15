@@ -1,7 +1,8 @@
 import pygame as pg
 
+from data_core import PathManager
 from misc import ControlCheats
-from misc import LevelLoader, Font, get_path, Health
+from misc import LevelLoader, Font, Health
 from objects import SeedContainer, Map, ImageObject, Text, Pacman
 from objects.fruits import Fruit
 from objects.ghosts import *
@@ -64,7 +65,7 @@ class Scene(base.Scene):
         for i in range(int(self.hp)):
             hp_image = ImageObject(
                 self.game,
-                get_path("1", "png", "images", "pacman", self.game.skins.current.name, "walk"),
+                PathManager.get_image_path(f"pacman/{self.game.skins.current.name}/walk/1"),
                 (5 + i * 20, 270),
             )
             hp_image.rotate(180)

@@ -1,12 +1,12 @@
 import random
 from typing import Tuple
 import pygame as pg
+
+from data_core import PathManager, Dirs
 from misc import (
     Animator,
-    get_list_path,
     DISABLE_GHOSTS_MOVING,
     DISABLE_GHOSTS_COLLISION,
-    get_path,
 )
 from objects import Character, Pacman, Text
 
@@ -35,44 +35,48 @@ class Base(Character):
 
         # Обычные Анимация
         self.left_walk_anim = Animator(
-            get_list_path("png", "images", "ghost", type(self).__name__.lower(), "left"),
+            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/{type(self).__name__.lower()}/left", ext="png"),
             is_rotation=False,
         )
         self.right_walk_anim = Animator(
-            get_list_path("png", "images", "ghost", type(self).__name__.lower(), "right"),
+            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/{type(self).__name__.lower()}/right", ext="png"),
             is_rotation=False,
         )
         self.top_walk_anim = Animator(
-            get_list_path("png", "images", "ghost", type(self).__name__.lower(), "top"),
+            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/{type(self).__name__.lower()}/top", ext="png"),
             is_rotation=False,
         )
         self.bottom_walk_anim = Animator(
-            get_list_path("png", "images", "ghost", type(self).__name__.lower(), "bottom"),
+            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/{type(self).__name__.lower()}/bottom", ext="png"),
             is_rotation=False,
         )
 
         # Анимации страха
         self.frightened_walk_anim1 = Animator(
-            get_list_path("png", "images", "ghost", "fear1"),
+            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/fear1", ext="png"),
             is_rotation=False,
-            aura=get_path("aura_blue", "png", "images", "ghost"),
+            aura=PathManager.get_image_path("ghost/aura_blue"),
         )
         self.frightened_walk_anim2 = Animator(
-            get_list_path("png", "images", "ghost", "fear2"),
+            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/fear2", ext="png"),
             is_rotation=False,
-            aura=get_path("aura_white", "png", "images", "ghost"),
+            aura=PathManager.get_image_path("ghost/aura_white"),
         )
 
         # Анимации съедения
         self.eaten_left_walk_anim = Animator(
-            get_list_path("png", "images", "ghost", "eaten", "left"), is_rotation=False
+            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/eaten/left", ext="png"),
+            is_rotation=False
         )
         self.eaten_right_walk_anim = Animator(
-            get_list_path("png", "images", "ghost", "eaten", "right"), is_rotation=False
+            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/eaten/right", ext="png"),
+            is_rotation=False
         )
-        self.eaten_top_walk_anim = Animator(get_list_path("png", "images", "ghost", "eaten", "top"), is_rotation=False)
+        self.eaten_top_walk_anim = Animator(
+            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/eaten/top", ext="png"),
+            is_rotation=False)
         self.eaten_bottom_walk_anim = Animator(
-            get_list_path("png", "images", "ghost", "eaten", "bottom"),
+            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/eaten/bottom", ext="png"),
             is_rotation=False,
         )
 
@@ -93,10 +97,7 @@ class Base(Character):
         self.animations = self.normal_animations
 
         super().__init__(
-            game,
-            self.top_walk_anim,
-            start_pos,
-            get_path("aura", "png", "images", "ghost", type(self).__name__.lower()),
+            game, self.top_walk_anim, start_pos, PathManager.get_image_path(f"ghost/{type(self).__name__.lower()}/aura")
         )
 
         self.is_can_leave_home = False
@@ -104,7 +105,10 @@ class Base(Character):
         self.count_eat_seeds_in_home = 0
         self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
-        self.invisible_anim = Animator(get_list_path("png", "images", "ghost", "invisible"), is_rotation=False)
+        self.invisible_anim = Animator(
+            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/invisible", ext="png"),
+            is_rotation=False
+        )
         self.love_cell = (0, 0)
         self.is_invisible = False
         self.is_in_home = True

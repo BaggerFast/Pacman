@@ -4,14 +4,13 @@ from typing import List
 import pygame as pg
 from PIL import Image, ImageFilter
 
-from data_core import Colors
+from data_core import Colors, PathManager, Dirs
 from misc import Sounds
 from misc.sound_controller import SoundController
 from misc import (
     HighScore,
     Score,
     UNLOCK_LEVELS,
-    get_list_path,
     UNLOCK_SKINS,
     FRUITS_COUNT,
     LevelLoader,
@@ -128,7 +127,7 @@ class Game:
             return [i for i in range(self.count)]
 
         def read_levels(self) -> None:
-            self.levels = get_list_path("json", "maps")
+            self.levels = PathManager.get_list_path(f'{Dirs.ASSET}/maps', ext="json")
             self.count = len(self.levels)
 
         def prerender_surfaces(self) -> List[pg.Surface]:

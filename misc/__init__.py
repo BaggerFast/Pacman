@@ -3,7 +3,6 @@ from .constants import *
 from .health import Health
 from .highscore import HighScore
 from .loader import LevelLoader
-from .path import *
 from .score import Score
 from .cheat_codes import ControlCheats
 from .storage import Storage

@@ -37,5 +37,5 @@ class PathManager(ABC):
     def get_list_path(cls, path: str, ext: str) -> List[str]:
         path = cls.get_path(path)
         pathes = [f for f in os.listdir(path) if f.endswith(f'.{ext.strip(".")}')]
-        pathes.sort(key=lambda x: x.split(f'.{ext.strip(".")}'))
+        pathes.sort(key=lambda x: int(x.strip(f'.{ext.strip(".")}')))
         return [os.path.join(path, f) for f in pathes]
