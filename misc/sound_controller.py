@@ -1,13 +1,15 @@
 import pygame as pg
 
+from data_core import PathManager
+
 
 def update(object):
     object.update_volume()
 
 
 class SoundController:
-    def __init__(self, game, sound, channel: int = 0, volume: int = 1):
-        self.sound = sound
+    def __init__(self, game, sound_path: str, channel: int = 0, volume: int = 1):
+        self.sound = pg.mixer.Sound(PathManager.get_sound_path(sound_path))
         self.game = game
         self.volume = volume
         self.channel = pg.mixer.Channel(channel)

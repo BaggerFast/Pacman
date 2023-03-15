@@ -2,7 +2,7 @@ from random import randint
 
 import pygame as pg
 
-from data_core import Colors
+from data_core import Colors, PathManager, Dirs
 from misc import CELL_SIZE, get_path
 from objects import DrawableObject, ImageObject
 
@@ -58,7 +58,7 @@ class Map(DrawableObject):
     def __load_tiles(self) -> None:
         self.tiles = []
         for i in self.tile_names:
-            tile_path = get_path(i, "png", "images", "map")
+            tile_path = PathManager.get_image_path(f"map/{i}")
             tile = pg.image.load(tile_path)
             self.tiles.append(tile)
 

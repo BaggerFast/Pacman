@@ -247,7 +247,7 @@ class Scene(base.Scene):
             if self.pacman.dead_anim.anim_finished and int(self.hp) < 1 and not self.game.sounds.pacman.get_busy():
                 self.template = self.screen.copy()
                 self.game.timer = pg.time.get_ticks() / 1000
-                self.game.scenes.set(self.game.scenes.GAMEOVER)
+                self.game.scenes.set(self.game.scenes.GAME_OVER)
             super(Scene, self).process_logic()
             self.__play_music()
             self.__process_collision()
