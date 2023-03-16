@@ -2,6 +2,7 @@ import pygame as pg
 from PIL import ImageFilter, Image
 
 from pacman.data_core import Colors
+from pacman.misc.serializers import LevelStorage
 from pacman.objects.map import rand_color
 from pacman.objects import ButtonController, Text, ImageObject
 from pacman.scenes import base
@@ -42,7 +43,7 @@ class Scene(base.Scene):
     def __create_indicator(self) -> None:
         self.__indicator = Text(
             self.game,
-            self.game.maps.level_name(self.game.maps.cur_id).replace("_", " "),
+            self.game.maps.level_name(LevelStorage().current).replace("_", " "),
             15,
             font=Font.TITLE,
         )

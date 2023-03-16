@@ -52,12 +52,6 @@ class Scene(base.Scene):
             self.name = name
             self.var = var
 
-        def update(self, var):
-            if var == "mute":
-                SettingsStorage().mute = not SettingsStorage().mute
-            elif var == "fun":
-                SettingsStorage().fun = not SettingsStorage().fun
-
         def click(self):
             flag_var = not getattr(SettingsStorage(), self.var)
             setattr(SettingsStorage(), self.var, flag_var)
@@ -67,7 +61,6 @@ class Scene(base.Scene):
             else:
                 self.text = self.name + " OFF"
                 self.colors = BUTTON_RED_COLORS
-            self.update(self.var)
 
     __volume_position = 150
     __difficulty_pos = 210

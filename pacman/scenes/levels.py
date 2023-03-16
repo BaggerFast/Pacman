@@ -3,6 +3,7 @@ from copy import copy
 import pygame as pg
 
 from pacman.misc import Font
+from pacman.misc.serializers import LevelStorage
 from pacman.objects import ButtonController, Text
 from pacman.objects.button import Button
 from pacman.scenes import base
@@ -15,7 +16,7 @@ class Scene(base.Scene):
             super().__init__(**args)
 
         def click(self):
-            self.game.maps.cur_id = self.value[0]
+            LevelStorage().current = self.value[0]
             self.game.records.update_records()
             self.game.scenes.set(self.game.scenes.MENU, reset=True)
 
@@ -27,7 +28,7 @@ class Scene(base.Scene):
 
         def deselect(self) -> None:
             if not self.game.scenes.current.is_current:
-                self.game.scenes.current.preview.image = self.game.maps.images[self.game.maps.cur_id].image
+                self.game.scenes.current.preview.image = self.game.maps.images[LevelStorage().current].image
 
             super().deselect()
 
@@ -39,7 +40,7 @@ class Scene(base.Scene):
 
     def create_static_objects(self):
         self.is_current = False
-        self.__scroll = self.game.maps.cur_id
+        self.__scroll = LevelStorage().current
         self.__scroll = min(self.__scroll, self.game.maps.count - self.__buttons_on_scene)
         self.__scroll = max(self.__scroll, 0)
         self.__create_title()
@@ -61,7 +62,7 @@ class Scene(base.Scene):
                     text="LEVEL" + str(i + 1),
                     center=(self.game.width // 2 - 55, (85 + 40 * counter)),
                     text_size=Font.BUTTON_TEXT_SIZE - 4,
-                    active=i in self.game.unlocked_levels,
+                    active=i in LevelStorage().unlocked,
                 )
             )
             counter += 1
@@ -78,18 +79,18 @@ class Scene(base.Scene):
 
         for index in range(len(buttons)):
             if hasattr(buttons[index], "value"):
-                if self.game.maps.cur_id == buttons[index].value[0]:
+                if LevelStorage().current == buttons[index].value[0]:
                     buttons[index].text = "-" + buttons[index].text + "-"
 
         self.__button_controller = ButtonController(self.game, buttons)
         self.objects.append(self.__button_controller)
 
     def unlocked(self) -> int:
-        return len(self.game.unlocked_levels)
+        return len(LevelStorage().unlocked)
 
     def create_objects(self) -> None:
         self.objects = []
-        self.preview = copy(self.game.maps.images[self.game.maps.cur_id])
+        self.preview = copy(self.game.maps.images[LevelStorage().current])
         self.objects.append(self.preview)
         self.create_buttons()
 

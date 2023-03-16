@@ -15,14 +15,13 @@ from pacman.misc import (
     LevelLoader,
     Skins,
 )
-from pacman.misc.serializers import StorageLoader, MainStorage, SettingsStorage, SkinStorage
+from pacman.misc.serializers import StorageLoader, MainStorage, SettingsStorage, SkinStorage, LevelStorage
 from pacman.misc.sound_controller import SoundController
 from pacman.objects import Map
 from pacman.scenes import *
 
 
 class Game:
-
     class Music:
         def __init__(self, game):
             self.click = SoundController(sound_path=Sounds.CLICK)
@@ -42,7 +41,8 @@ class Game:
                 self.seed = SoundController(channel=4, sound_path=Sounds.SEED)
                 self.intro = SoundController(
                     channel=1,
-                    sound_path=Sounds.INTRO[0] if not SkinStorage().current_skin == game.skins.pokeball else Sounds.POC_INTRO,
+                    sound_path=Sounds.INTRO[
+                        0] if not SkinStorage().current == game.skins.pokeball else Sounds.POC_INTRO,
                 )
                 self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
 
@@ -58,7 +58,8 @@ class Game:
                 self.seed = SoundController(channel=4, sound_path=Sounds.SEED)
                 self.intro = SoundController(
                     channel=1,
-                    sound_path=Sounds.INTRO[0] if  not SkinStorage().current_skin == game.skins.pokeball else Sounds.POC_INTRO,
+                    sound_path=Sounds.INTRO[
+                        0] if not SkinStorage().current == game.skins.pokeball else Sounds.POC_INTRO,
                 )
                 self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
 
@@ -93,7 +94,6 @@ class Game:
             self.game = game
             self.levels = []
             self.count = 0
-            self.cur_id = 0
             self.read_levels()
             self.__images = self.prerender_surfaces()
 
@@ -103,7 +103,7 @@ class Game:
 
         @property
         def full_surface(self):
-            self.__load_from_map(self.cur_id)
+            self.__load_from_map(LevelStorage().current)
             return self.__map.prerender_map_surface()
 
         @staticmethod
@@ -133,8 +133,6 @@ class Game:
     __size = width, height = 224, 285
 
     __FPS = 60
-    __def_level_id = 0
-    __def_skin = "default"
 
     def __init__(self) -> None:
         self.storage_loader = StorageLoader(PathManager.get_path("storage.json"))
@@ -150,8 +148,6 @@ class Game:
         self.skins = Skins(self)
         self.score = Score()
 
-        self.read_from_storage()
-
         self.sounds = self.Music(self)
 
         self.skins.current = "default"
@@ -159,24 +155,11 @@ class Game:
         self.scenes = self.Scenes(self)
         self.scenes.set(self.scenes.MENU)
 
-    def read_from_storage(self):
-        # self.__storage = Storage(self)
-        self.unlocked_levels = MainStorage().levels.unlocked
-        self.maps.cur_id =  MainStorage().levels.current
-        self.unlocked_skins = MainStorage().skins.unlocked_skins
-        self.eaten_fruits = MainStorage().eaten_fruits
-        self.highscores = MainStorage().highscores
-
     def save_to_storage(self):
-        # self.__storage.last_level_id = self.maps.cur_id
-        # self.__storage.last_skin = self.skins.current.name
-        # self.__storage.eaten_fruits = self.eaten_fruits
         # if not UNLOCK_LEVELS:
         #     self.__storage.unlocked_levels = self.unlocked_levels
         # if not UNLOCK_SKINS:
         #     self.__storage.unlocked_skins = self.unlocked_skins
-        # self.__storage.highscores = self.highscores
-        # self.__storage.save()
         self.storage_loader.to_file()
 
     @property
@@ -242,20 +225,20 @@ class Game:
 
     def unlock_level(self, level_id: int = 0) -> None:
         if level_id in self.maps.keys():
-            if not UNLOCK_LEVELS and level_id not in self.unlocked_levels:
-                self.unlocked_levels.append(level_id)
+            if not UNLOCK_LEVELS and level_id not in MainStorage().levels.unlocked:
+                MainStorage().levels.unlocked.append(level_id)
         else:
             raise Exception(f"id error. Map id: {level_id} doesn't exist")
 
     def unlock_skin(self, skin_name: str = 0) -> None:
         if skin_name in self.skins.all_skins:
-            if not UNLOCK_SKINS and skin_name not in self.unlocked_skins:
-                self.unlocked_skins.append(skin_name)
+            if not UNLOCK_SKINS and skin_name not in MainStorage().skins.unlocked:
+                MainStorage().skins.unlocked.append(skin_name)
         else:
             raise Exception(f"Name error. Skin name: {skin_name} doesn't exist")
 
     def store_fruit(self, fruit_id: int = 0, value: int = 0) -> None:
         if fruit_id in range(FRUITS_COUNT):
-            self.eaten_fruits[fruit_id] += value
+            MainStorage().eaten_fruits[fruit_id] += value
         else:
             raise Exception(f"id error. Fruit id: {fruit_id} doesn't exist")

@@ -3,7 +3,7 @@ import pygame as pg
 from pacman.data_core import PathManager
 from pacman.misc import ControlCheats
 from pacman.misc import LevelLoader, Font, Health
-from pacman.misc.serializers import SettingsStorage
+from pacman.misc.serializers import SettingsStorage, LevelStorage
 from pacman.objects import SeedContainer, Map, ImageObject, Text, Pacman
 from pacman.objects.fruits import Fruit
 from pacman.objects.ghosts import *
@@ -49,7 +49,7 @@ class Scene(base.Scene):
         self.static_objects.append(self.__high_scores_label_text)
 
     def __load_from_map(self):
-        self.__loader = LevelLoader(self.game.maps.levels[self.game.maps.cur_id])
+        self.__loader = LevelLoader(self.game.maps.levels[LevelStorage().current])
         self.__map_data = self.__loader.get_map_data()
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()

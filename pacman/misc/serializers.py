@@ -39,8 +39,8 @@ class SerDes(Singleton, JsonSerializer, JsonDeserializer):
 class SkinStorage(SerDes):
 
     def __init__(self):
-        self.unlocked_skins = ["default"]
-        self.current_skin = "default"
+        self.unlocked = ["default"]
+        self.current = "default"
 
 
 class LevelStorage(SerDes):

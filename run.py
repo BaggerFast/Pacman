@@ -1,8 +1,7 @@
-import sys
 import pygame as pg
 
+from pacman import Game
 from pacman.data_core import PathManager
-from pacman.game import Game
 
 
 def pg_setup():
@@ -19,7 +18,6 @@ def main():
     pg_setup()
     game = Game()
     game.main_loop()
-    sys.exit(0)
 
 
 if __name__ == "__main__":

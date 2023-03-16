@@ -1,4 +1,6 @@
 import pygame as pg
+
+from pacman.misc.serializers import LevelStorage
 from pacman.objects import ButtonController, Button, Text
 from pacman.scenes import base
 from pacman.misc import BUTTON_TRANSPERENT_COLORS, Font
@@ -69,17 +71,17 @@ class Scene(base.Scene):
 
     def __unlock_level(self):
         if self.__is_last_level():
-            next_level = self.game.maps.cur_id + 1
+            next_level = LevelStorage().current
             self.game.unlock_level(next_level)
 
     def __next_level(self):
-        next_level = self.game.maps.cur_id + 1
-        self.game.maps.cur_id = next_level
+        next_level =  LevelStorage().current + 1
+        LevelStorage().current = next_level
         self.game.records.update_records()
         self.game.scenes.set(self.game.scenes.MAIN, reset=True)
 
     def __is_last_level(self) -> bool:
-        return (self.game.maps.cur_id + 1) < self.game.maps.count
+        return (LevelStorage().current + 1) < self.game.maps.count
 
     def on_activate(self) -> None:
         super().on_activate()

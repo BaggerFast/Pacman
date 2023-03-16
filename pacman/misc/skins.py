@@ -4,6 +4,7 @@ import pygame as pg
 
 from pacman.data_core import PathManager, Dirs
 from pacman.misc import Animator
+from pacman.misc.serializers import SkinStorage
 from pacman.objects import ImageObject
 
 
@@ -23,7 +24,7 @@ class Skins:
 
         @property
         def is_unlocked(self):
-            return self.name in self.__game.unlocked_skins
+            return self.name in SkinStorage().unlocked
 
         @property
         def walk(self):

@@ -3,6 +3,7 @@ from copy import copy
 import pygame as pg
 
 from pacman.data_core import PathManager, Dirs
+from pacman.misc.serializers import MainStorage, SkinStorage
 from pacman.objects import ButtonController, Text, Button, ImageObject
 from pacman.scenes import base
 from pacman.misc import Font, BUTTON_SKIN_BUY
@@ -39,7 +40,7 @@ class Scene(base.Scene):
         def click(self) -> None:
             flag = True
             for key in self.value[1].skin_cost.keys():
-                if self.game.eaten_fruits[key] < self.value[1].skin_cost[key]:
+                if MainStorage().eaten_fruits[key] < self.value[1].skin_cost[key]:
                     flag = False
 
             self.select()
@@ -94,7 +95,7 @@ class Scene(base.Scene):
                 (self.game.width // 8 - 9 + index * 25, 60),
             )
             self.objects.append(fruit)
-            text = Text(self.game, str(self.game.eaten_fruits[index]), 10)
+            text = Text(self.game, f'{MainStorage().eaten_fruits[index]}', 10)
             text.move_center(self.game.width // 8 - 10 + index * 25, 60)
             self.objects.append(text)
 
@@ -148,7 +149,7 @@ class Scene(base.Scene):
                             self.button_pos_y + i * self.button_pos_multiply_y,
                         ),
                         text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
-                        active=self.skins[i][1].name in self.game.unlocked_skins,
+                        active=self.skins[i][1].name in SkinStorage().unlocked,
                     )
                 )
             else:
