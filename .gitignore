@@ -306,4 +306,4 @@ $RECYCLE.BIN/
 storage.json
 saves/*
 !.gitkeep
-misc/constants/variables.py
+pacman/misc/constants/variables.py

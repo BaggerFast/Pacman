@@ -1,8 +1,8 @@
 import sys
 import pygame as pg
 
-from data_core import PathManager
-from game import Game
+from pacman.data_core import PathManager
+from pacman.game import Game
 
 
 def pg_setup():
