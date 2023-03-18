@@ -15,7 +15,10 @@ class Animator:
         self.is_rotation = is_rotation
         self.__animate_timer = 0
         self.__time_out = time_out
-        self.__add_image(path_to_images)
+        if isinstance(path_to_images[0], str):
+            self.__add_image(path_to_images)
+        else:
+            self.__images = path_to_images
         self.__current_image_index = 0
         self.__current_image = self.__images[self.__current_image_index]
         self.__current_aura = pg.image.load(aura) if aura else aura
@@ -32,15 +35,9 @@ class Animator:
     def current_aura(self):
         return self.__current_aura
 
-    @property
-    def current_path(self):
-        return self.__pathes[self.__current_image_index]
-
     def __add_image(self, path_to_images: list) -> None:
-        self.__pathes = []
         self.__images = []
         for i in range(len(path_to_images)):
-            self.__pathes.append(path_to_images[i])
             self.__images.append(pg.image.load(path_to_images[i]))
 
     def recolor(self, game):
@@ -49,7 +46,7 @@ class Animator:
                 for x in range(self.__images[i].get_width()):
                     for y in range(self.__images[i].get_height()):
                         if self.__images[i].get_at((x, y)) == (255, 255, 0):
-                            self.__images[i].set_at((x, y), game.pacman_color)  # Set the color of the pixel.
+                            self.__images[i].set_at((x, y), game.pacman_color)
 
     def get_len_anim(self) -> int:
         return len(self.__images)

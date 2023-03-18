@@ -5,6 +5,7 @@ import pygame as pg
 from pacman.data_core import PathManager, Dirs
 from pacman.misc import Animator
 from pacman.misc.serializers import SkinStorage
+from pacman.misc.sprite_sheet import sprite_slice
 from pacman.objects import ImageObject
 
 
@@ -17,9 +18,8 @@ class Skins:
             self.__walk = Animator(
                 PathManager.get_list_path(f"{Dirs.IMAGE}/pacman/{self.name}/walk", ext="png"),
             )
-            self.__dead = Animator(
-                PathManager.get_list_path(f"{Dirs.IMAGE}/pacman/{self.name}/dead", ext="png"), 100, False, True
-            )
+            dead = sprite_slice(pg.image.load(PathManager.get_image_path(f"pacman/{self.name}/dead")), (15, 15))
+            self.__dead = Animator(dead, 100, False, True)
             self.__image = self.prerender_surface()
 
         @property
