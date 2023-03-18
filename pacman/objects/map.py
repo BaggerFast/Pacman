@@ -1,9 +1,10 @@
+from copy import copy
 from random import randint
 
 import pygame as pg
 
 from pacman.data_core import Colors, PathManager
-from pacman.misc import CELL_SIZE
+from pacman.misc.sprite_sheet import sprite_slice
 from pacman.objects import DrawableObject, ImageObject
 
 
@@ -31,75 +32,37 @@ def rand_color():
 
 
 class Map(DrawableObject):
-    tile_names = [
-        "space",
-        "fat_up_wall",
-        "fat_left_corner",
-        "fat_y_corner",
-        "up_wall",
-        "left_corner",
-        "ghost_left_corner",
-        "ghost_door",
-        "ghost_door_wall_left",
-    ]
-    tiles = []
 
-    def __init__(self, game, map_data, x=0, y=20) -> None:
+    def __init__(self, game, map_data) -> None:
         super().__init__()
+        self.color = rand_color()
         self.game = game
-        self.x = x
-        self.y = y
-        self.map = map_data
+        self.tile_size = 8
+        self.map_data = map_data
         self.__size = (224, 248)
         self.surface = pg.Surface(self.__size)
-        self.__load_tiles()
-        self.color = rand_color()
-        self.__render_map_surface()
+        self.tiles = sprite_slice(pg.image.load(PathManager.get_image_path('map.png')),
+                                  (self.tile_size, self.tile_size))
+        self.surface = self.__load_surface()
+        self.surface_for_draw = self.__surface_recolor()
 
-    def __load_tiles(self) -> None:
-        self.tiles = []
-        for i in self.tile_names:
-            tile_path = PathManager.get_image_path(f"map/{i}")
-            tile = pg.image.load(tile_path)
-            self.tiles.append(tile)
+    def __surface_recolor(self) -> pg.Surface:
+        srf = copy(self.surface)
+        for x in range(srf.get_width()):
+            for y in range(srf.get_height()):
+                if srf.get_at((x, y)) == Colors.MAIN_MAP:
+                    srf.set_at((x, y), self.color)
+        return srf
 
-    def __corner_preprocess(self, x, y, temp_surface: pg.Surface) -> pg.Surface:
-        flip_x = self.map[y][x][1] // (CELL_SIZE // 2)
-        flip_y = False
-        temp_surface = pg.transform.flip(temp_surface, flip_x, flip_y)
-        rotate_angle = self.map[y][x][1] % (CELL_SIZE // 2) * -90
-        temp_surface = pg.transform.rotate(temp_surface, rotate_angle)
-        return temp_surface
-
-    def __draw_cell(self, x, y) -> None:
-        temp_surface = self.tiles[self.map[y][x][0]]
-        if len(self.map[y][x]) == 2:
-            temp_surface = self.__corner_preprocess(x, y, temp_surface)
-        self.surface.blit(temp_surface, (x * CELL_SIZE, y * CELL_SIZE))
-
-    def __render_map_surface(self) -> None:
-        for y in range(len(self.map)):
-            for x in range(len(self.map[y])):
-                self.__draw_cell(x, y)
-
-        for x in range(self.surface.get_width()):
-            for y in range(self.surface.get_height()):
-                if self.surface.get_at((x, y)) == Colors.MAIN_MAP:
-                    self.surface.set_at((x, y), self.color)
+    def __load_surface(self) -> pg.Surface:
+        surface = pg.Surface((len(self.map_data[0]) * self.tile_size, len(self.map_data) * self.tile_size))
+        for y, row in enumerate(self.map_data):
+            for x, tile in enumerate(row):
+                surface.blit(self.tiles[tile - 1], (x * self.tile_size, y * self.tile_size))
+        return surface
 
     def prerender_map_surface(self) -> pg.Surface:
-        surface = pg.Surface(self.__size)
-        for y in range(len(self.map)):
-            for x in range(len(self.map[y])):
-                temp_surface = self.tiles[self.map[y][x][0]]
-                if len(self.map[y][x]) == 2:
-                    temp_surface = self.__corner_preprocess(x, y, temp_surface)
-                surface.blit(temp_surface, (x * CELL_SIZE, y * CELL_SIZE))
-        for x in range(self.surface.get_width()):
-            for y in range(self.surface.get_height()):
-                if self.surface.get_at((x, y)) == Colors.MAIN_MAP:
-                    self.surface.set_at((x, y), self.color)
-        return surface
+        return self.surface
 
     def prerender_map_image_scaled(self) -> ImageObject:
         image = ImageObject(self.game, self.prerender_map_surface(), (110, 96))
@@ -113,4 +76,4 @@ class Map(DrawableObject):
         return image
 
     def process_draw(self, screen: pg.Surface) -> None:
-        screen.blit(self.surface, (self.x, self.y))
+        screen.blit(self.surface, (0, 20))
