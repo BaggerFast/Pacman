@@ -25,7 +25,7 @@ class RecordsScene(base.Scene):
             center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE,
         )
-        self.objects.append(ButtonController(self.game, [back_button]))
+        self.objects.append(ButtonController([back_button]))
 
     def __create_title(self) -> None:
         title = Text("RECORDS", 32, font=Font.TITLE)

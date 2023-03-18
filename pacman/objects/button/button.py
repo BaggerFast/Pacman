@@ -1,32 +1,12 @@
 from typing import List, Union, Callable, Tuple
 import pygame as pg
 
-from pacman.data_core import Colors
 from pacman.data_core.enums import BtnStateEnum
 from pacman.misc import Font, ButtonColor, BUTTON_DEFAULT_COLORS
 from pacman.objects.base import DrawableObject
 
 
-class BaseButton(DrawableObject):
-    def __init__(self, game, geometry: pg.Rect, function: Callable[[], None]) -> None:
-        super().__init__(game)
-        self.rect = geometry
-        self.function = function
-
-    def process_event(self, event: pg.event.Event) -> None:
-        if event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL:
-            if self.rect.collidepoint(event.pos):
-                self.click()
-
-    def process_draw(self) -> None:
-        if not self.is_hidden:
-            pg.draw.rect(self.game.screen, Colors.WHITE, self.rect)
-
-    def click(self) -> None:
-        self.function()
-
-
-class Button(BaseButton):
+class Button(DrawableObject):
     def __init__(
         self,
         game,
@@ -39,52 +19,49 @@ class Button(BaseButton):
         font=Font.DEFAULT,
         active: bool = True,
     ):
-        super().__init__(game, geometry, function)
+        super().__init__()
+        self.game = game
+        self.rect = geometry
+        self.function = function
+
         self.__text = text
         self.font = pg.font.Font(font, text_size)
         self.active = active
         self.__colors: ButtonColor = colors
-        self.deselect()
+        self.state = BtnStateEnum.INITIAL
         self.surfaces = self.prepare_surfaces()
-        self.left_button_pressed = False
         if center:
             self.move_center(*center)
 
     def mouse_hover(self, pos: Tuple[Union[int, float], Union[int, float]]) -> bool:
-        return bool(self.rect.collidepoint(pos)) and self.active
+        return self.rect.collidepoint(pos) and self.active
 
     def process_mouse_motion(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEMOTION:
             return
         if self.mouse_hover(event.pos):
-            if not self.left_button_pressed and self.state != BtnStateEnum.HOVER:
-                self.select()
+            self.select()
         elif self.state != BtnStateEnum.INITIAL:
             self.deselect()
 
     def process_mouse_button_down(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONDOWN or event.type == pg.MOUSEWHEEL:
             return
-        if event.button == pg.BUTTON_LEFT:
-            self.left_button_pressed = True
         if self.mouse_hover(event.pos):
             self.activate()
-            self.game.sounds.click.play()
 
     def process_mouse_button_up(self, event: pg.event.Event) -> None:
         if event.type != pg.MOUSEBUTTONUP or event.type == pg.MOUSEWHEEL:
             return
-        if event.button == pg.BUTTON_LEFT:
-            self.left_button_pressed = False
         if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT and self.state != BtnStateEnum.INITIAL:
             self.deselect()
 
-    def process_event(self, event: pg.event.Event) -> None:
-        if self.active:
-            self.process_mouse_motion(event)
-            self.process_mouse_button_down(event)
-            self.process_mouse_button_up(event)
-            super().process_event(event)
+    def process_mouse_click(self, event: pg.event.Event) -> None:
+        if not (event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL):
+            return
+        if self.rect.collidepoint(event.pos):
+            self.select()
+            self.click()
 
     @property
     def colors(self):
@@ -111,7 +88,7 @@ class Button(BaseButton):
         return surfaces
 
     def prepare_surface(self, state_index: int) -> pg.Surface:
-        surface = pg.surface.Surface(self.rect.size)
+        surface = pg.Surface(self.rect.size)
         surface = surface.convert_alpha()
         zero_rect = surface.get_rect()
 
@@ -124,9 +101,17 @@ class Button(BaseButton):
 
         return surface
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         if not self.is_hidden:
-            self.game.screen.blit(self.surfaces[self.state.value], self.rect.topleft)
+            screen.blit(self.surfaces[self.state.value], self.rect.topleft)
+
+    def process_event(self, event: pg.event.Event) -> None:
+        if not self.active:
+            return
+        self.process_mouse_button_down(event)
+        self.process_mouse_button_up(event)
+        self.process_mouse_click(event)
+        self.process_mouse_motion(event)
 
     def select(self) -> None:
         self.state = BtnStateEnum.HOVER
@@ -136,3 +121,10 @@ class Button(BaseButton):
 
     def activate(self) -> None:
         self.state = BtnStateEnum.CLICK
+
+    def click(self) -> None:
+        self.game.sounds.click.play()
+        self.function()
+
+    def is_state(self, state: BtnStateEnum):
+        return self.state is state

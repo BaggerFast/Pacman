@@ -63,10 +63,11 @@ class ButtonColor(NamedTuple):
 
 
 BUTTON_DEFAULT_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Colors.GRAY, background=Colors.BLACK),
-    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.JET),
-    click=ButtonStateColor(text=Colors.BLACK, background=Colors.BLACK),
+    static=ButtonStateColor(text=Colors.GRAY, background=Colors.TRANSPARENT),
+    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.TRANSPARENT),
+    click=ButtonStateColor(text=Colors.BLACK, background=Colors.JET),
 )
+
 
 BUTTON_TRANSPERENT_COLORS = ButtonColor(
     static=ButtonStateColor(text=Colors.GRAY, background=Colors.TRANSPARENT),

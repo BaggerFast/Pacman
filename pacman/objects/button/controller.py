@@ -1,102 +1,76 @@
-from typing import List, Tuple, Union
+from typing import List
 
 import pygame as pg
 
+from pacman.data_core import KbKeys
+from pacman.data_core.enums import BtnStateEnum
 from pacman.objects import DrawableObject
 from pacman.objects.button.button import Button
 
 
 class ButtonController(DrawableObject):
-    keys_previous = [pg.K_UP, pg.K_w]
-    keys_next = [pg.K_DOWN, pg.K_s]
-    keys_activate = [pg.K_SPACE, pg.K_RETURN]
-
-    def __init__(self, game, buttons: List[Button]) -> None:
-        super().__init__(game)
+    def __init__(self, buttons: List[Button]) -> None:
+        super().__init__()
         self.buttons = buttons
         self.active_button_index = -1
 
-    def reset_state(self) -> None:
-        self.deselect_current_button()
-        self.active_button_index = -1
+        self.kb_actions = {
+            KbKeys.DOWN: self.move_down,
+            KbKeys.UP: self.move_up,
+            KbKeys.ENTER: self.press_cur_btn,
+        }
 
-    def set_state(self, index):
-        self.active_button_index = index
+    # region new
 
-    def deselect_current_button(self) -> None:
-        self.buttons[self.active_button_index].deselect()
+    @property
+    def current(self) -> Button:
+        return self.buttons[self.active_button_index]
 
-    def select_previous_button(self) -> None:
-        self.buttons[self.active_button_index].deselect()
-        self.active_button_index -= 1
-        if self.active_button_index < 0:
-            self.active_button_index = len(self.buttons) - 1
-        if self.buttons[self.active_button_index].active:
-            self.buttons[self.active_button_index].select()
-        else:
-            self.select_previous_button()
+    def move_up(self):
+        self.current.deselect()
+        self.active_button_index = (self.active_button_index - 1) % len(self.buttons)
+        if not self.current.active:
+            self.move_up()
+        self.current.select()
 
-    def select_next_button(self) -> None:
-        self.buttons[self.active_button_index].deselect()
-        self.active_button_index += 1
-        if self.active_button_index == len(self.buttons):
-            self.active_button_index = 0
-        if self.buttons[self.active_button_index].active:
-            self.buttons[self.active_button_index].select()
-        else:
-            self.select_next_button()
+    def move_down(self) -> None:
+        self.current.deselect()
+        self.active_button_index = (self.active_button_index + 1) % len(self.buttons)
+        if not self.current.active:
+            self.move_down()
+        self.current.select()
 
-    def activate_current_button(self) -> None:
-        self.game.sounds.click.play()
-        self.buttons[self.active_button_index].activate()
+    def press_cur_btn(self) -> None:
+        self.current.activate()
+        self.current.click()
 
-    def click_current_button(self) -> None:
-        self.buttons[self.active_button_index].select()
-        self.buttons[self.active_button_index].click()
+    def __parse_keyboard(self, event) -> None:
+        if event.type == pg.KEYDOWN:
+            for key in self.kb_actions:
+                if event.key in key:
+                    self.kb_actions[key]()
+                    return
+        elif event.type == pg.KEYUP:
+            if event.key in KbKeys.ENTER and self.current.is_state(BtnStateEnum.CLICK):
+                self.current.select()
 
-    def process_key_down(self, event: pg.event.Event) -> None:
-        if event.type != pg.KEYDOWN:
-            return
-        if event.key in self.keys_previous:
-            self.select_previous_button()
-        elif event.key in self.keys_next:
-            self.select_next_button()
-        elif event.key in self.keys_activate:
-            self.activate_current_button()
+    def process_draw(self, screen: pg.Surface) -> None:
+        for button in self.buttons:
+            button.process_draw(screen)
 
-    def process_key_up(self, event: pg.event.Event) -> None:
-        if event.type != pg.KEYUP:
-            return
-        if event.key in [pg.K_SPACE, pg.K_RETURN]:
-            self.click_current_button()
+    def process_event(self, event: pg.event.Event) -> None:
+        self.buttons_process_event(event)
+        self.check_hover_btn()
+        self.__parse_keyboard(event)
 
-    def get_button_under_mouse(self, pos: Tuple[Union[int, float], Union[int, float]]) -> Union[int, None]:
-        for index in range(len(self.buttons)):
-            if self.buttons[index].rect.collidepoint(pos):
-                return index
-        return None
-
-    def process_mouse_motion(self, event: pg.event.Event) -> None:
-        if event.type != pg.MOUSEMOTION:
-            return
-        index = self.get_button_under_mouse(event.pos)
-        if index:
-            self.active_button_index = index
-
-    def process_button_events(self, event: pg.event.Event) -> None:
+    def buttons_process_event(self, event: pg.event.Event) -> None:
         for button in self.buttons:
             button.process_event(event)
 
-    def process_event(self, event: pg.event.Event) -> None:
-        self.process_button_events(event)
-        self.process_key_down(event)
-        self.process_key_up(event)
-        self.process_mouse_motion(event)
+    def check_hover_btn(self) -> None:
+        for index, button in enumerate(self.buttons):
+            if button.is_state(BtnStateEnum.HOVER):
+                self.active_button_index = index
+                return
 
-    def process_draw(self) -> None:
-        for button in self.buttons:
-            button.process_draw()
-
-    def process_logic(self) -> None:
-        for button in self.buttons:
-            button.process_logic()
+    # endregion

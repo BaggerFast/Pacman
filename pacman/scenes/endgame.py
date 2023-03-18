@@ -54,7 +54,7 @@ class EndGameScene(base.Scene):
                 colors=BUTTON_TRANSPERENT_COLORS,
             ),
         ]
-        self.objects.append(ButtonController(self.game, buttons))
+        self.objects.append(ButtonController(buttons))
 
     def __create_score_text(self) -> None:
         self.__text_score = Text(f"Score: {self.game.score}", 20)

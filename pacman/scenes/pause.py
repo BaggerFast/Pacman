@@ -25,7 +25,7 @@ class PauseScene(base.Scene):
                     colors=BUTTON_TRANSPERENT_COLORS,
                 )
             )
-        self.objects.append(ButtonController(self.game, buttons))
+        self.objects.append(ButtonController(buttons))
 
     def create_title(self) -> None:
         self.__main_text = Text("PAUSE", 40, font=Font.TITLE)

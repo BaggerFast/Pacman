@@ -17,6 +17,7 @@ class SettingsScene(base.Scene):
             self.update_text()
 
         def click(self) -> None:
+            self.game.sounds.click.play()
             self.value += 1
             if self.value > 2:
                 self.value = 0
@@ -34,6 +35,7 @@ class SettingsScene(base.Scene):
 
         def click(self) -> None:
             SettingsStorage().set_volume(SettingsStorage().volume + self.value)
+            self.game.sounds.click.play()
             self.game.scenes.current.volume_value.text = f"{SettingsStorage().volume}%"
             for sound in self.game.sounds.__dict__.keys():
                 self.game.sounds.__dict__[sound].update()
@@ -53,6 +55,7 @@ class SettingsScene(base.Scene):
             self.var = var
 
         def click(self):
+            self.game.sounds.click.play()
             flag_var = not getattr(SettingsStorage(), self.var)
             setattr(SettingsStorage(), self.var, flag_var)
             for sound in self.game.sounds.__dict__.keys():
@@ -133,7 +136,7 @@ class SettingsScene(base.Scene):
             )
         )
 
-        self.objects.append(ButtonController(self.game, self.buttons))
+        self.objects.append(ButtonController(self.buttons))
 
     def additional_event_check(self, event: pg.event.Event) -> None:
         if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:

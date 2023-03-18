@@ -9,6 +9,7 @@ class Scene:
             super().__init__(**args)
 
         def click(self) -> None:
+            self.game.sounds.click.play()
             if callable(self.scene[0]):
                 self.scene[0]()
             else:

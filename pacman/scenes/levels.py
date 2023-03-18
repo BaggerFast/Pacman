@@ -16,15 +16,18 @@ class LevelsScene(base.Scene):
             super().__init__(**args)
 
         def click(self):
+            self.game.sounds.click.play()
             LevelStorage().current = self.value[0]
             self.game.records.update_records()
             self.game.scenes.set(self.game.scenes.MENU, reset=True)
 
         def select(self) -> None:
+            super().select()
             self.game.scenes.current.is_current = True
             self.game.scenes.current.preview.image = self.value[1].image
 
         def deselect(self) -> None:
+            super().deselect()
             if not self.game.scenes.current.is_current:
                 self.game.scenes.current.preview.image = self.game.maps.images[LevelStorage().current].image
 
@@ -76,7 +79,7 @@ class LevelsScene(base.Scene):
                 if LevelStorage().current == buttons[index].value[0]:
                     buttons[index].text = "-" + buttons[index].text + "-"
 
-        self.__button_controller = ButtonController(self.game, buttons)
+        self.__button_controller = ButtonController(buttons)
         self.objects.append(self.__button_controller)
 
     def unlocked(self) -> int:

@@ -71,4 +71,4 @@ class MenuScene(base.Scene):
                     colors=BUTTON_MENU,
                 )
             )
-        self.objects.append(ButtonController(self.game, buttons))
+        self.objects.append(ButtonController(buttons))

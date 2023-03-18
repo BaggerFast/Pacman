@@ -16,6 +16,7 @@ class SkinsScene(base.Scene):
             super().__init__(**args)
 
         def click(self) -> None:
+            self.game.sounds.click.play()
             self.game.skins.current = self.value
             self.select()
             self.game.scenes.current.update_button_text()
@@ -38,6 +39,7 @@ class SkinsScene(base.Scene):
             super().__init__(**args)
 
         def click(self) -> None:
+            self.game.sounds.click.play()
             flag = True
             for key in self.value[1].skin_cost.keys():
                 if MainStorage().eaten_fruits[key] < self.value[1].skin_cost[key]:
@@ -179,7 +181,7 @@ class SkinsScene(base.Scene):
             )
         )
 
-        self.__button_controller = ButtonController(self.game, buttons)
+        self.__button_controller = ButtonController(buttons)
         self.objects.append(self.__button_controller)
         self.update_button_text()
 
