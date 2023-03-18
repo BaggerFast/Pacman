@@ -46,8 +46,8 @@ class SkinsScene(base.Scene):
             self.select()
             if flag:
                 for key in self.value[1].skin_cost.keys():
-                    self.game.store_fruit(key, -self.value[1].skin_cost[key])
-                self.game.unlock_skin(self.value[1].name)
+                    MainStorage().store_fruit(key, -self.value[1].skin_cost[key])
+                SkinStorage().unlock_skin(self.value[1].name)
                 self.game.scenes.current.create_objects()
 
         def deselect(self) -> None:
@@ -95,7 +95,7 @@ class SkinsScene(base.Scene):
                 (self.game.width // 8 - 9 + index * 25, 60),
             )
             self.objects.append(fruit)
-            text = Text(self.game, f"{MainStorage().eaten_fruits[index]}", 10)
+            text = Text(f"{MainStorage().eaten_fruits[index]}", 10)
             text.move_center(self.game.width // 8 - 10 + index * 25, 60)
             self.objects.append(text)
 
@@ -116,7 +116,7 @@ class SkinsScene(base.Scene):
                             pos_regarding_buttons_y + index_pos_y * index,
                         ),
                     )
-                    text = Text(self.game, str(self.skins[index][1].skin_cost[i]), 10)
+                    text = Text(str(self.skins[index][1].skin_cost[i]), 10)
                     text.move_center(
                         pos_regarding_buttons_x + index_pos_x * multiply_x,
                         pos_regarding_buttons_y + index_pos_y * index,
@@ -126,7 +126,7 @@ class SkinsScene(base.Scene):
                     multiply_x += 1
 
     def __create_title(self) -> None:
-        title = Text(self.game, "SELECT SKIN", 25, font=Font.TITLE)
+        title = Text("SELECT SKIN", 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
 

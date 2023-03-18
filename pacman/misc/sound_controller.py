@@ -7,8 +7,8 @@ from pacman.misc.serializers import SettingsStorage
 class SoundController:
     def __init__(self, sound_path: str, channel: int = 0, volume: int = 1):
         self.sound = pg.mixer.Sound(PathManager.get_sound_path(sound_path))
-        self.volume = volume
         self.channel = pg.mixer.Channel(channel)
+        self.volume = volume
         self.update()
 
     def update(self):
@@ -16,7 +16,7 @@ class SoundController:
         self.sound.set_volume(self.volume)
 
     def play(self):
-        self.sound.set_volume(self.volume)
+        self.update()
         self.channel.play(self.sound)
 
     def pause(self):
@@ -28,5 +28,5 @@ class SoundController:
     def stop(self):
         self.channel.stop()
 
-    def get_busy(self):
+    def is_busy(self):
         return self.channel.get_busy()

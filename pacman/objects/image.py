@@ -1,13 +1,12 @@
 from typing import Tuple, Union
-
 import pygame as pg
-
 from pacman.objects import DrawableObject
 
 
 class ImageObject(DrawableObject):
     def __init__(self, game, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0)) -> None:
-        super().__init__(game)
+        super().__init__()
+        self.game = game
         if isinstance(image, str):
             self.__filename = image
             self.image = pg.image.load(self.__filename).convert_alpha()
@@ -35,8 +34,8 @@ class ImageObject(DrawableObject):
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
 
-    def process_draw(self) -> None:
-        self.game.screen.blit(self.image, self.rect)
+    def process_draw(self, screen) -> None:
+        screen.blit(self.image, self.rect)
 
     def process_event(self, event: pg.event.Event) -> None:
         pass

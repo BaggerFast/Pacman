@@ -36,13 +36,12 @@ class MenuScene(base.Scene):
         self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
     def create_title(self) -> None:
-        title = Text(self.game, "PACMAN", 36, font=Font.TITLE)
+        title = Text("PACMAN", 36, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
 
     def __create_indicator(self) -> None:
         self.__indicator = Text(
-            self.game,
             self.game.maps.level_name(LevelStorage().current).replace("_", " "),
             15,
             font=Font.TITLE,

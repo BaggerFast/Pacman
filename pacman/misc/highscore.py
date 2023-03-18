@@ -1,7 +1,10 @@
+from deprecated import deprecated
+
 from pacman.misc import HIGHSCORES_COUNT
 from pacman.misc.serializers import LevelStorage, MainStorage
 
 
+@deprecated(reason="This class will be removed soon")
 class HighScore:
     def __init__(self, game) -> None:
         self.game = game

@@ -1,7 +1,8 @@
 from typing import Tuple, List
 import pygame as pg
 
-from pacman.misc import CELL_SIZE, Animator
+from pacman.misc import Animator
+from pacman.misc.cell_util import CellUtil
 from pacman.objects import DrawableObject
 
 
@@ -15,12 +16,13 @@ class Character(DrawableObject):
     }
 
     def __init__(self, game, animator: Animator, start_pos: Tuple[int, int], aura: str = None) -> None:
-        super().__init__(game)
+        super().__init__()
+        self.game = game
         self.__aura = pg.image.load(aura) if aura else aura
         self.animator = animator
         self.rect = self.animator.current_image.get_rect()
         self.shift_x, self.shift_y = self.direction["right"][:2]
-        self.start_pos = self.pos_from_cell(start_pos)
+        self.start_pos = CellUtil.pos_from_cell(start_pos)
         self.move_center(*self.start_pos)
         self.speed = 0
         self.rotate = 0
@@ -50,10 +52,10 @@ class Character(DrawableObject):
     def process_logic(self) -> None:
         self.step()
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         for i in range(-1, 2):
             if self.animator.current_aura:
-                self.game.screen.blit(
+                screen.blit(
                     self.animator.current_aura,
                     (
                         self.rect.centerx - self.__aura.get_rect().width // 2,
@@ -61,14 +63,14 @@ class Character(DrawableObject):
                     ),
                 )
             elif self.__aura:
-                self.game.screen.blit(
+                screen.blit(
                     self.__aura,
                     (
                         self.rect.centerx - self.__aura.get_rect().width // 2,
                         self.rect.centery - self.__aura.get_rect().height // 2,
                     ),
                 )
-            self.game.screen.blit(
+            screen.blit(
                 self.animator.current_image,
                 (self.rect.x + self.game.width * i, self.rect.y),
             )
@@ -81,24 +83,12 @@ class Character(DrawableObject):
     def move_to(self, direction) -> bool:
         return self.movement_cell(self.get_cell())[direction]
 
-    def in_center(self) -> bool:
-        return (
-            self.rect.centerx % CELL_SIZE == CELL_SIZE // 2 and (self.rect.centery - 20) % CELL_SIZE == CELL_SIZE // 2
-        )
-
     def get_cell(self) -> Tuple[int, int]:
-        return self.rect.centerx // CELL_SIZE, (self.rect.centery - 20) // CELL_SIZE
+        return CellUtil.get_cell(self.rect)
 
     def in_rect(self, rect: List[int]) -> bool:
         return rect[0] <= self.get_cell()[0] <= rect[2] and rect[1] <= self.get_cell()[1] <= rect[3]
 
     @staticmethod
     def two_cells_dis(cell1: Tuple[int, int], cell2: Tuple[int, int]) -> float:
-        return ((cell1[0] - cell2[0]) ** 2 + (cell1[1] - cell2[1]) ** 2) ** 0.5
-
-    @staticmethod
-    def pos_from_cell(cell: Tuple[int, int]) -> Tuple[int, int]:
-        return (
-            cell[0] * CELL_SIZE + CELL_SIZE // 2,
-            cell[1] * CELL_SIZE + 20 + CELL_SIZE // 2,
-        )
+        return CellUtil.two_cells_dis(cell1, cell2)

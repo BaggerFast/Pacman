@@ -3,6 +3,7 @@ import pygame as pg
 
 from pacman.data_core import PathManager
 from pacman.misc import INFINITY_LIVES
+from pacman.misc.cell_util import CellUtil
 from pacman.objects.character_base import Character
 
 
@@ -30,7 +31,7 @@ class Pacman(Character):
     def process_logic(self) -> None:
         self.animator.timer_check()
         if not self.dead:
-            if self.in_center():
+            if CellUtil.in_cell_center(self.rect):
                 if self.move_to(self.rotate):
                     self.go()
                 else:

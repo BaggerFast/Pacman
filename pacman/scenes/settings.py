@@ -68,11 +68,11 @@ class SettingsScene(base.Scene):
     __difficulty_pos = 210
 
     def create_static_objects(self):
-        self.volume_text = Text(self.game, "VOLUME", 20)
+        self.volume_text = Text("VOLUME", 20)
         self.volume_text.move_center(self.game.width // 2, self.__volume_position)
         self.static_objects.append(self.volume_text)
 
-        self.volume_value = Text(self.game, f"{SettingsStorage().volume}%", 20)
+        self.volume_value = Text(f"{SettingsStorage().volume}%", 20)
         self.volume_value.move_center(
             self.game.width // 2,
             self.__volume_position + 30,
@@ -83,7 +83,7 @@ class SettingsScene(base.Scene):
     def create_title(self) -> None:
         text = ["SETTINGS"]
         for i in range(len(text)):
-            text[i] = Text(self.game, text[i], 30, font=Font.TITLE)
+            text[i] = Text(text[i], 30, font=Font.TITLE)
             text[i].move_center(self.game.width // 2, 30 + i * 40)
             self.static_objects.append(text[i])
 

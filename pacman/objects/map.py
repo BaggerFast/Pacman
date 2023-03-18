@@ -45,7 +45,8 @@ class Map(DrawableObject):
     tiles = []
 
     def __init__(self, game, map_data, x=0, y=20) -> None:
-        super().__init__(game)
+        super().__init__()
+        self.game = game
         self.x = x
         self.y = y
         self.map = map_data
@@ -62,7 +63,7 @@ class Map(DrawableObject):
             tile = pg.image.load(tile_path)
             self.tiles.append(tile)
 
-    def __corner_preprocess(self, x, y, temp_surface: pg.surface.Surface) -> pg.surface.Surface:
+    def __corner_preprocess(self, x, y, temp_surface: pg.Surface) -> pg.Surface:
         flip_x = self.map[y][x][1] // (CELL_SIZE // 2)
         flip_y = False
         temp_surface = pg.transform.flip(temp_surface, flip_x, flip_y)
@@ -84,7 +85,7 @@ class Map(DrawableObject):
         for x in range(self.surface.get_width()):
             for y in range(self.surface.get_height()):
                 if self.surface.get_at((x, y)) == Colors.MAIN_MAP:
-                    self.surface.set_at((x, y), self.color)  # Set the color of the pixel.
+                    self.surface.set_at((x, y), self.color)
 
     def prerender_map_surface(self) -> pg.Surface:
         surface = pg.Surface(self.__size)
@@ -108,10 +109,8 @@ class Map(DrawableObject):
         for x in range(image.image.get_width()):
             for y in range(image.image.get_height()):
                 if image.image.get_at((x, y))[2] > 0:
-                    image.image.set_at(
-                        (x, y), (0, 0, min(image.image.get_at((x, y))[2] * 5, 255), 255)
-                    )  # Set the color of the pixel.
+                    image.image.set_at((x, y), (0, 0, min(image.image.get_at((x, y))[2] * 5, 255), 255))
         return image
 
-    def process_draw(self) -> None:
-        self.game.screen.blit(self.surface, (self.x, self.y))
+    def process_draw(self, screen: pg.Surface) -> None:
+        screen.blit(self.surface, (self.x, self.y))

@@ -24,13 +24,9 @@ class LevelsScene(base.Scene):
             self.game.scenes.current.is_current = True
             self.game.scenes.current.preview.image = self.value[1].image
 
-            super().select()
-
         def deselect(self) -> None:
             if not self.game.scenes.current.is_current:
                 self.game.scenes.current.preview.image = self.game.maps.images[LevelStorage().current].image
-
-            super().deselect()
 
     __buttons_on_scene = 4
 
@@ -46,26 +42,24 @@ class LevelsScene(base.Scene):
         self.__create_title()
 
     def __create_title(self) -> None:
-        title = Text(self.game, "SELECT LEVEL", 25, font=Font.TITLE)
+        title = Text("SELECT LEVEL", 25, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
 
     def create_buttons(self) -> None:
         buttons = []
-        counter = 0
         for i in range(self.__scroll, self.__scroll + self.__buttons_on_scene):
             buttons.append(
                 self.LvlButton(
                     game=self.game,
                     geometry=pg.Rect(0, 0, 100, 40),
                     value=(i, self.game.maps.images[i]),
-                    text="LEVEL" + str(i + 1),
-                    center=(self.game.width // 2 - 55, (85 + 40 * counter)),
+                    text="LEVEL" + f"{i + 1}",
+                    center=(self.game.width // 2 - 55, (85 + 40 * (i - self.__scroll))),
                     text_size=Font.BUTTON_TEXT_SIZE - 4,
                     active=i in LevelStorage().unlocked,
                 )
             )
-            counter += 1
         buttons.append(
             self.SceneButton(
                 game=self.game,
@@ -90,7 +84,7 @@ class LevelsScene(base.Scene):
 
     def create_objects(self) -> None:
         self.objects = []
-        self.preview = copy(self.game.maps.images[LevelStorage().current])
+        self.preview = self.game.maps.images[LevelStorage().current]
         self.objects.append(self.preview)
         self.create_buttons()
 

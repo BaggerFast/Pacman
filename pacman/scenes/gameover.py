@@ -14,7 +14,7 @@ class GameOverScene(base.Scene):
     def create_title(self) -> None:
         text = ["GAME", "OVER"]
         for i in range(2):
-            text[i] = Text(self.game, text[i], 40, font=Font.TITLE)
+            text[i] = Text(text[i], 40, font=Font.TITLE)
             text[i].move_center(self.game.width // 2, 30 + i * 40)
             self.static_objects.append(text[i])
 
@@ -39,12 +39,12 @@ class GameOverScene(base.Scene):
         self.objects.append(ButtonController(self.game, buttons))
 
     def __create_score_text(self) -> None:
-        self.__text_score = Text(self.game, f"Score: {self.game.score}", 20)
+        self.__text_score = Text(f"Score: {self.game.score}", 20)
         self.__text_score.move_center(self.game.width // 2, 135)
         self.objects.append(self.__text_score)
 
     def __create_highscore_text(self) -> None:
-        self.__text_highscore = Text(self.game, f"High score: {self.game.records.data[-1]}", 20)
+        self.__text_highscore = Text(f"High score: {self.game.records.data[-1]}", 20)
         self.__text_highscore.move_center(self.game.width // 2, 165)
         self.objects.append(self.__text_highscore)
 

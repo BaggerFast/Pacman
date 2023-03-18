@@ -39,7 +39,7 @@ class ControlCheats:
             self.update_timer()
         self.old_enter_code = self.enter_code
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         pass
 
     def process_event(self, event) -> None:

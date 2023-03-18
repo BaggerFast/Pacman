@@ -38,13 +38,12 @@ class MainScene(base.Scene):
 
     def __create_static_text(self):
         self.__scores_label_text = Text(
-            self.game,
             "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE",
             Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(10, 0, 20, 20),
         )
 
-        self.__high_scores_label_text = Text(self.game, "HIGHSCORE", Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20))
+        self.__high_scores_label_text = Text("HIGHSCORE", Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20))
         self.static_objects.append(self.__scores_label_text)
         self.static_objects.append(self.__high_scores_label_text)
 
@@ -80,7 +79,6 @@ class MainScene(base.Scene):
         self.text = ["READY", "GO!"]
         for i in range(2):
             self.text[i] = Text(
-                self.game,
                 self.text[i],
                 30,
                 font=Font.TITLE,
@@ -140,7 +138,6 @@ class MainScene(base.Scene):
 
     def __create_hud(self):
         self.__high_scores_value_text = Text(
-            self.game,
             str(self.game.records.data[-1]),
             Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(130, 8, 20, 20),
@@ -148,7 +145,6 @@ class MainScene(base.Scene):
         self.static_objects.append(self.__high_scores_value_text)
 
         self.__scores_value_text = Text(
-            self.game,
             str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(self.game.score),
             Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(10, 8, 20, 20),
@@ -226,7 +222,7 @@ class MainScene(base.Scene):
                 self.text[1].surface.set_alpha(0)
 
     def __play_music(self):
-        if not self.game.sounds.siren.get_busy():
+        if not self.game.sounds.siren.is_busy():
             self.game.sounds.siren.play()
 
     def __check_ghosts(self):
@@ -236,17 +232,17 @@ class MainScene(base.Scene):
                 flag = True
         if flag:
             self.game.sounds.siren.pause()
-            if not self.game.sounds.pellet.get_busy():
+            if not self.game.sounds.pellet.is_busy():
                 self.game.sounds.pellet.play()
         else:
             self.game.sounds.siren.unpause()
             self.game.sounds.pellet.stop()
 
     def process_logic(self) -> None:
-        if not self.game.sounds.intro.get_busy():
+        if not self.game.sounds.intro.is_busy():
             self.text[0].surface.set_alpha(0)
             self.text[1].surface.set_alpha(0)
-            if self.pacman.dead_anim.anim_finished and int(self.hp) < 1 and not self.game.sounds.pacman.get_busy():
+            if self.pacman.dead_anim.anim_finished and int(self.hp) < 1 and not self.game.sounds.pacman.is_busy():
                 self.template = self.screen.copy()
                 self.game.timer = pg.time.get_ticks() / 1000
                 self.game.scenes.set(self.game.scenes.GAMEOVER)
@@ -293,10 +289,10 @@ class MainScene(base.Scene):
                     ghost.gg_text.text = " "
                 self.ghost_text_flag = False
 
-    def additional_draw(self) -> None:
-        super().additional_draw()
+    def additional_draw(self, screen: pg.Surface) -> None:
+        super().additional_draw(screen)
         for hp in self.__hp_hud:
-            hp.process_draw()
+            hp.process_draw(screen)
 
     def additional_logic(self) -> None:
         self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"
@@ -311,7 +307,7 @@ class MainScene(base.Scene):
             self.game.sounds.siren.unpause()
         for ghost in self.__ghosts:
             if ghost.mode == "Frightened":
-                if self.game.sounds.pellet.get_busy():
+                if self.game.sounds.pellet.is_busy():
                     self.game.sounds.pellet.play()
                     break
         if self.pacman.animator == self.pacman.dead_anim:

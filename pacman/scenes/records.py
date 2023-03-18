@@ -28,12 +28,12 @@ class RecordsScene(base.Scene):
         self.objects.append(ButtonController(self.game, [back_button]))
 
     def __create_title(self) -> None:
-        title = Text(self.game, "RECORDS", 32, font=Font.TITLE)
+        title = Text("RECORDS", 32, font=Font.TITLE)
         title.move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
 
     def __create_error_label(self) -> None:
-        self.__error_text = Text(self.game, "NO RECORDS", 24, color=Colors.RED)
+        self.__error_text = Text("NO RECORDS", 24, color=Colors.RED)
         self.__error_text.move_center(self.game.width // 2, 100)
 
     def __create_text_labels(self) -> None:
@@ -44,7 +44,6 @@ class RecordsScene(base.Scene):
         for i in range(5):
             self.medals_text.append(
                 Text(
-                    self.game,
                     str(self.game.records.data[y]),
                     30,
                     pg.Rect(60, 55 + 35 * i, 0, 0),
@@ -65,15 +64,15 @@ class RecordsScene(base.Scene):
             )
             self.__medals[i].scale(35, 35)
 
-    def additional_draw(self) -> None:
-        super().additional_draw()
+    def additional_draw(self, screen: pg.Surface) -> None:
+        super().additional_draw(screen)
         if self.game.records.data[4] == 0:
-            self.__error_text.process_draw()
+            self.__error_text.process_draw(screen)
         y = 4
         for i in range(5):
             if self.game.records.data[y] != 0:
-                self.medals_text[i].process_draw()
-                self.__medals[i].process_draw()
+                self.medals_text[i].process_draw(screen)
+                self.__medals[i].process_draw(screen)
             y -= 1
 
     def additional_event_check(self, event: pg.event.Event) -> None:

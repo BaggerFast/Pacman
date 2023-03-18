@@ -8,6 +8,7 @@ from pacman.misc import (
     DISABLE_GHOSTS_MOVING,
     DISABLE_GHOSTS_COLLISION,
 )
+from pacman.misc.cell_util import CellUtil
 from pacman.objects import Character, Pacman, Text
 
 
@@ -112,12 +113,7 @@ class Base(Character):
         self.work_counter = True
         self.set_direction("left")
         self.mode = "Scatter"
-        self.gg_text = Text(
-            self.game,
-            " ",
-            10,
-            pg.Rect(0, 0, 0, 0),
-        )
+        self.gg_text = Text(" ", 10)
 
         # Временное решение
         self.tmp_flag1 = False
@@ -183,10 +179,10 @@ class Base(Character):
         self.ai_timer = pg.time.get_ticks()
 
     def ghosts_ai(self) -> None:
-        if self.in_center() and self.collision and not self.is_invisible:
+        if CellUtil.in_cell_center(self.rect) and self.collision and not self.is_invisible:
             if self.move_to(self.rotate):
                 self.go()
-            cell = self.movement_cell(self.get_cell())
+            cell = self.movement_cell(CellUtil.get_cell(self.rect))
             cell[(self.rotate + 2) % 4] = False
             for rect in self.game.current_scene.cant_up_ghost_rect:
                 if self.in_rect(rect):
@@ -195,9 +191,10 @@ class Base(Character):
                 min_dis = float("inf")
                 for i in range(4):
                     if cell[i]:
+                        cell2 = CellUtil.get_cell(self.rect)
                         tmp_cell = (
-                            self.get_cell()[0] + self.direction2[i][0],
-                            self.get_cell()[1] + self.direction2[i][1],
+                            cell2[0] + self.direction2[i][0],
+                            cell2[1] + self.direction2[i][1],
                         )
                         if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
                             min_dis = self.two_cells_dis(self.love_cell, tmp_cell)

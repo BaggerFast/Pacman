@@ -9,14 +9,13 @@ from pacman.objects import DrawableObject
 class Text(DrawableObject):
     def __init__(
         self,
-        game,
         text: str = "",
         size: int = 0,
         rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0),
         color=pg.Color(255, 255, 255),
         font=Font.DEFAULT,
     ):
-        super().__init__(game)
+        super().__init__()
         self.rect = rect
         self.__pos = rect
         self.size = size
@@ -56,8 +55,8 @@ class Text(DrawableObject):
     def pos(self, pos: Tuple[int, int]):
         self.__pos = pos
 
-    def process_draw(self) -> None:
-        self.game.screen.blit(self.surface, self.rect)
+    def process_draw(self, screen: pg.Surface) -> None:
+        screen.blit(self.surface, self.rect)
 
     def process_event(self, event) -> None:
         pass

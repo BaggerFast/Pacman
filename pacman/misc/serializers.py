@@ -40,11 +40,21 @@ class SkinStorage(SerDes):
         self.unlocked = ["default"]
         self.current = "default"
 
+    def unlock_skin(self, skin_name: str = 0) -> None:
+        if skin_name not in MainStorage().skins.unlocked:
+            self.unlocked.append(skin_name)
+        else:
+            raise Exception(f"Name error. Skin name: {skin_name} doesn't exist")
+
 
 class LevelStorage(SerDes):
     def __init__(self):
         self.current = 0
         self.unlocked = [0]
+
+    def unlock_level(self, level_id: int = 0) -> None:
+        if level_id not in MainStorage().levels.unlocked:
+            self.unlocked.append(level_id)
 
 
 class SettingsStorage(SerDes):
@@ -81,9 +91,14 @@ class MainStorage(SerDes):
         self.eaten_fruits = [0 for _ in range(FRUITS_COUNT)]
         self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(10)]
 
+    def store_fruit(self, fruit_id: int = 0, value: int = 0) -> None:
+        if fruit_id in range(FRUITS_COUNT):
+            self.eaten_fruits[fruit_id] += value
+        else:
+            raise Exception(f"id error. Fruit id: {fruit_id} doesn't exist")
+
 
 class StorageLoader:
-
     def __init__(self, path: str):
         self.__path = path
 
@@ -96,5 +111,5 @@ class StorageLoader:
         try:
             with open(self.__path, "r") as f:
                 MainStorage().deserialize(json.load(f))
-        except FileNotFoundError or JSONDecodeError:
+        except (FileNotFoundError, JSONDecodeError):
             self.to_file()

@@ -7,7 +7,8 @@ from pacman.objects import DrawableObject
 
 class SeedContainer(DrawableObject):
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
-        super().__init__(game)
+        super().__init__()
+        self.game = game
         self.__ram_img = pg.image.load(PathManager.get_image_path("ram"))
         self.__x = x
         self.__y = y
@@ -30,12 +31,12 @@ class SeedContainer(DrawableObject):
     def y(self):
         return self.__y
 
-    def __draw_seeds(self) -> None:
+    def __draw_seeds(self, screen) -> None:
         for row in range(len(self.__seeds)):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col]:
                     if self.game.skins.current.name == "chrome":
-                        self.game.screen.blit(
+                        screen.blit(
                             self.__ram_img,
                             (
                                 self.x + col * CELL_SIZE + CELL_SIZE // 2 - 6,
@@ -44,7 +45,7 @@ class SeedContainer(DrawableObject):
                         )
                     else:
                         pg.draw.circle(
-                            self.game.screen,
+                            screen,
                             Colors.WHITE,
                             (
                                 self.x + col * CELL_SIZE + CELL_SIZE // 2,
@@ -53,13 +54,13 @@ class SeedContainer(DrawableObject):
                             1,
                         )
 
-    def __draw_energizers(self) -> None:
+    def __draw_energizers(self, screen) -> None:
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.game.animate_timer = pg.time.get_ticks()
             self.__index_color *= -1
         for energizer in self.__energizers:
             pg.draw.circle(
-                self.game.screen,
+                screen,
                 self.__color[self.__index_color],
                 (
                     self.x + energizer[0] * CELL_SIZE + CELL_SIZE // 2,
@@ -68,21 +69,17 @@ class SeedContainer(DrawableObject):
                 4,
             )
 
-    def process_draw(self) -> None:
-        self.__draw_seeds()
-        self.__draw_energizers()
+    def process_draw(self, screen: pg.Surface) -> None:
+        self.__draw_seeds(screen)
+        self.__draw_energizers(screen)
 
     def process_collision(self, object) -> int:
-        """
-        :param object: any class with pygame.rect
-        :return: is objects in collision (bool) and self type (str)
-        """
         for row in range(len(self.__seeds)):
             for col in range(len(self.__seeds[row])):
                 if self.__seeds[row][col] and row * CELL_SIZE + 18 == object.rect.y:
                     if col * CELL_SIZE - 2 == object.rect.x:
                         self.__seeds[row][col] = None
-                        if not self.game.sounds.seed.get_busy():
+                        if not self.game.sounds.seed.is_busy():
                             self.game.sounds.seed.play()
                         self.game.score.eat_seed()
                         self.__seeds_on_field -= 1
@@ -95,6 +92,4 @@ class SeedContainer(DrawableObject):
                     return 2
 
     def is_field_empty(self) -> bool:
-        if self.__seeds_on_field == (self.__max_seeds - 10 if HIGH_CALORIE_SEEDS else 0):
-            return True
-        return False
+        return self.__seeds_on_field == (self.__max_seeds - 10 if HIGH_CALORIE_SEEDS else 0)

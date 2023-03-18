@@ -5,18 +5,10 @@ import pygame as pg
 from PIL import Image, ImageFilter
 
 from pacman.data_core import Colors, PathManager, Dirs, Sounds
-from pacman.misc import (
-    HighScore,
-    Score,
-    UNLOCK_LEVELS,
-    UNLOCK_SKINS,
-    FRUITS_COUNT,
-    LevelLoader,
-    Skins,
-)
-from pacman.misc.serializers import StorageLoader, MainStorage, SettingsStorage, SkinStorage, LevelStorage
+from pacman.misc import HighScore, Score, LevelLoader, Skins
+from pacman.misc.serializers import StorageLoader, SettingsStorage, SkinStorage, LevelStorage
 from pacman.misc.sound_controller import SoundController
-from pacman.objects import Map
+from pacman.objects import Map, ImageObject
 from pacman.scenes import (
     PauseScene,
     MenuScene,
@@ -134,7 +126,7 @@ class Game:
             self.levels = PathManager.get_list_path(f"{Dirs.ASSET}/maps", ext="json")
             self.count = len(self.levels)
 
-        def prerender_surfaces(self) -> List[pg.Surface]:
+        def prerender_surfaces(self) -> list[ImageObject]:
             images = []
             for level_id in range(self.count):
                 self.__load_from_map(level_id)
@@ -167,13 +159,6 @@ class Game:
         self.scenes = self.Scenes(self)
         self.scenes.set(self.scenes.MENU)
 
-    def save_to_storage(self):
-        # if not UNLOCK_LEVELS:
-        #     self.__storage.unlocked_levels = self.unlocked_levels
-        # if not UNLOCK_SKINS:
-        #     self.__storage.unlocked_skins = self.unlocked_skins
-        self.storage_loader.to_file()
-
     @property
     def current_scene(self):
         return self.scenes.current
@@ -193,7 +178,7 @@ class Game:
             self.exit_game()
 
     def exit_game(self) -> None:
-        self.save_to_storage()
+        self.storage_loader.to_file()
         self.__game_over = True
         print("Bye bye")
 
@@ -223,7 +208,7 @@ class Game:
             )
             surface = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
             self.screen.blit(surface, (0, 0))
-        self.scenes.current.process_draw()
+        self.scenes.current.process_draw(self.screen)
         pg.display.flip()
 
     def main_loop(self) -> None:
@@ -234,23 +219,3 @@ class Game:
             self.__clock.tick(self.__FPS)
 
     # endregion
-
-    def unlock_level(self, level_id: int = 0) -> None:
-        if level_id in self.maps.keys():
-            if not UNLOCK_LEVELS and level_id not in MainStorage().levels.unlocked:
-                MainStorage().levels.unlocked.append(level_id)
-        else:
-            raise Exception(f"id error. Map id: {level_id} doesn't exist")
-
-    def unlock_skin(self, skin_name: str = 0) -> None:
-        if skin_name in self.skins.all_skins:
-            if not UNLOCK_SKINS and skin_name not in MainStorage().skins.unlocked:
-                MainStorage().skins.unlocked.append(skin_name)
-        else:
-            raise Exception(f"Name error. Skin name: {skin_name} doesn't exist")
-
-    def store_fruit(self, fruit_id: int = 0, value: int = 0) -> None:
-        if fruit_id in range(FRUITS_COUNT):
-            MainStorage().eaten_fruits[fruit_id] += value
-        else:
-            raise Exception(f"id error. Fruit id: {fruit_id} doesn't exist")

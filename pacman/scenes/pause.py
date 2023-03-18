@@ -28,7 +28,7 @@ class PauseScene(base.Scene):
         self.objects.append(ButtonController(self.game, buttons))
 
     def create_title(self) -> None:
-        self.__main_text = Text(self.game, "PAUSE", 40, font=Font.TITLE)
+        self.__main_text = Text("PAUSE", 40, font=Font.TITLE)
         self.__main_text.move_center(self.game.width // 2, 35)
         self.static_objects.append(self.__main_text)
 

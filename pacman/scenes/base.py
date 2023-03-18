@@ -6,7 +6,7 @@ class Scene:
     class SceneButton(Button):
         def __init__(self, **args):
             self.scene = args.pop("scene")
-            super(Scene.SceneButton, self).__init__(**args)
+            super().__init__(**args)
 
         def click(self) -> None:
             if callable(self.scene[0]):
@@ -32,10 +32,10 @@ class Scene:
             item.process_logic()
         self.additional_logic()
 
-    def process_draw(self) -> None:
+    def process_draw(self, screen: pg.Surface) -> None:
         for item in self.objects:
-            item.process_draw()
-        self.additional_draw()
+            item.process_draw(screen)
+        self.additional_draw(screen)
 
     def create_static_objects(self) -> None:
         self.create_title()
@@ -54,9 +54,9 @@ class Scene:
     def additional_logic(self) -> None:
         pass
 
-    def additional_draw(self) -> None:
+    def additional_draw(self, screen: pg.Surface) -> None:
         for item in self.static_objects:
-            item.process_draw()
+            item.process_draw(screen)
 
     def on_deactivate(self) -> None:
         pass

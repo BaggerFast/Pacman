@@ -17,7 +17,7 @@ class EndGameScene(base.Scene):
     def create_title(self) -> None:
         text = ["YOU", "WON"]
         for i in range(len(text)):
-            text[i] = Text(self.game, text[i], 40, font=Font.TITLE)
+            text[i] = Text(text[i], 40, font=Font.TITLE)
             text[i].move_center(self.game.width // 2, 30 + i * 40)
             self.static_objects.append(text[i])
 
@@ -57,12 +57,12 @@ class EndGameScene(base.Scene):
         self.objects.append(ButtonController(self.game, buttons))
 
     def __create_score_text(self) -> None:
-        self.__text_score = Text(self.game, f"Score: {self.game.score}", 20)
+        self.__text_score = Text(f"Score: {self.game.score}", 20)
         self.__text_score.move_center(self.game.width // 2, 135)
         self.objects.append(self.__text_score)
 
     def __create_highscore_text(self) -> None:
-        self.__text_highscore = Text(self.game, f"High score: {self.game.records.data[-1]}", 20)
+        self.__text_highscore = Text(f"High score: {self.game.records.data[-1]}", 20)
         self.__text_highscore.move_center(self.game.width // 2, 165)
         self.objects.append(self.__text_highscore)
 
@@ -72,7 +72,7 @@ class EndGameScene(base.Scene):
     def __unlock_level(self):
         if self.__is_last_level():
             next_level = LevelStorage().current
-            self.game.unlock_level(next_level)
+            LevelStorage().unlock_level(next_level)
 
     def __next_level(self):
         next_level = LevelStorage().current + 1

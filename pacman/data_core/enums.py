@@ -1,13 +1,12 @@
 from enum import Enum, auto
 
-
 # region States
 
 
 class BtnStateEnum(Enum):
     INITIAL = 0
-    HOVER = auto()
-    CLICK = auto()
+    HOVER = 1
+    CLICK = 2
 
 
 class GhostStateEnum(Enum):
@@ -29,12 +28,12 @@ class DifficultEnum(Enum):
 
 
 class SkinEnum(Enum):
-    DEFAULT = 0
+    EDGE = auto()
     CHROME = auto()
-    HALF_LIFE = auto()
+    DEFAULT = auto()
     WINDOWS = auto()
     POKEBALL = auto()
-    EDGE = auto()
+    HALF_LIFE = auto()
 
 
 # endregion
