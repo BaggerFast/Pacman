@@ -9,7 +9,7 @@ from pacman.objects.button import Button
 from pacman.scenes import base
 
 
-class Scene(base.Scene):
+class LevelsScene(base.Scene):
     class LvlButton(Button):
         def __init__(self, **args):
             self.value = args.pop("value")

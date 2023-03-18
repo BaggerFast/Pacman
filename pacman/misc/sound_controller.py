@@ -4,12 +4,7 @@ from pacman.data_core import PathManager
 from pacman.misc.serializers import SettingsStorage
 
 
-def update(object):
-    object.update_volume()
-
-
 class SoundController:
-
     def __init__(self, sound_path: str, channel: int = 0, volume: int = 1):
         self.sound = pg.mixer.Sound(PathManager.get_sound_path(sound_path))
         self.volume = volume
@@ -17,7 +12,6 @@ class SoundController:
         self.update()
 
     def update(self):
-
         self.volume = 0 if not SettingsStorage().mute else SettingsStorage().volume / 100
         self.sound.set_volume(self.volume)
 

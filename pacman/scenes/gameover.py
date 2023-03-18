@@ -4,7 +4,7 @@ from pacman.scenes import base
 from pacman.misc import Font, BUTTON_TRANSPERENT_COLORS
 
 
-class Scene(base.Scene):
+class GameOverScene(base.Scene):
     def create_objects(self) -> None:
         super().create_objects()
         self.__save_record()

@@ -7,7 +7,7 @@ from pacman.objects.button import Button
 from pacman.scenes import base
 
 
-class Scene(base.Scene):
+class SettingsScene(base.Scene):
     class DifficultyButton(Button):
         __dificulties = {0: "easy", 1: "medium", 2: "hard"}
 
@@ -55,6 +55,8 @@ class Scene(base.Scene):
         def click(self):
             flag_var = not getattr(SettingsStorage(), self.var)
             setattr(SettingsStorage(), self.var, flag_var)
+            for sound in self.game.sounds.__dict__.keys():
+                self.game.sounds.__dict__[sound].update()
             if flag_var:
                 self.text = self.name + " ON"
                 self.colors = BUTTON_GREEN_COLORS

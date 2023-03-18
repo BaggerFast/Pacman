@@ -6,7 +6,6 @@ from pacman.misc.singleton import Singleton
 
 
 class JsonSerializer:
-
     def serialize(self) -> dict:
         data = {}
         for key in sorted(self.__dict__):
@@ -19,17 +18,17 @@ class JsonSerializer:
 
 
 class JsonDeserializer:
-
     def deserialize(self, value: dict) -> None:
         for key in value:
             if not hasattr(self, key):
                 continue
             key_var = getattr(self, key)
-            if isinstance(key_var, JsonDeserializer):
-                key_var.deserialize(value[key])
-                setattr(self, key, key_var)
+            if not isinstance(key_var, JsonDeserializer):
+                setattr(self, key, value[key])
                 continue
-            setattr(self, key, value[key])
+            key_var.deserialize(value[key])
+            setattr(self, key, key_var)
+            continue
 
 
 class SerDes(Singleton, JsonSerializer, JsonDeserializer):
@@ -37,21 +36,18 @@ class SerDes(Singleton, JsonSerializer, JsonDeserializer):
 
 
 class SkinStorage(SerDes):
-
     def __init__(self):
         self.unlocked = ["default"]
         self.current = "default"
 
 
 class LevelStorage(SerDes):
-
     def __init__(self):
         self.current = 0
         self.unlocked = [0]
 
 
 class SettingsStorage(SerDes):
-
     def __init__(self):
         self.volume = 100
         self.difficulty = 0
@@ -62,7 +58,7 @@ class SettingsStorage(SerDes):
 
     def set_volume(self, value: int):
         if not isinstance(value, int):
-            raise ValueError('Volume must be integer of [0, 100]')
+            raise ValueError("Volume must be integer of [0, 100]")
         self.volume = min(max(value, 0), 100)
 
     # endregion
@@ -71,14 +67,13 @@ class SettingsStorage(SerDes):
 
     def set_difficulty(self, value: int):
         if not isinstance(value, int):
-            raise ValueError('Difficult must be integer of [0, 3]')
+            raise ValueError("Difficult must be integer of [0, 3]")
         self.difficulty = value % 3
 
     # endregion
 
 
 class MainStorage(SerDes):
-
     def __init__(self):
         self.settings = SettingsStorage()
         self.skins = SkinStorage()
@@ -92,12 +87,12 @@ class StorageLoader:
     def __init__(self, path: str):
         self.__path = path
 
-    def to_file(self):
+    def to_file(self) -> None:
         string = json.dumps(MainStorage().serialize(), indent=2)
         with open(self.__path, "w") as f:
             f.write(string)
 
-    def from_file(self):
+    def from_file(self) -> None:
         try:
             with open(self.__path, "r") as f:
                 MainStorage().deserialize(json.load(f))

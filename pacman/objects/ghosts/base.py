@@ -192,7 +192,7 @@ class Base(Character):
                 if self.in_rect(rect):
                     cell[3] = False
             if self.mode != "Frightened":
-                min_dis = 10000000000000
+                min_dis = float("inf")
                 for i in range(4):
                     if cell[i]:
                         tmp_cell = (

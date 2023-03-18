@@ -4,7 +4,7 @@ from pacman.scenes import base
 from pacman.misc import Font, BUTTON_TRANSPERENT_COLORS
 
 
-class Scene(base.Scene):
+class PauseScene(base.Scene):
     def create_buttons(self) -> None:
         names = {
             0: ("CONTINUE", self.game.scenes.MAIN, False),

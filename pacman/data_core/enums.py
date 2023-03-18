@@ -19,6 +19,8 @@ class GhostStateEnum(Enum):
 
 # endregion
 
+# region ListEnum
+
 
 class DifficultEnum(Enum):
     EASY = 0
@@ -33,3 +35,6 @@ class SkinEnum(Enum):
     WINDOWS = auto()
     POKEBALL = auto()
     EDGE = auto()
+
+
+# endregion

@@ -4,8 +4,7 @@ from typing import List
 import pygame as pg
 from PIL import Image, ImageFilter
 
-from pacman.data_core import Colors, PathManager, Dirs
-from pacman.misc import Sounds
+from pacman.data_core import Colors, PathManager, Dirs, Sounds
 from pacman.misc import (
     HighScore,
     Score,
@@ -18,7 +17,18 @@ from pacman.misc import (
 from pacman.misc.serializers import StorageLoader, MainStorage, SettingsStorage, SkinStorage, LevelStorage
 from pacman.misc.sound_controller import SoundController
 from pacman.objects import Map
-from pacman.scenes import *
+from pacman.scenes import (
+    PauseScene,
+    MenuScene,
+    MainScene,
+    GameOverScene,
+    LevelsScene,
+    RecordsScene,
+    EndGameScene,
+    SkinsScene,
+    SettingsScene,
+)
+from pacman.scenes.base import Scene
 
 
 class Game:
@@ -41,8 +51,9 @@ class Game:
                 self.seed = SoundController(channel=4, sound_path=Sounds.SEED)
                 self.intro = SoundController(
                     channel=1,
-                    sound_path=Sounds.INTRO[
-                        0] if not SkinStorage().current == game.skins.pokeball else Sounds.POC_INTRO,
+                    sound_path=(
+                        Sounds.INTRO[0] if not SkinStorage().current == game.skins.pokeball else Sounds.POC_INTRO
+                    ),
                 )
                 self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
 
@@ -58,29 +69,30 @@ class Game:
                 self.seed = SoundController(channel=4, sound_path=Sounds.SEED)
                 self.intro = SoundController(
                     channel=1,
-                    sound_path=Sounds.INTRO[
-                        0] if not SkinStorage().current == game.skins.pokeball else Sounds.POC_INTRO,
+                    sound_path=(
+                        Sounds.INTRO[0] if not SkinStorage().current == game.skins.pokeball else Sounds.POC_INTRO
+                    ),
                 )
                 self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
 
     class Scenes:
         def __init__(self, game):
-            self.PAUSE = pause.Scene(game)
-            self.MENU = menu.Scene(game)
-            self.MAIN = main.Scene(game)
-            self.GAMEOVER = gameover.Scene(game)
-            self.LEVELS = levels.Scene(game)
-            self.RECORDS = records.Scene(game)
-            self.ENDGAME = endgame.Scene(game)
-            self.SKINS = skins.Scene(game)
-            self.SETTINGS = settings.Scene(game)
+            self.PAUSE = PauseScene(game)
+            self.MENU = MenuScene(game)
+            self.MAIN = MainScene(game)
+            self.GAMEOVER = GameOverScene(game)
+            self.LEVELS = LevelsScene(game)
+            self.RECORDS = RecordsScene(game)
+            self.ENDGAME = EndGameScene(game)
+            self.SKINS = SkinsScene(game)
+            self.SETTINGS = SettingsScene(game)
             self.__current = None
 
         @property
         def current(self):
             return self.__current
 
-        def set(self, scene: base.Scene, reset: bool = False, surface: bool = False) -> None:
+        def set(self, scene: Scene, reset: bool = False, surface: bool = False) -> None:
             scene.prev_scene = self.__current
             if self.__current is not None and not surface:
                 self.__current.on_deactivate()

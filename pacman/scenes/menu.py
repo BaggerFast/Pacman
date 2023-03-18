@@ -9,7 +9,7 @@ from pacman.scenes import base
 from pacman.misc import Font, BUTTON_MENU
 
 
-class Scene(base.Scene):
+class MenuScene(base.Scene):
     def create_objects(self) -> None:
         self.objects = []
         self.preview = self.game.maps.full_surface

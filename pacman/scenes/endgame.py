@@ -6,7 +6,7 @@ from pacman.scenes import base
 from pacman.misc import BUTTON_TRANSPERENT_COLORS, Font
 
 
-class Scene(base.Scene):
+class EndGameScene(base.Scene):
     def create_objects(self) -> None:
         super().create_objects()
         self.__save_record()
@@ -75,7 +75,7 @@ class Scene(base.Scene):
             self.game.unlock_level(next_level)
 
     def __next_level(self):
-        next_level =  LevelStorage().current + 1
+        next_level = LevelStorage().current + 1
         LevelStorage().current = next_level
         self.game.records.update_records()
         self.game.scenes.set(self.game.scenes.MAIN, reset=True)

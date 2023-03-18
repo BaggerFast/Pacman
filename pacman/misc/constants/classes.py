@@ -1,24 +1,7 @@
 from abc import ABC
-from typing import NamedTuple, Final
+from typing import NamedTuple
 
-from pacman.data_core import PathManager, Dirs
-
-
-# pg.mixer.Sound
-class Sounds(ABC):
-    CLICK: Final[str] = "navigation"
-    SEED: Final[str] = "munch"
-    SEED_FUN: Final[str] = "leader"
-    FRUIT: Final[str] = "eat_fruit"
-    GHOST: Final[str] = "eat_ghost"
-    POC_INTRO: Final[str] = "pokemon_intro"
-    INTERMISSION: Final[str] = "intermission"
-    PELLET: Final[str] = "power_pellet"
-
-    DEAD = PathManager.get_list_path(f"{Dirs.SOUND}/death", ext="ogg")
-    GAME_OVER = PathManager.get_list_path(f"{Dirs.SOUND}/gameover", ext="ogg")
-    INTRO = PathManager.get_list_path(f"{Dirs.SOUND}/intro", ext="ogg")
-    SIREN = PathManager.get_list_path(f"{Dirs.SOUND}/siren", ext="ogg")
+from pacman.data_core import PathManager
 
 
 class Points:

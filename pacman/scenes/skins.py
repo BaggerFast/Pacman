@@ -9,7 +9,7 @@ from pacman.scenes import base
 from pacman.misc import Font, BUTTON_SKIN_BUY
 
 
-class Scene(base.Scene):
+class SkinsScene(base.Scene):
     class SkinButton(Button):
         def __init__(self, **args):
             self.value = args.pop("value")
@@ -95,7 +95,7 @@ class Scene(base.Scene):
                 (self.game.width // 8 - 9 + index * 25, 60),
             )
             self.objects.append(fruit)
-            text = Text(self.game, f'{MainStorage().eaten_fruits[index]}', 10)
+            text = Text(self.game, f"{MainStorage().eaten_fruits[index]}", 10)
             text.move_center(self.game.width // 8 - 10 + index * 25, 60)
             self.objects.append(text)
 

@@ -3,7 +3,6 @@ from pacman.misc.serializers import LevelStorage, MainStorage
 
 
 class HighScore:
-
     def __init__(self, game) -> None:
         self.game = game
         self.__level_id = LevelStorage().current

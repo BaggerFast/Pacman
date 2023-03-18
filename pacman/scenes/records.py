@@ -6,7 +6,7 @@ from pacman.objects import ButtonController, ImageObject, Text
 from pacman.scenes import base
 
 
-class Scene(base.Scene):
+class RecordsScene(base.Scene):
     def create_static_objects(self):
         self.__create_medals()
         self.__create_title()
