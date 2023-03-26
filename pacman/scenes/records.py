@@ -2,6 +2,7 @@ import pygame as pg
 
 from pacman.data_core import Colors, PathManager
 from pacman.misc import Font
+from pacman.misc.serializers import LevelStorage
 from pacman.objects import ButtonController, ImageObject, Text
 from pacman.scenes import base
 
@@ -14,6 +15,9 @@ class RecordsScene(base.Scene):
 
     def create_objects(self) -> None:
         super().create_objects()
+        self.__indicator = Text(f"level {LevelStorage().current+1}", 12, font=Font.DEFAULT)
+        self.__indicator.move_center(self.game.width // 2, 55)
+        self.objects.append(self.__indicator)
         self.__create_text_labels()
 
     def create_buttons(self) -> None:
@@ -41,12 +45,14 @@ class RecordsScene(base.Scene):
         text_colors = [Colors.GOLD, Colors.SILVER, Colors.BRONZE, Colors.WHITE, Colors.WHITE]
         y = 4
         for i in range(5):
+            text = "." * 12 if self.game.records.data[y] == 0 else str(self.game.records.data[y])
+            text_color = Colors.WHITE if self.game.records.data[y] == 0 else text_colors[i]
             self.medals_text.append(
                 Text(
-                    str(self.game.records.data[y]),
-                    30,
-                    pg.Rect(60, 55 + 35 * i, 0, 0),
-                    text_colors[i],
+                    text,
+                    25,
+                    pg.Rect(60, 60 + 35 * i, 0, 0),
+                    text_color,
                 )
             )
             y -= 1
@@ -58,10 +64,9 @@ class RecordsScene(base.Scene):
                 ImageObject(
                     self.game,
                     PathManager.get_image_path(f"medal/{i}"),
-                    (16, 55 + 35 * i),
-                )
+                    (16, 60 + 35 * i),
+                ).scale(30, 30)
             )
-            self.__medals[i].scale(35, 35)
 
     def additional_draw(self, screen: pg.Surface) -> None:
         super().additional_draw(screen)
@@ -70,7 +75,7 @@ class RecordsScene(base.Scene):
             return
         y = 4
         for i in range(5):
-            if self.game.records.data[y] != 0:
+            if y != -1:
                 self.medals_text[i].process_draw(screen)
                 self.__medals[i].process_draw(screen)
             y -= 1
