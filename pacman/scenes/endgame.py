@@ -3,7 +3,7 @@ import pygame as pg
 from pacman.misc.serializers import LevelStorage
 from pacman.objects import ButtonController, Button, Text
 from pacman.scenes import base
-from pacman.misc import BUTTON_TRANSPERENT_COLORS, Font
+from pacman.misc import Font
 
 
 class EndGameScene(base.Scene):
@@ -25,34 +25,28 @@ class EndGameScene(base.Scene):
         buttons = [
             (
                 Button(
-                    self.game,
-                    pg.Rect(0, 0, 180, 35),
-                    self.__next_level,
-                    "NEXT LEVEL",
-                    center=(self.game.width // 2, 210),
+                    game=self.game,
+                    rect=pg.Rect(0, 0, 180, 35),
+                    function=self.__next_level,
+                    text="NEXT LEVEL",
                     text_size=Font.BUTTON_TEXT_SIZE,
-                    colors=BUTTON_TRANSPERENT_COLORS,
-                )
+                ).move_center(self.game.width // 2, 210)
                 if self.__is_last_level()
                 else self.SceneButton(
                     game=self.game,
-                    geometry=pg.Rect(0, 0, 180, 35),
+                    rect=pg.Rect(0, 0, 180, 35),
                     text="EXIT",
                     scene=(self.game.scenes.MENU, False),
-                    center=(self.game.width // 2, 210),
                     text_size=Font.BUTTON_TEXT_SIZE,
-                    colors=BUTTON_TRANSPERENT_COLORS,
-                )
+                ).move_center(self.game.width // 2, 210)
             ),
             self.SceneButton(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 180, 35),
+                rect=pg.Rect(0, 0, 180, 35),
                 text="MENU",
                 scene=(self.game.scenes.MENU, False),
-                center=(self.game.width // 2, 250),
                 text_size=Font.BUTTON_TEXT_SIZE,
-                colors=BUTTON_TRANSPERENT_COLORS,
-            ),
+            ).move_center(self.game.width // 2, 250),
         ]
         self.objects.append(ButtonController(buttons))
 

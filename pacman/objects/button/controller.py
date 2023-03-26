@@ -9,18 +9,17 @@ from pacman.objects.button.button import Button
 
 
 class ButtonController(DrawableObject):
-    def __init__(self, buttons: List[Button]) -> None:
+    def __init__(self, buttons: List[Button]):
         super().__init__()
         self.buttons = buttons
-        self.active_button_index = -1
+        self.active_button_index = 0
+        self.current.select()
 
-        self.kb_actions = {
+        self.kb_down_actions = {
             KbKeys.DOWN: self.move_down,
             KbKeys.UP: self.move_up,
-            KbKeys.ENTER: self.press_cur_btn,
+            KbKeys.ENTER: lambda: self.current.activate(),
         }
-
-    # region new
 
     @property
     def current(self) -> Button:
@@ -40,21 +39,25 @@ class ButtonController(DrawableObject):
             self.move_down()
         self.current.select()
 
-    def press_cur_btn(self) -> None:
-        self.current.activate()
+    def unpress_cur_btn(self):
+        if not self.current.is_state(BtnStateEnum.CLICK):
+            return
+        self.current.select()
         self.current.click()
 
     def __parse_keyboard(self, event) -> None:
         if event.type == pg.KEYDOWN:
-            for key in self.kb_actions:
+            for key in self.kb_down_actions:
                 if event.key in key:
-                    self.kb_actions[key]()
+                    self.kb_down_actions[key]()
                     return
         elif event.type == pg.KEYUP:
-            if event.key in KbKeys.ENTER and self.current.is_state(BtnStateEnum.CLICK):
-                self.current.select()
+            if event.key in KbKeys.ENTER:
+                self.unpress_cur_btn()
 
     def process_draw(self, screen: pg.Surface) -> None:
+        if self.current.is_state(BtnStateEnum.INITIAL):
+            self.current.select()
         for button in self.buttons:
             button.process_draw(screen)
 
@@ -72,5 +75,3 @@ class ButtonController(DrawableObject):
             if button.is_state(BtnStateEnum.HOVER):
                 self.active_button_index = index
                 return
-
-    # endregion

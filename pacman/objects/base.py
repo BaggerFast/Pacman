@@ -6,14 +6,15 @@ class DrawableObject:
         self.is_hidden = is_hidden
         self.rect = pg.rect.Rect(0, 0, 0, 0)
 
-    def move(self, x, y) -> None:
-        self.rect.x = x
-        self.rect.y = y
+    def move(self, x, y) -> "DrawableObject":
+        self.rect.x, self.rect.y = x, y
+        return self
 
-    def move_center(self, x: int, y: int) -> None:
-        self.rect.centerx = x
-        self.rect.centery = y
+    def move_center(self, x: int, y: int) -> "DrawableObject":
+        self.rect.centerx, self.rect.centery = x, y
+        return self
 
+    # todo: DELETE
     def process_event(self, event: pg.event.Event) -> None:
         pass
 

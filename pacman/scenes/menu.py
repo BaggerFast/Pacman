@@ -6,7 +6,7 @@ from pacman.misc.serializers import LevelStorage
 from pacman.objects.map import rand_color
 from pacman.objects import ButtonController, Text, ImageObject
 from pacman.scenes import base
-from pacman.misc import Font, BUTTON_MENU
+from pacman.misc import Font
 
 
 class MenuScene(base.Scene):
@@ -41,12 +41,7 @@ class MenuScene(base.Scene):
         self.static_objects.append(title)
 
     def __create_indicator(self) -> None:
-        self.__indicator = Text(
-            self.game.maps.level_name(LevelStorage().current).replace("_", " "),
-            15,
-            font=Font.TITLE,
-        )
-        self.__indicator.move_center(self.game.width // 2, 60)
+        self.__indicator = Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(self.game.width // 2, 60)
         self.objects.append(self.__indicator)
 
     def create_buttons(self) -> None:
@@ -63,12 +58,10 @@ class MenuScene(base.Scene):
             buttons.append(
                 self.SceneButton(
                     game=self.game,
-                    geometry=pg.Rect(0, 0, 180, 26),
+                    rect=pg.Rect(0, 0, 180, 26),
                     text=names[i][0],
                     scene=(names[i][1], names[i][2]),
-                    center=(self.game.width // 2, 95 + i * 28),
                     text_size=Font.BUTTON_TEXT_SIZE,
-                    colors=BUTTON_MENU,
-                )
+                ).move_center(self.game.width // 2, 95 + i * 28)
             )
         self.objects.append(ButtonController(buttons))

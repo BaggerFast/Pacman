@@ -19,12 +19,11 @@ class RecordsScene(base.Scene):
     def create_buttons(self) -> None:
         back_button = self.SceneButton(
             game=self.game,
-            geometry=pg.Rect(0, 0, 180, 40),
+            rect=pg.Rect(0, 0, 180, 40),
             text="MENU",
             scene=(self.game.scenes.MENU, False),
-            center=(self.game.width // 2, 250),
             text_size=Font.BUTTON_TEXT_SIZE,
-        )
+        ).move_center(self.game.width // 2, 250)
         self.objects.append(ButtonController([back_button]))
 
     def __create_title(self) -> None:
@@ -68,6 +67,7 @@ class RecordsScene(base.Scene):
         super().additional_draw(screen)
         if self.game.records.data[4] == 0:
             self.__error_text.process_draw(screen)
+            return
         y = 4
         for i in range(5):
             if self.game.records.data[y] != 0:

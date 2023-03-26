@@ -65,14 +65,7 @@ class ButtonColor(NamedTuple):
 BUTTON_DEFAULT_COLORS = ButtonColor(
     static=ButtonStateColor(text=Colors.GRAY, background=Colors.TRANSPARENT),
     hover=ButtonStateColor(text=Colors.WHITE, background=Colors.TRANSPARENT),
-    click=ButtonStateColor(text=Colors.BLACK, background=Colors.JET),
-)
-
-
-BUTTON_TRANSPERENT_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Colors.GRAY, background=Colors.TRANSPARENT),
-    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.HALF_TRANSPARENT),
-    click=ButtonStateColor(text=Colors.WHITE, background=Colors.JET),
+    click=ButtonStateColor(text=Colors.DARK_GRAY, background=Colors.HALF_TRANSPARENT),
 )
 
 BUTTON_GREEN_COLORS = ButtonColor(
@@ -91,10 +84,4 @@ BUTTON_SKIN_BUY = ButtonColor(
     static=ButtonStateColor(text=Colors.YELLOW, background=Colors.BLACK),
     hover=ButtonStateColor(text=Colors.WHITE, background=Colors.JET),
     click=ButtonStateColor(text=Colors.BLACK, background=Colors.BLACK),
-)
-
-BUTTON_MENU = ButtonColor(
-    static=ButtonStateColor(text=Colors.GRAY, background=Colors.TRANSPARENT),
-    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.TRANSPARENT),
-    click=ButtonStateColor(text=Colors.WHITE, background=Colors.JET),
 )

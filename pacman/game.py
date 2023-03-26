@@ -102,7 +102,7 @@ class Game:
             self.__images = self.prerender_surfaces()
 
         @property
-        def images(self):
+        def images(self) -> List[ImageObject]:
             return self.__images
 
         @property
@@ -111,8 +111,8 @@ class Game:
             return self.__map.prerender_map_surface()
 
         @staticmethod
-        def level_name(level_id: int = 0):
-            return f"level_{level_id + 1}"
+        def level_name(level_id: int = 0) -> str:
+            return f"Level {level_id + 1}"
 
         def __load_from_map(self, level_id: int = 0) -> None:
             self.__loader = LevelLoader(self.levels[level_id])

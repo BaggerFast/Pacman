@@ -128,8 +128,7 @@ class SkinsScene(base.Scene):
                     multiply_x += 1
 
     def __create_title(self) -> None:
-        title = Text("SELECT SKIN", 25, font=Font.TITLE)
-        title.move_center(self.game.width // 2, 30)
+        title = Text("SELECT SKIN", 25, font=Font.TITLE).move_center(self.game.width // 2, 30)
         self.static_objects.append(title)
 
     def create_buttons(self) -> None:
@@ -143,42 +142,33 @@ class SkinsScene(base.Scene):
                 buttons.append(
                     self.SkinButton(
                         game=self.game,
-                        geometry=pg.Rect(0, 0, 90, 25),
+                        rect=pg.Rect(0, 0, 90, 25),
                         text=self.skins[i][0],
                         value=self.skins[i][1],
-                        center=(
-                            self.button_pos_x,
-                            self.button_pos_y + i * self.button_pos_multiply_y,
-                        ),
                         text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
                         active=self.skins[i][1].name in SkinStorage().unlocked,
-                    )
+                    ).move_center(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y)
                 )
             else:
                 buttons.append(
                     self.BuyButton(
                         game=self.game,
-                        geometry=pg.Rect(0, 0, 90, 25),
+                        rect=pg.Rect(0, 0, 90, 25),
                         text=self.skins[i][0],
                         value=self.skins[i],
-                        center=(
-                            self.button_pos_x,
-                            self.button_pos_y + i * self.button_pos_multiply_y,
-                        ),
                         text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
                         colors=BUTTON_SKIN_BUY,
-                    )
+                    ).move_center(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y)
                 )
 
         buttons.append(
             self.SceneButton(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 180, 40),
+                rect=pg.Rect(0, 0, 180, 40),
                 text="MENU",
                 scene=(self.game.scenes.MENU, False),
-                center=(self.game.width // 2, 250),
                 text_size=Font.BUTTON_TEXT_SIZE,
-            )
+            ).move_center(self.game.width // 2, 250)
         )
 
         self.__button_controller = ButtonController(buttons)

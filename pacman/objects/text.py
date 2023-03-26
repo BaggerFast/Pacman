@@ -48,7 +48,7 @@ class Text(DrawableObject):
 
     @color.setter
     def color(self, color: pg.color):
-        self.color = color
+        self.__color = color
         self.surface = self.font.render(self.__text, False, self.__color)
 
     @pos.setter
@@ -63,3 +63,6 @@ class Text(DrawableObject):
 
     def process_logic(self) -> None:
         pass
+
+    def __repr__(self):
+        return f"Text: {self.__text}"

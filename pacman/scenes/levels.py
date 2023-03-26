@@ -71,14 +71,8 @@ class LevelsScene(base.Scene):
                 scene=(self.game.scenes.MENU, False),
                 center=(self.game.width // 2, 250),
                 text_size=Font.BUTTON_TEXT_SIZE,
-            )
+            ).move_center(self.game.width // 2, 250)
         )
-
-        for index in range(len(buttons)):
-            if hasattr(buttons[index], "value"):
-                if LevelStorage().current == buttons[index].value[0]:
-                    buttons[index].text = "-" + buttons[index].text + "-"
-
         self.__button_controller = ButtonController(buttons)
         self.objects.append(self.__button_controller)
 

@@ -32,7 +32,6 @@ def rand_color():
 
 
 class Map(DrawableObject):
-
     def __init__(self, game, map_data) -> None:
         super().__init__()
         self.color = rand_color()
@@ -41,8 +40,9 @@ class Map(DrawableObject):
         self.map_data = map_data
         self.__size = (224, 248)
         self.surface = pg.Surface(self.__size)
-        self.tiles = sprite_slice(pg.image.load(PathManager.get_image_path('map.png')),
-                                  (self.tile_size, self.tile_size))
+        self.tiles = sprite_slice(
+            pg.image.load(PathManager.get_image_path("map.png")), (self.tile_size, self.tile_size)
+        )
         self.surface = self.__load_surface()
         self.surface_for_draw = self.__surface_recolor()
 
@@ -66,13 +66,6 @@ class Map(DrawableObject):
 
     def prerender_map_image_scaled(self) -> ImageObject:
         image = ImageObject(self.game, self.prerender_map_surface(), (110, 96))
-        image.smoothscale(100, 100)
-
-        # Threshold
-        for x in range(image.image.get_width()):
-            for y in range(image.image.get_height()):
-                if image.image.get_at((x, y))[2] > 0:
-                    image.image.set_at((x, y), (0, 0, min(image.image.get_at((x, y))[2] * 5, 255), 255))
         return image
 
     def process_draw(self, screen: pg.Surface) -> None:

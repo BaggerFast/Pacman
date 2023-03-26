@@ -49,12 +49,33 @@ class SkinStorage(SerDes):
 
 class LevelStorage(SerDes):
     def __init__(self):
-        self.current = 0
+        self.level_count = 10
+        self.__current = 0
         self.unlocked = [0]
+
+    @property
+    def current(self) -> int:
+        return self.__current
+
+    @current.setter
+    def current(self, value):
+        if isinstance(value, int):
+            self.__current = value
+        else:
+            raise Exception("Current level must be a positive integer")
+
+    def __str__(self):
+        return f"Level {self.current+1}"
 
     def unlock_level(self, level_id: int = 0) -> None:
         if level_id not in MainStorage().levels.unlocked:
             self.unlocked.append(level_id)
+
+    def set_next_level(self):
+        self.current = (self.current + 1) % self.level_count
+
+    def set_prev_level(self):
+        self.current = (self.current - 1) % self.level_count
 
 
 class SettingsStorage(SerDes):

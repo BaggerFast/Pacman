@@ -45,12 +45,12 @@ class SettingsScene(base.Scene):
             flag_var = getattr(SettingsStorage(), var)
             super().__init__(
                 game=game,
-                geometry=pg.Rect(0, 0, 180, 35),
+                rect=pg.Rect(0, 0, 180, 35),
                 text=name + (" ON" if flag_var else " OFF"),
-                center=(game.width // 2, 75 + i * 40),
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_GREEN_COLORS if flag_var else BUTTON_RED_COLORS,
             )
+            self.move_center(game.width // 2, 75 + i * 40)
             self.name = name
             self.var = var
 
@@ -101,39 +101,35 @@ class SettingsScene(base.Scene):
         self.buttons.append(
             self.SelectButton(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 40, 35),
+                rect=pg.Rect(0, 0, 40, 35),
                 text="-",
-                center=(self.game.width // 2 - 60, self.__volume_position + 30),
                 value=-5,
-            )
+            ).move_center(self.game.width // 2 - 60, self.__volume_position + 30)
         )
         self.buttons.append(
             self.SelectButton(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 40, 35),
+                rect=pg.Rect(0, 0, 40, 35),
                 text="+",
-                center=(self.game.width // 2 + 65, self.__volume_position + 30),
                 value=5,
-            )
+            ).move_center(self.game.width // 2 + 65, self.__volume_position + 30)
         )
         if self.prev_scene == self.game.scenes.MENU:
             self.buttons.append(
                 self.DifficultyButton(
                     game=self.game,
-                    geometry=pg.Rect(0, 0, 120, 35),
-                    center=(self.game.width // 2, self.__difficulty_pos),
+                    rect=pg.Rect(0, 0, 120, 35),
                     text_size=Font.BUTTON_TEXT_SIZE,
-                )
+                ).move_center(self.game.width // 2, self.__difficulty_pos)
             )
         self.buttons.append(
             self.SceneButton(
                 game=self.game,
-                geometry=pg.Rect(0, 0, 180, 40),
+                rect=pg.Rect(0, 0, 180, 40),
                 text="BACK",
                 scene=(self.prev_scene, False),
-                center=(self.game.width // 2, 250),
                 text_size=Font.BUTTON_TEXT_SIZE,
-            )
+            ).move_center(self.game.width // 2, 250)
         )
 
         self.objects.append(ButtonController(self.buttons))

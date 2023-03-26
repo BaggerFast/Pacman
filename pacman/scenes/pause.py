@@ -1,7 +1,7 @@
 import pygame as pg
 from pacman.objects import ButtonController, Text
 from pacman.scenes import base
-from pacman.misc import Font, BUTTON_TRANSPERENT_COLORS
+from pacman.misc import Font
 
 
 class PauseScene(base.Scene):
@@ -17,13 +17,11 @@ class PauseScene(base.Scene):
             buttons.append(
                 self.SceneButton(
                     game=self.game,
-                    geometry=pg.Rect(0, 0, 180, 40),
+                    rect=pg.Rect(0, 0, 180, 40),
                     text=names[i][0],
                     scene=(names[i][1], names[i][2]),
-                    center=(self.game.width // 2, 100 + 45 * i),
                     text_size=Font.BUTTON_TEXT_SIZE,
-                    colors=BUTTON_TRANSPERENT_COLORS,
-                )
+                ).move_center(self.game.width // 2, 100 + 45 * i)
             )
         self.objects.append(ButtonController(buttons))
 

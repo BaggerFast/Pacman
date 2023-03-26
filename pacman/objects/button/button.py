@@ -10,28 +10,24 @@ class Button(DrawableObject):
     def __init__(
         self,
         game,
-        geometry: Union[tuple, pg.Rect],
+        rect: Union[tuple, pg.Rect],
         function: Callable[[], None] = None,
         text: str = "Define me",
         colors: ButtonColor = BUTTON_DEFAULT_COLORS,
-        center: Tuple[int, int] = None,
         text_size: int = 60,
         font=Font.DEFAULT,
         active: bool = True,
     ):
         super().__init__()
         self.game = game
-        self.rect = geometry
+        self.rect = rect
         self.function = function
-
         self.__text = text
         self.font = pg.font.Font(font, text_size)
         self.active = active
         self.__colors: ButtonColor = colors
         self.state = BtnStateEnum.INITIAL
         self.surfaces = self.prepare_surfaces()
-        if center:
-            self.move_center(*center)
 
     def mouse_hover(self, pos: Tuple[Union[int, float], Union[int, float]]) -> bool:
         return self.rect.collidepoint(pos) and self.active
