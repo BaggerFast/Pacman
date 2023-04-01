@@ -112,6 +112,16 @@ class MainStorage(SerDes):
         self.eaten_fruits = [0 for _ in range(FRUITS_COUNT)]
         self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(10)]
 
+    def add_record(self, score: int):
+        self.highscores[self.levels.current].append(int(score))
+        self.highscores[self.levels.current] = sorted(self.highscores[self.levels.current])[-HIGHSCORES_COUNT:]
+
+    def current_highscores(self):
+        return self.highscores[self.levels.current][:]
+
+    def get_highscore(self) -> int:
+        return self.highscores[self.levels.current][-1]
+
     def store_fruit(self, fruit_id: int = 0, value: int = 0) -> None:
         if fruit_id in range(FRUITS_COUNT):
             self.eaten_fruits[fruit_id] += value

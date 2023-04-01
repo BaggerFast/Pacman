@@ -1,16 +1,11 @@
 from abc import ABC
-from typing import NamedTuple
-
 from pacman.data_core import PathManager
 
 
 class Points:
-    class Tuple(NamedTuple):
-        value: int
-
-    POINT_PER_SEED = Tuple(10).value
-    POINT_PER_ENERGIZER = Tuple(50).value
-    POINT_PER_FRUIT = Tuple(40).value
+    POINT_PER_SEED = 10
+    POINT_PER_ENERGIZER = 50
+    POINT_PER_FRUIT = 40
 
 
 class Font(ABC):

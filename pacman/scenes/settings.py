@@ -1,5 +1,6 @@
 import pygame as pg
 
+from pacman.data_core import Config
 from pacman.misc import Font, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from pacman.misc.serializers import SettingsStorage
 from pacman.objects import ButtonController, Text
@@ -18,27 +19,13 @@ class SettingsScene(base.Scene):
 
         def click(self) -> None:
             self.game.sounds.click.play()
-            self.value += 1
-            if self.value > 2:
-                self.value = 0
+            self.value = (self.value + 1) % len(self.__dificulties)
             self.update_text()
             self.select()
             SettingsStorage().difficulty = self.value
 
         def update_text(self):
             self.text = self.__dificulties[self.value]
-
-    class SelectButton(Button):
-        def __init__(self, **args):
-            self.value = args.pop("value")
-            super().__init__(**args)
-
-        def click(self) -> None:
-            SettingsStorage().set_volume(SettingsStorage().volume + self.value)
-            self.game.sounds.click.play()
-            self.game.scenes.current.volume_value.text = f"{SettingsStorage().volume}%"
-            for sound in self.game.sounds.__dict__.keys():
-                self.game.sounds.__dict__[sound].update()
 
     class SettingButton(Button):
         def __init__(self, game, name, i, var):
@@ -50,7 +37,7 @@ class SettingsScene(base.Scene):
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_GREEN_COLORS if flag_var else BUTTON_RED_COLORS,
             )
-            self.move_center(game.width // 2, 75 + i * 40)
+            self.move_center(Config.RESOLUTION.half_width, 75 + i * 40)
             self.name = name
             self.var = var
 
@@ -72,12 +59,12 @@ class SettingsScene(base.Scene):
 
     def create_static_objects(self):
         self.volume_text = Text("VOLUME", 20)
-        self.volume_text.move_center(self.game.width // 2, self.__volume_position)
+        self.volume_text.move_center(Config.RESOLUTION.half_width, self.__volume_position)
         self.static_objects.append(self.volume_text)
 
         self.volume_value = Text(f"{SettingsStorage().volume}%", 20)
         self.volume_value.move_center(
-            self.game.width // 2,
+            Config.RESOLUTION.half_width,
             self.__volume_position + 30,
         )
         self.static_objects.append(self.volume_value)
@@ -87,8 +74,14 @@ class SettingsScene(base.Scene):
         text = ["SETTINGS"]
         for i in range(len(text)):
             text[i] = Text(text[i], 30, font=Font.TITLE)
-            text[i].move_center(self.game.width // 2, 30 + i * 40)
+            text[i].move_center(Config.RESOLUTION.half_width, 30 + i * 40)
             self.static_objects.append(text[i])
+
+    def click_sound(self, step):
+        SettingsStorage().set_volume(SettingsStorage().volume + step)
+        self.game.scenes.current.volume_value.text = f"{SettingsStorage().volume}%"
+        for sound in self.game.sounds.__dict__.keys():
+            self.game.sounds.__dict__[sound].update()
 
     def create_buttons(self) -> None:
         names = [
@@ -99,20 +92,20 @@ class SettingsScene(base.Scene):
         for i in range(len(names)):
             self.buttons.append(self.SettingButton(self.game, names[i][0], i, names[i][1]))
         self.buttons.append(
-            self.SelectButton(
+            Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 40, 35),
                 text="-",
-                value=-5,
-            ).move_center(self.game.width // 2 - 60, self.__volume_position + 30)
+                function=lambda: self.click_sound(-5),
+            ).move_center(Config.RESOLUTION.half_width - 60, self.__volume_position + 30)
         )
         self.buttons.append(
-            self.SelectButton(
+            Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 40, 35),
                 text="+",
-                value=5,
-            ).move_center(self.game.width // 2 + 65, self.__volume_position + 30)
+                function=lambda: self.click_sound(5),
+            ).move_center(Config.RESOLUTION.half_width + 65, self.__volume_position + 30)
         )
         if self.prev_scene == self.game.scenes.MENU:
             self.buttons.append(
@@ -120,16 +113,16 @@ class SettingsScene(base.Scene):
                     game=self.game,
                     rect=pg.Rect(0, 0, 120, 35),
                     text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(self.game.width // 2, self.__difficulty_pos)
+                ).move_center(Config.RESOLUTION.half_width, self.__difficulty_pos)
             )
         self.buttons.append(
-            self.SceneButton(
+            Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 180, 40),
                 text="BACK",
-                scene=(self.prev_scene, False),
+                function=lambda: self.click_btn(self.prev_scene, False),
                 text_size=Font.BUTTON_TEXT_SIZE,
-            ).move_center(self.game.width // 2, 250)
+            ).move_center(Config.RESOLUTION.half_width, 250)
         )
 
         self.objects.append(ButtonController(self.buttons))

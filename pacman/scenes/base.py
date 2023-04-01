@@ -3,18 +3,6 @@ from pacman.objects.button import Button
 
 
 class Scene:
-    class SceneButton(Button):
-        def __init__(self, **args):
-            self.scene = args.pop("scene")
-            super().__init__(**args)
-
-        def click(self) -> None:
-            self.game.sounds.click.play()
-            if callable(self.scene[0]):
-                self.scene[0]()
-            else:
-                self.game.scenes.set(self.scene[0], reset=self.scene[1])
-
     def __init__(self, game) -> None:
         self.game = game
         self.prev_scene = None
@@ -22,6 +10,13 @@ class Scene:
         self.objects: list = []
         self.static_objects = []
         self.create_static_objects()
+
+    def click_btn(self, scene, status):
+        self.game.sounds.click.play()
+        if callable(scene):
+            scene()
+        else:
+            self.game.scenes.set(scene, reset=status)
 
     def process_event(self, event: pg.event.Event) -> None:
         for item in self.objects:

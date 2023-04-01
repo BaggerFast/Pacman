@@ -2,7 +2,7 @@ from copy import copy
 
 import pygame as pg
 
-from pacman.data_core import PathManager, Dirs
+from pacman.data_core import PathManager, Dirs, Config
 from pacman.misc.serializers import MainStorage, SkinStorage
 from pacman.objects import ButtonController, Text, Button, ImageObject
 from pacman.scenes import base
@@ -94,11 +94,11 @@ class SkinsScene(base.Scene):
             fruit = ImageObject(
                 self.game,
                 self.fruit_images[index],
-                (self.game.width // 8 - 9 + index * 25, 60),
+                (Config.RESOLUTION.WIDTH // 8 - 9 + index * 25, 60),
             )
             self.objects.append(fruit)
             text = Text(f"{MainStorage().eaten_fruits[index]}", 10)
-            text.move_center(self.game.width // 8 - 10 + index * 25, 60)
+            text.move_center(Config.RESOLUTION.WIDTH // 8 - 10 + index * 25, 60)
             self.objects.append(text)
 
     def create_fruits_and_text_for_skins(self) -> None:
@@ -128,13 +128,13 @@ class SkinsScene(base.Scene):
                     multiply_x += 1
 
     def __create_title(self) -> None:
-        title = Text("SELECT SKIN", 25, font=Font.TITLE).move_center(self.game.width // 2, 30)
+        title = Text("SELECT SKIN", 25, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30)
         self.static_objects.append(title)
 
     def create_buttons(self) -> None:
         buttons = []
 
-        self.button_pos_x = self.game.width // 2 - 65
+        self.button_pos_x = Config.RESOLUTION.half_width - 65
         self.button_pos_y = 90
         self.button_pos_multiply_y = 25
         for i in range(len(self.skins)):
@@ -162,13 +162,13 @@ class SkinsScene(base.Scene):
                 )
 
         buttons.append(
-            self.SceneButton(
+            Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 180, 40),
                 text="MENU",
-                scene=(self.game.scenes.MENU, False),
+                function=lambda: self.click_btn(self.game.scenes.MENU, False),
                 text_size=Font.BUTTON_TEXT_SIZE,
-            ).move_center(self.game.width // 2, 250)
+            ).move_center(Config.RESOLUTION.half_width, 250)
         )
 
         self.__button_controller = ButtonController(buttons)

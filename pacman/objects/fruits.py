@@ -1,5 +1,5 @@
-import pygame as pg
 from random import randint
+import pygame as pg
 from pacman.data_core import PathManager, Dirs
 from pacman.misc.animator import Animator
 from pacman.misc.cell_util import CellUtil

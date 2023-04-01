@@ -11,7 +11,7 @@ class Button(DrawableObject):
         self,
         game,
         rect: Union[tuple, pg.Rect],
-        function: Callable[[], None] = None,
+        function: Callable = None,
         text: str = "Define me",
         colors: ButtonColor = BUTTON_DEFAULT_COLORS,
         text_size: int = 60,
@@ -79,7 +79,7 @@ class Button(DrawableObject):
 
     def prepare_surfaces(self) -> List[pg.Surface]:
         surfaces = []
-        for index in range(len(self.__colors.get_members_list())):
+        for index in range(len(self.__colors)):
             surfaces.append(self.prepare_surface(index))
         return surfaces
 

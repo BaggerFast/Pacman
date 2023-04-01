@@ -1,6 +1,7 @@
 from typing import Tuple, List
 import pygame as pg
 
+from pacman.data_core import Config
 from pacman.misc import Animator
 from pacman.misc.cell_util import CellUtil
 from pacman.objects import DrawableObject
@@ -28,8 +29,12 @@ class Character(DrawableObject):
         self.rotate = 0
 
     def step(self) -> None:
-        self.rect.centerx = (self.rect.centerx + self.shift_x * self.speed + self.game.width) % self.game.width
-        self.rect.centery = (self.rect.centery + self.shift_y * self.speed + self.game.height) % self.game.height
+        self.rect.centerx = (
+            self.rect.centerx + self.shift_x * self.speed + Config.RESOLUTION.WIDTH
+        ) % Config.RESOLUTION.WIDTH
+        self.rect.centery = (
+            self.rect.centery + self.shift_y * self.speed + Config.RESOLUTION.HEIGHT
+        ) % Config.RESOLUTION.HEIGHT
 
     def go(self) -> None:
         if self.speed != 0:
@@ -72,7 +77,7 @@ class Character(DrawableObject):
                 )
             screen.blit(
                 self.animator.current_image,
-                (self.rect.x + self.game.width * i, self.rect.y),
+                (self.rect.x + Config.RESOLUTION.WIDTH * i, self.rect.y),
             )
 
     def movement_cell(self, cell: Tuple[int, int]) -> list:

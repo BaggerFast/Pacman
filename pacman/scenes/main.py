@@ -1,9 +1,9 @@
 import pygame as pg
 
-from pacman.data_core import PathManager
+from pacman.data_core import PathManager, Config
 from pacman.misc import ControlCheats
 from pacman.misc import LevelLoader, Font, Health
-from pacman.misc.serializers import SettingsStorage, LevelStorage
+from pacman.misc.serializers import SettingsStorage, LevelStorage, MainStorage
 from pacman.objects import SeedContainer, Map, ImageObject, Text, Pacman
 from pacman.objects.fruits import Fruit
 from pacman.objects.ghosts import *
@@ -84,7 +84,7 @@ class MainScene(base.Scene):
                 font=Font.TITLE,
                 rect=pg.Rect(20, 0, 20, 20),
             )
-            self.text[i].move_center(self.game.width // 2, self.game.height // 2)
+            self.text[i].move_center(Config.RESOLUTION.half_width, Config.RESOLUTION.half_height)
             self.text[i].surface.set_alpha(0)
             self.static_objects.append(self.text[i])
         self.state_text = 1
@@ -138,7 +138,7 @@ class MainScene(base.Scene):
 
     def __create_hud(self):
         self.__high_scores_value_text = Text(
-            str(self.game.records.data[-1]),
+            f"{MainStorage().get_highscore()}",
             Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(130, 8, 20, 20),
         )

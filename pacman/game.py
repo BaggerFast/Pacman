@@ -4,8 +4,8 @@ from typing import List
 import pygame as pg
 from PIL import Image, ImageFilter
 
-from pacman.data_core import Colors, PathManager, Dirs, Sounds
-from pacman.misc import HighScore, Score, LevelLoader, Skins
+from pacman.data_core import Colors, PathManager, Dirs, Sounds, Config
+from pacman.misc import Score, LevelLoader, Skins
 from pacman.misc.serializers import StorageLoader, SettingsStorage, SkinStorage, LevelStorage
 from pacman.misc.sound_controller import SoundController
 from pacman.objects import Map, ImageObject
@@ -134,17 +134,13 @@ class Game:
                 images.append(image)
             return images
 
-    __size = width, height = 224, 285
-
-    __FPS = 60
-
     def __init__(self) -> None:
         self.storage_loader = StorageLoader(PathManager.get_path("storage.json"))
         self.storage_loader.from_file()
 
         self.__game_over = False
         self.maps = self.Maps(self)
-        self.screen = pg.display.set_mode(self.__size, pg.SCALED)
+        self.screen = pg.display.set_mode(tuple(Config.RESOLUTION), pg.SCALED)
         self.__clock = pg.time.Clock()
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
@@ -155,17 +151,12 @@ class Game:
         self.sounds = self.Music(self)
 
         self.skins.current = "default"
-        self.records = HighScore(self)
         self.scenes = self.Scenes(self)
         self.scenes.set(self.scenes.MENU)
 
     @property
     def current_scene(self):
         return self.scenes.current
-
-    @property
-    def size(self):
-        return self.__size
 
     # region Exit
 
@@ -202,7 +193,7 @@ class Game:
             blur_count = 10
             current_time = pg.time.get_ticks() / 1000
             surify = pg.image.tostring(self.scenes.MAIN.template, "RGBA")
-            impil = Image.frombytes("RGBA", self.__size, surify)
+            impil = Image.frombytes("RGBA", tuple(Config.RESOLUTION), surify)
             piler = impil.filter(
                 ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count))
             )
@@ -216,6 +207,6 @@ class Game:
             self.__process_all_events()
             self.__process_all_logic()
             self.__process_all_draw()
-            self.__clock.tick(self.__FPS)
+            self.__clock.tick(Config.FPS)
 
     # endregion

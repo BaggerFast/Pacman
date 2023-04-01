@@ -1,6 +1,5 @@
-import pygame as pg
-
 from typing import Tuple
+import pygame as pg
 from .base import Base
 
 

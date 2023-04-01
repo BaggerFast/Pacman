@@ -1,10 +1,10 @@
 import pygame as pg
 from PIL import ImageFilter, Image
 
-from pacman.data_core import Colors
+from pacman.data_core import Colors, Config
 from pacman.misc.serializers import LevelStorage
 from pacman.objects.map import rand_color
-from pacman.objects import ButtonController, Text, ImageObject
+from pacman.objects import ButtonController, Text, ImageObject, Button
 from pacman.scenes import base
 from pacman.misc import Font
 
@@ -32,36 +32,36 @@ class MenuScene(base.Scene):
         rect = self.preview.get_rect()
         surify = pg.image.tostring(self.preview, "RGBA")
         impil = Image.frombytes("RGBA", (rect.width, rect.height), surify)
-        piler = impil.resize(self.game.size).filter(ImageFilter.GaussianBlur(radius=blur_count))
+        piler = impil.resize(tuple(Config.RESOLUTION)).filter(ImageFilter.GaussianBlur(radius=blur_count))
         self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
 
     def create_title(self) -> None:
         title = Text("PACMAN", 36, font=Font.TITLE)
-        title.move_center(self.game.width // 2, 30)
+        title.move_center(Config.RESOLUTION.half_width, 30)
         self.static_objects.append(title)
 
     def __create_indicator(self) -> None:
-        self.__indicator = Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(self.game.width // 2, 60)
+        self.__indicator = Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 60)
         self.objects.append(self.__indicator)
 
     def create_buttons(self) -> None:
         names = {
-            0: ("PLAY", self.game.scenes.MAIN, True),
-            1: ("LEVELS", self.game.scenes.LEVELS, False),
-            2: ("SKINS", self.game.scenes.SKINS, False),
-            3: ("RECORDS", self.game.scenes.RECORDS, False),
-            4: ("SETTINGS", self.game.scenes.SETTINGS, False),
-            5: ("EXIT", self.game.exit_game, None),
+            0: ("PLAY", lambda: self.click_btn(self.game.scenes.MAIN, True)),
+            1: ("LEVELS", lambda: self.click_btn(self.game.scenes.LEVELS, False)),
+            2: ("SKINS", lambda: self.click_btn(self.game.scenes.SKINS, False)),
+            3: ("RECORDS", lambda: self.click_btn(self.game.scenes.RECORDS, False)),
+            4: ("SETTINGS", lambda: self.click_btn(self.game.scenes.SETTINGS, False)),
+            5: ("EXIT", lambda: self.click_btn(self.game.exit_game, None)),
         }
         buttons = []
         for i in range(len(names)):
             buttons.append(
-                self.SceneButton(
+                Button(
                     game=self.game,
                     rect=pg.Rect(0, 0, 180, 26),
                     text=names[i][0],
-                    scene=(names[i][1], names[i][2]),
+                    function=names[i][1],
                     text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(self.game.width // 2, 95 + i * 28)
+                ).move_center(Config.RESOLUTION.half_width, 95 + i * 28)
             )
         self.objects.append(ButtonController(buttons))

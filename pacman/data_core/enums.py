@@ -5,8 +5,8 @@ from enum import Enum, auto
 
 class BtnStateEnum(Enum):
     INITIAL = 0
-    HOVER = 1
-    CLICK = 2
+    HOVER = auto()
+    CLICK = auto()
 
 
 class GhostStateEnum(Enum):
