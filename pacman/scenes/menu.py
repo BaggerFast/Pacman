@@ -2,6 +2,7 @@ import pygame as pg
 from PIL import ImageFilter, Image
 
 from pacman.data_core import Colors, Config
+from pacman.data_core.game_objects import GameObjects
 from pacman.misc.serializers import LevelStorage
 from pacman.objects.map import rand_color
 from pacman.objects import ButtonController, Text, ImageObject, Button
@@ -11,15 +12,16 @@ from pacman.misc import Font
 
 class MenuScene(base.Scene):
     def create_objects(self) -> None:
-        self.objects = []
+        self.objects = GameObjects()
         self.preview = self.game.maps.full_surface
         self.color = rand_color()
         self.change_color()
         self.blur()
-        self.image = ImageObject(self.game, self.preview, (0, 0))
+        self.image = ImageObject(self.preview, (0, 0))
         self.objects.append(self.image)
         self.create_buttons()
         self.__create_indicator()
+        self.objects.append(Text("PACMAN", 36, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30))
 
     def change_color(self):
         for x in range(self.preview.get_width()):
@@ -34,11 +36,6 @@ class MenuScene(base.Scene):
         impil = Image.frombytes("RGBA", (rect.width, rect.height), surify)
         piler = impil.resize(tuple(Config.RESOLUTION)).filter(ImageFilter.GaussianBlur(radius=blur_count))
         self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
-
-    def create_title(self) -> None:
-        title = Text("PACMAN", 36, font=Font.TITLE)
-        title.move_center(Config.RESOLUTION.half_width, 30)
-        self.static_objects.append(title)
 
     def __create_indicator(self) -> None:
         self.__indicator = Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 60)

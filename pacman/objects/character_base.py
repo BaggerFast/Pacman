@@ -2,12 +2,13 @@ from typing import Tuple, List
 import pygame as pg
 
 from pacman.data_core import Config
+from pacman.data_core.interfaces import ILogical, IDrawable
 from pacman.misc import Animator
 from pacman.misc.cell_util import CellUtil
-from pacman.objects import DrawableObject
+from pacman.objects import MovementObject
 
 
-class Character(DrawableObject):
+class Character(MovementObject, ILogical, IDrawable):
     direction = {
         "right": (1, 0, 0),
         "down": (0, 1, 1),
@@ -54,10 +55,10 @@ class Character(DrawableObject):
                 if self.animator.is_rotation:
                     self.animator.change_rotation()
 
-    def process_logic(self) -> None:
+    def update(self) -> None:
         self.step()
 
-    def process_draw(self, screen: pg.Surface) -> None:
+    def draw(self, screen: pg.Surface) -> None:
         for i in range(-1, 2):
             if self.animator.current_aura:
                 screen.blit(

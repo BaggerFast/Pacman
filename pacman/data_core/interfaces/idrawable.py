@@ -1,10 +1,7 @@
 from abc import ABC
-import pygame as pg
+from pygame import Surface
 
 
 class IDrawable(ABC):
-    def draw(self, screen: pg.Surface) -> None:
+    def draw(self, screen: Surface) -> None:
         raise NotImplementedError
-
-    def secondary_draw(self, screen: pg.Surface) -> None:
-        pass

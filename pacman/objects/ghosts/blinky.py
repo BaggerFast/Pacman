@@ -19,10 +19,10 @@ class Blinky(Base):
         self.mode = "Scatter"
         self.set_direction("left")
 
-    def process_logic(self) -> None:
+    def update(self) -> None:
         self.is_in_home = False
         if not self.is_invisible:
-            super().process_logic()
+            super().update()
             self.collision = True
             self.go()
 

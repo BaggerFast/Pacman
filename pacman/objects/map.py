@@ -4,8 +4,9 @@ from random import randint
 import pygame as pg
 
 from pacman.data_core import Colors, PathManager
+from pacman.data_core.interfaces import IDrawable
 from pacman.misc.sprite_sheet import sprite_slice
-from pacman.objects import DrawableObject, ImageObject
+from pacman.objects import MovementObject, ImageObject
 
 
 def rand_color():
@@ -31,7 +32,7 @@ def rand_color():
     return color
 
 
-class Map(DrawableObject):
+class Map(MovementObject, IDrawable):
     def __init__(self, game, map_data) -> None:
         super().__init__()
         self.color = rand_color()
@@ -65,8 +66,8 @@ class Map(DrawableObject):
         return self.surface
 
     def prerender_map_image_scaled(self) -> ImageObject:
-        image = ImageObject(self.game, self.prerender_map_surface(), (110, 96))
+        image = ImageObject(self.prerender_map_surface(), (110, 96))
         return image
 
-    def process_draw(self, screen: pg.Surface) -> None:
+    def draw(self, screen: pg.Surface) -> None:
         screen.blit(self.surface, (0, 20))

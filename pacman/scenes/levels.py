@@ -1,6 +1,7 @@
 import pygame as pg
 
 from pacman.data_core import KbKeys, Colors, Config
+from pacman.data_core.game_objects import GameObjects
 from pacman.misc import Font
 from pacman.misc.serializers import LevelStorage
 from pacman.objects import ButtonController, Text, ImageObject, Button
@@ -8,14 +9,6 @@ from pacman.scenes import base
 
 
 class LevelsScene(base.Scene):
-    def create_static_objects(self):
-        self.__create_title()
-
-    def __create_title(self) -> None:
-        title = Text("SELECT LEVEL", 25, font=Font.TITLE)
-        title.move_center(Config.RESOLUTION.half_width, 30)
-        self.static_objects.append(title)
-
     def create_buttons(self) -> None:
         buttons = []
         buttons.append(
@@ -35,11 +28,12 @@ class LevelsScene(base.Scene):
         return LevelStorage().current
 
     def create_objects(self) -> None:
-        self.objects = []
+        self.objects = GameObjects()
         self.preview: ImageObject = self.game.maps.images[LevelStorage().current]
         self.preview.smoothscale(224 * 0.6, 248 * 0.6)
         self.preview.move_center(Config.RESOLUTION.half_width, Config.RESOLUTION.half_height)
         self.objects.append(self.preview)
+        self.objects.append(Text("SELECT LEVEL", 25, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30))
 
         self.text = Text(f"Level: {self.current_level+1}/{LevelStorage().level_count}", 20).move_center(
             Config.RESOLUTION.half_width, Config.RESOLUTION.half_height
@@ -77,7 +71,9 @@ class LevelsScene(base.Scene):
             self.preview: ImageObject = self.game.maps.images[self.current_level]
             self.preview.smoothscale(224 * 0.6, 248 * 0.6)
             self.preview.move_center(Config.RESOLUTION.half_width, Config.RESOLUTION.half_height)
+
             self.objects.append(self.preview)
+
             self.text3.color = Colors.DARK_GRAY
             self.text2.color = Colors.DARK_GRAY
             if self.current_level == 0:

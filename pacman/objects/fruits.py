@@ -1,14 +1,15 @@
 from random import randint
 import pygame as pg
 from pacman.data_core import PathManager, Dirs
+from pacman.data_core.interfaces import IDrawable, ILogical
 from pacman.misc.animator import Animator
 from pacman.misc.cell_util import CellUtil
 from pacman.misc.serializers import MainStorage
-from pacman.objects.base import DrawableObject
+from pacman.objects.base import MovementObject
 from pacman.objects import Text, ImageObject
 
 
-class Fruit(DrawableObject):
+class Fruit(MovementObject, IDrawable, ILogical):
     def __init__(self, game, pos: tuple) -> None:
         super().__init__()
         self.game = game
@@ -32,17 +33,16 @@ class Fruit(DrawableObject):
                 text=f"{self.__scores[self.__anim.get_cur_index() - 1]}",
                 size=10,
                 rect=self.rect,
-            ).process_draw(screen)
+            ).draw(screen)
 
         if self.__drawing:
             screen.blit(self.__anim.current_image, self.rect)
 
         for i in range(self.__anim.get_cur_index(), 0, -1):
             ImageObject(
-                self.game,
                 PathManager.get_image_path(f"fruit/{i-1}"),
                 (130 + (i - 1) * 12, 270),
-            ).process_draw(screen)
+            ).draw(screen)
 
     def __creating_scores(self):
         if len(self.__scores) < self.__anim.get_len_anim():
@@ -75,8 +75,8 @@ class Fruit(DrawableObject):
                 self.game.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
                 self.__change_image()
 
-    def process_logic(self):
+    def update(self):
         self.__check_time()
 
-    def process_draw(self, screen: pg.Surface) -> None:
+    def draw(self, screen: pg.Surface) -> None:
         self.__draw_fruit(screen)

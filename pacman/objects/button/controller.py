@@ -4,11 +4,12 @@ import pygame as pg
 
 from pacman.data_core import KbKeys
 from pacman.data_core.enums import BtnStateEnum
-from pacman.objects import DrawableObject
+from pacman.data_core.interfaces import IDrawable, IEventful
+from pacman.objects import MovementObject
 from pacman.objects.button.button import Button
 
 
-class ButtonController(DrawableObject):
+class ButtonController(MovementObject, IDrawable, IEventful):
     def __init__(self, buttons: List[Button]):
         super().__init__()
         self.buttons = buttons
@@ -55,20 +56,21 @@ class ButtonController(DrawableObject):
             if event.key in KbKeys.ENTER:
                 self.unpress_cur_btn()
 
-    def process_draw(self, screen: pg.Surface) -> None:
+    def draw(self, screen: pg.Surface) -> None:
         if self.current.is_state(BtnStateEnum.INITIAL):
             self.current.select()
         for button in self.buttons:
-            button.process_draw(screen)
+            button.draw(screen)
 
-    def process_event(self, event: pg.event.Event) -> None:
+    def event_handler(self, event: pg.event.Event) -> bool:
         self.buttons_process_event(event)
         self.check_hover_btn()
         self.__parse_keyboard(event)
+        return False
 
     def buttons_process_event(self, event: pg.event.Event) -> None:
         for button in self.buttons:
-            button.process_event(event)
+            button.event_handler(event)
 
     def check_hover_btn(self) -> None:
         for index, button in enumerate(self.buttons):

@@ -3,6 +3,7 @@ from copy import copy
 import pygame as pg
 
 from pacman.data_core import PathManager, Dirs, Config
+from pacman.data_core.game_objects import GameObjects
 from pacman.misc.serializers import MainStorage, SkinStorage
 from pacman.objects import ButtonController, Text, Button, ImageObject
 from pacman.scenes import base
@@ -68,12 +69,9 @@ class SkinsScene(base.Scene):
         self.is_current = False
         super().process_event(event)
 
-    def create_static_objects(self) -> None:
+    def create_objects(self) -> None:
         self.is_current = False
         self.fruit_images = PathManager.get_list_path(f"{Dirs.IMAGE}/fruit", ext="png")
-        self.__create_title()
-
-    def create_objects(self) -> None:
         self.skins = {
             0: ("PACMAN", self.game.skins.default),
             1: ("HALF-LIFE", self.game.skins.half_life),
@@ -82,7 +80,8 @@ class SkinsScene(base.Scene):
             4: ("EDGE", self.game.skins.edge),
             5: ("CHROME", self.game.skins.chrome),
         }
-        self.objects = []
+        self.objects = GameObjects()
+        self.objects.append(Text("SELECT SKIN", 25, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30))
         self.preview = copy(self.game.skins.current.image)
         self.objects.append(self.preview)
         self.create_buttons()
@@ -92,10 +91,10 @@ class SkinsScene(base.Scene):
     def create_fruits_and_text_we_have(self) -> None:
         for index in range(len(self.fruit_images)):
             fruit = ImageObject(
-                self.game,
                 self.fruit_images[index],
                 (Config.RESOLUTION.WIDTH // 8 - 9 + index * 25, 60),
             )
+
             self.objects.append(fruit)
             text = Text(f"{MainStorage().eaten_fruits[index]}", 10)
             text.move_center(Config.RESOLUTION.WIDTH // 8 - 10 + index * 25, 60)
@@ -111,7 +110,6 @@ class SkinsScene(base.Scene):
             if not self.skins[index][1].is_unlocked:
                 for i in self.skins[index][1].skin_cost:
                     fruit = ImageObject(
-                        self.game,
                         self.fruit_images[i],
                         (
                             pos_regarding_buttons_x + index_pos_x * multiply_x,
@@ -126,10 +124,6 @@ class SkinsScene(base.Scene):
                     self.objects.append(fruit)
                     self.objects.append(text)
                     multiply_x += 1
-
-    def __create_title(self) -> None:
-        title = Text("SELECT SKIN", 25, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30)
-        self.static_objects.append(title)
 
     def create_buttons(self) -> None:
         buttons = []

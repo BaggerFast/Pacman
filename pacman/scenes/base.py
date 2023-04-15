@@ -1,5 +1,6 @@
 import pygame as pg
-from pacman.objects.button import Button
+
+from pacman.data_core.game_objects import GameObjects
 
 
 class Scene:
@@ -7,8 +8,8 @@ class Scene:
         self.game = game
         self.prev_scene = None
         self.screen: pg.Surface = self.game.screen
-        self.objects: list = []
-        self.static_objects = []
+        self.objects = GameObjects()
+        self.static_objects = GameObjects()
         self.create_static_objects()
 
     def click_btn(self, scene, status):
@@ -19,25 +20,22 @@ class Scene:
             self.game.scenes.set(scene, reset=status)
 
     def process_event(self, event: pg.event.Event) -> None:
-        for item in self.objects:
-            item.process_event(event)
+        self.objects.event_handler(event)
         self.additional_event_check(event)
 
     def process_logic(self) -> None:
-        for item in self.objects:
-            item.process_logic()
+        self.objects.update()
         self.additional_logic()
 
     def process_draw(self, screen: pg.Surface) -> None:
-        for item in self.objects:
-            item.process_draw(screen)
+        self.objects.draw(screen)
         self.additional_draw(screen)
 
     def create_static_objects(self) -> None:
         self.create_title()
 
     def create_objects(self) -> None:
-        self.objects = []
+        self.objects = GameObjects()
         self.create_buttons()
 
     def on_activate(self) -> None:
@@ -52,7 +50,7 @@ class Scene:
 
     def additional_draw(self, screen: pg.Surface) -> None:
         for item in self.static_objects:
-            item.process_draw(screen)
+            item.draw(screen)
 
     def on_deactivate(self) -> None:
         pass

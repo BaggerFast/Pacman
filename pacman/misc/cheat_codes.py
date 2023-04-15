@@ -1,4 +1,7 @@
 import pygame as pg
+from pygame.event import Event
+
+from pacman.data_core.interfaces import ILogical, IEventful
 
 
 class Cheat:
@@ -16,7 +19,7 @@ class Cheat:
         return False
 
 
-class ControlCheats:
+class ControlCheats(ILogical, IEventful):
     def __init__(self, cheat_codes) -> None:
         self.cheats = []
         for cheat in cheat_codes:
@@ -28,7 +31,7 @@ class ControlCheats:
     def update_timer(self) -> None:
         self.timer = pg.time.get_ticks()
 
-    def process_logic(self) -> None:
+    def update(self) -> None:
         for cheat in self.cheats:
             if cheat.check_enter_code(self.enter_code):
                 self.enter_code = ""
@@ -39,9 +42,6 @@ class ControlCheats:
             self.update_timer()
         self.old_enter_code = self.enter_code
 
-    def process_draw(self, screen: pg.Surface) -> None:
-        pass
-
-    def process_event(self, event) -> None:
+    def event_handler(self, event: Event):
         if event.type == pg.KEYDOWN and event.key in range(pg.K_a, pg.K_z + 1):
             self.enter_code += event.unicode

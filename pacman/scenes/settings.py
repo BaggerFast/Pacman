@@ -1,6 +1,7 @@
 import pygame as pg
 
 from pacman.data_core import Config
+from pacman.data_core.game_objects import GameObjects
 from pacman.misc import Font, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from pacman.misc.serializers import SettingsStorage
 from pacman.objects import ButtonController, Text
@@ -57,25 +58,17 @@ class SettingsScene(base.Scene):
     __volume_position = 150
     __difficulty_pos = 210
 
-    def create_static_objects(self):
-        self.volume_text = Text("VOLUME", 20)
-        self.volume_text.move_center(Config.RESOLUTION.half_width, self.__volume_position)
-        self.static_objects.append(self.volume_text)
-
+    def create_objects(self) -> None:
+        self.objects = GameObjects()
+        self.objects.append(Text("SETTINGS", 30, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30))
+        self.objects.append(Text("VOLUME", 20).move_center(Config.RESOLUTION.half_width, self.__volume_position))
+        self.create_buttons()
         self.volume_value = Text(f"{SettingsStorage().volume}%", 20)
         self.volume_value.move_center(
             Config.RESOLUTION.half_width,
             self.__volume_position + 30,
         )
-        self.static_objects.append(self.volume_value)
-        self.create_title()
-
-    def create_title(self) -> None:
-        text = ["SETTINGS"]
-        for i in range(len(text)):
-            text[i] = Text(text[i], 30, font=Font.TITLE)
-            text[i].move_center(Config.RESOLUTION.half_width, 30 + i * 40)
-            self.static_objects.append(text[i])
+        self.objects.append(self.volume_value)
 
     def click_sound(self, step):
         SettingsStorage().set_volume(SettingsStorage().volume + step)

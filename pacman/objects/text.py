@@ -1,12 +1,14 @@
 from typing import Tuple
 
 import pygame as pg
+from pygame import Surface
 
+from pacman.data_core.interfaces import IDrawable
 from pacman.misc import Font
-from pacman.objects import DrawableObject
+from pacman.objects import MovementObject
 
 
-class Text(DrawableObject):
+class Text(MovementObject, IDrawable):
     def __init__(
         self,
         text: str = "",
@@ -55,14 +57,8 @@ class Text(DrawableObject):
     def pos(self, pos: Tuple[int, int]):
         self.__pos = pos
 
-    def process_draw(self, screen: pg.Surface) -> None:
+    def draw(self, screen: Surface) -> None:
         screen.blit(self.surface, self.rect)
-
-    def process_event(self, event) -> None:
-        pass
-
-    def process_logic(self) -> None:
-        pass
 
     def __repr__(self):
         return f"Text: {self.__text}"

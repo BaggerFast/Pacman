@@ -1,11 +1,12 @@
 import pygame as pg
 
 from pacman.data_core import Colors, PathManager
+from pacman.data_core.interfaces import IDrawable
 from pacman.misc import CELL_SIZE, HIGH_CALORIE_SEEDS
-from pacman.objects import DrawableObject
+from pacman.objects import MovementObject
 
 
-class SeedContainer(DrawableObject):
+class SeedContainer(MovementObject, IDrawable):
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
         super().__init__()
         self.game = game
@@ -69,7 +70,7 @@ class SeedContainer(DrawableObject):
                 4,
             )
 
-    def process_draw(self, screen: pg.Surface) -> None:
+    def draw(self, screen: pg.Surface) -> None:
         self.__draw_seeds(screen)
         self.__draw_energizers(screen)
 

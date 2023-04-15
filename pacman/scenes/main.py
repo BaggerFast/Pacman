@@ -1,6 +1,7 @@
 import pygame as pg
 
 from pacman.data_core import PathManager, Config
+from pacman.data_core.game_objects import GameObjects
 from pacman.misc import ControlCheats
 from pacman.misc import LevelLoader, Font, Health
 from pacman.misc.serializers import SettingsStorage, LevelStorage, MainStorage
@@ -64,7 +65,6 @@ class MainScene(base.Scene):
         self.__hp_hud = []
         for i in range(int(self.hp)):
             hp_image = ImageObject(
-                self.game,
                 PathManager.get_image_path(f"pacman/{self.game.skins.current.name}/walk/1"),
                 (5 + i * 20, 270),
             )
@@ -90,10 +90,9 @@ class MainScene(base.Scene):
         self.state_text = 1
 
     def create_objects(self) -> None:
-        self.objects = []
+        self.objects = GameObjects()
         self.game.sounds.siren.unpause()
-        self.cheats = ControlCheats([["aezakmi", self.add_hp]])
-        self.objects.append(self.cheats)
+        self.objects.append(ControlCheats([["aezakmi", self.add_hp]]))
         self.text[len(self.text) - 1].surface.set_alpha(0)
         self.__create_map()
         self.objects.append(self.fruit)
@@ -246,7 +245,7 @@ class MainScene(base.Scene):
                 self.template = self.screen.copy()
                 self.game.timer = pg.time.get_ticks() / 1000
                 self.game.scenes.set(self.game.scenes.GAMEOVER)
-            super(MainScene, self).process_logic()
+            super().process_logic()
             self.__play_music()
             self.__process_collision()
             if self.pacman.animator != self.pacman.dead_anim:
@@ -292,7 +291,7 @@ class MainScene(base.Scene):
     def additional_draw(self, screen: pg.Surface) -> None:
         super().additional_draw(screen)
         for hp in self.__hp_hud:
-            hp.process_draw(screen)
+            hp.draw(screen)
 
     def additional_logic(self) -> None:
         self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"

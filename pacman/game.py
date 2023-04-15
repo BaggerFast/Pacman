@@ -179,8 +179,8 @@ class Game:
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
-            self.__process_exit_events(event)
             self.scenes.current.process_event(event)
+            self.__process_exit_events(event)
 
     def __process_all_logic(self) -> None:
         self.scenes.current.process_logic()

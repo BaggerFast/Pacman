@@ -40,7 +40,6 @@ class Skins:
 
         def prerender_surface(self) -> pg.Surface:
             image = ImageObject(
-                self.__game,
                 pg.image.load(PathManager.get_image_path(f"pacman/{self.name}/walk/1")),
                 (145, 125),
             )

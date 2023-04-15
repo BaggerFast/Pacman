@@ -18,10 +18,10 @@ class Pinky(Base):
         self.shift_y = -1
         self.set_direction("down")
 
-    def process_logic(self) -> None:
+    def update(self) -> None:
         if self.is_invisible:
             return
-        super().process_logic()
+        super().update()
         if self.is_in_home and self.can_leave_home():
             self.set_direction("up")
             self.go()

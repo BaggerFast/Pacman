@@ -1,9 +1,6 @@
 from abc import ABC
 
 
-class ILocal(ABC):
+class ILogical(ABC):
     def update(self) -> None:
         raise NotImplementedError
-
-    def secondary_update(self) -> None:
-        pass

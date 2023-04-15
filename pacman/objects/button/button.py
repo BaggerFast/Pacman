@@ -2,11 +2,12 @@ from typing import List, Union, Callable, Tuple
 import pygame as pg
 
 from pacman.data_core.enums import BtnStateEnum
+from pacman.data_core.interfaces import IDrawable, IEventful
 from pacman.misc import Font, ButtonColor, BUTTON_DEFAULT_COLORS
-from pacman.objects.base import DrawableObject
+from pacman.objects.base import MovementObject
 
 
-class Button(DrawableObject):
+class Button(MovementObject, IDrawable, IEventful):
     def __init__(
         self,
         game,
@@ -97,11 +98,10 @@ class Button(DrawableObject):
 
         return surface
 
-    def process_draw(self, screen: pg.Surface) -> None:
-        if not self.is_hidden:
-            screen.blit(self.surfaces[self.state.value], self.rect.topleft)
+    def draw(self, screen: pg.Surface) -> None:
+        screen.blit(self.surfaces[self.state.value], self.rect.topleft)
 
-    def process_event(self, event: pg.event.Event) -> None:
+    def event_handler(self, event: pg.event.Event) -> None:
         if not self.active:
             return
         self.process_mouse_button_down(event)

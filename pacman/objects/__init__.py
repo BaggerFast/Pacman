@@ -1,4 +1,4 @@
-from .base import DrawableObject
+from .base import MovementObject
 from .character_base import Character
 from .image import ImageObject
 from .map import Map

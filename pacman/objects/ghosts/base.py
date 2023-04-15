@@ -119,7 +119,7 @@ class Base(Character):
         self.tmp_flag1 = False
         self.tmp_flag2 = False
 
-    def process_logic(self) -> None:
+    def update(self) -> None:
         self.deceleration_multiplier_with_rect = 1
         for rect in self.game.current_scene.slow_ghost_rect:
             if self.in_rect(rect):
