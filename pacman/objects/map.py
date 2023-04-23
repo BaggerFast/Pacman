@@ -33,10 +33,9 @@ def rand_color():
 
 
 class Map(MovementObject, IDrawable):
-    def __init__(self, game, map_data) -> None:
+    def __init__(self, map_data) -> None:
         super().__init__()
         self.color = rand_color()
-        self.game = game
         self.tile_size = 8
         self.map_data = map_data
         self.__size = (224, 248)

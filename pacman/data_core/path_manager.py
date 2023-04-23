@@ -1,6 +1,6 @@
 import os
-from os.path import dirname, abspath, join
 from abc import ABC
+from os.path import dirname, abspath, join
 from typing import Final, List
 
 

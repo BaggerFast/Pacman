@@ -1,4 +1,5 @@
 from typing import Tuple
+
 import pygame as pg
 
 from pacman.data_core import PathManager

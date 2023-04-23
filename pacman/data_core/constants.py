@@ -1,8 +1,10 @@
 from abc import ABC
 from typing import Final
+
 import pygame.locals as keys
 from pygame import Color
-from pacman.data_core import PathManager, Dirs
+
+from .path_manager import PathManager, Dirs
 
 
 class KbKeys(ABC):

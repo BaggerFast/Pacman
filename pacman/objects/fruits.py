@@ -1,12 +1,14 @@
 from random import randint
+
 import pygame as pg
+
 from pacman.data_core import PathManager, Dirs
 from pacman.data_core.interfaces import IDrawable, ILogical
 from pacman.misc.animator import Animator
 from pacman.misc.cell_util import CellUtil
 from pacman.misc.serializers import MainStorage
-from pacman.objects.base import MovementObject
 from pacman.objects import Text, ImageObject
+from pacman.objects.base import MovementObject
 
 
 class Fruit(MovementObject, IDrawable, ILogical):

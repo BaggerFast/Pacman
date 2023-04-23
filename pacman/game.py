@@ -67,32 +67,6 @@ class Game:
                 )
                 self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
 
-    class Scenes:
-        def __init__(self, game):
-            self.PAUSE = PauseScene(game)
-            self.MENU = MenuScene(game)
-            self.MAIN = MainScene(game)
-            self.GAMEOVER = GameOverScene(game)
-            self.LEVELS = LevelsScene(game)
-            self.RECORDS = RecordsScene(game)
-            self.ENDGAME = EndGameScene(game)
-            self.SKINS = SkinsScene(game)
-            self.SETTINGS = SettingsScene(game)
-            self.__current = None
-
-        @property
-        def current(self):
-            return self.__current
-
-        def set(self, scene: Scene, reset: bool = False, surface: bool = False) -> None:
-            scene.prev_scene = self.__current
-            if self.__current is not None and not surface:
-                self.__current.on_deactivate()
-            self.__current = scene
-            if reset:
-                self.__current.on_reset()
-            self.__current.on_activate()
-
     class Maps:
         def __init__(self, game):
             self.game = game
@@ -117,7 +91,7 @@ class Game:
         def __load_from_map(self, level_id: int = 0) -> None:
             self.__loader = LevelLoader(self.levels[level_id])
             self.__map_data = self.__loader.get_map_data()
-            self.__map = Map(self.game, self.__map_data)
+            self.__map = Map(self.__map_data)
 
         def keys(self) -> List[int]:
             return [i for i in range(self.count)]
@@ -139,7 +113,7 @@ class Game:
         self.storage_loader.from_file()
 
         self.__game_over = False
-        self.maps = self.Maps(self)
+        self.maps = self.Maps()
         self.screen = pg.display.set_mode(tuple(Config.RESOLUTION), pg.SCALED)
         self.__clock = pg.time.Clock()
         self.timer = pg.time.get_ticks() / 1000

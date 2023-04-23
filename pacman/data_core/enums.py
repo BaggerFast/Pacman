@@ -16,6 +16,11 @@ class GhostStateEnum(Enum):
     EATEN = auto()
 
 
+class GameStateEnum(Enum):
+    INTRO = 0
+    ACTION = auto()
+
+
 # endregion
 
 # region ListEnum

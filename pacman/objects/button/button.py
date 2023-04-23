@@ -13,6 +13,7 @@ class Button(MovementObject, IDrawable, IEventful):
         game,
         rect: Union[tuple, pg.Rect],
         function: Callable = None,
+        select_function: Callable = None,
         text: str = "Define me",
         colors: ButtonColor = BUTTON_DEFAULT_COLORS,
         text_size: int = 60,
@@ -23,6 +24,7 @@ class Button(MovementObject, IDrawable, IEventful):
         self.game = game
         self.rect = rect
         self.function = function
+        self.select_function = select_function
         self.__text = text
         self.font = pg.font.Font(font, text_size)
         self.active = active
@@ -111,6 +113,8 @@ class Button(MovementObject, IDrawable, IEventful):
 
     def select(self) -> None:
         self.state = BtnStateEnum.HOVER
+        if isinstance(self.select_function, Callable):
+            self.select_function()
 
     def deselect(self) -> None:
         self.state = BtnStateEnum.INITIAL
@@ -120,7 +124,8 @@ class Button(MovementObject, IDrawable, IEventful):
 
     def click(self) -> None:
         self.game.sounds.click.play()
-        self.function()
+        if isinstance(self.function, Callable):
+            self.function()
 
     def is_state(self, state: BtnStateEnum):
         return self.state is state

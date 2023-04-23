@@ -43,8 +43,6 @@ class SkinStorage(SerDes):
     def unlock_skin(self, skin_name: str = 0) -> None:
         if skin_name not in MainStorage().skins.unlocked:
             self.unlocked.append(skin_name)
-        else:
-            raise Exception(f"Name error. Skin name: {skin_name} doesn't exist")
 
 
 class LevelStorage(SerDes):
@@ -65,7 +63,7 @@ class LevelStorage(SerDes):
             raise Exception("Current level must be a positive integer")
 
     def __str__(self):
-        return f"Level {self.current+1}"
+        return f"Level {self.current + 1}"
 
     def unlock_level(self, level_id: int = 0) -> None:
         if level_id not in MainStorage().levels.unlocked:

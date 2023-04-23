@@ -25,17 +25,19 @@ class ImageObject(MovementObject, IDrawable):
         self.rect.topleft = topleft
         return self
 
-    def smoothscale(self, x, y) -> None:
+    def smoothscale(self, x, y) -> "ImageObject":
         self.image = pg.transform.smoothscale(self.image, (x, y))
         topleft = self.rect.topleft
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
+        return self
 
-    def rotate(self, angle) -> None:
+    def rotate(self, angle) -> "ImageObject":
         self.image = pg.transform.rotate(self.image, angle)
         topleft = self.rect.topleft
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
+        return self
 
     def draw(self, screen: Surface) -> None:
         screen.blit(self.image, self.rect)

@@ -1,4 +1,5 @@
 from typing import Final
+
 from pacman.data_core.data_classes import ResolutionSize
 
 

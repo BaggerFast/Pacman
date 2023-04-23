@@ -1,5 +1,6 @@
 import random
 from typing import Tuple
+
 import pygame as pg
 
 from pacman.data_core import PathManager, Dirs
@@ -14,17 +15,11 @@ from pacman.objects import Character, Pacman, Text
 
 class Base(Character):
     love_point_in_scatter_mode = (0, 0)
-    max_count_eat_seeds_in_home = 0
+    seed_percent_in_home = 0
     direction2 = {0: (1, 0, 0), 1: (0, 1, 1), 2: (-1, 0, 2), 3: (0, -1, 3)}
 
-    def __init__(
-        self,
-        game,
-        start_pos: Tuple[int, int],
-        frightened_time,
-        chase_time,
-        scatter_time,
-    ) -> None:
+    def __init__(self, game, start_pos: Tuple[int, int], seed_count, frightened_time, chase_time, scatter_time):
+        self.__seed_count = seed_count
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
         self.acceleration_multiplier = 1
@@ -99,9 +94,7 @@ class Base(Character):
             game, self.top_walk_anim, start_pos, PathManager.get_image_path(f"ghost/{type(self).__name__.lower()}/aura")
         )
 
-        self.is_can_leave_home = False
         self.collision = False
-        self.count_eat_seeds_in_home = 0
         self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
         self.invisible_anim = Animator(
@@ -120,17 +113,13 @@ class Base(Character):
         self.tmp_flag2 = False
 
     def update(self) -> None:
+        if self.is_invisible:
+            return
         self.deceleration_multiplier_with_rect = 1
         for rect in self.game.current_scene.slow_ghost_rect:
             if self.in_rect(rect):
                 self.deceleration_multiplier_with_rect = 2
         self.deceleration_multiplier_with_rect *= self.deceleration_multiplier
-        if self.is_in_home and not self.can_leave_home():
-            self.go()
-            if self.rect.centery >= self.start_pos[1] + 5:
-                self.set_direction("up")
-            elif self.rect.centery <= self.start_pos[1] - 5:
-                self.set_direction("down")
         if self.mode != "Eaten":
             self.gg_text.rect = pg.Rect(self.rect.x, self.rect.y, 0, 0)
         if self.rotate is None:
@@ -152,19 +141,25 @@ class Base(Character):
             self.mode != "Frightened" and self.mode != "Eaten",
         )
 
-    def counter(self) -> None:
-        if self.work_counter:
-            self.count_eat_seeds_in_home += 1
-
-    def can_leave_home(self) -> bool:
+    def can_leave_home(self, eaten_seed) -> bool:
         return (
-            (self.count_eat_seeds_in_home >= self.max_count_eat_seeds_in_home and self.work_counter)
-            or pg.time.get_ticks() - self.timer >= 4000
-            or self.is_can_leave_home
+            eaten_seed > (self.__seed_count / 100) * self.seed_percent_in_home
+            or pg.time.get_ticks() - self.timer >= 10000
         )
+
+    def home_ai(self, eaten_seed):
+        if self.is_in_home and not self.can_leave_home(eaten_seed):
+            self.go()
+            if self.rect.centery >= self.start_pos[1] + 5:
+                self.set_direction("up")
+            elif self.rect.centery <= self.start_pos[1] - 5:
+                self.set_direction("down")
 
     def update_timer(self) -> None:
         self.timer = pg.time.get_ticks()
+
+    def update_ai_timer(self):
+        self.ai_timer = pg.time.get_ticks()
 
     def invisible(self) -> None:
         self.animator = self.invisible_anim
@@ -174,9 +169,6 @@ class Base(Character):
     def visible(self) -> None:
         self.is_invisible = False
         self.collision = True
-
-    def update_ai_timer(self):
-        self.ai_timer = pg.time.get_ticks()
 
     def ghosts_ai(self) -> None:
         if CellUtil.in_cell_center(self.rect) and self.collision and not self.is_invisible:
