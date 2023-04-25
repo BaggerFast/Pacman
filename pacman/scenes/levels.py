@@ -1,25 +1,25 @@
 import pygame as pg
-
+from pygame.event import Event
 from pacman.data_core import KbKeys, Colors, Config
-from pacman.data_core.game_objects import GameObjects
 from pacman.misc import Font
 from pacman.misc.serializers import LevelStorage
+from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, Text, ImageObject, Button
-from pacman.scenes import base
+from pacman.scene_manager import SceneManager
+from pacman.scenes.base_scene import BaseScene
 
 
-class LevelsScene(base.Scene):
+class LevelsScene(BaseScene):
     def create_buttons(self) -> None:
-        buttons = []
-        buttons.append(
+        buttons = [
             Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 180, 40),
                 text="",
-                function=lambda: self.click_btn(self.game.scenes.MENU, False),
+                function=SceneManager().pop,
                 text_size=Font.BUTTON_TEXT_SIZE,
             )
-        )
+        ]
         self.__button_controller = ButtonController(buttons)
         self.objects.append(self.__button_controller)
 
@@ -27,8 +27,8 @@ class LevelsScene(base.Scene):
     def current_level(self) -> int:
         return LevelStorage().current
 
-    def create_objects(self) -> None:
-        self.objects = GameObjects()
+    def _create_objects(self) -> None:
+        super()._create_objects()
         self.preview: ImageObject = self.game.maps.images[LevelStorage().current]
         self.preview.smoothscale(224 * 0.6, 248 * 0.6)
         self.preview.move_center(Config.RESOLUTION.half_width, Config.RESOLUTION.half_height)
@@ -59,10 +59,11 @@ class LevelsScene(base.Scene):
         self.objects.append(self.text3)
         self.create_buttons()
 
-    def additional_event_check(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.game.scenes.set(self.game.scenes.MENU)
-        elif event.type == pg.KEYDOWN:
+    def process_event(self, event: Event) -> None:
+        super().process_event(event)
+        if is_esc_pressed(event):
+            SceneManager().pop()
+        if event.type == pg.KEYDOWN:
             if event.key in KbKeys.RIGHT and self.current_level != LevelStorage().level_count - 1:
                 if self.current_level + 1 in LevelStorage().unlocked:
                     LevelStorage().set_next_level()

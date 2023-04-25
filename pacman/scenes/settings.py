@@ -1,33 +1,17 @@
 import pygame as pg
+from pygame.event import Event
 
 from pacman.data_core import Config
-from pacman.data_core.game_objects import GameObjects
 from pacman.misc import Font, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from pacman.misc.serializers import SettingsStorage
+from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, Text
 from pacman.objects.button import Button
-from pacman.scenes import base
+from pacman.scene_manager import SceneManager
+from pacman.scenes.base_scene import BaseScene
 
 
-class SettingsScene(base.Scene):
-    class DifficultyButton(Button):
-        __dificulties = {0: "easy", 1: "medium", 2: "hard"}
-
-        def __init__(self, **args):
-            super().__init__(**args)
-            self.value = SettingsStorage().difficulty
-            self.update_text()
-
-        def click(self) -> None:
-            self.game.sounds.click.play()
-            self.value = (self.value + 1) % len(self.__dificulties)
-            self.update_text()
-            self.select()
-            SettingsStorage().difficulty = self.value
-
-        def update_text(self):
-            self.text = self.__dificulties[self.value]
-
+class SettingsScene(BaseScene):
     class SettingButton(Button):
         def __init__(self, game, name, i, var):
             flag_var = getattr(SettingsStorage(), var)
@@ -57,24 +41,36 @@ class SettingsScene(base.Scene):
 
     __volume_position = 150
     __difficulty_pos = 210
+    __dificulties = {0: "easy", 1: "medium", 2: "hard"}
 
-    def create_objects(self) -> None:
-        self.objects = GameObjects()
-        self.objects.append(Text("SETTINGS", 30, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30))
-        self.objects.append(Text("VOLUME", 20).move_center(Config.RESOLUTION.half_width, self.__volume_position))
+    def _create_objects(self) -> None:
+        self.difficult_button = Button(
+            game=self.game,
+            rect=pg.Rect(0, 0, 120, 35),
+            function=self.click_difficult,
+            text_size=Font.BUTTON_TEXT_SIZE,
+            text=self.__dificulties[SettingsStorage().difficulty],
+        ).move_center(Config.RESOLUTION.half_width, self.__difficulty_pos)
         self.create_buttons()
-        self.volume_value = Text(f"{SettingsStorage().volume}%", 20)
-        self.volume_value.move_center(
+        self.volume_value = Text(f"{SettingsStorage().volume}%", 20).move_center(
             Config.RESOLUTION.half_width,
             self.__volume_position + 30,
         )
-        self.objects.append(self.volume_value)
+        self.objects += [
+            Text("SETTINGS", 30, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
+            Text("VOLUME", 20).move_center(Config.RESOLUTION.half_width, self.__volume_position),
+            self.volume_value,
+        ]
 
     def click_sound(self, step):
         SettingsStorage().set_volume(SettingsStorage().volume + step)
-        self.game.scenes.current.volume_value.text = f"{SettingsStorage().volume}%"
+        self.volume_value.text = f"{SettingsStorage().volume}%"
         for sound in self.game.sounds.__dict__.keys():
             self.game.sounds.__dict__[sound].update()
+
+    def click_difficult(self) -> None:
+        SettingsStorage().difficulty = (SettingsStorage().difficulty + 1) % len(self.__dificulties)
+        self.difficult_button.text = self.__dificulties[SettingsStorage().difficulty]
 
     def create_buttons(self) -> None:
         names = [
@@ -84,42 +80,35 @@ class SettingsScene(base.Scene):
         self.buttons = []
         for i in range(len(names)):
             self.buttons.append(self.SettingButton(self.game, names[i][0], i, names[i][1]))
-        self.buttons.append(
+        self.buttons += [
             Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 40, 35),
                 text="-",
                 function=lambda: self.click_sound(-5),
-            ).move_center(Config.RESOLUTION.half_width - 60, self.__volume_position + 30)
-        )
-        self.buttons.append(
+            ).move_center(Config.RESOLUTION.half_width - 60, self.__volume_position + 30),
             Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 40, 35),
                 text="+",
                 function=lambda: self.click_sound(5),
-            ).move_center(Config.RESOLUTION.half_width + 65, self.__volume_position + 30)
-        )
-        if self.prev_scene == self.game.scenes.MENU:
-            self.buttons.append(
-                self.DifficultyButton(
-                    game=self.game,
-                    rect=pg.Rect(0, 0, 120, 35),
-                    text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Config.RESOLUTION.half_width, self.__difficulty_pos)
-            )
-        self.buttons.append(
+            ).move_center(Config.RESOLUTION.half_width + 65, self.__volume_position + 30),
+            self.difficult_button,
             Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 180, 40),
                 text="BACK",
-                function=lambda: self.click_btn(self.prev_scene, False),
+                function=SceneManager().pop,
                 text_size=Font.BUTTON_TEXT_SIZE,
-            ).move_center(Config.RESOLUTION.half_width, 250)
-        )
-
+            ).move_center(Config.RESOLUTION.half_width, 250),
+        ]
         self.objects.append(ButtonController(self.buttons))
 
-    def additional_event_check(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.game.scenes.set(self.prev_scene)
+    def process_event(self, event: Event) -> None:
+        super().process_event(event)
+        if is_esc_pressed(event):
+            SceneManager().pop()
+    #
+    # def additional_event_check(self, event: pg.event.Event) -> None:
+    #     if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+    #         self.game.scenes.set(self.prev_scene)

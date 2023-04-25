@@ -1,174 +1,206 @@
 import pygame as pg
+from pygame.event import Event
 
 from pacman.data_core import PathManager, Config
-from pacman.data_core.game_objects import GameObjects
-from pacman.misc import ControlCheats
-from pacman.misc import LevelLoader, Font, Health
-from pacman.misc.serializers import SettingsStorage, LevelStorage, MainStorage
+from pacman.data_core.enums import GameStateEnum
+from pacman.misc import ControlCheats, LevelLoader, Font, Health
+from pacman.misc.serializers import LevelStorage, MainStorage
+from pacman.misc.util import is_esc_pressed
 from pacman.objects import SeedContainer, Map, ImageObject, Text, Pacman
 from pacman.objects.fruits import Fruit
 from pacman.objects.ghosts import *
-from pacman.scenes import base
+from pacman.scene_manager import SceneManager
+from pacman.scenes.base_scene import BaseScene
 
 
-class MainScene(base.Scene):
-    def create_static_objects(self):
-        self.__load_from_map()
-        self.__create_sounds()
-        self.__create_static_text()
-        self.__create_start_anim()
-        self.__create_hud()
-        self.__create_health()
-        self.__pre_init()
-        self.create_objects()
+class MainScene(BaseScene):
 
-    def __pre_init(self):
-        self.__timer_reset_pacman = 0
-        self.__seeds_eaten = 0
-        self.__max_seeds_eaten_to_prefered_ghost = 7
-        self.__work_ghost_counters = True
-        self.__first_run_ghost = True
-        self.fruit = Fruit(self.game, self.__fruit_position)
-        self.ghost_text_timer = pg.time.get_ticks()
-        self.ghost_text_flag = False
-
-    def __create_health(self):
-        self.hp = Health(3, 4)
-        self.__hp_hud = []
-        self.__prepare_lives_meter()
-
-    def __create_static_text(self):
-        self.__scores_label_text = Text(
-            "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE",
-            Font.MAIN_SCENE_SIZE,
-            rect=pg.Rect(10, 0, 20, 20),
-        )
-
-        self.__high_scores_label_text = Text("HIGHSCORE", Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20))
-        self.static_objects.append(self.__scores_label_text)
-        self.static_objects.append(self.__high_scores_label_text)
-
-    def __load_from_map(self):
-        self.__loader = LevelLoader(self.game.maps.levels[LevelStorage().current])
-        self.__map_data = self.__loader.get_map_data()
-        self.__seed_data = self.__loader.get_seed_data()
-        self.__energizer_data = self.__loader.get_energizer_data()
-        self.__movements_data = self.__loader.get_movements_data()
-        self.__player_position = self.__loader.get_player_position()
-        self.__ghost_positions = self.__loader.get_ghost_positions()
-        self.__fruit_position = self.__loader.get_fruit_position()
-        self.slow_ghost_rect = self.__loader.get_slow_ghost_rect()
-        self.cant_up_ghost_rect = self.__loader.get_cant_up_ghost_rect()
-        self.__map = Map(self.game, self.__map_data)
-
-    def __prepare_lives_meter(self) -> None:
-        self.__hp_hud = []
-        for i in range(int(self.hp)):
-            hp_image = ImageObject(
-                PathManager.get_image_path(f"pacman/{self.game.skins.current.name}/walk/1"),
-                (5 + i * 20, 270),
-            )
-            hp_image.rotate(180)
-            self.__hp_hud.append(hp_image)
-
-    def __create_sounds(self):
-        self.timer = 0
-        self.intro_sound = self.game.sounds.intro
+    # region COMPLETE:
+    def __play_sound(self):
+        if not self.game.sounds.siren.is_busy():
+            self.game.sounds.siren.play()
+        if self.pacman.animator != self.pacman.dead_anim:
+            if any(ghost.mode == "Frightened" for ghost in self.__ghosts):
+                self.game.sounds.siren.pause()
+                if not self.game.sounds.pellet.is_busy():
+                    self.game.sounds.pellet.play()
+            else:
+                self.game.sounds.siren.unpause()
+                self.game.sounds.pellet.stop()
 
     def __create_start_anim(self):
-        self.text = ["READY", "GO!"]
-        for i in range(2):
-            self.text[i] = Text(
-                self.text[i],
-                30,
-                font=Font.TITLE,
-                rect=pg.Rect(20, 0, 20, 20),
-            )
-            self.text[i].move_center(Config.RESOLUTION.half_width, Config.RESOLUTION.half_height)
-            self.text[i].surface.set_alpha(0)
-            self.static_objects.append(self.text[i])
-        self.state_text = 1
+        self.text = []
+        for i, txt in enumerate(["READY", "GO!"]):
+            self.text.append(Text(txt, 30, font=Font.TITLE, rect=pg.Rect(20, 0, 20, 20)))
+            self.text[-1].move_center(Config.RESOLUTION.half_width, Config.RESOLUTION.half_height)
 
-    def create_objects(self) -> None:
-        self.objects = GameObjects()
-        self.game.sounds.siren.unpause()
-        self.objects.append(ControlCheats([["aezakmi", self.add_hp]]))
-        self.text[len(self.text) - 1].surface.set_alpha(0)
-        self.__create_map()
-        self.objects.append(self.fruit)
-        self.__create_ghost()
-        self.pacman = Pacman(self.game, self.__player_position)
-        self.objects.append(self.pacman)
+    def __create_hud(self):
+        self.objects += [
+            Text("HIGHSCORE", Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)),
+            Text(
+                f"{MainStorage().get_highscore()}",
+                size=Font.MAIN_SCENE_SIZE,
+                rect=pg.Rect(130, 8, 20, 20),
+            ),
+            Text(
+                text="MEMORY" if self.game.skins.current.name == "chrome" else "SCORE",
+                size=Font.MAIN_SCENE_SIZE,
+                rect=pg.Rect(10, 0, 20, 20),
+            ),
+            self.__scores_value_text,
+        ]
+        for i in range(int(self.hp) - 1):
+            self.objects.append(
+                ImageObject(
+                    PathManager.get_image_path(f"pacman/{self.game.skins.current.name}/walk/1"), (5 + i * 20, 270)
+                ).rotate(180)
+            )
+
+    @property
+    def movements_data(self):
+        return self.__loader.get_movements_data()
+
+    # endregion
+
+    # region Intro
+
+    def intro_logic(self) -> None:
+        if self.state is not GameStateEnum.INTRO:
+            return
+        self.__start_label()
+        if not self.game.sounds.intro.is_busy():
+            self.state = GameStateEnum.ACTION
+            self.text.clear()
+            for ghost in self.__ghosts:
+                ghost.update_timer()
+                ghost.update_ai_timer()
+
+    def __start_label(self) -> None:
+        current_time = pg.time.get_ticks() / 1000
+        if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
+            self.state_text = not self.state_text
+        text_alpha = 255 if self.state_text else 0
+        if current_time - self.timer > self.intro_sound.sound.get_length() / 4 * 3:
+            if len(self.text) > 1:
+                del self.text[0]
+        self.text[0].surface.set_alpha(text_alpha)
+
+    # endregion
+
+    # region Base
+
+    def process_logic(self) -> None:
+        match self.state:
+            case GameStateEnum.INTRO:
+                self.intro_logic()
+            case GameStateEnum.ACTION:
+                self.game_logic()
+
+    def draw(self, screen: pg.Surface) -> None:
+        super().draw(screen)
+        if self.state.INTRO:
+            for txt in self.text[0:1]:
+                txt.draw(screen)
+
+    # endregion
+
+    # region Old
+
+    # def additional_logic(self) -> None:
+    #     self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"
+    #     self.__scores_value_text.text = (
+    #         str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(self.game.score)
+    #     )
+    #     self.__prepare_lives_meter()
+
+    # endregion
+
+    # region Temp
 
     def add_hp(self):
         self.hp += 1
 
-    def __create_map(self):
-        self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
-        self.objects.append(self.__map)
-        self.objects.append(self.__seeds)
+    def on_enter(self) -> None:
+        if self.pacman.animator != self.pacman.dead_anim:
+            self.game.sounds.siren.unpause()
+        if any(ghost.mode == "Frightened" for ghost in self.__ghosts):
+            self.game.sounds.siren.pause()
+            self.game.sounds.pellet.play()
 
-    def __create_ghost(self):
-        if SettingsStorage().difficulty == 0:
-            self.blinky = Blinky(self.game, self.__ghost_positions[3], 8000, 20000, 7000)
-            self.pinky = Pinky(self.game, self.__ghost_positions[1], 8000, 20000, 7000)
-            self.inky = Inky(self.game, self.__ghost_positions[0], 8000, 20000, 5000)
-            self.clyde = Clyde(self.game, self.__ghost_positions[2], 8000, 0, 0)
-        elif SettingsStorage().difficulty == 1:
-            self.blinky = Blinky(self.game, self.__ghost_positions[3], 4000, 40000, 5000)
-            self.pinky = Pinky(self.game, self.__ghost_positions[1], 4000, 40000, 5000)
-            self.inky = Inky(self.game, self.__ghost_positions[0], 4000, 40000, 3000)
-            self.clyde = Clyde(self.game, self.__ghost_positions[2], 4000, 0, 0)
-        elif SettingsStorage().difficulty == 2:
-            self.blinky = Blinky(self.game, self.__ghost_positions[3], 2000, 80000, 3000)
-            self.pinky = Pinky(self.game, self.__ghost_positions[1], 2000, 80000, 3000)
-            self.inky = Inky(self.game, self.__ghost_positions[0], 2000, 80000, 1000)
-            self.clyde = Clyde(self.game, self.__ghost_positions[2], 2000, 0, 0)
+    def on_exit(self) -> None:
+        self.game.sounds.siren.stop()
+        self.game.sounds.pellet.stop()
 
-        self.__ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
+    # endregion
 
-        self.__not_prefered_ghosts = self.__ghosts.copy()
-        self.__prefered_ghost = self.pinky
-        self.__count_prefered_ghost = 0
+    def pre_init(self):
+        self.game.sounds.intro.play()
+        self.game.sounds.reload_sounds(self.game)
+        self.state = GameStateEnum.INTRO
+        self.__loader = LevelLoader(self.game.maps.levels[LevelStorage().current])
+        self.__seed_data = self.__loader.get_seed_data()
+        self.__energizer_data = self.__loader.get_energizer_data()
+        self.slow_ghost_rect = self.__loader.get_slow_ghost_rect()
+        self.cant_up_ghost_rect = self.__loader.get_cant_up_ghost_rect()
+        self.__map = Map(self.__loader.get_map_data())
 
-        for ghost in self.__ghosts:
-            self.objects.append(ghost)
-            self.objects.append(ghost.gg_text)
+        self.timer = 0
+        self.intro_sound = self.game.sounds.intro
 
-    def __create_hud(self):
-        self.__high_scores_value_text = Text(
-            f"{MainStorage().get_highscore()}",
-            Font.MAIN_SCENE_SIZE,
-            rect=pg.Rect(130, 8, 20, 20),
-        )
-        self.static_objects.append(self.__high_scores_value_text)
+        self.__create_start_anim()
 
+        self.hp = Health(3, 4)
+
+        self.__timer_reset_pacman = 0
+        self.__seeds_eaten = 0
+
+        self.fruit = Fruit(self.game, self.__loader.get_fruit_position())
+        self.ghost_text_timer = pg.time.get_ticks()
+        self.ghost_text_flag = False
+        self.state_text = True
+
+        self.fruit = Fruit(self.game, self.__loader.get_fruit_position())
         self.__scores_value_text = Text(
-            str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(self.game.score),
-            Font.MAIN_SCENE_SIZE,
+            f"{'Mb' if self.game.skins.current.name == 'chrome' else self.game.score}",
+            size=Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(10, 8, 20, 20),
         )
-        self.static_objects.append(self.__scores_value_text)
 
-    @property
-    def movements_data(self):
-        return self.__movements_data
+    def _create_objects(self):
+        super()._create_objects()
+        self.__seeds_eaten = 0
+        self.__timer_reset_pacman = 0
+        self.ghost_text_flag = False
+        self.ghost_text_timer = pg.time.get_ticks()
+        self.__create_map()
+        self.__create_characters()
+        self.__create_hud()
 
-    def additional_event_check(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            pg.mixer.pause()
-            self.template = self.screen.copy()
-            self.game.timer = pg.time.get_ticks() / 1000
-            self.game.scenes.set(self.game.scenes.PAUSE, surface=True)
+        self.objects += [self.fruit, ControlCheats([["aezakmi", self.add_hp]])]
+
+    def __create_map(self):
+        self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
+        self.objects += [self.__map, self.__seeds]
+
+    def __create_characters(self):
+        hero_pos = self.__loader.get_hero_postions()
+        seed_count = sum([1 for i in self.__seed_data for j in i if j])
+
+        self.pacman = Pacman(self.game, hero_pos["pacman"])
+        self.inky = Inky(self.game, hero_pos["inky"], seed_count)
+        self.pinky = Pinky(self.game, hero_pos["pinky"], seed_count)
+        self.clyde = Clyde(self.game, hero_pos["clyde"], seed_count)
+        self.blinky = Blinky(self.game, hero_pos["blinky"], seed_count)
+        self.__ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
+
+        self.objects.append(self.pacman)
+        for ghost in self.__ghosts:
+            self.objects += [ghost, ghost.gg_text]
 
     def __change_prefered_ghost(self) -> None:
-        self.__count_prefered_ghost += 1
-        self.__not_prefered_ghosts.pop(0)
-        if self.__count_prefered_ghost < 4:
-            self.__prefered_ghost = self.__ghosts[self.__count_prefered_ghost]
-        else:
-            self.__prefered_ghost = None
-            self.__count_prefered_ghost = 0
+        for ghost in self.__ghosts:
+            if ghost.is_in_home:
+                ghost.home_ai(self.__seeds_eaten)
 
     def __process_collision(self) -> None:
         self.fruit.process_collision(self.pacman)
@@ -179,143 +211,51 @@ class MainScene(base.Scene):
                     self.__timer_reset_pacman = pg.time.get_ticks()
                     if not self.pacman.dead:
                         self.pacman.death()
-                        self.__prepare_lives_meter()
                     for ghost2 in self.__ghosts:
                         ghost2.invisible()
-                else:
-                    if ghost.mode == "Frightened":
-                        ghost.gg_text.text = str(200 * 2**self.game.score.fear_count)
-                        for ghost2 in self.__ghosts:
-                            ghost.invisible()
-                        self.game.score.eat_ghost()
-                        self.ghost_text_flag = True
-                        self.ghost_text_timer = pg.time.get_ticks()
+                    break
+                if ghost.mode == "Frightened":
+                    ghost.gg_text.text = f"{200 * 2 ** self.game.score.fear_count}"
+                    ghost.invisible()
+                    self.game.score.eat_ghost()
+                    self.ghost_text_flag = True
+                    self.ghost_text_timer = pg.time.get_ticks()
                     ghost.toggle_mode_to_eaten()
-
         if seed_eaten == 1:
-            if self.__prefered_ghost is not None and self.__work_ghost_counters:
-                self.__prefered_ghost.counter()
-                self.__prefered_ghost.update_timer()
-            elif not self.__work_ghost_counters and self.__prefered_ghost is not None:
-                self.__seeds_eaten += 1
-                self.__prefered_ghost.update_timer()
+            self.__seeds_eaten += 1
         elif seed_eaten == 2:
             self.game.score.activate_fear_mode()
             for ghost in self.__ghosts:
                 ghost.toggle_mode_to_frightened()
 
-    def __start_label(self) -> None:
-        current_time = pg.time.get_ticks() / 1000
-        if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
-            self.state_text *= -1
-        if self.state_text == 1:
-            if current_time - self.timer < self.intro_sound.sound.get_length() / 4 * 3:
-                self.text[0].surface.set_alpha(255)
-            else:
-                self.text[0].surface.set_alpha(0)
-                self.text[1].surface.set_alpha(255)
-        else:
-            if current_time - self.timer < self.intro_sound.sound.get_length() / 4 * 3:
-                self.text[0].surface.set_alpha(0)
-            else:
-                self.text[1].surface.set_alpha(0)
+    def check_game_status(self):
+        if self.__seeds.is_field_empty():
+            from pacman.scenes.game_win import GameWinScene
+            SceneManager().reset(GameWinScene(self.game, self.game.score))
+        elif self.pacman.dead_anim.anim_finished and int(self.hp) < 1 and not self.game.sounds.pacman.is_busy():
+            from pacman.scenes.game_over import GameOverScene
+            SceneManager().reset(GameOverScene(self.game, self.game.score))
 
-    def __play_music(self):
-        if not self.game.sounds.siren.is_busy():
-            self.game.sounds.siren.play()
+    def update_score_text(self):
+        self.__scores_value_text.text = f"{'Mb' if self.game.skins.current.name == 'chrome' else self.game.score}"
 
-    def __check_ghosts(self):
-        flag = False
-        for ghost in self.__ghosts:
-            if ghost.mode == "Frightened":
-                flag = True
-        if flag:
-            self.game.sounds.siren.pause()
-            if not self.game.sounds.pellet.is_busy():
-                self.game.sounds.pellet.play()
-        else:
-            self.game.sounds.siren.unpause()
-            self.game.sounds.pellet.stop()
-
-    def process_logic(self) -> None:
-        if not self.game.sounds.intro.is_busy():
-            self.text[0].surface.set_alpha(0)
-            self.text[1].surface.set_alpha(0)
-            if self.pacman.dead_anim.anim_finished and int(self.hp) < 1 and not self.game.sounds.pacman.is_busy():
-                self.template = self.screen.copy()
-                self.game.timer = pg.time.get_ticks() / 1000
-                self.game.scenes.set(self.game.scenes.GAMEOVER)
-            super().process_logic()
-            self.__play_music()
-            self.__process_collision()
-            if self.pacman.animator != self.pacman.dead_anim:
-                self.__check_ghosts()
-            self.text[0].surface.set_alpha(0)
-            self.text[1].surface.set_alpha(0)
-            if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
-                self.create_objects()
-                self.__seeds_eaten = 0
-                self.__work_ghost_counters = False
-                self.__max_seeds_eaten_to_prefered_ghost = 7
-                for ghost in self.__ghosts:
-                    ghost.work_counter = False
-            if self.__seeds_eaten == self.__max_seeds_eaten_to_prefered_ghost and self.__prefered_ghost is not None:
-                self.__prefered_ghost.is_can_leave_home = True
-                if self.__max_seeds_eaten_to_prefered_ghost == 7:
-                    self.__max_seeds_eaten_to_prefered_ghost = 17
-                elif self.__max_seeds_eaten_to_prefered_ghost == 17:
-                    self.__max_seeds_eaten_to_prefered_ghost = 32
-            if self.__seeds.is_field_empty():
-                self.template = self.screen.copy()
-                self.game.timer = pg.time.get_ticks() / 1000
-                self.game.scenes.set(self.game.scenes.ENDGAME, reset=True)
-        else:
-            self.__start_label()
-            for ghost in self.__ghosts:
-                ghost.update_ai_timer()
-                ghost.update_timer()
-        if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
-            self.__change_prefered_ghost()
-        if self.__prefered_ghost is not None and self.__prefered_ghost.can_leave_home():
-            self.__change_prefered_ghost()
-        for ghost in self.__not_prefered_ghosts:
-            if ghost != self.__prefered_ghost:
-                ghost.update_timer()
+    def game_logic(self):
+        super().process_logic()
+        self.__play_sound()
+        self.__change_prefered_ghost()
+        self.__process_collision()
+        self.update_score_text()
+        if pg.time.get_ticks() - self.__timer_reset_pacman >= 3000 and self.pacman.animator.anim_finished:
+            self._create_objects()
         if self.ghost_text_flag:
-            if pg.time.get_ticks() - self.ghost_text_timer >= 1000:
+            if pg.time.get_ticks() - self.ghost_text_timer >= 500:
                 for ghost in self.__ghosts:
                     ghost.visible()
                     ghost.gg_text.text = " "
                 self.ghost_text_flag = False
 
-    def additional_draw(self, screen: pg.Surface) -> None:
-        super().additional_draw(screen)
-        for hp in self.__hp_hud:
-            hp.draw(screen)
-
-    def additional_logic(self) -> None:
-        self.__scores_label_text.text = "MEMORY" if self.game.skins.current.name == "chrome" else "SCORE"
-        self.__scores_value_text.text = (
-            str(self.game.score) + " Mb" if self.game.skins.current.name == "chrome" else str(self.game.score)
-        )
-        self.__prepare_lives_meter()
-
-    def on_activate(self) -> None:
-        self.game.sounds.intro.unpause()
-        if self.pacman.animator != self.pacman.dead_anim:
-            self.game.sounds.siren.unpause()
-        for ghost in self.__ghosts:
-            if ghost.mode == "Frightened":
-                if self.game.sounds.pellet.is_busy():
-                    self.game.sounds.pellet.play()
-                    break
-        if self.pacman.animator == self.pacman.dead_anim:
-            self.game.sounds.pacman.unpause()
-
-    def on_reset(self) -> None:
-        pg.mixer.stop()
-        self.game.sounds.reload_sounds(self.game)
-        self.game.score.reset()
-        self.game.scenes.MAIN.recreate()
-        self.timer = pg.time.get_ticks() / 1000
-        self.game.sounds.intro.play()
+    def process_event(self, event: Event) -> None:
+        super().process_event(event)
+        if is_esc_pressed(event) and self.state != GameStateEnum.INTRO:
+            from pacman.scenes.pause import PauseScene
+            SceneManager().append(PauseScene(self.game))

@@ -2,25 +2,14 @@ from random import choice
 from typing import List
 
 import pygame as pg
-from PIL import Image, ImageFilter
 
 from pacman.data_core import Colors, PathManager, Dirs, Sounds, Config
 from pacman.misc import Score, LevelLoader, Skins
 from pacman.misc.serializers import StorageLoader, SettingsStorage, SkinStorage, LevelStorage
 from pacman.misc.sound_controller import SoundController
 from pacman.objects import Map, ImageObject
-from pacman.scenes import (
-    PauseScene,
-    MenuScene,
-    MainScene,
-    GameOverScene,
-    LevelsScene,
-    RecordsScene,
-    EndGameScene,
-    SkinsScene,
-    SettingsScene,
-)
-from pacman.scenes.base import Scene
+from pacman.scene_manager import SceneManager
+from pacman.scenes.menu import MenuScene
 
 
 class Game:
@@ -68,8 +57,7 @@ class Game:
                 self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
 
     class Maps:
-        def __init__(self, game):
-            self.game = game
+        def __init__(self):
             self.levels = []
             self.count = 0
             self.read_levels()
@@ -119,18 +107,17 @@ class Game:
         self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
-        self.skins = Skins(self)
+        self.skins = Skins()
         self.score = Score()
 
         self.sounds = self.Music(self)
 
         self.skins.current = "default"
-        self.scenes = self.Scenes(self)
-        self.scenes.set(self.scenes.MENU)
+        SceneManager().reset(MenuScene(self))
 
     @property
     def current_scene(self):
-        return self.scenes.current
+        return SceneManager().current
 
     # region Exit
 
@@ -153,27 +140,15 @@ class Game:
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
-            self.scenes.current.process_event(event)
+            SceneManager().current.process_event(event)
             self.__process_exit_events(event)
 
     def __process_all_logic(self) -> None:
-        self.scenes.current.process_logic()
+        SceneManager().current.process_logic()
 
     def __process_all_draw(self) -> None:
-        exceptions = [self.scenes.PAUSE, self.scenes.GAMEOVER, self.scenes.ENDGAME]
-        if self.scenes.current not in exceptions:
-            self.screen.fill(Colors.BLACK)
-        else:
-            blur_count = 10
-            current_time = pg.time.get_ticks() / 1000
-            surify = pg.image.tostring(self.scenes.MAIN.template, "RGBA")
-            impil = Image.frombytes("RGBA", tuple(Config.RESOLUTION), surify)
-            piler = impil.filter(
-                ImageFilter.GaussianBlur(radius=min((current_time - self.timer) * blur_count * 2, blur_count))
-            )
-            surface = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
-            self.screen.blit(surface, (0, 0))
-        self.scenes.current.process_draw(self.screen)
+        self.screen.fill(Colors.BLACK)
+        SceneManager().current.draw(self.screen)
         pg.display.flip()
 
     def main_loop(self) -> None:

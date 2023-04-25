@@ -17,8 +17,8 @@ class SeedLoader:
         self.__seeds[fruit_y][int(fruit_x + 0.5)] = False
 
     def __remove_seeds_under_pacman(self) -> None:
-        player_y = self.__json["player_pos"][1]
-        player_x = self.__json["player_pos"][0]
+        player_y = self.__json["characters"]["pacman"][1]
+        player_x = self.__json["characters"]["pacman"][0]
         self.__seeds[player_y][int(player_x - 0.5)] = False
         self.__seeds[player_y][int(player_x + 0.5)] = False
 
@@ -69,11 +69,8 @@ class LevelLoader:
     def get_energizer_data(self) -> List[Tuple[int, int]]:
         return self.__seed_loader.get_energizer_data()
 
-    def get_player_position(self) -> Tuple[int | float, int | float]:
-        return deepcopy(self.__json["player_pos"])
-
-    def get_ghost_positions(self) -> List[Tuple[int | float, int | float]]:
-        return deepcopy(self.__json["ghosts_pos"])
+    def get_hero_postions(self):
+        return deepcopy(self.__json["characters"])
 
     def get_fruit_position(self) -> Tuple[int | float, int | float]:
         return deepcopy(self.__json["fruit_pos"])

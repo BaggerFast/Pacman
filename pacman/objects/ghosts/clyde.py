@@ -1,29 +1,34 @@
 from typing import Tuple
+
 from .base import Base
+from ...misc.serializers import SettingsStorage
 
 
 class Clyde(Base):
-    max_count_eat_seeds_in_home = 60
+    seed_percent_in_home = 15
     love_point_in_scatter_mode = (0, 32)
 
-    def __init__(
-        self,
-        game,
-        start_pos: Tuple[int, int],
-        frightened_time=8000,
-        chase_time=20000,
-        scatter_time=7000,
-    ):
-        super().__init__(game, start_pos, frightened_time, chase_time, scatter_time)
+    def __init__(self, game, start_pos: Tuple[int, int], seed_count):
+        frightened_time = 8000
+        chase_time = 0
+        scatter_time = 0
+        if SettingsStorage().difficulty == 1:
+            frightened_time = 4000
+            chase_time = 0
+            scatter_time = 0
+        elif SettingsStorage().difficulty == 2:
+            frightened_time = 2000
+            chase_time = 0
+            scatter_time = 0
+        super().__init__(game, start_pos, seed_count, frightened_time, chase_time, scatter_time)
         self.mode = "Chase"
         self.shift_y = 1
         self.set_direction("up")
+        self.is_in_home = True
 
-    def update(self) -> None:
-        if self.is_invisible:
-            return
-        super().update()
-        if self.is_in_home and self.can_leave_home():
+    def home_ai(self, eaten_seed):
+        super().home_ai(eaten_seed)
+        if self.can_leave_home(eaten_seed):
             self.set_direction("left")
             self.go()
             scene = self.game.current_scene

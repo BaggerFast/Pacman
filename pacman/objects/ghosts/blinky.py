@@ -1,21 +1,25 @@
 from typing import Tuple
 import pygame as pg
-
 from .base import Base
+from ...misc.serializers import SettingsStorage
 
 
 class Blinky(Base):
     love_point_in_scatter_mode = (33, -3)
 
-    def __init__(
-        self,
-        game,
-        start_pos: Tuple[int, int],
-        frightened_time=8000,
-        chase_time=20000,
-        scatter_time=7000,
-    ):
-        super().__init__(game, start_pos, frightened_time, chase_time, scatter_time)
+    def __init__(self, game, start_pos: Tuple[int, int], seed_count):
+        frightened_time = 8000
+        chase_time = 20000
+        scatter_time = 7000
+        if SettingsStorage().difficulty == 1:
+            frightened_time = 4000
+            chase_time = 40000
+            scatter_time = 5000
+        elif SettingsStorage().difficulty == 2:
+            frightened_time = 2000
+            chase_time = 80000
+            scatter_time = 3000
+        super().__init__(game, start_pos, seed_count, frightened_time, chase_time, scatter_time)
         self.mode = "Scatter"
         self.set_direction("left")
 

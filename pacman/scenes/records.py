@@ -1,29 +1,37 @@
 import pygame as pg
+from pygame import Surface
+from pygame.event import Event
 
 from pacman.data_core import Colors, PathManager, Config
 from pacman.misc import Font
 from pacman.misc.serializers import LevelStorage, MainStorage
+from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, ImageObject, Text, Button
-from pacman.scenes import base
+from pacman.scene_manager import SceneManager
+from pacman.scenes.base_scene import BaseScene
 
 
-class RecordsScene(base.Scene):
-    def create_objects(self) -> None:
-        super().create_objects()
-        self.__indicator = Text(f"level {LevelStorage().current+1}", 12, font=Font.DEFAULT)
-        self.__indicator.move_center(Config.RESOLUTION.half_width, 55)
-        self.objects.append(self.__indicator)
-        self.objects.append(Text("RECORDS", 32, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30))
+class RecordsScene(BaseScene):
+    def _create_objects(self) -> None:
+        super()._create_objects()
+        self.__indicator = Text(f"level {LevelStorage().current+1}", 12, font=Font.DEFAULT).move_center(
+            Config.RESOLUTION.half_width, 55
+        )
+        self.objects += [
+            self.__indicator,
+            Text("RECORDS", 32, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
+        ]
         self.__error_text = Text("NO RECORDS", 24, color=Colors.RED).move_center(Config.RESOLUTION.half_width, 100)
         self.__create_text_labels()
         self.__create_medals()
+        self.create_buttons()
 
     def create_buttons(self) -> None:
         back_button = Button(
             game=self.game,
             rect=pg.Rect(0, 0, 180, 40),
             text="MENU",
-            function=lambda: self.click_btn(self.game.scenes.MENU, False),
+            function=SceneManager().pop,
             text_size=Font.BUTTON_TEXT_SIZE,
         ).move_center(Config.RESOLUTION.half_width, 250)
         self.objects.append(ButtonController([back_button]))
@@ -55,7 +63,8 @@ class RecordsScene(base.Scene):
                 ).scale(30, 30)
             )
 
-    def additional_draw(self, screen: pg.Surface) -> None:
+    def draw(self, screen: Surface) -> None:
+        super().draw(screen)
         if not sum(MainStorage().current_highscores()):
             self.__error_text.draw(screen)
             return
@@ -66,6 +75,7 @@ class RecordsScene(base.Scene):
                 self.__medals[i].draw(screen)
             y -= 1
 
-    def additional_event_check(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-            self.game.scenes.set(self.game.scenes.MENU)
+    def process_event(self, event: Event) -> None:
+        super().process_event(event)
+        if is_esc_pressed(event):
+            SceneManager().pop()

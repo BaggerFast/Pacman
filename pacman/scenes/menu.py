@@ -2,17 +2,17 @@ import pygame as pg
 from PIL import ImageFilter, Image
 
 from pacman.data_core import Colors, Config
-from pacman.data_core.game_objects import GameObjects
-from pacman.misc.serializers import LevelStorage
-from pacman.objects.map import rand_color
-from pacman.objects import ButtonController, Text, ImageObject, Button
-from pacman.scenes import base
 from pacman.misc import Font
+from pacman.misc.serializers import LevelStorage
+from pacman.objects import ButtonController, Text, ImageObject, Button
+from pacman.objects.map import rand_color
+from pacman.scene_manager import SceneManager
+from pacman.scenes.base_scene import BaseScene
 
 
-class MenuScene(base.Scene):
-    def create_objects(self) -> None:
-        self.objects = GameObjects()
+class MenuScene(BaseScene):
+
+    def _create_objects(self) -> None:
         self.preview = self.game.maps.full_surface
         self.color = rand_color()
         self.change_color()
@@ -42,22 +42,29 @@ class MenuScene(base.Scene):
         self.objects.append(self.__indicator)
 
     def create_buttons(self) -> None:
-        names = {
-            0: ("PLAY", lambda: self.click_btn(self.game.scenes.MAIN, True)),
-            1: ("LEVELS", lambda: self.click_btn(self.game.scenes.LEVELS, False)),
-            2: ("SKINS", lambda: self.click_btn(self.game.scenes.SKINS, False)),
-            3: ("RECORDS", lambda: self.click_btn(self.game.scenes.RECORDS, False)),
-            4: ("SETTINGS", lambda: self.click_btn(self.game.scenes.SETTINGS, False)),
-            5: ("EXIT", lambda: self.click_btn(self.game.exit_game, None)),
-        }
+        from pacman.scenes.main import MainScene
+        from pacman.scenes.skins import SkinsScene
+        from pacman.scenes.levels import LevelsScene
+        from pacman.scenes.records import RecordsScene
+        from pacman.scenes.settings import SettingsScene
+
+        scene_manager = SceneManager()
+        names = [
+            ("PLAY", lambda: scene_manager.append(MainScene(self.game))),
+            ("LEVELS", lambda: scene_manager.append(LevelsScene(self.game))),
+            ("SKINS", lambda: scene_manager.append(SkinsScene(self.game))),
+            ("RECORDS", lambda: scene_manager.append(RecordsScene(self.game))),
+            ("SETTINGS", lambda: scene_manager.append(SettingsScene(self.game))),
+            ("EXIT", self.game.exit_game),
+        ]
         buttons = []
-        for i in range(len(names)):
+        for i, (name, fn) in enumerate(names):
             buttons.append(
                 Button(
                     game=self.game,
                     rect=pg.Rect(0, 0, 180, 26),
-                    text=names[i][0],
-                    function=names[i][1],
+                    text=name,
+                    function=fn,
                     text_size=Font.BUTTON_TEXT_SIZE,
                 ).move_center(Config.RESOLUTION.half_width, 95 + i * 28)
             )
