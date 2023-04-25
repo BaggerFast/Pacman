@@ -11,8 +11,8 @@ class SeedLoader:
         self.__prepare_seeds()
 
     def __remove_seeds_under_fruit(self) -> None:
-        fruit_y = self.__json["fruit_pos"][1]
-        fruit_x = self.__json["fruit_pos"][0]
+        fruit_y = self.__json["static_objects"]["fruit"][1]
+        fruit_x = self.__json["static_objects"]["fruit"][0]
         self.__seeds[fruit_y][int(fruit_x - 0.5)] = False
         self.__seeds[fruit_y][int(fruit_x + 0.5)] = False
 
@@ -23,11 +23,11 @@ class SeedLoader:
         self.__seeds[player_y][int(player_x + 0.5)] = False
 
     def __remove_seeds_under_energizers(self) -> None:
-        for x, y in self.__json["big_dots_pos"]:
+        for x, y in self.__json["static_objects"]["big_dots"]:
             self.__seeds[y][x] = False
 
     def __remove_seeds_under_ghost_area(self) -> None:
-        for i in self.__json["not_dots_rect"]:
+        for i in self.__json["rects"]["no_dots"]:
             for y in range(i[1], i[3] + 1):
                 for x in range(i[0], i[2] + 1):
                     self.__seeds[y][x] = False
@@ -43,11 +43,11 @@ class SeedLoader:
         return deepcopy(self.__seeds)
 
     def get_energizer_data(self) -> List[Tuple[int, int]]:
-        return deepcopy(self.__json["big_dots_pos"])
+        return deepcopy(self.__json["static_objects"]["big_dots"])
 
 
 class LevelLoader:
-    def __init__(self, filename="1_map.json") -> None:
+    def __init__(self, filename: str) -> None:
         self.filename = filename
         self.__load_map_json()
         self.movements_map = self.get_movements_data()
@@ -73,10 +73,10 @@ class LevelLoader:
         return deepcopy(self.__json["characters"])
 
     def get_fruit_position(self) -> Tuple[int | float, int | float]:
-        return deepcopy(self.__json["fruit_pos"])
+        return deepcopy(self.__json["static_objects"]["fruit"])
 
     def get_slow_ghost_rect(self):
-        return deepcopy(self.__json["slow_ghost_rect"])
+        return deepcopy(self.__json["rects"]["slow_zone"])
 
     def get_cant_up_ghost_rect(self):
-        return deepcopy(self.__json["cant_up_ghost_rect"])
+        return deepcopy(self.__json["rects"]["cant_up_ghosts"])
