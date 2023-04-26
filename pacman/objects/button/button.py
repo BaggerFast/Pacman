@@ -14,7 +14,7 @@ class Button(MovementObject, IDrawable, IEventful):
         rect: Union[tuple, pg.Rect],
         function: Callable = None,
         select_function: Callable = None,
-        text: str = "Define me",
+        text: str = "",
         colors: ButtonColor = BUTTON_DEFAULT_COLORS,
         text_size: int = 60,
         font=Font.DEFAULT,

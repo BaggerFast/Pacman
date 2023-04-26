@@ -16,6 +16,12 @@ class GhostStateEnum(Enum):
     EATEN = auto()
 
 
+class FruitStateEnum:
+    ACTIVE = 0
+    DISABLED = auto()
+    EATEN = auto()
+
+
 class GameStateEnum(Enum):
     INTRO = 0
     ACTION = auto()

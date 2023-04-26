@@ -1,8 +1,7 @@
-from random import randint
-
 import pygame as pg
-
 from pacman.data_core import PathManager, Dirs
+from pacman.data_core.enums import FruitStateEnum
+from pacman.data_core.game_objects import GameObjects
 from pacman.data_core.interfaces import IDrawable, ILogical
 from pacman.misc.animator import Animator
 from pacman.misc.cell_util import CellUtil
@@ -16,66 +15,51 @@ class Fruit(MovementObject, IDrawable, ILogical):
         super().__init__()
         self.game = game
         self.__anim = Animator(PathManager.get_list_path(f"{Dirs.IMAGE}/fruit", ext="png"), False, False)
-        self.__image = self.__anim.current_image
         self.rect = self.__anim.current_image.get_rect()
         self.move_center(*CellUtil.pos_from_cell(pos))
+
+        self.state = FruitStateEnum.DISABLED
+        self.timer = pg.time.get_ticks()
+
         self.__scores = [100, 300, 500, 700, 1000, 2000, 3000, 5000]
-        self.__creating_scores()
-        self.__drawing = False
-        self.__eaten = None
-        self.__eaten_time = 0
-        self.__start_time = pg.time.get_ticks()
-        self.__eat_timer = 90
-        self.__score_to_eat = 0
-        self.__score_tolerance = 150
+
+        self.eaten_text = Text(text=f"{self.__scores[self.__anim.get_cur_index()]}", size=10, rect=self.rect)
+        self.eaten_fruits_hud = GameObjects()
+
+    def change_state(self, state: FruitStateEnum):
+        self.timer = pg.time.get_ticks()
+        self.state = state
 
     def __draw_fruit(self, screen: pg.Surface):
-        if self.__eaten:
-            Text(
-                text=f"{self.__scores[self.__anim.get_cur_index() - 1]}",
-                size=10,
-                rect=self.rect,
-            ).draw(screen)
-
-        if self.__drawing:
+        if self.state is FruitStateEnum.ACTIVE:
             screen.blit(self.__anim.current_image, self.rect)
-
-        for i in range(self.__anim.get_cur_index(), 0, -1):
-            ImageObject(
-                PathManager.get_image_path(f"fruit/{i-1}"),
-                (130 + (i - 1) * 12, 270),
-            ).draw(screen)
-
-    def __creating_scores(self):
-        if len(self.__scores) < self.__anim.get_len_anim():
-            for i in range(len(self.__scores) - 1, self.__anim.get_len_anim()):
-                self.__scores.append(randint(100, 500))
+        elif self.state is FruitStateEnum.EATEN:
+            self.eaten_text.draw(screen)
+        self.eaten_fruits_hud.draw(screen)
 
     def __check_time(self):
-        if pg.time.get_ticks() - self.__start_time >= 9000:  # 9000
-            self.__drawing = True
-            self.__score_to_eat = (
-                int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index() - 1]
-            )
-        if pg.time.get_ticks() - self.__start_time >= 300:
-            self.__eaten = None
+        if self.state is FruitStateEnum.DISABLED and pg.time.get_ticks() - self.timer >= 9000:
+            self.change_state(FruitStateEnum.ACTIVE)
+        elif self.state is FruitStateEnum.EATEN and pg.time.get_ticks() - self.timer >= 300:
+            self.change_state(FruitStateEnum.DISABLED)
 
     def __change_image(self) -> None:
+        self.eaten_text.text = f"{self.__scores[(self.__anim.get_cur_index() + 1) % self.__anim.get_len_anim()]}"
+        self.eaten_fruits_hud.append(
+            ImageObject(self.__anim.current_image, (130 + (len(self.eaten_fruits_hud) - 1) * 12, 270))
+        )
         self.__anim.change_cur_image((self.__anim.get_cur_index() + 1) % self.__anim.get_len_anim())
 
-    def process_collision(self, object):
-        if self.__drawing:
-            if (self.rect.x == min(object.rect.left, object.rect.right)) and (self.rect.y == object.rect.y):
-                self.game.sounds.fruit.play()
-                self.__drawing = False
-                self.__start_time = pg.time.get_ticks()
-                self.__eaten = True
-                self.__score_to_eat = (
-                    int(self.game.score) + self.__eat_timer + self.__scores[self.__anim.get_cur_index()]
-                )
-                MainStorage().store_fruit(self.__anim.get_cur_index(), 1)
-                self.game.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
-                self.__change_image()
+    def process_collision(self, rect: pg.Rect):
+        if self.state is not FruitStateEnum.ACTIVE:
+            return False
+        if not (self.rect.y == rect.y and rect.left <= self.rect.x <= rect.right):
+            return False
+        self.change_state(FruitStateEnum.EATEN)
+        MainStorage().store_fruit(self.__anim.get_cur_index(), 1)
+        self.game.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
+        self.__change_image()
+        return True
 
     def update(self):
         self.__check_time()

@@ -15,9 +15,8 @@ class Pacman(Character, IEventful):
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
         self.__walk_anim = game.skins.current.walk
         self.__dead_anim = game.skins.current.dead
-        super().__init__(
-            game, self.__walk_anim, start_pos, PathManager.get_image_path(f"pacman/{game.skins.current.name}/aura")
-        )
+        super().__init__(game, self.__walk_anim, start_pos,
+                         PathManager.get_image_path(f"pacman/{game.skins.current.name}/aura"))
         self.dead = False
         self.__feature_rotate = "none"
 
@@ -45,8 +44,6 @@ class Pacman(Character, IEventful):
             super().update()
 
     def death(self) -> None:
-        if not INFINITY_LIVES:
-            self.game.current_scene.hp -= 1
         self.animator = self.__dead_anim
         self.game.sounds.siren.pause()
         self.game.sounds.pellet.stop()

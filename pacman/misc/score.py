@@ -31,14 +31,12 @@ class Score:
         self + Points.POINT_PER_SEED
 
     def eat_energizer(self) -> None:
+        self.fear_mode = True
+        self.fear_count = 0
         self + Points.POINT_PER_ENERGIZER
 
     def eat_fruit(self, bonus) -> None:
         self + bonus
-
-    def activate_fear_mode(self) -> None:
-        self.fear_mode = True
-        self.fear_count = 0
 
     def deactivate_fear_mode(self) -> None:
         self.fear_mode = False

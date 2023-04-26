@@ -92,3 +92,6 @@ class Animator:
 
     def mirror_x(self) -> None:
         self.__current_image = pg.transform.flip(self.current_image, True, False)
+
+    def __len__(self):
+        return len(self.__images)

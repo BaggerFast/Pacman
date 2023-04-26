@@ -19,13 +19,13 @@ class GameWinScene(BaseScene):
         super()._create_objects()
         MainStorage().add_record(self.game.score)
         self.__unlock_level()
-
         self.objects += [
             Text("YOU", 40, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
             Text("WON", 40, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 70),
             Text(f"Score: {self.score}", 20).move_center(Config.RESOLUTION.half_width, 135),
             Text(f"High score: {MainStorage().get_highscore()}", 20).move_center(Config.RESOLUTION.half_width, 165),
         ]
+        self.create_buttons()
 
     def create_buttons(self) -> None:
         from pacman.scenes.menu import MenuScene

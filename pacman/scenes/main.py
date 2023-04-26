@@ -80,7 +80,7 @@ class MainScene(BaseScene):
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.state_text = not self.state_text
         text_alpha = 255 if self.state_text else 0
-        if current_time - self.timer > self.intro_sound.sound.get_length() / 4 * 3:
+        if current_time - self.start_time > self.intro_sound.sound.get_length() / 4 * 3:
             if len(self.text) > 1:
                 del self.text[0]
         self.text[0].surface.set_alpha(text_alpha)
@@ -144,7 +144,7 @@ class MainScene(BaseScene):
         self.cant_up_ghost_rect = self.__loader.get_cant_up_ghost_rect()
         self.__map = Map(self.__loader.get_map_data())
 
-        self.timer = 0
+        self.game.score.reset()
         self.intro_sound = self.game.sounds.intro
 
         self.__create_start_anim()
@@ -159,7 +159,6 @@ class MainScene(BaseScene):
         self.ghost_text_flag = False
         self.state_text = True
 
-        self.fruit = Fruit(self.game, self.__loader.get_fruit_position())
         self.__scores_value_text = Text(
             f"{'Mb' if self.game.skins.current.name == 'chrome' else self.game.score}",
             size=Font.MAIN_SCENE_SIZE,
@@ -203,30 +202,35 @@ class MainScene(BaseScene):
                 ghost.home_ai(self.__seeds_eaten)
 
     def __process_collision(self) -> None:
-        self.fruit.process_collision(self.pacman)
-        seed_eaten = self.__seeds.process_collision(self.pacman)
-        for ghost in self.__ghosts:
-            if ghost.collision_check(self.pacman)[0]:
-                if ghost.collision_check(self.pacman)[1]:
-                    self.__timer_reset_pacman = pg.time.get_ticks()
-                    if not self.pacman.dead:
-                        self.pacman.death()
-                    for ghost2 in self.__ghosts:
-                        ghost2.invisible()
-                    break
-                if ghost.mode == "Frightened":
-                    ghost.gg_text.text = f"{200 * 2 ** self.game.score.fear_count}"
-                    ghost.invisible()
-                    self.game.score.eat_ghost()
-                    self.ghost_text_flag = True
-                    self.ghost_text_timer = pg.time.get_ticks()
-                    ghost.toggle_mode_to_eaten()
-        if seed_eaten == 1:
-            self.__seeds_eaten += 1
-        elif seed_eaten == 2:
-            self.game.score.activate_fear_mode()
+        if self.fruit.process_collision(self.pacman.rect):
+            self.game.sounds.fruit.play()
+        elif self.__seeds.energizer_collision(self.pacman.rect):
+            self.game.score.eat_energizer()
             for ghost in self.__ghosts:
                 ghost.toggle_mode_to_frightened()
+        elif self.__seeds.seed_collision(self.pacman.rect):
+            self.__seeds_eaten += 1
+            self.game.score.eat_seed()
+            if not self.game.sounds.seed.is_busy():
+                self.game.sounds.seed.play()
+        else:
+            for ghost in self.__ghosts:
+                if ghost.collision_check(self.pacman.rect)[0]:
+                    if ghost.collision_check(self.pacman.rect)[1]:
+                        self.__timer_reset_pacman = pg.time.get_ticks()
+                        if not self.pacman.dead and not INFINITY_LIVES:
+                            self.hp -= 1
+                            self.pacman.death()
+                        for ghost2 in self.__ghosts:
+                            ghost2.invisible()
+                        break
+                    if ghost.mode == "Frightened":
+                        ghost.gg_text.text = f"{200 * 2 ** self.game.score.fear_count}"
+                        ghost.invisible()
+                        self.game.score.eat_ghost()
+                        self.ghost_text_flag = True
+                        self.ghost_text_timer = pg.time.get_ticks()
+                        ghost.toggle_mode_to_eaten()
 
     def check_game_status(self):
         if self.__seeds.is_field_empty():
@@ -253,6 +257,7 @@ class MainScene(BaseScene):
                     ghost.visible()
                     ghost.gg_text.text = " "
                 self.ghost_text_flag = False
+        self.check_game_status()
 
     def process_event(self, event: Event) -> None:
         super().process_event(event)
