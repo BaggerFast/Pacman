@@ -1,14 +1,8 @@
 import random
 from typing import Tuple
-
 import pygame as pg
-
 from pacman.data_core import PathManager, Dirs
-from pacman.misc import (
-    Animator,
-    DISABLE_GHOSTS_MOVING,
-    DISABLE_GHOSTS_COLLISION,
-)
+from pacman.misc import Animator, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION
 from pacman.misc.cell_util import CellUtil
 from pacman.objects import Character, Pacman, Text
 
@@ -90,9 +84,7 @@ class Base(Character):
 
         self.animations = self.normal_animations
 
-        super().__init__(
-            game, self.top_walk_anim, start_pos, PathManager.get_image_path(f"ghost/{type(self).__name__.lower()}/aura")
-        )
+        super().__init__(game, self.top_walk_anim, start_pos, PathManager.get_image_path(f"ghost/{type(self).__name__.lower()}/aura"))
 
         self.collision = False
         self.timer = pg.time.get_ticks()
@@ -133,12 +125,12 @@ class Base(Character):
                 self.animator.timer_check()
         self.process_logic_iterator += 1
 
-    def collision_check(self, pacman: Pacman):
+    def collision_check(self, rect: pg.Rect):
         return (
-            self.two_cells_dis(self.rect.center, pacman.rect.center) < 3
+            self.two_cells_dis(self.rect.center, rect.center) < 3
             and self.collision
             and not DISABLE_GHOSTS_COLLISION,
-            self.mode != "Frightened" and self.mode != "Eaten",
+            self.mode not in ("Frightened" , "Eaten")
         )
 
     def can_leave_home(self, eaten_seed) -> bool:
@@ -170,18 +162,59 @@ class Base(Character):
         self.is_invisible = False
         self.collision = True
 
+    def eaten_ai(self):
+        if self.mode != "Eaten":
+            return
+        self.deceleration_multiplier = 1
+        self.love_cell = (
+            self.game.current_scene.blinky.start_pos[0] // 8,
+            (self.game.current_scene.blinky.start_pos[1] - 20) // 8,
+        )
+        if not self.tmp_flag1 and self.rect.center == self.game.current_scene.blinky.start_pos:
+            self.collision = False
+            self.set_direction("down")
+            self.tmp_flag1 = True
+        if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.game.current_scene.pinky.start_pos[1]:
+            self.animations = self.normal_animations
+            self.acceleration_multiplier = 1
+            self.deceleration_multiplier = 2
+            self.set_direction("up")
+            self.tmp_flag2 = True
+        if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
+            self.deceleration_multiplier = 1
+            self.set_direction("left")
+            self.mode = "Scatter"
+            self.collision = True
+            self.update_ai_timer()
+            self.tmp_flag1 = False
+            self.tmp_flag2 = False
+
+    def frightened_ai(self):
+        if self.mode != "Frightened":
+            return
+        if pg.time.get_ticks() - self.ai_timer >= self.frightened_time - 2000:
+            self.animator = self.frightened_walk_anim2
+        if pg.time.get_ticks() - self.ai_timer >= self.frightened_time:
+            self.game.score.deactivate_fear_mode()
+            self.update_ai_timer()
+            self.deceleration_multiplier = 1
+            self.animations = self.normal_animations
+            self.game.sounds.pellet.stop()
+            self.mode = "Scatter"
+
     def ghosts_ai(self) -> None:
         if CellUtil.in_cell_center(self.rect) and self.collision and not self.is_invisible:
             if self.move_to(self.rotate):
                 self.go()
             cell = self.movement_cell(CellUtil.get_cell(self.rect))
+
             cell[(self.rotate + 2) % 4] = False
-            for rect in self.game.current_scene.cant_up_ghost_rect:
-                if self.in_rect(rect):
-                    cell[3] = False
+            if not any(cell):
+                cell[(self.rotate + 2) % 4] = True
+
             if self.mode != "Frightened":
                 min_dis = float("inf")
-                for i in range(4):
+                for i in range(len(cell)):
                     if cell[i]:
                         cell2 = CellUtil.get_cell(self.rect)
                         tmp_cell = (
@@ -192,47 +225,12 @@ class Base(Character):
                             min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
                             self.shift_x, self.shift_y, self.rotate = self.direction2[i]
             else:
-                while True:
-                    rand = random.randrange(4)
-                    if cell[rand]:
-                        break
+                rand = 0
+                while not cell[rand]:
+                    rand = random.randrange(len(cell))
                 self.shift_x, self.shift_y, self.rotate = self.direction2[rand]
-
-        if self.mode == "Frightened":
-            if pg.time.get_ticks() - self.ai_timer >= self.frightened_time - 2000:
-                self.animator = self.frightened_walk_anim2
-            if pg.time.get_ticks() - self.ai_timer >= self.frightened_time:
-                self.game.score.deactivate_fear_mode()
-                self.update_ai_timer()
-                self.deceleration_multiplier = 1
-                self.animations = self.normal_animations
-                self.game.sounds.pellet.stop()
-                self.mode = "Scatter"
-
-        if self.mode == "Eaten":
-            self.deceleration_multiplier = 1
-            self.love_cell = (
-                self.game.current_scene.blinky.start_pos[0] // 8,
-                (self.game.current_scene.blinky.start_pos[1] - 20) // 8,
-            )
-            if not self.tmp_flag1 and self.rect.center == self.game.current_scene.blinky.start_pos:
-                self.collision = False
-                self.set_direction("down")
-                self.tmp_flag1 = True
-            if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.game.current_scene.pinky.start_pos[1]:
-                self.animations = self.normal_animations
-                self.acceleration_multiplier = 1
-                self.deceleration_multiplier = 2
-                self.set_direction("up")
-                self.tmp_flag2 = True
-            if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
-                self.deceleration_multiplier = 1
-                self.set_direction("left")
-                self.mode = "Scatter"
-                self.collision = True
-                self.update_ai_timer()
-                self.tmp_flag1 = False
-                self.tmp_flag2 = False
+        self.eaten_ai()
+        self.frightened_ai()
 
     def step(self) -> None:
         if not DISABLE_GHOSTS_MOVING:

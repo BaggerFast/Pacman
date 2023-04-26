@@ -3,7 +3,7 @@ from pygame.event import Event
 
 from pacman.data_core import PathManager, Config
 from pacman.data_core.enums import GameStateEnum
-from pacman.misc import ControlCheats, LevelLoader, Font, Health
+from pacman.misc import ControlCheats, LevelLoader, Font, Health, INFINITY_LIVES
 from pacman.misc.serializers import LevelStorage, MainStorage
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import SeedContainer, Map, ImageObject, Text, Pacman
@@ -141,7 +141,6 @@ class MainScene(BaseScene):
         self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()
         self.slow_ghost_rect = self.__loader.get_slow_ghost_rect()
-        self.cant_up_ghost_rect = self.__loader.get_cant_up_ghost_rect()
         self.__map = Map(self.__loader.get_map_data())
 
         self.game.score.reset()

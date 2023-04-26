@@ -77,6 +77,3 @@ class LevelLoader:
 
     def get_slow_ghost_rect(self):
         return deepcopy(self.__json["rects"]["slow_zone"])
-
-    def get_cant_up_ghost_rect(self):
-        return deepcopy(self.__json["rects"]["cant_up_ghosts"])
