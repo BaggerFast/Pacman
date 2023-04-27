@@ -1,6 +1,7 @@
 from typing import Tuple
 
 from .base import Base
+from ...data_core.enums import GhostStateEnum
 from ...misc.serializers import SettingsStorage
 
 
@@ -21,7 +22,7 @@ class Clyde(Base):
             chase_time = 0
             scatter_time = 0
         super().__init__(game, start_pos, seed_count, frightened_time, chase_time, scatter_time)
-        self.mode = "Chase"
+        self.state = GhostStateEnum.CHASE
         self.shift_y = 1
         self.set_direction("up")
         self.is_in_home = True
@@ -43,11 +44,11 @@ class Clyde(Base):
         super().ghosts_ai()
         scene = self.game.current_scene
         pacman = scene.pacman
-        if self.mode == "Scatter":
+        if self.state is GhostStateEnum.SCATTER:
             self.love_cell = self.love_point_in_scatter_mode
             if self.two_cells_dis(self.get_cell(), pacman.get_cell()) >= 8:
-                self.mode = "Chase"
-        elif self.mode == "Chase":
+                self.state = GhostStateEnum.CHASE
+        elif self.state is GhostStateEnum.CHASE:
             self.love_cell = pacman.get_cell()
             if self.two_cells_dis(self.get_cell(), pacman.get_cell()) <= 8:
-                self.mode = "Scatter"
+                self.state = GhostStateEnum.SCATTER

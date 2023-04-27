@@ -2,7 +2,7 @@ import pygame as pg
 from pygame.event import Event
 
 from pacman.data_core import PathManager, Config
-from pacman.data_core.enums import GameStateEnum
+from pacman.data_core.enums import GameStateEnum, GhostStateEnum
 from pacman.misc import ControlCheats, LevelLoader, Font, Health, INFINITY_LIVES
 from pacman.misc.serializers import LevelStorage, MainStorage
 from pacman.misc.util import is_esc_pressed
@@ -20,7 +20,7 @@ class MainScene(BaseScene):
         if not self.game.sounds.siren.is_busy():
             self.game.sounds.siren.play()
         if self.pacman.animator != self.pacman.dead_anim:
-            if any(ghost.mode == "Frightened" for ghost in self.__ghosts):
+            if any(ghost.state is GhostStateEnum.FRIGHTENED for ghost in self.__ghosts):
                 self.game.sounds.siren.pause()
                 if not self.game.sounds.pellet.is_busy():
                     self.game.sounds.pellet.play()
@@ -123,7 +123,7 @@ class MainScene(BaseScene):
     def on_enter(self) -> None:
         if self.pacman.animator != self.pacman.dead_anim:
             self.game.sounds.siren.unpause()
-        if any(ghost.mode == "Frightened" for ghost in self.__ghosts):
+        if any(ghost.state is GhostStateEnum.FRIGHTENED for ghost in self.__ghosts):
             self.game.sounds.siren.pause()
             self.game.sounds.pellet.play()
 
@@ -223,7 +223,7 @@ class MainScene(BaseScene):
                         for ghost2 in self.__ghosts:
                             ghost2.invisible()
                         break
-                    if ghost.mode == "Frightened":
+                    if ghost.state is GhostStateEnum.FRIGHTENED:
                         ghost.gg_text.text = f"{200 * 2 ** self.game.score.fear_count}"
                         ghost.invisible()
                         self.game.score.eat_ghost()

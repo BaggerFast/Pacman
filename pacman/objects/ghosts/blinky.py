@@ -1,6 +1,7 @@
 from typing import Tuple
 import pygame as pg
 from .base import Base
+from ...data_core.enums import GhostStateEnum
 from ...misc.serializers import SettingsStorage
 
 
@@ -20,7 +21,7 @@ class Blinky(Base):
             chase_time = 80000
             scatter_time = 3000
         super().__init__(game, start_pos, seed_count, frightened_time, chase_time, scatter_time)
-        self.mode = "Scatter"
+        self.state = GhostStateEnum.SCATTER
         self.set_direction("left")
 
     def update(self) -> None:
@@ -34,13 +35,13 @@ class Blinky(Base):
         super().ghosts_ai()
         scene = self.game.current_scene
         pacman = scene.pacman
-        if self.mode == "Scatter":
+        if self.state is GhostStateEnum.SCATTER:
             self.love_cell = self.love_point_in_scatter_mode
             if pg.time.get_ticks() - self.ai_timer >= self.scatter_time:
                 self.update_ai_timer()
-                self.mode = "Chase"
-        if self.mode == "Chase":
+                self.state = GhostStateEnum.CHASE
+        if self.state is GhostStateEnum.CHASE:
             self.love_cell = pacman.get_cell()
             if pg.time.get_ticks() - self.ai_timer >= self.chase_time:
                 self.update_ai_timer()
-                self.mode = "Scatter"
+                self.state = GhostStateEnum.SCATTER

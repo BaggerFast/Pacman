@@ -14,6 +14,7 @@ class GhostStateEnum(Enum):
     SCATTER = auto()
     FRIGHTENED = auto()
     EATEN = auto()
+    HIDDEN = auto()
 
 
 class FruitStateEnum:

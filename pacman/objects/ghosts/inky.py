@@ -1,6 +1,7 @@
 from typing import Tuple
 import pygame as pg
 from .base import Base
+from ...data_core.enums import GhostStateEnum
 from ...misc.serializers import SettingsStorage
 
 
@@ -49,12 +50,12 @@ class Inky(Base):
         scene = self.game.current_scene
         pacman = scene.pacman
         blinky = scene.blinky
-        if self.mode == "Scatter":
+        if self.state is GhostStateEnum.SCATTER:
             self.love_cell = self.love_point_in_scatter_mode
             if pg.time.get_ticks() - self.ai_timer >= self.scatter_time:
                 self.update_ai_timer()
-                self.mode = "Chase"
-        if self.mode == "Chase":
+                self.state = GhostStateEnum.CHASE
+        if self.state is GhostStateEnum.CHASE:
             pacman_cell = pacman.get_cell()
             rotate = pacman.rotate
             blinky_cell = blinky.get_cell()
@@ -72,4 +73,4 @@ class Inky(Base):
             )
             if pg.time.get_ticks() - self.ai_timer >= self.chase_time:
                 self.update_ai_timer()
-                self.mode = "Scatter"
+                self.state = GhostStateEnum.SCATTER

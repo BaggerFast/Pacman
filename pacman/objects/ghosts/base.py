@@ -2,9 +2,10 @@ import random
 from typing import Tuple
 import pygame as pg
 from pacman.data_core import PathManager, Dirs
+from pacman.data_core.enums import GhostStateEnum
 from pacman.misc import Animator, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION
 from pacman.misc.cell_util import CellUtil
-from pacman.objects import Character, Pacman, Text
+from pacman.objects import Character, Text
 
 
 class Base(Character):
@@ -85,7 +86,6 @@ class Base(Character):
         self.animations = self.normal_animations
 
         super().__init__(game, self.top_walk_anim, start_pos, PathManager.get_image_path(f"ghost/{type(self).__name__.lower()}/aura"))
-
         self.collision = False
         self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
@@ -97,7 +97,7 @@ class Base(Character):
         self.is_in_home = True
         self.work_counter = True
         self.set_direction("left")
-        self.mode = "Scatter"
+        self.state = GhostStateEnum.SCATTER
         self.gg_text = Text(" ", 10)
 
         # Временное решение
@@ -112,11 +112,11 @@ class Base(Character):
             if self.in_rect(rect):
                 self.deceleration_multiplier_with_rect = 2
         self.deceleration_multiplier_with_rect *= self.deceleration_multiplier
-        if self.mode != "Eaten":
+        if self.state is not GhostStateEnum.EATEN:
             self.gg_text.rect = pg.Rect(self.rect.x, self.rect.y, 0, 0)
         if self.rotate is None:
             self.rotate = 0
-        if not self.is_invisible and self.mode != "Frightened":
+        if not self.is_invisible and self.state is not GhostStateEnum.FRIGHTENED:
             self.animator = self.animations[self.rotate]
         if not self.process_logic_iterator % self.deceleration_multiplier_with_rect:
             for _ in range(self.acceleration_multiplier):
@@ -130,7 +130,7 @@ class Base(Character):
             self.two_cells_dis(self.rect.center, rect.center) < 3
             and self.collision
             and not DISABLE_GHOSTS_COLLISION,
-            self.mode not in ("Frightened" , "Eaten")
+            self.state not in (GhostStateEnum.FRIGHTENED, GhostStateEnum.EATEN)
         )
 
     def can_leave_home(self, eaten_seed) -> bool:
@@ -163,7 +163,7 @@ class Base(Character):
         self.collision = True
 
     def eaten_ai(self):
-        if self.mode != "Eaten":
+        if self.state is not GhostStateEnum.EATEN:
             return
         self.deceleration_multiplier = 1
         self.love_cell = (
@@ -183,14 +183,14 @@ class Base(Character):
         if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
             self.deceleration_multiplier = 1
             self.set_direction("left")
-            self.mode = "Scatter"
+            self.state = GhostStateEnum.SCATTER
             self.collision = True
             self.update_ai_timer()
             self.tmp_flag1 = False
             self.tmp_flag2 = False
 
     def frightened_ai(self):
-        if self.mode != "Frightened":
+        if self.state is not GhostStateEnum.FRIGHTENED:
             return
         if pg.time.get_ticks() - self.ai_timer >= self.frightened_time - 2000:
             self.animator = self.frightened_walk_anim2
@@ -200,7 +200,7 @@ class Base(Character):
             self.deceleration_multiplier = 1
             self.animations = self.normal_animations
             self.game.sounds.pellet.stop()
-            self.mode = "Scatter"
+            self.state = GhostStateEnum.SCATTER
 
     def ghosts_ai(self) -> None:
         if CellUtil.in_cell_center(self.rect) and self.collision and not self.is_invisible:
@@ -212,7 +212,7 @@ class Base(Character):
             if not any(cell):
                 cell[(self.rotate + 2) % 4] = True
 
-            if self.mode != "Frightened":
+            if self.state is not GhostStateEnum.FRIGHTENED:
                 min_dis = float("inf")
                 for i in range(len(cell)):
                     if cell[i]:
@@ -237,15 +237,15 @@ class Base(Character):
             super().step()
 
     def toggle_mode_to_frightened(self):
-        if self.mode != "Eaten" and self.frightened_time != 0:
+        if self.state is not GhostStateEnum.EATEN and self.frightened_time != 0:
             self.update_ai_timer()
-            self.mode = "Frightened"
+            self.state = GhostStateEnum.FRIGHTENED
             self.animator = self.frightened_walk_anim1
             self.deceleration_multiplier = 2
 
     def toggle_mode_to_eaten(self):
-        if self.mode != "Eaten":
+        if self.state is not GhostStateEnum.EATEN:
             self.game.sounds.ghost.play()
-        self.mode = "Eaten"
+        self.state = GhostStateEnum.EATEN
         self.animations = self.eaten_animations
         self.acceleration_multiplier = 2
