@@ -1,6 +1,6 @@
 from abc import ABC
 from typing import Tuple, Final
-
+from math import hypot
 import pygame as pg
 
 
@@ -13,11 +13,15 @@ class CellUtil(ABC):
 
     @staticmethod
     def two_cells_dis(cell1: Tuple[int, int], cell2: Tuple[int, int]) -> float:
-        return ((cell1[0] - cell2[0]) ** 2 + (cell1[1] - cell2[1]) ** 2) ** 0.5
+        return hypot(cell1[0] - cell2[0], cell1[1] - cell2[1])
 
     @classmethod
     def get_cell(cls, rect: pg.Rect) -> Tuple[int, int]:
         return rect.centerx // cls.CELL_SIZE, (rect.centery - 20) // cls.CELL_SIZE
+
+    @classmethod
+    def half_cell(cls):
+        return cls.CELL_SIZE // 2
 
     @classmethod
     def in_cell_center(cls, rect: pg.Rect) -> bool:

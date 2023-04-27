@@ -75,20 +75,19 @@ class SeedContainer(MovementObject, IDrawable):
     def seed_collision(self, rect: pg.Rect) -> bool:
         if not self.__seeds_on_field:
             return False
-        for row in range(len(self.__seeds)):
-            for col in range(len(self.__seeds[row])):
-                if col * CELL_SIZE - 2 == rect.x and self.__seeds[row][col] and row * CELL_SIZE + 18 == rect.y:
-                    self.__seeds[row][col] = False
+        for y in range(len(self.__seeds)):
+            for x in range(len(self.__seeds[y])):
+                if self.__seeds[y][x] and x * CELL_SIZE - 2 == rect.x and y * CELL_SIZE + 18 == rect.y:
+                    self.__seeds[y][x] = False
                     self.__seeds_on_field -= 1
                     return True
         return False
 
     def energizer_collision(self, rect: pg.Rect) -> bool:
-        for energizer in self.__energizers:
-            if energizer[1] * CELL_SIZE + 18 == rect.y:
-                if energizer[0] * CELL_SIZE - 2 == rect.x:
-                    self.__energizers.remove(energizer)
-                    return True
+        for i, (x, y) in enumerate(self.__energizers):
+            if y * CELL_SIZE + 18 == rect.y and x * CELL_SIZE - 2 == rect.x:
+                del self.__energizers[i]
+                return True
         return False
 
     def is_field_empty(self) -> bool:
