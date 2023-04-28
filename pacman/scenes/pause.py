@@ -10,7 +10,6 @@ from pacman.scenes.base_scene import BaseScene
 
 
 class PauseScene(BaseScene):
-
     def _create_objects(self) -> None:
         from pacman.scenes.main import MainScene
         from pacman.scenes.menu import MenuScene
@@ -42,7 +41,3 @@ class PauseScene(BaseScene):
         super().process_event(event)
         if is_esc_pressed(event):
             SceneManager().pop()
-
-    # def additional_event_check(self, event: pg.event.Event) -> None:
-    #     if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-    #         self.game.scenes.set(self.game.scenes.MAIN)

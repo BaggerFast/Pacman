@@ -11,9 +11,8 @@ from pacman.objects.base import MovementObject
 
 
 class Fruit(MovementObject, IDrawable, ILogical):
-    def __init__(self, game, pos: tuple) -> None:
+    def __init__(self, pos: tuple) -> None:
         super().__init__()
-        self.game = game
         self.__anim = Animator(PathManager.get_list_path(f"{Dirs.IMAGE}/fruit", ext="png"), False, False)
         self.rect = self.__anim.current_image.get_rect()
         self.move_center(*CellUtil.pos_from_cell(pos))
@@ -57,9 +56,11 @@ class Fruit(MovementObject, IDrawable, ILogical):
             return False
         self.change_state(FruitStateEnum.EATEN)
         MainStorage().store_fruit(self.__anim.get_cur_index(), 1)
-        self.game.score.eat_fruit(self.__scores[self.__anim.get_cur_index()])
         self.__change_image()
         return True
+
+    def get_scores(self):
+        return self.__scores[self.__anim.get_cur_index()]
 
     def update(self):
         self.__check_time()

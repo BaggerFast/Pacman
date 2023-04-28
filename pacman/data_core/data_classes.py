@@ -3,8 +3,16 @@ from dataclasses import dataclass
 
 @dataclass
 class Cell:
-    x: int
-    y: int
+    __x: int
+    __y: int
+
+    @property
+    def x(self) -> int:
+        return self.__x * 8
+
+    @property
+    def y(self) -> int:
+        return self.__y * 8 + 20
 
 
 @dataclass

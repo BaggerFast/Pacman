@@ -14,7 +14,6 @@ from pacman.scenes.base_scene import BaseScene
 
 
 class MainScene(BaseScene):
-
     # region COMPLETE:
     def __play_sound(self):
         if not self.game.sounds.siren.is_busy():
@@ -94,6 +93,7 @@ class MainScene(BaseScene):
             case GameStateEnum.INTRO:
                 self.intro_logic()
             case GameStateEnum.ACTION:
+                super().process_logic()
                 self.game_logic()
 
     def draw(self, screen: pg.Surface) -> None:
@@ -138,26 +138,20 @@ class MainScene(BaseScene):
         self.game.sounds.reload_sounds(self.game)
         self.state = GameStateEnum.INTRO
         self.__loader = LevelLoader(self.game.maps.levels[LevelStorage().current])
-        self.__seed_data = self.__loader.get_seed_data()
         self.__energizer_data = self.__loader.get_energizer_data()
         self.slow_ghost_rect = self.__loader.get_slow_ghost_rect()
+        self.__seeds = SeedContainer(self.game, self.__loader.get_seed_data(), self.__energizer_data)
         self.__map = Map(self.__loader.get_map_data())
-
         self.game.score.reset()
         self.intro_sound = self.game.sounds.intro
-
         self.__create_start_anim()
-
         self.hp = Health(3, 4)
-
         self.__timer_reset_pacman = 0
         self.__seeds_eaten = 0
-
-        self.fruit = Fruit(self.game, self.__loader.get_fruit_position())
+        self.fruit = Fruit(self.__loader.get_fruit_position())
         self.ghost_text_timer = pg.time.get_ticks()
         self.ghost_text_flag = False
         self.state_text = True
-
         self.__scores_value_text = Text(
             f"{'Mb' if self.game.skins.current.name == 'chrome' else self.game.score}",
             size=Font.MAIN_SCENE_SIZE,
@@ -170,25 +164,19 @@ class MainScene(BaseScene):
         self.__timer_reset_pacman = 0
         self.ghost_text_flag = False
         self.ghost_text_timer = pg.time.get_ticks()
-        self.__create_map()
+
+        self.objects += [self.__map, self.__seeds, self.fruit]
         self.__create_characters()
         self.__create_hud()
-
-        self.objects += [self.fruit, ControlCheats([["aezakmi", self.add_hp]])]
-
-    def __create_map(self):
-        self.__seeds = SeedContainer(self.game, self.__seed_data, self.__energizer_data)
-        self.objects += [self.__map, self.__seeds]
+        self.objects += [ControlCheats([["aezakmi", self.add_hp]])]
 
     def __create_characters(self):
         hero_pos = self.__loader.get_hero_postions()
-        seed_count = sum([1 for i in self.__seed_data for j in i if j])
-
         self.pacman = Pacman(self.game, hero_pos["pacman"])
-        self.inky = Inky(self.game, hero_pos["inky"], seed_count)
-        self.pinky = Pinky(self.game, hero_pos["pinky"], seed_count)
-        self.clyde = Clyde(self.game, hero_pos["clyde"], seed_count)
-        self.blinky = Blinky(self.game, hero_pos["blinky"], seed_count)
+        self.inky = Inky(self.game, hero_pos["inky"], len(self.__seeds))
+        self.pinky = Pinky(self.game, hero_pos["pinky"], len(self.__seeds))
+        self.clyde = Clyde(self.game, hero_pos["clyde"], len(self.__seeds))
+        self.blinky = Blinky(self.game, hero_pos["blinky"], len(self.__seeds))
         self.__ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
 
         self.objects.append(self.pacman)
@@ -203,6 +191,7 @@ class MainScene(BaseScene):
     def __process_collision(self) -> None:
         if self.fruit.process_collision(self.pacman.rect):
             self.game.sounds.fruit.play()
+            self.game.score.eat_fruit(self.fruit.get_scores())
         elif self.__seeds.energizer_collision(self.pacman.rect):
             self.game.score.eat_energizer()
             for ghost in self.__ghosts:
@@ -234,16 +223,17 @@ class MainScene(BaseScene):
     def check_game_status(self):
         if self.__seeds.is_field_empty():
             from pacman.scenes.game_win import GameWinScene
+
             SceneManager().reset(GameWinScene(self.game, self.game.score))
         elif self.pacman.dead_anim.anim_finished and int(self.hp) < 1 and not self.game.sounds.pacman.is_busy():
             from pacman.scenes.game_over import GameOverScene
+
             SceneManager().reset(GameOverScene(self.game, self.game.score))
 
     def update_score_text(self):
         self.__scores_value_text.text = f"{'Mb' if self.game.skins.current.name == 'chrome' else self.game.score}"
 
     def game_logic(self):
-        super().process_logic()
         self.__play_sound()
         self.__change_prefered_ghost()
         self.__process_collision()
@@ -262,4 +252,5 @@ class MainScene(BaseScene):
         super().process_event(event)
         if is_esc_pressed(event) and self.state != GameStateEnum.INTRO:
             from pacman.scenes.pause import PauseScene
+
             SceneManager().append(PauseScene(self.game))

@@ -11,7 +11,6 @@ from pacman.scenes.base_scene import BaseScene
 
 
 class MenuScene(BaseScene):
-
     def _create_objects(self) -> None:
         self.preview = self.game.maps.full_surface
         self.color = rand_color()

@@ -79,6 +79,7 @@ class GameWinScene(BaseScene):
         super().process_event(event)
         if is_esc_pressed(event):
             from pacman.scenes.menu import MenuScene
+
             SceneManager().reset(MenuScene(self.game))
 
     def on_enter(self) -> None:

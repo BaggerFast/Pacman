@@ -1,5 +1,6 @@
 from enum import Enum, auto
 
+
 # region States
 
 
@@ -46,6 +47,13 @@ class SkinEnum(Enum):
     WINDOWS = auto()
     POKEBALL = auto()
     HALF_LIFE = auto()
+
+
+class RotateEnum(Enum):
+    RIGHT = 0
+    DOWN = auto()
+    LEFT = auto()
+    UP = auto()
 
 
 # endregion

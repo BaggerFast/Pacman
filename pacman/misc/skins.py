@@ -12,10 +12,6 @@ class Skin:
     def __init__(self, skin_name: str, skin_cost):
         self.name = skin_name
         self.skin_cost = skin_cost
-
-        self.__walk = Animator(PathManager.get_list_path(f"{Dirs.IMAGE}/pacman/{self.name}/walk", ext="png"))
-        dead = sprite_slice(pg.image.load(PathManager.get_image_path(f"pacman/{self.name}/dead")), (15, 15))
-        self.__dead = Animator(dead, 100, False, True)
         self.__image = self.prerender_surface()
 
     @property
@@ -24,11 +20,12 @@ class Skin:
 
     @property
     def walk(self):
-        return copy(self.__walk)
+        return Animator(PathManager.get_list_path(f"{Dirs.IMAGE}/pacman/{self.name}/walk", ext="png"))
 
     @property
     def dead(self):
-        return copy(self.__dead)
+        dead = sprite_slice(pg.image.load(PathManager.get_image_path(f"pacman/{self.name}/dead")), (15, 15))
+        return Animator(dead, 100, False, True)
 
     @property
     def image(self):

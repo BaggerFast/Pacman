@@ -85,7 +85,9 @@ class Base(Character):
 
         self.animations = self.normal_animations
 
-        super().__init__(game, self.top_walk_anim, start_pos, PathManager.get_image_path(f"ghost/{type(self).__name__.lower()}/aura"))
+        super().__init__(
+            game, self.top_walk_anim, start_pos, PathManager.get_image_path(f"ghost/{type(self).__name__.lower()}/aura")
+        )
         self.collision = False
         self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
@@ -127,10 +129,8 @@ class Base(Character):
 
     def collision_check(self, rect: pg.Rect):
         return (
-            self.two_cells_dis(self.rect.center, rect.center) < 3
-            and self.collision
-            and not DISABLE_GHOSTS_COLLISION,
-            self.state not in (GhostStateEnum.FRIGHTENED, GhostStateEnum.EATEN)
+            self.two_cells_dis(self.rect.center, rect.center) < 3 and self.collision and not DISABLE_GHOSTS_COLLISION,
+            self.state not in (GhostStateEnum.FRIGHTENED, GhostStateEnum.EATEN),
         )
 
     def can_leave_home(self, eaten_seed) -> bool:

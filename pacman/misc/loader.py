@@ -72,7 +72,7 @@ class LevelLoader:
     def get_hero_postions(self):
         return deepcopy(self.__json["characters"])
 
-    def get_fruit_position(self) -> Tuple[int | float, int | float]:
+    def get_fruit_position(self) -> Tuple[float, float]:
         return deepcopy(self.__json["static_objects"]["fruit"])
 
     def get_slow_ghost_rect(self):

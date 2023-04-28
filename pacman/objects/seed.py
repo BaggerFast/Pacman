@@ -1,55 +1,52 @@
 import pygame as pg
 from pacman.data_core import Colors, PathManager
+from pacman.data_core.data_classes import Cell
 from pacman.data_core.interfaces import IDrawable
 from pacman.misc import CELL_SIZE, HIGH_CALORIE_SEEDS
 from pacman.objects import MovementObject
 
 
 class SeedContainer(MovementObject, IDrawable):
-
     def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
         super().__init__()
         self.game = game
-        self.__seeds = seed_data
-        self.__energizers = energizer_data
+        self.__seeds = self.prepare_seeds(seed_data)
+        self.__energizers = self.prepare_energizers(energizer_data)
         self.__x, self.__y = x, y
 
         self.__ram_img = pg.image.load(PathManager.get_image_path("ram"))
 
         self.__show_energizer = True
-        self.__seeds_on_field = sum([1 for seed_row in self.__seeds for seed in seed_row if seed])
-        self.__max_seeds = self.__seeds_on_field
+        self.__max_seeds = len(self.__seeds)
 
-    @property
-    def x(self):
-        return self.__x
+    @staticmethod
+    def prepare_seeds(seed_data) -> list[Cell]:
+        seed = []
+        for i in range(len(seed_data)):
+            for j in range(len(seed_data[i])):
+                if not seed_data[i][j]:
+                    continue
+                seed.append(Cell(j, i))
+        return seed
 
-    @property
-    def y(self):
-        return self.__y
+    @staticmethod
+    def prepare_energizers(energizer_data) -> list[Cell]:
+        return [Cell(*cell) for cell in energizer_data]
 
     def __draw_seeds(self, screen) -> None:
-        for row in range(len(self.__seeds)):
-            for col in range(len(self.__seeds[row])):
-                if self.__seeds[row][col]:
-                    if self.game.skins.current.name == "chrome":
-                        screen.blit(
-                            self.__ram_img,
-                            (
-                                self.x + col * CELL_SIZE + CELL_SIZE // 2 - 6,
-                                self.y + row * CELL_SIZE + CELL_SIZE // 2 - 6,
-                            ),
-                        )
-                    else:
-                        pg.draw.circle(
-                            screen,
-                            Colors.WHITE,
-                            (
-                                self.x + col * CELL_SIZE + CELL_SIZE // 2,
-                                self.y + row * CELL_SIZE + CELL_SIZE // 2,
-                            ),
-                            1,
-                        )
+        for seed in self.__seeds:
+            if self.game.skins.current.name == "chrome":
+                screen.blit(
+                    self.__ram_img,
+                    (seed.x + CELL_SIZE // 2 - 6, seed.y + CELL_SIZE // 2 - 6),
+                )
+                continue
+            pg.draw.circle(
+                screen,
+                Colors.WHITE,
+                (seed.x + CELL_SIZE // 2, seed.y + CELL_SIZE // 2),
+                1,
+            )
 
     def __draw_energizers(self, screen) -> None:
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
@@ -61,10 +58,7 @@ class SeedContainer(MovementObject, IDrawable):
             pg.draw.circle(
                 screen,
                 Colors.WHITE,
-                (
-                    self.x + energizer[0] * CELL_SIZE + CELL_SIZE // 2,
-                    self.y + energizer[1] * CELL_SIZE + CELL_SIZE // 2,
-                ),
+                (energizer.x + CELL_SIZE // 2, energizer.y + CELL_SIZE // 2),
                 4,
             )
 
@@ -73,22 +67,23 @@ class SeedContainer(MovementObject, IDrawable):
         self.__draw_energizers(screen)
 
     def seed_collision(self, rect: pg.Rect) -> bool:
-        if not self.__seeds_on_field:
+        if not len(self.__seeds):
             return False
-        for y in range(len(self.__seeds)):
-            for x in range(len(self.__seeds[y])):
-                if self.__seeds[y][x] and x * CELL_SIZE - 2 == rect.x and y * CELL_SIZE + 18 == rect.y:
-                    self.__seeds[y][x] = False
-                    self.__seeds_on_field -= 1
-                    return True
+        for i, cell in enumerate(self.__seeds):
+            if cell.x - 2 == rect.x and cell.y - 2 == rect.y:
+                del self.__seeds[i]
+                return True
         return False
 
     def energizer_collision(self, rect: pg.Rect) -> bool:
-        for i, (x, y) in enumerate(self.__energizers):
-            if y * CELL_SIZE + 18 == rect.y and x * CELL_SIZE - 2 == rect.x:
+        for i, energizer in enumerate(self.__energizers):
+            if energizer.y - 2 == rect.y and energizer.x - 2 == rect.x:
                 del self.__energizers[i]
                 return True
         return False
 
     def is_field_empty(self) -> bool:
-        return self.__seeds_on_field == (self.__max_seeds - 10 if HIGH_CALORIE_SEEDS else 0)
+        return len(self.__seeds) == (self.__max_seeds - 10 if HIGH_CALORIE_SEEDS else 0)
+
+    def __len__(self):
+        return len(self.__seeds)

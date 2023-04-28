@@ -1,7 +1,7 @@
 from typing import Tuple, List
 
 import pygame as pg
-
+from pygame.rect import Rect
 from pacman.data_core import Config
 from pacman.data_core.interfaces import ILogical, IDrawable
 from pacman.misc import Animator
@@ -48,13 +48,14 @@ class Character(MovementObject, ILogical, IDrawable):
         self.speed = 0
 
     def set_direction(self, new_direction="none") -> None:
-        if new_direction:
-            self.shift_x, self.shift_y, rotate = self.direction[new_direction]
-            if self.rotate != rotate:
-                self.rotate = rotate
-                self.animator.rotate = rotate
-                if self.animator.is_rotation:
-                    self.animator.change_rotation()
+        if not new_direction:
+            return
+        self.shift_x, self.shift_y, rotate = self.direction[new_direction]
+        if self.rotate != rotate:
+            self.rotate = rotate
+            self.animator.rotate = rotate
+            if self.animator.is_rotation:
+                self.animator.change_rotation()
 
     def update(self) -> None:
         self.step()
@@ -94,7 +95,7 @@ class Character(MovementObject, ILogical, IDrawable):
         return CellUtil.get_cell(self.rect)
 
     def in_rect(self, rect: List[int]) -> bool:
-        return rect[0] <= self.get_cell()[0] <= rect[2] and rect[1] <= self.get_cell()[1] <= rect[3]
+        return Rect(*rect).collidepoint(self.get_cell())
 
     @staticmethod
     def two_cells_dis(cell1: Tuple[int, int], cell2: Tuple[int, int]) -> float:

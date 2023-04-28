@@ -108,7 +108,3 @@ class SettingsScene(BaseScene):
         super().process_event(event)
         if is_esc_pressed(event):
             SceneManager().pop()
-    #
-    # def additional_event_check(self, event: pg.event.Event) -> None:
-    #     if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
-    #         self.game.scenes.set(self.prev_scene)

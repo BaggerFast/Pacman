@@ -1,10 +1,7 @@
 from typing import Tuple
-
 import pygame as pg
-
 from pacman.data_core import PathManager
 from pacman.data_core.interfaces import IEventful
-from pacman.misc import INFINITY_LIVES
 from pacman.misc.cell_util import CellUtil
 from pacman.objects.character_base import Character
 
@@ -15,8 +12,9 @@ class Pacman(Character, IEventful):
     def __init__(self, game, start_pos: Tuple[int, int]) -> None:
         self.__walk_anim = game.skins.current.walk
         self.__dead_anim = game.skins.current.dead
-        super().__init__(game, self.__walk_anim, start_pos,
-                         PathManager.get_image_path(f"pacman/{game.skins.current.name}/aura"))
+        super().__init__(
+            game, self.__walk_anim, start_pos, PathManager.get_image_path(f"pacman/{game.skins.current.name}/aura")
+        )
         self.dead = False
         self.__feature_rotate = "none"
 
