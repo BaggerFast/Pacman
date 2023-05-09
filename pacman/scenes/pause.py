@@ -1,6 +1,5 @@
 import pygame as pg
 from pygame.event import Event
-
 from pacman.data_core import Config
 from pacman.misc import Font
 from pacman.misc.util import is_esc_pressed

@@ -15,7 +15,7 @@ class Fruit(MovementObject, IDrawable, ILogical):
         super().__init__()
         self.__anim = Animator(PathManager.get_list_path(f"{Dirs.IMAGE}/fruit", ext="png"), False, False)
         self.rect = self.__anim.current_image.get_rect()
-        self.move_center(*CellUtil.pos_from_cell(pos))
+        self.move_center(*CellUtil.center_pos_from_cell(pos))
 
         self.state = FruitStateEnum.DISABLED
         self.timer = pg.time.get_ticks()
@@ -52,7 +52,7 @@ class Fruit(MovementObject, IDrawable, ILogical):
     def process_collision(self, rect: pg.Rect):
         if self.state is not FruitStateEnum.ACTIVE:
             return False
-        if not (self.rect.y == rect.y and rect.left <= self.rect.x <= rect.right):
+        if not (self.rect.center == rect.center):
             return False
         self.change_state(FruitStateEnum.EATEN)
         MainStorage().store_fruit(self.__anim.get_cur_index(), 1)

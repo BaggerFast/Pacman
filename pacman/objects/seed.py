@@ -2,18 +2,16 @@ import pygame as pg
 from pacman.data_core import Colors, PathManager
 from pacman.data_core.data_classes import Cell
 from pacman.data_core.interfaces import IDrawable
-from pacman.misc import CELL_SIZE, HIGH_CALORIE_SEEDS
+from pacman.misc import HIGH_CALORIE_SEEDS
 from pacman.objects import MovementObject
 
 
 class SeedContainer(MovementObject, IDrawable):
-    def __init__(self, game, seed_data, energizer_data, x=0, y=20) -> None:
+    def __init__(self, game, seed_data, energizer_data) -> None:
         super().__init__()
         self.game = game
         self.__seeds = self.prepare_seeds(seed_data)
         self.__energizers = self.prepare_energizers(energizer_data)
-        self.__x, self.__y = x, y
-
         self.__ram_img = pg.image.load(PathManager.get_image_path("ram"))
 
         self.__show_energizer = True
@@ -38,13 +36,13 @@ class SeedContainer(MovementObject, IDrawable):
             if self.game.skins.current.name == "chrome":
                 screen.blit(
                     self.__ram_img,
-                    (seed.x + CELL_SIZE // 2 - 6, seed.y + CELL_SIZE // 2 - 6),
+                    seed.rect.center,
                 )
                 continue
             pg.draw.circle(
                 screen,
                 Colors.WHITE,
-                (seed.x + CELL_SIZE // 2, seed.y + CELL_SIZE // 2),
+                seed.rect.center,
                 1,
             )
 
@@ -58,7 +56,7 @@ class SeedContainer(MovementObject, IDrawable):
             pg.draw.circle(
                 screen,
                 Colors.WHITE,
-                (energizer.x + CELL_SIZE // 2, energizer.y + CELL_SIZE // 2),
+                energizer.rect.center,
                 4,
             )
 
@@ -70,14 +68,14 @@ class SeedContainer(MovementObject, IDrawable):
         if not len(self.__seeds):
             return False
         for i, cell in enumerate(self.__seeds):
-            if cell.x - 2 == rect.x and cell.y - 2 == rect.y:
+            if cell.rect.center == rect.center:
                 del self.__seeds[i]
                 return True
         return False
 
     def energizer_collision(self, rect: pg.Rect) -> bool:
         for i, energizer in enumerate(self.__energizers):
-            if energizer.y - 2 == rect.y and energizer.x - 2 == rect.x:
+            if energizer.rect.center == rect.center:
                 del self.__energizers[i]
                 return True
         return False

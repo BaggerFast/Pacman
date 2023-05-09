@@ -1,5 +1,3 @@
-from typing import Tuple
-
 import pygame as pg
 from pygame import Surface
 
@@ -23,7 +21,7 @@ class Text(MovementObject, IDrawable):
         self.size = size
         self.__color = color
         self.font = pg.font.Font(font, self.size)
-        self.__text: str
+        self.__text = ""
         self.text = text
         self.surface: pg.Surface
 
@@ -52,10 +50,6 @@ class Text(MovementObject, IDrawable):
     def color(self, color: pg.color):
         self.__color = color
         self.surface = self.font.render(self.__text, False, self.__color)
-
-    @pos.setter
-    def pos(self, pos: Tuple[int, int]):
-        self.__pos = pos
 
     def draw(self, screen: Surface) -> None:
         screen.blit(self.surface, self.rect)

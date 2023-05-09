@@ -3,6 +3,7 @@ import pygame as pg
 from .base import Base
 from ...data_core.enums import GhostStateEnum
 from ...misc.serializers import SettingsStorage
+from ...scene_manager import SceneManager
 
 
 class Blinky(Base):
@@ -33,7 +34,7 @@ class Blinky(Base):
 
     def ghosts_ai(self) -> None:
         super().ghosts_ai()
-        scene = self.game.current_scene
+        scene = SceneManager().current
         pacman = scene.pacman
         if self.state is GhostStateEnum.SCATTER:
             self.love_cell = self.love_point_in_scatter_mode

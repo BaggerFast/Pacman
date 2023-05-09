@@ -4,6 +4,12 @@ from enum import Enum, auto
 # region States
 
 
+class PacmanState(Enum):
+    IDLING = 0
+    MOVING = auto()
+    DEATH = auto()
+
+
 class BtnStateEnum(Enum):
     INITIAL = 0
     HOVER = auto()

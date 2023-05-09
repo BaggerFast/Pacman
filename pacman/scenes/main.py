@@ -3,7 +3,7 @@ from pygame.event import Event
 
 from pacman.data_core import PathManager, Config
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
-from pacman.misc import ControlCheats, LevelLoader, Font, Health, INFINITY_LIVES
+from pacman.misc import ControlCheats, LevelLoader, Font, Health, INFINITY_LIVES, Score
 from pacman.misc.serializers import LevelStorage, MainStorage
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import SeedContainer, Map, ImageObject, Text, Pacman
@@ -134,6 +134,7 @@ class MainScene(BaseScene):
     # endregion
 
     def pre_init(self):
+        self.score = Score()
         self.game.sounds.intro.play()
         self.game.sounds.reload_sounds(self.game)
         self.state = GameStateEnum.INTRO
@@ -142,7 +143,6 @@ class MainScene(BaseScene):
         self.slow_ghost_rect = self.__loader.get_slow_ghost_rect()
         self.__seeds = SeedContainer(self.game, self.__loader.get_seed_data(), self.__energizer_data)
         self.__map = Map(self.__loader.get_map_data())
-        self.game.score.reset()
         self.intro_sound = self.game.sounds.intro
         self.__create_start_anim()
         self.hp = Health(3, 4)
@@ -153,7 +153,7 @@ class MainScene(BaseScene):
         self.ghost_text_flag = False
         self.state_text = True
         self.__scores_value_text = Text(
-            f"{'Mb' if self.game.skins.current.name == 'chrome' else self.game.score}",
+            f"{'Mb' if self.game.skins.current.name == 'chrome' else self.score}",
             size=Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(10, 8, 20, 20),
         )
@@ -191,14 +191,14 @@ class MainScene(BaseScene):
     def __process_collision(self) -> None:
         if self.fruit.process_collision(self.pacman.rect):
             self.game.sounds.fruit.play()
-            self.game.score.eat_fruit(self.fruit.get_scores())
+            self.score.eat_fruit(self.fruit.get_scores())
         elif self.__seeds.energizer_collision(self.pacman.rect):
-            self.game.score.eat_energizer()
+            self.score.eat_energizer()
             for ghost in self.__ghosts:
                 ghost.toggle_mode_to_frightened()
         elif self.__seeds.seed_collision(self.pacman.rect):
             self.__seeds_eaten += 1
-            self.game.score.eat_seed()
+            self.score.eat_seed()
             if not self.game.sounds.seed.is_busy():
                 self.game.sounds.seed.play()
         else:
@@ -213,9 +213,9 @@ class MainScene(BaseScene):
                             ghost2.invisible()
                         break
                     if ghost.state is GhostStateEnum.FRIGHTENED:
-                        ghost.gg_text.text = f"{200 * 2 ** self.game.score.fear_count}"
+                        ghost.gg_text.text = f"{200 * 2 ** self.score.fear_count}"
                         ghost.invisible()
-                        self.game.score.eat_ghost()
+                        self.score.eat_ghost()
                         self.ghost_text_flag = True
                         self.ghost_text_timer = pg.time.get_ticks()
                         ghost.toggle_mode_to_eaten()
@@ -224,14 +224,14 @@ class MainScene(BaseScene):
         if self.__seeds.is_field_empty():
             from pacman.scenes.game_win import GameWinScene
 
-            SceneManager().reset(GameWinScene(self.game, self.game.score))
+            SceneManager().reset(GameWinScene(self.game, self.score))
         elif self.pacman.dead_anim.anim_finished and int(self.hp) < 1 and not self.game.sounds.pacman.is_busy():
             from pacman.scenes.game_over import GameOverScene
 
-            SceneManager().reset(GameOverScene(self.game, self.game.score))
+            SceneManager().reset(GameOverScene(self.game, self.score))
 
     def update_score_text(self):
-        self.__scores_value_text.text = f"{'Mb' if self.game.skins.current.name == 'chrome' else self.game.score}"
+        self.__scores_value_text.text = f"{'Mb' if self.game.skins.current.name == 'chrome' else self.score}"
 
     def game_logic(self):
         self.__play_sound()

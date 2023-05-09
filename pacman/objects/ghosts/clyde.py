@@ -3,6 +3,7 @@ from typing import Tuple
 from .base import Base
 from ...data_core.enums import GhostStateEnum
 from ...misc.serializers import SettingsStorage
+from ...scene_manager import SceneManager
 
 
 class Clyde(Base):
@@ -25,14 +26,13 @@ class Clyde(Base):
         self.state = GhostStateEnum.CHASE
         self.shift_y = 1
         self.set_direction("up")
-        self.is_in_home = True
 
     def home_ai(self, eaten_seed):
         super().home_ai(eaten_seed)
         if self.can_leave_home(eaten_seed):
             self.set_direction("left")
             self.go()
-            scene = self.game.current_scene
+            scene = SceneManager().current
             if self.rect.centerx == scene.pinky.start_pos[0]:
                 self.set_direction("up")
             if self.rect.centery == scene.blinky.start_pos[1]:
@@ -42,7 +42,7 @@ class Clyde(Base):
 
     def ghosts_ai(self) -> None:
         super().ghosts_ai()
-        scene = self.game.current_scene
+        scene = SceneManager().current
         pacman = scene.pacman
         if self.state is GhostStateEnum.SCATTER:
             self.love_cell = self.love_point_in_scatter_mode

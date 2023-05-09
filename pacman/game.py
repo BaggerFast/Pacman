@@ -4,7 +4,7 @@ from typing import List
 import pygame as pg
 
 from pacman.data_core import Colors, PathManager, Dirs, Sounds, Config
-from pacman.misc import Score, LevelLoader, Skins
+from pacman.misc import LevelLoader, Skins
 from pacman.misc.serializers import StorageLoader, SettingsStorage, SkinStorage, LevelStorage
 from pacman.misc.sound_controller import SoundController
 from pacman.objects import Map, ImageObject
@@ -104,20 +104,13 @@ class Game:
         self.maps = self.Maps()
         self.screen = pg.display.set_mode(tuple(Config.RESOLUTION), pg.SCALED)
         self.__clock = pg.time.Clock()
-        self.timer = pg.time.get_ticks() / 1000
         self.time_out = 125
         self.animate_timer = 0
         self.skins = Skins()
-        self.score = Score()
-
         self.sounds = self.Music(self)
 
         self.skins.current = "default"
         SceneManager().reset(MenuScene(self))
-
-    @property
-    def current_scene(self):
-        return SceneManager().current
 
     # region Exit
 

@@ -7,6 +7,7 @@ from pacman.data_core.interfaces import ILogical, IDrawable
 from pacman.misc import Animator
 from pacman.misc.cell_util import CellUtil
 from pacman.objects import MovementObject
+from pacman.scene_manager import SceneManager
 
 
 class Character(MovementObject, ILogical, IDrawable):
@@ -25,7 +26,7 @@ class Character(MovementObject, ILogical, IDrawable):
         self.animator = animator
         self.rect = self.animator.current_image.get_rect()
         self.shift_x, self.shift_y = self.direction["right"][:2]
-        self.start_pos = CellUtil.pos_from_cell(start_pos)
+        self.start_pos = CellUtil.center_pos_from_cell(start_pos)
         self.move_center(*self.start_pos)
         self.speed = 0
         self.rotate = 0
@@ -84,9 +85,9 @@ class Character(MovementObject, ILogical, IDrawable):
             )
 
     def movement_cell(self, cell: Tuple[int, int]) -> list:
-        scene = self.game.current_scene
+        scene = SceneManager().current
         cell = scene.movements_data[cell[1]][cell[0]]
-        return [i == "1" for i in "{0:04b}".format(cell)[::-1]]
+        return [bool(int(i)) for i in reversed("{0:04b}".format(cell))]
 
     def move_to(self, direction) -> bool:
         return self.movement_cell(self.get_cell())[direction]

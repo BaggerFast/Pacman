@@ -3,6 +3,7 @@ import pygame as pg
 from .base import Base
 from ...data_core.enums import GhostStateEnum
 from ...misc.serializers import SettingsStorage
+from ...scene_manager import SceneManager
 
 
 class Inky(Base):
@@ -37,7 +38,7 @@ class Inky(Base):
         if self.can_leave_home(eaten_seed):
             self.set_direction("right")
             self.go()
-            scene = self.game.current_scene
+            scene = SceneManager().current
             if self.rect.centerx == scene.pinky.start_pos[0]:
                 self.set_direction("up")
             if self.rect.centery == scene.blinky.start_pos[1]:
@@ -47,7 +48,7 @@ class Inky(Base):
 
     def ghosts_ai(self) -> None:
         super().ghosts_ai()
-        scene = self.game.current_scene
+        scene = SceneManager().current
         pacman = scene.pacman
         blinky = scene.blinky
         if self.state is GhostStateEnum.SCATTER:

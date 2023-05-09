@@ -6,6 +6,7 @@ from pacman.data_core.enums import GhostStateEnum
 from pacman.misc import Animator, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION
 from pacman.misc.cell_util import CellUtil
 from pacman.objects import Character, Text
+from pacman.scene_manager import SceneManager
 
 
 class Base(Character):
@@ -110,7 +111,7 @@ class Base(Character):
         if self.is_invisible:
             return
         self.deceleration_multiplier_with_rect = 1
-        for rect in self.game.current_scene.slow_ghost_rect:
+        for rect in SceneManager().current.slow_ghost_rect:
             if self.in_rect(rect):
                 self.deceleration_multiplier_with_rect = 2
         self.deceleration_multiplier_with_rect *= self.deceleration_multiplier
@@ -167,20 +168,20 @@ class Base(Character):
             return
         self.deceleration_multiplier = 1
         self.love_cell = (
-            self.game.current_scene.blinky.start_pos[0] // 8,
-            (self.game.current_scene.blinky.start_pos[1] - 20) // 8,
+            SceneManager().current.blinky.start_pos[0] // 8,
+            (SceneManager().current.blinky.start_pos[1] - 20) // 8,
         )
-        if not self.tmp_flag1 and self.rect.center == self.game.current_scene.blinky.start_pos:
+        if not self.tmp_flag1 and self.rect.center == SceneManager().current.blinky.start_pos:
             self.collision = False
             self.set_direction("down")
             self.tmp_flag1 = True
-        if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.game.current_scene.pinky.start_pos[1]:
+        if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == SceneManager().current.pinky.start_pos[1]:
             self.animations = self.normal_animations
             self.acceleration_multiplier = 1
             self.deceleration_multiplier = 2
             self.set_direction("up")
             self.tmp_flag2 = True
-        if self.tmp_flag2 and self.rect.centery == self.game.current_scene.blinky.start_pos[1]:
+        if self.tmp_flag2 and self.rect.centery == SceneManager().current.blinky.start_pos[1]:
             self.deceleration_multiplier = 1
             self.set_direction("left")
             self.state = GhostStateEnum.SCATTER
@@ -195,7 +196,7 @@ class Base(Character):
         if pg.time.get_ticks() - self.ai_timer >= self.frightened_time - 2000:
             self.animator = self.frightened_walk_anim2
         if pg.time.get_ticks() - self.ai_timer >= self.frightened_time:
-            self.game.score.deactivate_fear_mode()
+            SceneManager().current.score.deactivate_fear_mode()
             self.update_ai_timer()
             self.deceleration_multiplier = 1
             self.animations = self.normal_animations

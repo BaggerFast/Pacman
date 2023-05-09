@@ -17,7 +17,7 @@ class GameWinScene(BaseScene):
 
     def _create_objects(self) -> None:
         super()._create_objects()
-        MainStorage().add_record(self.game.score)
+        MainStorage().add_record(self.score)
         self.__unlock_level()
         self.objects += [
             Text("YOU", 40, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),

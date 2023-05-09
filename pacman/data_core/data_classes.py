@@ -1,21 +1,18 @@
 from dataclasses import dataclass
+from pygame import Rect
 
 
-@dataclass
+@dataclass(frozen=True)
 class Cell:
-    __x: int
-    __y: int
+    x: int
+    y: int
 
     @property
-    def x(self) -> int:
-        return self.__x * 8
-
-    @property
-    def y(self) -> int:
-        return self.__y * 8 + 20
+    def rect(self):
+        return Rect(self.x * 8, self.y * 8 + 20, 8, 8)
 
 
-@dataclass
+@dataclass(frozen=True)
 class ResolutionSize:
     WIDTH: int
     HEIGHT: int
