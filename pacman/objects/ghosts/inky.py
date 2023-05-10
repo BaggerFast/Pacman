@@ -1,4 +1,3 @@
-from typing import Tuple
 import pygame as pg
 from .base import Base
 from ...data_core.enums import GhostStateEnum
@@ -13,7 +12,7 @@ class Inky(Base):
     def __init__(
         self,
         game,
-        start_pos: Tuple[int, int],
+        loader,
         seed_count,
     ):
         frightened_time = 8000
@@ -28,7 +27,7 @@ class Inky(Base):
             chase_time = 80000
             scatter_time = 1000
 
-        super().__init__(game, start_pos, seed_count, frightened_time, chase_time, scatter_time)
+        super().__init__(game, loader, seed_count, frightened_time, chase_time, scatter_time)
         self.shift_y = 1
         self.set_direction("up")
         self.is_in_home = True
@@ -38,10 +37,9 @@ class Inky(Base):
         if self.can_leave_home(eaten_seed):
             self.set_direction("right")
             self.go()
-            scene = SceneManager().current
-            if self.rect.centerx == scene.pinky.start_pos[0]:
+            if self.rect.centerx == self.pinky_start_pos[0]:
                 self.set_direction("up")
-            if self.rect.centery == scene.blinky.start_pos[1]:
+            if self.rect.centery == self.blinky_start_pos[1]:
                 self.set_direction("left")
                 self.is_in_home = False
                 self.collision = True

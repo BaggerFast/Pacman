@@ -43,5 +43,5 @@ class Score:
         self.fear_count = 0
 
     def eat_ghost(self) -> None:
-        self + (200 * 2**self.fear_count)
+        self + (200 * 2 ** self.fear_count)
         self.fear_count += 1

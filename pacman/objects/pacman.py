@@ -9,14 +9,15 @@ from pacman.objects.character_base import Character
 class Pacman(Character, IEventful):
     action = {pg.K_w: "up", pg.K_a: "left", pg.K_s: "down", pg.K_d: "right"}
 
-    def __init__(self, game, start_pos: Tuple[int, int]) -> None:
+    def __init__(self, game, loader) -> None:
         self.__walk_anim = game.skins.current.walk
         self.__dead_anim = game.skins.current.dead
         super().__init__(
-            game, self.__walk_anim, start_pos, PathManager.get_image_path(f"pacman/{game.skins.current.name}/aura")
+            game, self.__walk_anim, loader, PathManager.get_image_path(f"pacman/{game.skins.current.name}/aura")
         )
         self.dead = False
         self.__feature_rotate = "none"
+        self.timer_reset = 0
 
     @property
     def dead_anim(self):
@@ -42,9 +43,13 @@ class Pacman(Character, IEventful):
             super().update()
 
     def death(self) -> None:
+        self.timer_reset = pg.time.get_ticks()
         self.animator = self.__dead_anim
         self.game.sounds.siren.pause()
         self.game.sounds.pellet.stop()
         self.game.sounds.pacman.play()
         self.animator.start()
         self.dead = True
+
+    def death_is_finished(self) -> bool:
+        return pg.time.get_ticks() - self.timer_reset >= 3000 and self.animator.anim_finished and self.dead

@@ -1,4 +1,3 @@
-from typing import Tuple
 import pygame as pg
 from .base import Base
 from ...data_core.enums import GhostStateEnum
@@ -9,7 +8,7 @@ from ...scene_manager import SceneManager
 class Blinky(Base):
     love_point_in_scatter_mode = (33, -3)
 
-    def __init__(self, game, start_pos: Tuple[int, int], seed_count):
+    def __init__(self, game, loader, seed_count):
         frightened_time = 8000
         chase_time = 20000
         scatter_time = 7000
@@ -21,7 +20,7 @@ class Blinky(Base):
             frightened_time = 2000
             chase_time = 80000
             scatter_time = 3000
-        super().__init__(game, start_pos, seed_count, frightened_time, chase_time, scatter_time)
+        super().__init__(game, loader, seed_count, frightened_time, chase_time, scatter_time)
         self.state = GhostStateEnum.SCATTER
         self.set_direction("left")
 

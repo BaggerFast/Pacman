@@ -78,7 +78,7 @@ class Game:
 
         def __load_from_map(self, level_id: int = 0) -> None:
             self.__loader = LevelLoader(self.levels[level_id])
-            self.__map_data = self.__loader.get_map_data()
+            self.__map_data = self.__loader.map
             self.__map = Map(self.__map_data)
 
         def keys(self) -> List[int]:

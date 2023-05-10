@@ -1,4 +1,3 @@
-from typing import Tuple
 import pygame as pg
 from .base import Base
 from ...data_core.enums import GhostStateEnum
@@ -12,7 +11,7 @@ class Pinky(Base):
     def __init__(
         self,
         game,
-        start_pos: Tuple[int, int],
+        loader,
         seed_count,
     ):
         frightened_time = 8000
@@ -26,7 +25,7 @@ class Pinky(Base):
             frightened_time = 2000
             chase_time = 80000
             scatter_time = 3000
-        super().__init__(game, start_pos, seed_count, frightened_time, chase_time, scatter_time)
+        super().__init__(game, loader, seed_count, frightened_time, chase_time, scatter_time)
         self.shift_y = -1
         self.set_direction("down")
 
@@ -35,16 +34,14 @@ class Pinky(Base):
         if self.can_leave_home(eaten_seed):
             self.set_direction("up")
             self.go()
-            scene = SceneManager().current
-            if self.rect.centery == scene.blinky.start_pos[1]:
+            if self.rect.centery == self.blinky_start_pos[1]:
                 self.set_direction("left")
                 self.is_in_home = False
                 self.collision = True
 
     def ghosts_ai(self) -> None:
         super().ghosts_ai()
-        scene = SceneManager().current
-        pacman = scene.pacman
+        pacman = SceneManager().current.pacman
         if self.state is GhostStateEnum.SCATTER:
             self.love_cell = self.love_point_in_scatter_mode
             if pg.time.get_ticks() - self.ai_timer >= self.scatter_time:

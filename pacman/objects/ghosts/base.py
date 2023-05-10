@@ -1,5 +1,4 @@
 import random
-from typing import Tuple
 import pygame as pg
 from pacman.data_core import PathManager, Dirs
 from pacman.data_core.enums import GhostStateEnum
@@ -14,7 +13,7 @@ class Base(Character):
     seed_percent_in_home = 0
     direction2 = {0: (1, 0, 0), 1: (0, 1, 1), 2: (-1, 0, 2), 3: (0, -1, 3)}
 
-    def __init__(self, game, start_pos: Tuple[int, int], seed_count, frightened_time, chase_time, scatter_time):
+    def __init__(self, game, loader, seed_count, frightened_time, chase_time, scatter_time):
         self.__seed_count = seed_count
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
@@ -87,7 +86,7 @@ class Base(Character):
         self.animations = self.normal_animations
 
         super().__init__(
-            game, self.top_walk_anim, start_pos, PathManager.get_image_path(f"ghost/{type(self).__name__.lower()}/aura")
+            game, self.top_walk_anim, loader, PathManager.get_image_path(f"ghost/{type(self).__name__.lower()}/aura")
         )
         self.collision = False
         self.timer = pg.time.get_ticks()
@@ -107,11 +106,16 @@ class Base(Character):
         self.tmp_flag1 = False
         self.tmp_flag2 = False
 
+        self.blinky_start_pos = CellUtil.center_pos_from_cell(self.hero_pos["blinky"])
+        self.pinky_start_pos = CellUtil.center_pos_from_cell(self.hero_pos["pinky"])
+
+        self.text_timer = 0
+
     def update(self) -> None:
         if self.is_invisible:
             return
         self.deceleration_multiplier_with_rect = 1
-        for rect in SceneManager().current.slow_ghost_rect:
+        for rect in self.level_loader.slow_ghost_rect:
             if self.in_rect(rect):
                 self.deceleration_multiplier_with_rect = 2
         self.deceleration_multiplier_with_rect *= self.deceleration_multiplier
@@ -125,14 +129,12 @@ class Base(Character):
             for _ in range(self.acceleration_multiplier):
                 self.ghosts_ai()
                 self.step()
-                self.animator.timer_check()
+        self.animator.timer_check()
         self.process_logic_iterator += 1
 
     def collision_check(self, rect: pg.Rect):
-        return (
-            self.two_cells_dis(self.rect.center, rect.center) < 3 and self.collision and not DISABLE_GHOSTS_COLLISION,
-            self.state not in (GhostStateEnum.FRIGHTENED, GhostStateEnum.EATEN),
-        )
+        return self.two_cells_dis(self.rect.center, rect.center) < 3 and self.collision and \
+            (not DISABLE_GHOSTS_COLLISION and self.state is not GhostStateEnum.EATEN)
 
     def can_leave_home(self, eaten_seed) -> bool:
         return (
@@ -156,32 +158,32 @@ class Base(Character):
 
     def invisible(self) -> None:
         self.animator = self.invisible_anim
+        # self.state = GhostStateEnum.HIDDEN
         self.is_invisible = True
         self.collision = False
 
     def visible(self) -> None:
-        self.is_invisible = False
-        self.collision = True
+        if pg.time.get_ticks() - self.text_timer >= 500:
+            self.gg_text.text = f" "
+            self.is_invisible = False
+            self.collision = True
 
     def eaten_ai(self):
         if self.state is not GhostStateEnum.EATEN:
             return
         self.deceleration_multiplier = 1
-        self.love_cell = (
-            SceneManager().current.blinky.start_pos[0] // 8,
-            (SceneManager().current.blinky.start_pos[1] - 20) // 8,
-        )
-        if not self.tmp_flag1 and self.rect.center == SceneManager().current.blinky.start_pos:
+        self.love_cell = tuple(self.hero_pos["blinky"])
+        if not self.tmp_flag1 and self.rect.center == self.blinky_start_pos:
             self.collision = False
             self.set_direction("down")
             self.tmp_flag1 = True
-        if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == SceneManager().current.pinky.start_pos[1]:
+        if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.pinky_start_pos[1]:
             self.animations = self.normal_animations
             self.acceleration_multiplier = 1
             self.deceleration_multiplier = 2
             self.set_direction("up")
             self.tmp_flag2 = True
-        if self.tmp_flag2 and self.rect.centery == SceneManager().current.blinky.start_pos[1]:
+        if self.tmp_flag2 and self.rect.centery == self.blinky_start_pos[1]:
             self.deceleration_multiplier = 1
             self.set_direction("left")
             self.state = GhostStateEnum.SCATTER
@@ -204,27 +206,28 @@ class Base(Character):
             self.state = GhostStateEnum.SCATTER
 
     def ghosts_ai(self) -> None:
-        if CellUtil.in_cell_center(self.rect) and self.collision and not self.is_invisible:
+        if CellUtil.in_cell_center(self.rect) and self.collision:
             if self.move_to(self.rotate):
                 self.go()
             cell = self.movement_cell(CellUtil.get_cell(self.rect))
-
             cell[(self.rotate + 2) % 4] = False
             if not any(cell):
                 cell[(self.rotate + 2) % 4] = True
 
             if self.state is not GhostStateEnum.FRIGHTENED:
                 min_dis = float("inf")
-                for i in range(len(cell)):
-                    if cell[i]:
-                        cell2 = CellUtil.get_cell(self.rect)
-                        tmp_cell = (
-                            cell2[0] + self.direction2[i][0],
-                            cell2[1] + self.direction2[i][1],
-                        )
-                        if min_dis > self.two_cells_dis(self.love_cell, tmp_cell):
-                            min_dis = self.two_cells_dis(self.love_cell, tmp_cell)
-                            self.shift_x, self.shift_y, self.rotate = self.direction2[i]
+                for i, c in enumerate(cell):
+                    if not c:
+                        continue
+                    cell2 = CellUtil.get_cell(self.rect)
+                    tmp_cell = (
+                        cell2[0] + self.direction2[i][0],
+                        cell2[1] + self.direction2[i][1],
+                    )
+                    diff_dis = self.two_cells_dis(self.love_cell, tmp_cell)
+                    if min_dis > diff_dis:
+                        min_dis = diff_dis
+                        self.shift_x, self.shift_y, self.rotate = self.direction2[i]
             else:
                 rand = 0
                 while not cell[rand]:
@@ -244,7 +247,10 @@ class Base(Character):
             self.animator = self.frightened_walk_anim1
             self.deceleration_multiplier = 2
 
-    def toggle_mode_to_eaten(self):
+    def toggle_mode_to_eaten(self, score: int):
+        self.gg_text.text = f"{score}"
+        self.text_timer = pg.time.get_ticks()
+        self.invisible()
         if self.state is not GhostStateEnum.EATEN:
             self.game.sounds.ghost.play()
         self.state = GhostStateEnum.EATEN

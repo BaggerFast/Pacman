@@ -10,6 +10,21 @@ class SeedLoader:
         self.__seeds = []
         self.__prepare_seeds()
 
+    @property
+    def seeds(self) -> List[bool]:
+        return self.__seeds
+
+    @property
+    def energizers(self) -> List[Tuple[int, int]]:
+        return self.__json["static_objects"]["big_dots"]
+
+    def __prepare_seeds(self) -> None:
+        self.__seeds = [[bool(x) for x in y] for y in self.__json["collision_map"]]
+        self.__remove_seeds_under_fruit()
+        self.__remove_seeds_under_pacman()
+        self.__remove_seeds_under_ghosts()
+        self.__remove_seeds_under_energizers()
+
     def __remove_seeds_under_fruit(self) -> None:
         fruit_y = self.__json["static_objects"]["fruit"][1]
         fruit_x = self.__json["static_objects"]["fruit"][0]
@@ -22,58 +37,51 @@ class SeedLoader:
         self.__seeds[player_y][int(player_x - 0.5)] = False
         self.__seeds[player_y][int(player_x + 0.5)] = False
 
-    def __remove_seeds_under_energizers(self) -> None:
-        for x, y in self.__json["static_objects"]["big_dots"]:
-            self.__seeds[y][x] = False
-
-    def __remove_seeds_under_ghost_area(self) -> None:
+    def __remove_seeds_under_ghosts(self) -> None:
         for i in self.__json["rects"]["no_dots"]:
             for y in range(i[1], i[3] + 1):
                 for x in range(i[0], i[2] + 1):
                     self.__seeds[y][x] = False
 
-    def __prepare_seeds(self) -> None:
-        self.__seeds = [[bool(x) for x in y] for y in self.__json["collision_map"]]
-        self.__remove_seeds_under_ghost_area()
-        self.__remove_seeds_under_pacman()
-        self.__remove_seeds_under_fruit()
-        self.__remove_seeds_under_energizers()
-
-    def get_seed_data(self) -> List[bool]:
-        return deepcopy(self.__seeds)
-
-    def get_energizer_data(self) -> List[Tuple[int, int]]:
-        return deepcopy(self.__json["static_objects"]["big_dots"])
+    def __remove_seeds_under_energizers(self) -> None:
+        for x, y in self.__json["static_objects"]["big_dots"]:
+            self.__seeds[y][x] = False
 
 
 class LevelLoader:
-    def __init__(self, filename: str) -> None:
-        self.filename = filename
-        self.__load_map_json()
-        self.movements_map = self.get_movements_data()
+    def __init__(self, file_name: str) -> None:
+        self.__json = self.__load_map_json(file_name)
         self.__seed_loader = SeedLoader(self.__json)
 
-    def __load_map_json(self) -> None:
-        with open(os.path.join("maps", self.filename)) as f:
-            self.__json = json.load(f)
+    @staticmethod
+    def __load_map_json(file_name) -> dict:
+        with open(os.path.join("maps", file_name)) as f:
+            return json.load(f)
 
-    def get_map_data(self) -> List[List[int]]:
-        return deepcopy(self.__json["map"])
+    @property
+    def map(self) -> List[List[int]]:
+        return self.__json["map"]
 
-    def get_movements_data(self) -> List[List[int]]:
-        return deepcopy(self.__json["collision_map"])
+    @property
+    def collision_map(self) -> List[List[int]]:
+        return self.__json["collision_map"]
 
-    def get_seed_data(self) -> List[bool]:
-        return self.__seed_loader.get_seed_data()
+    @property
+    def seeds_map(self) -> List[bool]:
+        return self.__seed_loader.seeds
 
-    def get_energizer_data(self) -> List[Tuple[int, int]]:
-        return self.__seed_loader.get_energizer_data()
+    @property
+    def energizers_pos(self) -> List[Tuple[int, int]]:
+        return self.__seed_loader.energizers
 
-    def get_hero_postions(self):
-        return deepcopy(self.__json["characters"])
+    @property
+    def heros_pos(self):
+        return self.__json["characters"]
 
-    def get_fruit_position(self) -> Tuple[float, float]:
-        return deepcopy(self.__json["static_objects"]["fruit"])
+    @property
+    def fruit_pos(self) -> Tuple[float, float]:
+        return self.__json["static_objects"]["fruit"]
 
-    def get_slow_ghost_rect(self):
-        return deepcopy(self.__json["rects"]["slow_zone"])
+    @property
+    def slow_ghost_rect(self):
+        return self.__json["rects"]["slow_zone"]

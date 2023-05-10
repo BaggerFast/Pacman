@@ -1,13 +1,11 @@
 from typing import Tuple, List
 
 import pygame as pg
-from pygame.rect import Rect
 from pacman.data_core import Config
 from pacman.data_core.interfaces import ILogical, IDrawable
-from pacman.misc import Animator
+from pacman.misc import Animator, LevelLoader
 from pacman.misc.cell_util import CellUtil
 from pacman.objects import MovementObject
-from pacman.scene_manager import SceneManager
 
 
 class Character(MovementObject, ILogical, IDrawable):
@@ -19,14 +17,16 @@ class Character(MovementObject, ILogical, IDrawable):
         "none": (0, 0, None),
     }
 
-    def __init__(self, game, animator: Animator, start_pos: Tuple[int, int], aura: str = None) -> None:
+    def __init__(self, game, animator: Animator, loader: LevelLoader, aura: str = None) -> None:
         super().__init__()
+        self.level_loader = loader
+        self.hero_pos = loader.heros_pos
         self.game = game
         self.__aura = pg.image.load(aura) if aura else aura
         self.animator = animator
         self.rect = self.animator.current_image.get_rect()
         self.shift_x, self.shift_y = self.direction["right"][:2]
-        self.start_pos = CellUtil.center_pos_from_cell(start_pos)
+        self.start_pos = CellUtil.center_pos_from_cell(self.hero_pos[type(self).__name__.lower()])
         self.move_center(*self.start_pos)
         self.speed = 0
         self.rotate = 0
@@ -85,8 +85,7 @@ class Character(MovementObject, ILogical, IDrawable):
             )
 
     def movement_cell(self, cell: Tuple[int, int]) -> list:
-        scene = SceneManager().current
-        cell = scene.movements_data[cell[1]][cell[0]]
+        cell = self.level_loader.collision_map[cell[1]][cell[0]]
         return [bool(int(i)) for i in reversed("{0:04b}".format(cell))]
 
     def move_to(self, direction) -> bool:
@@ -96,7 +95,8 @@ class Character(MovementObject, ILogical, IDrawable):
         return CellUtil.get_cell(self.rect)
 
     def in_rect(self, rect: List[int]) -> bool:
-        return Rect(*rect).collidepoint(self.get_cell())
+        cell_x, cell_y = self.get_cell()
+        return rect[0] <= cell_x <= rect[2] and rect[1] <= cell_y <= rect[3]
 
     @staticmethod
     def two_cells_dis(cell1: Tuple[int, int], cell2: Tuple[int, int]) -> float:
