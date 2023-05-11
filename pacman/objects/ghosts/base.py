@@ -30,16 +30,12 @@ class Base(Character):
     direction2 = {0: (1, 0, 0), 1: (0, 1, 1), 2: (-1, 0, 2), 3: (0, -1, 3)}
     PEACEFULL_STATES = (GhostStateEnum.EATEN, GhostStateEnum.HIDDEN, GhostStateEnum.INDOOR)
 
-    def __init__(self, game, loader, seed_count, frightened_time, chase_time, scatter_time):
+    def __init__(self, game, loader, seed_count):
         self.__seed_count = seed_count
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
         self.acceleration_multiplier = 1
         self.deceleration_multiplier_with_rect = 1
-
-        self.frightened_time = frightened_time
-        self.chase_time = chase_time
-        self.scatter_time = scatter_time
 
         # Обычные Анимация
         self.left_walk_anim = Animator(
@@ -110,15 +106,13 @@ class Base(Character):
             PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/invisible", ext="png"), is_rotation=False
         )
         self.love_cell = (0, 0)
-        self.set_direction("left")
         self.state = GhostStateEnum.INDOOR
         self.gg_text = Text(" ", 10)
         self.ghost_entered_home = False
 
         self.blinky_start_pos = CellUtil.center_pos_from_cell(self.hero_pos["blinky"])
         self.pinky_start_pos = CellUtil.center_pos_from_cell(self.hero_pos["pinky"])
-
-        self.text_timer = 0
+        self.diffucult_settings = self.generate_difficulty_settings()
         self.go()
 
         self.__states_ai = {
@@ -130,8 +124,6 @@ class Base(Character):
         }
 
     def update(self) -> None:
-        if self.is_invisible:
-            return
         self.deceleration_multiplier_with_rect = 1
         for rect in self.level_loader.slow_ghost_rect:
             if self.in_rect(rect):
@@ -143,6 +135,7 @@ class Base(Character):
 
         if self.state is not GhostStateEnum.FRIGHTENED:
             self.animator = self.animations[self.rotate]
+
         if not self.process_logic_iterator % self.deceleration_multiplier_with_rect:
             for _ in range(self.acceleration_multiplier):
                 if self.state in self.__states_ai.keys():
@@ -161,11 +154,7 @@ class Base(Character):
     def update_ai_timer(self):
         self.ai_timer = pg.time.get_ticks()
 
-    def invisible(self) -> None:
-        self.animator = self.invisible_anim
-        # self.state = GhostStateEnum.HIDDEN
-        self.is_invisible = True
-        self.collision = False
+    # region States
 
     @ghost_state(GhostStateEnum.EATEN)
     def eaten_ai(self):
@@ -184,16 +173,15 @@ class Base(Character):
             self.update_ai_timer()
         elif self.rect.center == self.pinky_start_pos:
             self.animations = self.normal_animations
-            self.acceleration_multiplier = 1
             self.deceleration_multiplier = 2
             self.set_direction("up")
 
     @ghost_state(GhostStateEnum.FRIGHTENED)
     def frightened_ai(self):
         self.go_random_cell()
-        if pg.time.get_ticks() - self.ai_timer >= self.frightened_time - 2000:
+        if pg.time.get_ticks() - self.ai_timer >= self.diffucult_settings.frightened - 2000:
             self.animator = self.frightened_walk_anim2
-        if self.check_ai_timer(self.frightened_time):
+        if self.check_ai_timer(self.diffucult_settings.frightened):
             SceneManager().current.score.deactivate_fear_mode()
             self.deceleration_multiplier = 1
             self.animations = self.normal_animations
@@ -214,8 +202,7 @@ class Base(Character):
     @ghost_state(GhostStateEnum.HIDDEN)
     def hidden_ai(self):
         self.gg_text.rect = pg.Rect(self.rect.x, self.rect.y, 0, 0)
-        if pg.time.get_ticks() - self.text_timer >= 500:
-            self.gg_text.text = f" "
+        if self.check_ai_timer(500):
             self.state = GhostStateEnum.EATEN
 
     @ghost_state(GhostStateEnum.SCATTER)
@@ -274,11 +261,11 @@ class Base(Character):
 
     def toggle_to_hidden(self, score: int):
         self.gg_text.text = f"{score}"
-        self.text_timer = pg.time.get_ticks()
+        self.update_ai_timer()
         if self.state is not GhostStateEnum.HIDDEN:
             self.game.sounds.ghost.play()
-        self.animator = self.invisible_anim
         self.state = GhostStateEnum.HIDDEN
+        self.animator = self.invisible_anim
         self.animations = self.eaten_animations
 
     def check_ai_timer(self, time) -> bool:
@@ -286,3 +273,12 @@ class Base(Character):
             self.update_ai_timer()
             return True
         return False
+
+    def generate_difficulty_settings(self) -> GhostDifficult:
+        raise NotImplementedError
+
+    def draw(self, screen: pg.Surface) -> None:
+        if self.state is GhostStateEnum.HIDDEN:
+            self.gg_text.draw(screen)
+            return
+        super().draw(screen)

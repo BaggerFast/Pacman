@@ -155,9 +155,7 @@ class MainScene(BaseScene):
         self.__ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
 
         self.objects.append(self.pacman)
-
-        for ghost in self.__ghosts:
-            self.objects += [ghost, ghost.gg_text]
+        self.objects.extend(self.__ghosts)
 
     def __change_prefered_ghost(self) -> None:
         for ghost in self.__ghosts:

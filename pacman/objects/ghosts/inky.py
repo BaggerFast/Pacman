@@ -29,7 +29,7 @@ class Inky(Base):
     @ghost_state(GhostStateEnum.SCATTER)
     def scatter_ai(self):
         self.go_to_cell(self.love_point_in_scatter_mode)
-        if self.check_ai_timer(self.scatter_time):
+        if self.check_ai_timer(self.diffucult_settings.scatter):
             self.state = GhostStateEnum.CHASE
 
     @ghost_state(GhostStateEnum.CHASE)
@@ -53,7 +53,7 @@ class Inky(Base):
                 pinky_love_cell[1] + vector_blinky_cell_pinky_love_cell[1],
             )
         )
-        if self.check_ai_timer(self.chase_time):
+        if self.check_ai_timer(self.diffucult_settings.chase):
             self.state = GhostStateEnum.SCATTER
 
     def generate_difficulty_settings(self) -> GhostDifficult:

@@ -11,8 +11,8 @@ class GameObjects(List):
     # region List methods
 
     def append(self, item) -> None:
-        if self.__check_type(item):
-            super().append(item)
+        self.__check_type(item)
+        super().append(item)
 
     def insert(self, index, item) -> None:
         self.__check_type(item)
@@ -32,8 +32,9 @@ class GameObjects(List):
 
     # region Custom
 
-    def __check_type(self, item) -> bool:
-        return isinstance(item, self.__included_types)
+    def __check_type(self, item):
+        if not isinstance(item, self.__included_types):
+            raise Exception("Wrong type")
 
     def update(self):
         filtered: Iterable[ILogical] = filter(lambda x: isinstance(x, ILogical), self)

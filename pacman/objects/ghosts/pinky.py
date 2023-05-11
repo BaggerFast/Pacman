@@ -1,6 +1,8 @@
 from random import choice
 from .base import Base, ghost_state
+from ...data_core.data_classes import GhostDifficult
 from ...data_core.enums import GhostStateEnum
+from ...misc.serializers import SettingsStorage
 from ...scene_manager import SceneManager
 
 
@@ -24,7 +26,7 @@ class Pinky(Base):
     @ghost_state(GhostStateEnum.SCATTER)
     def scatter_ai(self):
         self.go_to_cell(self.love_point_in_scatter_mode)
-        if self.check_ai_timer(self.scatter_time):
+        if self.check_ai_timer(self.diffucult_settings.scatter):
             self.state = GhostStateEnum.CHASE
 
     @ghost_state(GhostStateEnum.CHASE)
@@ -37,5 +39,12 @@ class Pinky(Base):
                 pacman.get_cell()[1] + self.direction2[rotate][1] * 2,
             )
         )
-        if self.check_ai_timer(self.chase_time):
+        if self.check_ai_timer(self.diffucult_settings.chase):
             self.state = GhostStateEnum.SCATTER
+
+    def generate_difficulty_settings(self) -> GhostDifficult:
+        return (
+            GhostDifficult(8000, 20000, 7000),
+            GhostDifficult(4000, 40000, 5000),
+            GhostDifficult(2000, 80000, 3000),
+        )[SettingsStorage().difficulty]
