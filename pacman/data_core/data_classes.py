@@ -3,6 +3,13 @@ from pygame import Rect
 
 
 @dataclass(frozen=True)
+class GhostDifficult:
+    frightened: int
+    chase: int
+    scatter: int
+
+
+@dataclass(frozen=True)
 class Cell:
     x: int
     y: int

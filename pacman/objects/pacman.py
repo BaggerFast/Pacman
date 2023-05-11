@@ -15,7 +15,7 @@ class Pacman(Character, IEventful):
         super().__init__(
             game, self.__walk_anim, loader, PathManager.get_image_path(f"pacman/{game.skins.current.name}/aura")
         )
-        self.dead = False
+        self.is_dead = False
         self.__feature_rotate = "none"
         self.timer_reset = 0
 
@@ -24,21 +24,21 @@ class Pacman(Character, IEventful):
         return self.__dead_anim
 
     def event_handler(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key in self.action.keys() and not self.dead:
+        if event.type == pg.KEYDOWN and event.key in self.action.keys() and not self.is_dead:
             self.go()
             self.__feature_rotate = self.action[event.key]
 
     def update(self) -> None:
         self.animator.timer_check()
-        if not self.dead:
+        if not self.is_dead:
             if CellUtil.in_cell_center(self.rect):
-                if self.move_to(self.rotate):
+                if self.can_rotate_to(self.rotate):
                     self.go()
                 else:
                     self.stop()
                     self.animator.change_cur_image(0)
                 c = self.direction[self.__feature_rotate][2]
-                if self.move_to(c):
+                if self.can_rotate_to(c):
                     self.set_direction(self.__feature_rotate)
             super().update()
 
@@ -49,7 +49,7 @@ class Pacman(Character, IEventful):
         self.game.sounds.pellet.stop()
         self.game.sounds.pacman.play()
         self.animator.start()
-        self.dead = True
+        self.is_dead = True
 
     def death_is_finished(self) -> bool:
-        return pg.time.get_ticks() - self.timer_reset >= 3000 and self.animator.anim_finished and self.dead
+        return pg.time.get_ticks() - self.timer_reset >= 3000 and self.animator.anim_finished and self.is_dead

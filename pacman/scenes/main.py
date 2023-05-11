@@ -67,7 +67,6 @@ class MainScene(BaseScene):
             self.state = GameStateEnum.ACTION
             self.text.clear()
             for ghost in self.__ghosts:
-                ghost.update_timer()
                 ghost.update_ai_timer()
 
     def __start_label(self) -> None:
@@ -162,8 +161,7 @@ class MainScene(BaseScene):
 
     def __change_prefered_ghost(self) -> None:
         for ghost in self.__ghosts:
-            if ghost.is_in_home:
-                ghost.home_ai(self.__seeds_eaten)
+            ghost.home_ai(self.__seeds_eaten)
 
     def __process_collision(self) -> None:
         pacman_rect = self.pacman.rect
@@ -185,22 +183,22 @@ class MainScene(BaseScene):
                     if ghost.state is GhostStateEnum.FRIGHTENED:
                         last_score = self.score.score
                         self.score.eat_ghost()
-                        ghost.toggle_mode_to_eaten(self.score.score-last_score)
+                        ghost.toggle_to_hidden(self.score.score - last_score)
                         break
                     else:
-                        if not (self.pacman.dead and INFINITY_LIVES):
+                        if not self.pacman.is_dead and not INFINITY_LIVES:
                             self.hp -= 1
                             self.pacman.death()
-                        for ghost2 in self.__ghosts:
-                            ghost2.invisible()
                         break
 
     def check_game_status(self):
         if self.__seeds.is_field_empty():
             from pacman.scenes.game_win import GameWinScene
+
             SceneManager().reset(GameWinScene(self.game, self.score))
         elif self.pacman.dead_anim.anim_finished and int(self.hp) < 1 and not self.game.sounds.pacman.is_busy():
             from pacman.scenes.game_over import GameOverScene
+
             SceneManager().reset(GameOverScene(self.game, self.score))
 
     def update_score_text(self):
@@ -213,9 +211,6 @@ class MainScene(BaseScene):
         self.update_score_text()
         if self.pacman.death_is_finished():
             self._create_objects()
-        for ghost in self.__ghosts:
-            if ghost.state is GhostStateEnum.EATEN:
-                ghost.visible()
         self.check_game_status()
 
     def process_event(self, event: Event) -> None:

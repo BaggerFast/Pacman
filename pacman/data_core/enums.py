@@ -22,6 +22,7 @@ class GhostStateEnum(Enum):
     FRIGHTENED = auto()
     EATEN = auto()
     HIDDEN = auto()
+    INDOOR = auto()
 
 
 class FruitStateEnum:

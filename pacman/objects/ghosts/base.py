@@ -1,17 +1,34 @@
 import random
+from functools import wraps
+
 import pygame as pg
 from pacman.data_core import PathManager, Dirs
+from pacman.data_core.data_classes import GhostDifficult
 from pacman.data_core.enums import GhostStateEnum
-from pacman.misc import Animator, DISABLE_GHOSTS_MOVING, DISABLE_GHOSTS_COLLISION
+from pacman.misc import Animator
 from pacman.misc.cell_util import CellUtil
 from pacman.objects import Character, Text
 from pacman.scene_manager import SceneManager
+
+
+def ghost_state(state: GhostStateEnum):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            self: Base = args[0]
+            if self.state is state:
+                return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
 
 
 class Base(Character):
     love_point_in_scatter_mode = (0, 0)
     seed_percent_in_home = 0
     direction2 = {0: (1, 0, 0), 1: (0, 1, 1), 2: (-1, 0, 2), 3: (0, -1, 3)}
+    PEACEFULL_STATES = (GhostStateEnum.EATEN, GhostStateEnum.HIDDEN, GhostStateEnum.INDOOR)
 
     def __init__(self, game, loader, seed_count, frightened_time, chase_time, scatter_time):
         self.__seed_count = seed_count
@@ -88,28 +105,29 @@ class Base(Character):
         super().__init__(
             game, self.top_walk_anim, loader, PathManager.get_image_path(f"ghost/{type(self).__name__.lower()}/aura")
         )
-        self.collision = False
-        self.timer = pg.time.get_ticks()
         self.ai_timer = pg.time.get_ticks()
         self.invisible_anim = Animator(
             PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/invisible", ext="png"), is_rotation=False
         )
         self.love_cell = (0, 0)
-        self.is_invisible = False
-        self.is_in_home = True
-        self.work_counter = True
         self.set_direction("left")
-        self.state = GhostStateEnum.SCATTER
+        self.state = GhostStateEnum.INDOOR
         self.gg_text = Text(" ", 10)
-
-        # Временное решение
-        self.tmp_flag1 = False
-        self.tmp_flag2 = False
+        self.ghost_entered_home = False
 
         self.blinky_start_pos = CellUtil.center_pos_from_cell(self.hero_pos["blinky"])
         self.pinky_start_pos = CellUtil.center_pos_from_cell(self.hero_pos["pinky"])
 
         self.text_timer = 0
+        self.go()
+
+        self.__states_ai = {
+            GhostStateEnum.CHASE: self.chase_ai,
+            GhostStateEnum.EATEN: self.eaten_ai,
+            GhostStateEnum.HIDDEN: self.hidden_ai,
+            GhostStateEnum.SCATTER: self.scatter_ai,
+            GhostStateEnum.FRIGHTENED: self.frightened_ai,
+        }
 
     def update(self) -> None:
         if self.is_invisible:
@@ -119,39 +137,26 @@ class Base(Character):
             if self.in_rect(rect):
                 self.deceleration_multiplier_with_rect = 2
         self.deceleration_multiplier_with_rect *= self.deceleration_multiplier
-        if self.state is not GhostStateEnum.EATEN:
-            self.gg_text.rect = pg.Rect(self.rect.x, self.rect.y, 0, 0)
+
         if self.rotate is None:
             self.rotate = 0
-        if not self.is_invisible and self.state is not GhostStateEnum.FRIGHTENED:
+
+        if self.state is not GhostStateEnum.FRIGHTENED:
             self.animator = self.animations[self.rotate]
         if not self.process_logic_iterator % self.deceleration_multiplier_with_rect:
             for _ in range(self.acceleration_multiplier):
-                self.ghosts_ai()
-                self.step()
+                if self.state in self.__states_ai.keys():
+                    self.__states_ai[self.state]()
+
         self.animator.timer_check()
         self.process_logic_iterator += 1
 
     def collision_check(self, rect: pg.Rect):
-        return self.two_cells_dis(self.rect.center, rect.center) < 3 and self.collision and \
-            (not DISABLE_GHOSTS_COLLISION and self.state is not GhostStateEnum.EATEN)
+        return self.two_cells_dis(self.rect.center, rect.center) < 3 and self.state not in self.PEACEFULL_STATES
 
     def can_leave_home(self, eaten_seed) -> bool:
-        return (
-            eaten_seed > (self.__seed_count / 100) * self.seed_percent_in_home
-            or pg.time.get_ticks() - self.timer >= 10000
-        )
-
-    def home_ai(self, eaten_seed):
-        if self.is_in_home and not self.can_leave_home(eaten_seed):
-            self.go()
-            if self.rect.centery >= self.start_pos[1] + 5:
-                self.set_direction("up")
-            elif self.rect.centery <= self.start_pos[1] - 5:
-                self.set_direction("down")
-
-    def update_timer(self) -> None:
-        self.timer = pg.time.get_ticks()
+        percent_of_seeds = (self.__seed_count / 100) * self.seed_percent_in_home
+        return eaten_seed > percent_of_seeds or pg.time.get_ticks() - self.ai_timer >= 10000
 
     def update_ai_timer(self):
         self.ai_timer = pg.time.get_ticks()
@@ -162,97 +167,122 @@ class Base(Character):
         self.is_invisible = True
         self.collision = False
 
-    def visible(self) -> None:
-        if pg.time.get_ticks() - self.text_timer >= 500:
-            self.gg_text.text = f" "
-            self.is_invisible = False
-            self.collision = True
-
+    @ghost_state(GhostStateEnum.EATEN)
     def eaten_ai(self):
-        if self.state is not GhostStateEnum.EATEN:
-            return
+        self.go_to_cell(self.hero_pos["blinky"])
         self.deceleration_multiplier = 1
-        self.love_cell = tuple(self.hero_pos["blinky"])
-        if not self.tmp_flag1 and self.rect.center == self.blinky_start_pos:
-            self.collision = False
-            self.set_direction("down")
-            self.tmp_flag1 = True
-        if self.tmp_flag1 and not self.tmp_flag2 and self.rect.y == self.pinky_start_pos[1]:
+        self.acceleration_multiplier = 2
+        if self.rect.center == self.blinky_start_pos:
+            if not self.ghost_entered_home:
+                self.ghost_entered_home = True
+                self.set_direction("down")
+                return
+            self.ghost_entered_home = False
+            self.acceleration_multiplier = 1
+            self.state = GhostStateEnum.SCATTER
+            self.set_direction(random.choice(("left", "right")))
+            self.update_ai_timer()
+        elif self.rect.center == self.pinky_start_pos:
             self.animations = self.normal_animations
             self.acceleration_multiplier = 1
             self.deceleration_multiplier = 2
             self.set_direction("up")
-            self.tmp_flag2 = True
-        if self.tmp_flag2 and self.rect.centery == self.blinky_start_pos[1]:
-            self.deceleration_multiplier = 1
-            self.set_direction("left")
-            self.state = GhostStateEnum.SCATTER
-            self.collision = True
-            self.update_ai_timer()
-            self.tmp_flag1 = False
-            self.tmp_flag2 = False
 
+    @ghost_state(GhostStateEnum.FRIGHTENED)
     def frightened_ai(self):
-        if self.state is not GhostStateEnum.FRIGHTENED:
-            return
+        self.go_random_cell()
         if pg.time.get_ticks() - self.ai_timer >= self.frightened_time - 2000:
             self.animator = self.frightened_walk_anim2
-        if pg.time.get_ticks() - self.ai_timer >= self.frightened_time:
+        if self.check_ai_timer(self.frightened_time):
             SceneManager().current.score.deactivate_fear_mode()
-            self.update_ai_timer()
             self.deceleration_multiplier = 1
             self.animations = self.normal_animations
             self.game.sounds.pellet.stop()
             self.state = GhostStateEnum.SCATTER
 
-    def ghosts_ai(self) -> None:
-        if CellUtil.in_cell_center(self.rect) and self.collision:
-            if self.move_to(self.rotate):
+    @ghost_state(GhostStateEnum.INDOOR)
+    def home_ai(self, eaten_seed):
+        self.step()
+        if self.can_leave_home(eaten_seed):
+            return
+        match self.rect.centery:
+            case y if y >= self.start_pos[1] + 5:
+                self.set_direction("up")
+            case y if y <= self.start_pos[1] - 5:
+                self.set_direction("down")
+
+    @ghost_state(GhostStateEnum.HIDDEN)
+    def hidden_ai(self):
+        self.gg_text.rect = pg.Rect(self.rect.x, self.rect.y, 0, 0)
+        if pg.time.get_ticks() - self.text_timer >= 500:
+            self.gg_text.text = f" "
+            self.state = GhostStateEnum.EATEN
+
+    @ghost_state(GhostStateEnum.SCATTER)
+    def scatter_ai(self):
+        raise NotImplementedError
+
+    @ghost_state(GhostStateEnum.CHASE)
+    def chase_ai(self):
+        raise NotImplementedError
+
+    # endregion
+
+    def go_to_cell(self, cell):
+        if CellUtil.in_cell_center(self.rect):
+            if self.can_rotate_to(self.rotate):
+                self.go()
+            available_dirs = self.movement_cell(CellUtil.get_cell(self.rect))
+            available_dirs[(self.rotate + 2) % 4] = False
+            if not any(available_dirs):
+                available_dirs[(self.rotate + 2) % 4] = True
+            min_dis = float("inf")
+            for i, c in enumerate(available_dirs):
+                if not c:
+                    continue
+                cell2 = CellUtil.get_cell(self.rect)
+                tmp_cell = (
+                    cell2[0] + self.direction2[i][0],
+                    cell2[1] + self.direction2[i][1],
+                )
+                diff_dis = self.two_cells_dis(cell, tmp_cell)
+                if min_dis > diff_dis:
+                    min_dis = diff_dis
+                    self.shift_x, self.shift_y, self.rotate = self.direction2[i]
+        self.step()
+
+    def go_random_cell(self):
+        if CellUtil.in_cell_center(self.rect):
+            if self.can_rotate_to(self.rotate):
                 self.go()
             cell = self.movement_cell(CellUtil.get_cell(self.rect))
             cell[(self.rotate + 2) % 4] = False
             if not any(cell):
                 cell[(self.rotate + 2) % 4] = True
-
-            if self.state is not GhostStateEnum.FRIGHTENED:
-                min_dis = float("inf")
-                for i, c in enumerate(cell):
-                    if not c:
-                        continue
-                    cell2 = CellUtil.get_cell(self.rect)
-                    tmp_cell = (
-                        cell2[0] + self.direction2[i][0],
-                        cell2[1] + self.direction2[i][1],
-                    )
-                    diff_dis = self.two_cells_dis(self.love_cell, tmp_cell)
-                    if min_dis > diff_dis:
-                        min_dis = diff_dis
-                        self.shift_x, self.shift_y, self.rotate = self.direction2[i]
-            else:
-                rand = 0
-                while not cell[rand]:
-                    rand = random.randrange(len(cell))
-                self.shift_x, self.shift_y, self.rotate = self.direction2[rand]
-        self.eaten_ai()
-        self.frightened_ai()
-
-    def step(self) -> None:
-        if not DISABLE_GHOSTS_MOVING:
-            super().step()
+            rand = 0
+            while not cell[rand]:
+                rand = random.randrange(len(cell))
+            self.shift_x, self.shift_y, self.rotate = self.direction2[rand]
+        self.step()
 
     def toggle_mode_to_frightened(self):
-        if self.state is not GhostStateEnum.EATEN and self.frightened_time != 0:
+        if self.state not in self.PEACEFULL_STATES:
             self.update_ai_timer()
             self.state = GhostStateEnum.FRIGHTENED
             self.animator = self.frightened_walk_anim1
             self.deceleration_multiplier = 2
 
-    def toggle_mode_to_eaten(self, score: int):
+    def toggle_to_hidden(self, score: int):
         self.gg_text.text = f"{score}"
         self.text_timer = pg.time.get_ticks()
-        self.invisible()
-        if self.state is not GhostStateEnum.EATEN:
+        if self.state is not GhostStateEnum.HIDDEN:
             self.game.sounds.ghost.play()
-        self.state = GhostStateEnum.EATEN
+        self.animator = self.invisible_anim
+        self.state = GhostStateEnum.HIDDEN
         self.animations = self.eaten_animations
-        self.acceleration_multiplier = 2
+
+    def check_ai_timer(self, time) -> bool:
+        if pg.time.get_ticks() - self.ai_timer >= time:
+            self.update_ai_timer()
+            return True
+        return False

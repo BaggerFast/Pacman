@@ -29,22 +29,8 @@ class Clyde(Base):
         super().home_ai(eaten_seed)
         if self.can_leave_home(eaten_seed):
             self.set_direction("left")
-            self.go()
-            if self.rect.centerx == self.pinky_start_pos[0]:
-                self.set_direction("up")
-            if self.rect.centery == self.blinky_start_pos[1]:
-                self.set_direction("left")
-                self.is_in_home = False
-                self.collision = True
-
-    def ghosts_ai(self) -> None:
-        super().ghosts_ai()
-        pacman = SceneManager().current.pacman
-        if self.state is GhostStateEnum.SCATTER:
-            self.love_cell = self.love_point_in_scatter_mode
-            if self.two_cells_dis(self.get_cell(), pacman.get_cell()) >= 8:
-                self.state = GhostStateEnum.CHASE
-        elif self.state is GhostStateEnum.CHASE:
-            self.love_cell = pacman.get_cell()
-            if self.two_cells_dis(self.get_cell(), pacman.get_cell()) <= 8:
-                self.state = GhostStateEnum.SCATTER
+        if self.rect.centerx == self.pinky_start_pos[0]:
+            self.set_direction("up")
+        if self.rect.centery == self.blinky_start_pos[1]:
+            self.state = GhostStateEnum.SCATTER
+            self.set_direction(choice(("left", "right")))

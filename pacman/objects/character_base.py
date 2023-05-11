@@ -88,7 +88,7 @@ class Character(MovementObject, ILogical, IDrawable):
         cell = self.level_loader.collision_map[cell[1]][cell[0]]
         return [bool(int(i)) for i in reversed("{0:04b}".format(cell))]
 
-    def move_to(self, direction) -> bool:
+    def can_rotate_to(self, direction) -> bool:
         return self.movement_cell(self.get_cell())[direction]
 
     def get_cell(self) -> Tuple[int, int]:
