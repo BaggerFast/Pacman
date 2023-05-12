@@ -110,8 +110,8 @@ class Base(Character):
         self.gg_text = Text(" ", 10)
         self.ghost_entered_home = False
 
-        self.blinky_start_pos = CellUtil.center_pos_from_cell(self.hero_pos["blinky"])
-        self.pinky_start_pos = CellUtil.center_pos_from_cell(self.hero_pos["pinky"])
+        self.door_room_pos = CellUtil.center_pos_from_cell(self.hero_pos["blinky"])
+        self.room_center_pos = CellUtil.center_pos_from_cell(self.hero_pos["pinky"])
         self.diffucult_settings = self.generate_difficulty_settings()
         self.go()
 
@@ -154,39 +154,7 @@ class Base(Character):
     def update_ai_timer(self):
         self.ai_timer = pg.time.get_ticks()
 
-    # region States
-
-    @ghost_state(GhostStateEnum.EATEN)
-    def eaten_ai(self):
-        self.go_to_cell(self.hero_pos["blinky"])
-        self.deceleration_multiplier = 1
-        self.acceleration_multiplier = 2
-        if self.rect.center == self.blinky_start_pos:
-            if not self.ghost_entered_home:
-                self.ghost_entered_home = True
-                self.set_direction("down")
-                return
-            self.ghost_entered_home = False
-            self.acceleration_multiplier = 1
-            self.state = GhostStateEnum.SCATTER
-            self.set_direction(random.choice(("left", "right")))
-            self.update_ai_timer()
-        elif self.rect.center == self.pinky_start_pos:
-            self.animations = self.normal_animations
-            self.deceleration_multiplier = 2
-            self.set_direction("up")
-
-    @ghost_state(GhostStateEnum.FRIGHTENED)
-    def frightened_ai(self):
-        self.go_random_cell()
-        if pg.time.get_ticks() - self.ai_timer >= self.diffucult_settings.frightened - 2000:
-            self.animator = self.frightened_walk_anim2
-        if self.check_ai_timer(self.diffucult_settings.frightened):
-            SceneManager().current.score.deactivate_fear_mode()
-            self.deceleration_multiplier = 1
-            self.animations = self.normal_animations
-            self.game.sounds.pellet.stop()
-            self.state = GhostStateEnum.SCATTER
+    # region States Ai
 
     @ghost_state(GhostStateEnum.INDOOR)
     def home_ai(self, eaten_seed):
@@ -201,16 +169,47 @@ class Base(Character):
 
     @ghost_state(GhostStateEnum.HIDDEN)
     def hidden_ai(self):
-        self.gg_text.rect = pg.Rect(self.rect.x, self.rect.y, 0, 0)
         if self.check_ai_timer(500):
             self.state = GhostStateEnum.EATEN
 
-    @ghost_state(GhostStateEnum.SCATTER)
-    def scatter_ai(self):
-        raise NotImplementedError
+    @ghost_state(GhostStateEnum.EATEN)
+    def eaten_ai(self):
+        self.go_to_cell(self.hero_pos["blinky"])
+        self.deceleration_multiplier = 1
+        self.acceleration_multiplier = 2
+        if self.rect.center == self.door_room_pos:
+            if not self.ghost_entered_home:
+                self.ghost_entered_home = True
+                self.set_direction("down")
+                return
+            self.ghost_entered_home = False
+            self.acceleration_multiplier = 1
+            self.state = GhostStateEnum.SCATTER
+            self.set_direction(random.choice(("left", "right")))
+            self.update_ai_timer()
+        elif self.rect.center == self.room_center_pos:
+            self.animations = self.normal_animations
+            self.deceleration_multiplier = 2
+            self.set_direction("up")
+
+    @ghost_state(GhostStateEnum.FRIGHTENED)
+    def frightened_ai(self):
+        self.go_to_random_cell()
+        if pg.time.get_ticks() - self.ai_timer >= self.diffucult_settings.frightened - 2000:
+            self.animator = self.frightened_walk_anim2
+        if self.check_ai_timer(self.diffucult_settings.frightened):
+            SceneManager().current.score.deactivate_fear_mode()
+            self.deceleration_multiplier = 1
+            self.animations = self.normal_animations
+            self.game.sounds.pellet.stop()
+            self.state = GhostStateEnum.SCATTER
 
     @ghost_state(GhostStateEnum.CHASE)
     def chase_ai(self):
+        raise NotImplementedError
+
+    @ghost_state(GhostStateEnum.SCATTER)
+    def scatter_ai(self):
         raise NotImplementedError
 
     # endregion
@@ -238,7 +237,7 @@ class Base(Character):
                     self.shift_x, self.shift_y, self.rotate = self.direction2[i]
         self.step()
 
-    def go_random_cell(self):
+    def go_to_random_cell(self):
         if CellUtil.in_cell_center(self.rect):
             if self.can_rotate_to(self.rotate):
                 self.go()
@@ -279,6 +278,7 @@ class Base(Character):
 
     def draw(self, screen: pg.Surface) -> None:
         if self.state is GhostStateEnum.HIDDEN:
+            self.gg_text.rect = self.rect
             self.gg_text.draw(screen)
             return
         super().draw(screen)

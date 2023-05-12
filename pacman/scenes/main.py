@@ -143,7 +143,9 @@ class MainScene(BaseScene):
         self.objects += [self.__map, self.__seeds, self.fruit]
         self.__create_characters()
         self.__create_hud()
-        self.objects += [ControlCheats([["aezakmi", self.add_hp]])]
+        self.objects.append(
+            ControlCheats([["aezakmi", self.add_hp]])
+        )
 
     def __create_characters(self):
         self.pacman = Pacman(self.game, self.__loader)

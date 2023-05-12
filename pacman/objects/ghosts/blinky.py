@@ -13,13 +13,6 @@ class Blinky(Base):
         super().__init__(game, loader, seed_count)
         self.state = GhostStateEnum.SCATTER
         self.set_direction(choice(("left", "right")))
-        self.go()
-
-    @ghost_state(GhostStateEnum.SCATTER)
-    def scatter_ai(self):
-        self.go_to_cell(self.love_point_in_scatter_mode)
-        if self.check_ai_timer(self.diffucult_settings.scatter):
-            self.state = GhostStateEnum.CHASE
 
     @ghost_state(GhostStateEnum.CHASE)
     def chase_ai(self):
@@ -27,6 +20,12 @@ class Blinky(Base):
         self.go_to_cell(pacman.get_cell())
         if self.check_ai_timer(self.diffucult_settings.chase):
             self.state = GhostStateEnum.SCATTER
+
+    @ghost_state(GhostStateEnum.SCATTER)
+    def scatter_ai(self):
+        self.go_to_cell(self.love_point_in_scatter_mode)
+        if self.check_ai_timer(self.diffucult_settings.scatter):
+            self.state = GhostStateEnum.CHASE
 
     def generate_difficulty_settings(self):
         return (

@@ -12,8 +12,18 @@ class Clyde(Base):
 
     def __init__(self, game, loader, seed_count):
         super().__init__(game, loader, seed_count)
-        self.shift_y = 1
         self.set_direction("up")
+
+    @ghost_state(GhostStateEnum.INDOOR)
+    def home_ai(self, eaten_seed):
+        super().home_ai(eaten_seed)
+        if self.can_leave_home(eaten_seed):
+            self.set_direction("left")
+        if self.rect.centerx == self.room_center_pos[0]:
+            self.set_direction("up")
+        if self.rect.centery == self.door_room_pos[1]:
+            self.state = GhostStateEnum.SCATTER
+            self.set_direction(choice(("left", "right")))
 
     @ghost_state(GhostStateEnum.CHASE)
     def chase_ai(self):
@@ -29,17 +39,6 @@ class Clyde(Base):
             self.go_to_cell(self.love_point_in_scatter_mode)
             if self.two_cells_dis(self.get_cell(), pacman.get_cell()) >= 8:
                 self.state = GhostStateEnum.CHASE
-
-    @ghost_state(GhostStateEnum.INDOOR)
-    def home_ai(self, eaten_seed):
-        super().home_ai(eaten_seed)
-        if self.can_leave_home(eaten_seed):
-            self.set_direction("left")
-        if self.rect.centerx == self.pinky_start_pos[0]:
-            self.set_direction("up")
-        if self.rect.centery == self.blinky_start_pos[1]:
-            self.state = GhostStateEnum.SCATTER
-            self.set_direction(choice(("left", "right")))
 
     def generate_difficulty_settings(self) -> GhostDifficult:
         return (

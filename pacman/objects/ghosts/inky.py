@@ -12,7 +12,6 @@ class Inky(Base):
 
     def __init__(self, game, loader, seed_count):
         super().__init__(game, loader, seed_count)
-        self.shift_y = 1
         self.set_direction("up")
 
     @ghost_state(GhostStateEnum.INDOOR)
@@ -20,17 +19,11 @@ class Inky(Base):
         super().home_ai(eaten_seed)
         if self.can_leave_home(eaten_seed):
             self.set_direction("right")
-        if self.rect.centerx == self.pinky_start_pos[0]:
+        if self.rect.centerx == self.room_center_pos[0]:
             self.set_direction("up")
-        if self.rect.centery == self.blinky_start_pos[1]:
+        if self.rect.centery == self.door_room_pos[1]:
             self.set_direction(choice(("left", "right")))
             self.state = GhostStateEnum.SCATTER
-
-    @ghost_state(GhostStateEnum.SCATTER)
-    def scatter_ai(self):
-        self.go_to_cell(self.love_point_in_scatter_mode)
-        if self.check_ai_timer(self.diffucult_settings.scatter):
-            self.state = GhostStateEnum.CHASE
 
     @ghost_state(GhostStateEnum.CHASE)
     def chase_ai(self):
@@ -55,6 +48,12 @@ class Inky(Base):
         )
         if self.check_ai_timer(self.diffucult_settings.chase):
             self.state = GhostStateEnum.SCATTER
+
+    @ghost_state(GhostStateEnum.SCATTER)
+    def scatter_ai(self):
+        self.go_to_cell(self.love_point_in_scatter_mode)
+        if self.check_ai_timer(self.diffucult_settings.scatter):
+            self.state = GhostStateEnum.CHASE
 
     def generate_difficulty_settings(self) -> GhostDifficult:
         return (
