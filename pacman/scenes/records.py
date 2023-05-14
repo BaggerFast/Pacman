@@ -4,6 +4,8 @@ from pygame.event import Event
 
 from pacman.data_core import Colors, PathManager, Config
 from pacman.misc import Font
+from pacman.misc.animator.sprite_sheet import sprite_slice
+from pacman.misc.loaders import load_image
 from pacman.misc.serializers import LevelStorage, MainStorage
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, ImageObject, Text, Button
@@ -55,10 +57,11 @@ class RecordsScene(BaseScene):
 
     def __create_medals(self) -> None:
         self.__medals = []
-        for i in range(5):
+        medals_sprite = sprite_slice("medals", (16, 16))
+        for i, medal in enumerate(medals_sprite):
             self.__medals.append(
                 ImageObject(
-                    PathManager.get_image_path(f"medal/{i}"),
+                    medal,
                     (16, 60 + 35 * i),
                 ).scale(30, 30)
             )

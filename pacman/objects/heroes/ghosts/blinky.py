@@ -1,9 +1,10 @@
 from random import choice
+
+from pacman.data_core.data_classes import GhostDifficult
+from pacman.data_core.enums import GhostStateEnum
+from pacman.misc.serializers import SettingsStorage
+from pacman.scene_manager import SceneManager
 from .base import Base, ghost_state
-from ...data_core.data_classes import GhostDifficult
-from ...data_core.enums import GhostStateEnum
-from ...misc.serializers import SettingsStorage
-from ...scene_manager import SceneManager
 
 
 class Blinky(Base):

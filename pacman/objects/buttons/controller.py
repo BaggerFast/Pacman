@@ -6,7 +6,7 @@ from pacman.data_core import KbKeys
 from pacman.data_core.enums import BtnStateEnum
 from pacman.data_core.interfaces import IDrawable, IEventful
 from pacman.objects import MovementObject
-from pacman.objects.button.button import Button
+from pacman.objects.buttons.button import Button
 
 
 class ButtonController(MovementObject, IDrawable, IEventful):

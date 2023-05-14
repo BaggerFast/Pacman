@@ -3,9 +3,9 @@ from random import randint
 
 import pygame as pg
 
-from pacman.data_core import Colors, PathManager
+from pacman.data_core import Colors
 from pacman.data_core.interfaces import IDrawable
-from pacman.misc.sprite_sheet import sprite_slice
+from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.objects import MovementObject, ImageObject
 
 
@@ -40,9 +40,7 @@ class Map(MovementObject, IDrawable):
         self.map_data = map_data
         self.__size = (224, 248)
         self.surface = pg.Surface(self.__size)
-        self.tiles = sprite_slice(
-            pg.image.load(PathManager.get_image_path("map.png")), (self.tile_size, self.tile_size)
-        )
+        self.tiles = sprite_slice("map.png", (8, 8))
         self.surface = self.__load_surface()
         self.surface_for_draw = self.__surface_recolor()
 

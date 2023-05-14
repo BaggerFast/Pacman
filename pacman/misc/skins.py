@@ -1,10 +1,10 @@
-from copy import copy
 from typing import Union
-import pygame as pg
-from pacman.data_core import PathManager, Dirs
-from pacman.misc import Animator
+
+from pacman.data_core import Dirs
+from pacman.misc.animator.animator import Animator
+from pacman.misc.animator.sprite_animator import SpriteSheetAnimator
+from pacman.misc.animator.sprite_sheet import sprite_slice, advanced_sprite_slice
 from pacman.misc.serializers import SkinStorage
-from pacman.misc.sprite_sheet import sprite_slice
 from pacman.objects import ImageObject
 
 
@@ -20,22 +20,21 @@ class Skin:
 
     @property
     def walk(self):
-        return Animator(PathManager.get_list_path(f"{Dirs.IMAGE}/pacman/{self.name}/walk", ext="png"))
+        walk = advanced_sprite_slice(f"{Dirs.IMAGE}/pacman/{self.name}/walk", (13, 13))
+        return SpriteSheetAnimator(walk)
 
     @property
     def dead(self):
-        dead = sprite_slice(pg.image.load(PathManager.get_image_path(f"pacman/{self.name}/dead")), (15, 15))
-        return Animator(dead, 100, False, True)
+        dead = sprite_slice(f"pacman/{self.name}/dead", (15, 15))
+        return Animator(dead, 100, False)
 
     @property
     def image(self):
         return self.__image
 
     def prerender_surface(self) -> ImageObject:
-        return ImageObject(
-            pg.image.load(PathManager.get_image_path(f"pacman/{self.name}/walk/1")),
-            (145, 125),
-        ).scale(70, 70)
+        img = sprite_slice(f"pacman/{self.name}/walk", (13, 13))[0]
+        return ImageObject(img, (145, 125)).scale(70, 70)
 
     def __str__(self):
         return self.name
@@ -43,12 +42,12 @@ class Skin:
 
 class Skins:
     def __init__(self):
-        self.default = Skin("default", {0: 0, 1: 0})
-        self.edge = Skin("edge", {4: 7, 5: 6})
-        self.pokeball = Skin("pokeball", {3: 10, 4: 7})
-        self.windows = Skin("windows", {2: 12, 3: 8})
-        self.half_life = Skin("half_life", {1: 14, 2: 10})
-        self.chrome = Skin("chrome", {6: 5, 7: 4})
+        self.default = Skin("default", {})
+        self.edge = Skin("edge", {0: 12, 1: 5})
+        self.pokeball = Skin("pokeball", {2: 12, 3: 5})
+        self.windows = Skin("windows", {3: 12, 4: 5})
+        self.half_life = Skin("half_life", {4: 12, 5: 5})
+        self.chrome = Skin("chrome", {5: 12, 6: 5})
         self.__current = self.default
 
     @property

@@ -1,13 +1,15 @@
 import random
 from functools import wraps
-
 import pygame as pg
-from pacman.data_core import PathManager, Dirs
 from pacman.data_core.data_classes import GhostDifficult
 from pacman.data_core.enums import GhostStateEnum
-from pacman.misc import Animator
+from pacman.misc.animator.animator import Animator
+from pacman.misc.animator.sprite_animator import SpriteSheetAnimator
+from pacman.misc.animator.sprite_sheet import sprite_slice, advanced_sprite_slice
 from pacman.misc.cell_util import CellUtil
-from pacman.objects import Character, Text
+from pacman.misc.loaders import load_image
+from pacman.objects import Text
+from pacman.objects.heroes.character_base import Character
 from pacman.scene_manager import SceneManager
 
 
@@ -31,80 +33,22 @@ class Base(Character):
     PEACEFULL_STATES = (GhostStateEnum.EATEN, GhostStateEnum.HIDDEN, GhostStateEnum.INDOOR)
 
     def __init__(self, game, loader, seed_count):
+        self.game = game
         self.__seed_count = seed_count
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
         self.acceleration_multiplier = 1
         self.deceleration_multiplier_with_rect = 1
 
-        # Обычные Анимация
-        self.left_walk_anim = Animator(
-            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/{type(self).__name__.lower()}/left", ext="png"),
-            is_rotation=False,
-        )
-        self.right_walk_anim = Animator(
-            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/{type(self).__name__.lower()}/right", ext="png"),
-            is_rotation=False,
-        )
-        self.top_walk_anim = Animator(
-            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/{type(self).__name__.lower()}/top", ext="png"),
-            is_rotation=False,
-        )
-        self.bottom_walk_anim = Animator(
-            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/{type(self).__name__.lower()}/bottom", ext="png"),
-            is_rotation=False,
-        )
+        self.walk_anim = SpriteSheetAnimator(advanced_sprite_slice(f"ghost/{self.name}/walk", (14, 14)))
+        self.eatten_anim = SpriteSheetAnimator(advanced_sprite_slice("ghost/eaten", (12, 12)))
 
-        # Анимации страха
-        self.frightened_walk_anim1 = Animator(
-            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/fear1", ext="png"),
-            is_rotation=False,
-            aura=PathManager.get_image_path("ghost/aura_blue"),
-        )
-        self.frightened_walk_anim2 = Animator(
-            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/fear2", ext="png"),
-            is_rotation=False,
-            aura=PathManager.get_image_path("ghost/aura_white"),
-        )
+        self.frightened_walk_anim_1 = Animator(sprite_slice("ghost/frightened_1", (14, 14)))
+        self.frightened_walk_anim_2 = Animator(sprite_slice("ghost/frightened_2", (14, 14)))
 
-        # Анимации съедения
-        self.eaten_left_walk_anim = Animator(
-            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/eaten/left", ext="png"), is_rotation=False
-        )
-        self.eaten_right_walk_anim = Animator(
-            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/eaten/right", ext="png"), is_rotation=False
-        )
-        self.eaten_top_walk_anim = Animator(
-            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/eaten/top", ext="png"), is_rotation=False
-        )
-        self.eaten_bottom_walk_anim = Animator(
-            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/eaten/bottom", ext="png"),
-            is_rotation=False,
-        )
-
-        self.normal_animations = [
-            self.right_walk_anim,
-            self.bottom_walk_anim,
-            self.left_walk_anim,
-            self.top_walk_anim,
-        ]
-
-        self.eaten_animations = [
-            self.eaten_right_walk_anim,
-            self.eaten_bottom_walk_anim,
-            self.eaten_left_walk_anim,
-            self.eaten_top_walk_anim,
-        ]
-
-        self.animations = self.normal_animations
-
-        super().__init__(
-            game, self.top_walk_anim, loader, PathManager.get_image_path(f"ghost/{type(self).__name__.lower()}/aura")
-        )
+        super().__init__(self.walk_anim, loader, f"ghost/{self.name}/aura")
         self.ai_timer = pg.time.get_ticks()
-        self.invisible_anim = Animator(
-            PathManager.get_list_path(f"{Dirs.IMAGE}/ghost/invisible", ext="png"), is_rotation=False
-        )
+
         self.love_cell = (0, 0)
         self.state = GhostStateEnum.INDOOR
         self.gg_text = Text(" ", 10)
@@ -133,15 +77,14 @@ class Base(Character):
         if self.rotate is None:
             self.rotate = 0
 
-        if self.state is not GhostStateEnum.FRIGHTENED:
-            self.animator = self.animations[self.rotate]
+        if isinstance(self.animator, SpriteSheetAnimator):
+            self.animator.rotate(self.rotate)
+        self.animator.update()
 
         if not self.process_logic_iterator % self.deceleration_multiplier_with_rect:
             for _ in range(self.acceleration_multiplier):
                 if self.state in self.__states_ai.keys():
                     self.__states_ai[self.state]()
-
-        self.animator.timer_check()
         self.process_logic_iterator += 1
 
     def collision_check(self, rect: pg.Rect):
@@ -177,32 +120,32 @@ class Base(Character):
         self.go_to_cell(self.hero_pos["blinky"])
         self.deceleration_multiplier = 1
         self.acceleration_multiplier = 2
-        if self.rect.center == self.door_room_pos:
-            if not self.ghost_entered_home:
+        match self.rect.center:
+            case self.door_room_pos if not self.ghost_entered_home:
                 self.ghost_entered_home = True
                 self.set_direction("down")
-                return
-            self.ghost_entered_home = False
-            self.acceleration_multiplier = 1
-            self.state = GhostStateEnum.SCATTER
-            self.set_direction(random.choice(("left", "right")))
-            self.update_ai_timer()
-        elif self.rect.center == self.room_center_pos:
-            self.animations = self.normal_animations
-            self.deceleration_multiplier = 2
-            self.set_direction("up")
+            case self.door_room_pos:
+                self.ghost_entered_home = False
+                self.acceleration_multiplier = 1
+                self.state = GhostStateEnum.SCATTER
+                self.set_direction(random.choice(("left", "right")))
+                self.update_ai_timer()
+            case self.room_center_pos:
+                self.animator = self.walk_anim
+                self.deceleration_multiplier = 2
+                self.set_direction("up")
 
     @ghost_state(GhostStateEnum.FRIGHTENED)
     def frightened_ai(self):
         self.go_to_random_cell()
-        if pg.time.get_ticks() - self.ai_timer >= self.diffucult_settings.frightened - 2000:
-            self.animator = self.frightened_walk_anim2
         if self.check_ai_timer(self.diffucult_settings.frightened):
             SceneManager().current.score.deactivate_fear_mode()
             self.deceleration_multiplier = 1
-            self.animations = self.normal_animations
             self.game.sounds.pellet.stop()
             self.state = GhostStateEnum.SCATTER
+            self.animator = self.walk_anim
+        elif pg.time.get_ticks() - self.ai_timer >= self.diffucult_settings.frightened - 2000:
+            self.animator = self.frightened_walk_anim_2
 
     @ghost_state(GhostStateEnum.CHASE)
     def chase_ai(self):
@@ -255,7 +198,7 @@ class Base(Character):
         if self.state not in self.PEACEFULL_STATES:
             self.update_ai_timer()
             self.state = GhostStateEnum.FRIGHTENED
-            self.animator = self.frightened_walk_anim1
+            self.animator = self.frightened_walk_anim_1
             self.deceleration_multiplier = 2
 
     def toggle_to_hidden(self, score: int):
@@ -264,8 +207,7 @@ class Base(Character):
         if self.state is not GhostStateEnum.HIDDEN:
             self.game.sounds.ghost.play()
         self.state = GhostStateEnum.HIDDEN
-        self.animator = self.invisible_anim
-        self.animations = self.eaten_animations
+        self.animator = self.eatten_anim
 
     def check_ai_timer(self, time) -> bool:
         if pg.time.get_ticks() - self.ai_timer >= time:
@@ -282,3 +224,7 @@ class Base(Character):
             self.gg_text.draw(screen)
             return
         super().draw(screen)
+
+    @property
+    def name(self) -> str:
+        return type(self).__name__.lower()

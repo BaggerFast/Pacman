@@ -1,20 +1,25 @@
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import PathManager, Config
+from pacman.data_core import Config
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
 from pacman.misc import ControlCheats, LevelLoader, Font, Health, INFINITY_LIVES, Score
+from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.misc.serializers import LevelStorage, MainStorage
 from pacman.misc.util import is_esc_pressed
-from pacman.objects import SeedContainer, Map, ImageObject, Text, Pacman
+from pacman.objects import SeedContainer, Map, ImageObject, Text
 from pacman.objects.fruits import Fruit
-from pacman.objects.ghosts import *
+
+
+from pacman.objects.heroes.ghosts import Inky, Pinky, Clyde, Blinky
+from pacman.objects.heroes.pacman import Pacman
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
 
 
 class MainScene(BaseScene):
     # region COMPLETE:
+
     def __play_sound(self):
         if not self.game.sounds.siren.is_busy():
             self.game.sounds.siren.play()
@@ -48,12 +53,9 @@ class MainScene(BaseScene):
             ),
             self.__scores_value_text,
         ]
+        sprite = sprite_slice(f"pacman/{self.game.skins.current.name}/walk", (13, 13))
         for i in range(int(self.hp) - 1):
-            self.objects.append(
-                ImageObject(
-                    PathManager.get_image_path(f"pacman/{self.game.skins.current.name}/walk/1"), (5 + i * 20, 270)
-                ).rotate(180)
-            )
+            self.objects.append(ImageObject(sprite[0], (5 + i * 20, 270)).rotate(180))
 
     # endregion
 
@@ -84,12 +86,8 @@ class MainScene(BaseScene):
     # region Base
 
     def process_logic(self) -> None:
-        match self.state:
-            case GameStateEnum.INTRO:
-                self.intro_logic()
-            case GameStateEnum.ACTION:
-                super().process_logic()
-                self.game_logic()
+        if self.state in self.actions:
+            self.actions[self.state]()
 
     def draw(self, screen: pg.Surface) -> None:
         super().draw(screen)
@@ -118,6 +116,11 @@ class MainScene(BaseScene):
     # endregion
 
     def pre_init(self):
+        self.actions = {
+            GameStateEnum.INTRO: self.intro_logic,
+            GameStateEnum.ACTION: self.game_logic,
+        }
+
         self.score = Score()
         self.game.sounds.intro.play()
         self.game.sounds.reload_sounds(self.game)
@@ -143,9 +146,7 @@ class MainScene(BaseScene):
         self.objects += [self.__map, self.__seeds, self.fruit]
         self.__create_characters()
         self.__create_hud()
-        self.objects.append(
-            ControlCheats([["aezakmi", self.add_hp]])
-        )
+        self.objects.append(ControlCheats([["aezakmi", self.hp.add]]))
 
     def __create_characters(self):
         self.pacman = Pacman(self.game, self.__loader)
@@ -156,7 +157,7 @@ class MainScene(BaseScene):
 
         self.__ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
 
-        self.objects.append(self.pacman)
+        self.objects += [self.pacman]
         self.objects.extend(self.__ghosts)
 
     def __change_prefered_ghost(self) -> None:
@@ -167,7 +168,8 @@ class MainScene(BaseScene):
         pacman_rect = self.pacman.rect
         if self.fruit.process_collision(pacman_rect):
             self.game.sounds.fruit.play()
-            self.score.eat_fruit(self.fruit.get_scores())
+            score = self.score.eat_fruit()
+            self.fruit.toggle_mode_to_eaten(score)
         elif self.__seeds.energizer_collision(pacman_rect):
             self.score.eat_energizer()
             for ghost in self.__ghosts:
@@ -181,37 +183,37 @@ class MainScene(BaseScene):
             for ghost in self.__ghosts:
                 if ghost.collision_check(pacman_rect):
                     if ghost.state is GhostStateEnum.FRIGHTENED:
-                        last_score = self.score.score
-                        self.score.eat_ghost()
-                        ghost.toggle_to_hidden(self.score.score - last_score)
+                        score = self.score.eat_ghost()
+                        ghost.toggle_to_hidden(score)
                         break
                     else:
                         if not self.pacman.is_dead and not INFINITY_LIVES:
-                            self.hp -= 1
+                            self.hp.remove()
                             self.pacman.death()
                         break
 
-    def check_game_status(self):
+    def __check_game_status(self):
         if self.__seeds.is_field_empty():
             from pacman.scenes.game_win import GameWinScene
 
             SceneManager().reset(GameWinScene(self.game, self.score))
-        elif self.pacman.dead_anim.anim_finished and int(self.hp) < 1 and not self.game.sounds.pacman.is_busy():
+        elif self.pacman.death_is_finished() and not self.game.sounds.pacman.is_busy():
+            if self.hp:
+                self._create_objects()
+                return
             from pacman.scenes.game_over import GameOverScene
-
             SceneManager().reset(GameOverScene(self.game, self.score))
 
-    def update_score_text(self):
+    def __update_score_text(self):
         self.__scores_value_text.text = f"{'Mb' if self.game.skins.current.name == 'chrome' else self.score}"
 
     def game_logic(self):
+        super().process_logic()
         self.__play_sound()
         self.__change_prefered_ghost()
         self.__process_collision()
-        self.update_score_text()
-        if self.pacman.death_is_finished():
-            self._create_objects()
-        self.check_game_status()
+        self.__update_score_text()
+        self.__check_game_status()
 
     def process_event(self, event: Event) -> None:
         super().process_event(event)

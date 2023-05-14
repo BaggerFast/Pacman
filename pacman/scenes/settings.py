@@ -6,7 +6,7 @@ from pacman.misc import Font, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from pacman.misc.serializers import SettingsStorage
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, Text
-from pacman.objects.button import Button
+from pacman.objects.buttons import Button
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
 

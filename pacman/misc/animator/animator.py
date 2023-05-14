@@ -1,23 +1,32 @@
-import pygame as pg
+from pygame import Surface, time
+from pacman.data_core.interfaces import ILogical
 
 
-class Animator:
-    def __init__(self, images: list[pg.Surface], time_out: int = 125, repeat: bool = True):
+class Animator(ILogical):
+    def __init__(self, images: tuple[Surface], time_out: int = 125, repeat: bool = True):
         self.__time_out = time_out
         self.__animate_timer = 0
         self.__repeat = repeat
         self.__run = True
-        self.images = images
-        self.current_index: int = 0
-        self.__anim_finished: bool = False
+        self.__images = images
+        self._current_index = 0
+        self.__is_anim_finished = False
+
+    # region Public
+
+    def update(self) -> None:
+        tmp_time = time.get_ticks()
+        if tmp_time - self.__animate_timer > self.__time_out and self.__run:
+            self.__animate_timer = tmp_time
+            self.__next_frame()
 
     @property
-    def anim_finished(self) -> bool:
-        return self.__anim_finished
+    def is_finished(self) -> bool:
+        return self.__is_anim_finished
 
     @property
-    def current_image(self) -> pg.Surface:
-        return self.images[self.current_index]
+    def current_image(self) -> Surface:
+        return self.__images[self._current_index]
 
     def stop(self) -> None:
         self.__run = False
@@ -25,21 +34,25 @@ class Animator:
     def start(self) -> None:
         self.__run = True
 
-    def update(self) -> None:
-        if pg.time.get_ticks() - self.__animate_timer > self.__time_out and self.__run:
-            self.__animate_timer = pg.time.get_ticks()
-            self.current_index += 1
-            self.image_swap()
-
-    def change_cur_image(self, index: int) -> None:
-        self.current_index = index
-
-    def image_swap(self) -> None:
-        if self.current_index == len(self.images) - 1 and not self.__repeat:
-            self.stop()
-            self.__anim_finished = True
-            return
-        self.current_index %= len(self.images)
+    def set_cur_image(self, index: int) -> None:
+        self._current_index = index
 
     def reset(self):
-        self.current_index = 0
+        self._current_index = 0
+
+    # endregion
+
+    # region Private
+
+    def __next_frame(self) -> None:
+        current_frame_is_last = self._current_index == len(self) - 1
+        if current_frame_is_last and not self.__repeat:
+            self.stop()
+            self.__is_anim_finished = True
+            return
+        self._current_index = (self._current_index + 1) % len(self)
+
+    def __len__(self) -> int:
+        return len(self.__images)
+
+    # endregion

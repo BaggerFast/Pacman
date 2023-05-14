@@ -3,8 +3,11 @@ from typing import Tuple, List
 import pygame as pg
 from pacman.data_core import Config
 from pacman.data_core.interfaces import ILogical, IDrawable
-from pacman.misc import Animator, LevelLoader
+from pacman.misc import LevelLoader
+from pacman.misc.animator.animator import Animator
+from pacman.misc.animator.sprite_animator import SpriteSheetAnimator
 from pacman.misc.cell_util import CellUtil
+from pacman.misc.loaders import load_image
 from pacman.objects import MovementObject
 
 
@@ -17,12 +20,12 @@ class Character(MovementObject, ILogical, IDrawable):
         "none": (0, 0, None),
     }
 
-    def __init__(self, game, animator: Animator, loader: LevelLoader, aura: str = None) -> None:
+    def __init__(self, animator: Animator, loader: LevelLoader, aura: str) -> None:
         super().__init__()
         self.level_loader = loader
         self.hero_pos = loader.heros_pos
-        self.game = game
-        self.__aura = pg.image.load(aura) if aura else aura
+
+        self.__aura = load_image(aura)
         self.animator = animator
         self.rect = self.animator.current_image.get_rect()
         self.shift_x, self.shift_y = self.direction["right"][:2]
@@ -54,31 +57,17 @@ class Character(MovementObject, ILogical, IDrawable):
         self.shift_x, self.shift_y, rotate = self.direction[new_direction]
         if self.rotate != rotate:
             self.rotate = rotate
-            self.animator.rotate = rotate
-            if self.animator.is_rotation:
-                self.animator.change_rotation()
+            if isinstance(self.animator, SpriteSheetAnimator):
+                self.animator.rotate(self.rotate)
 
     def update(self) -> None:
         self.step()
 
     def draw(self, screen: pg.Surface) -> None:
         for i in range(-1, 2):
-            if self.animator.current_aura:
-                screen.blit(
-                    self.animator.current_aura,
-                    (
-                        self.rect.centerx - self.__aura.get_rect().width // 2,
-                        self.rect.centery - self.__aura.get_rect().height // 2,
-                    ),
-                )
-            elif self.__aura:
-                screen.blit(
-                    self.__aura,
-                    (
-                        self.rect.centerx - self.__aura.get_rect().width // 2,
-                        self.rect.centery - self.__aura.get_rect().height // 2,
-                    ),
-                )
+            rect_x = self.rect.centerx - self.__aura.get_rect().width // 2
+            rect_y = self.rect.centery - self.__aura.get_rect().height // 2
+            screen.blit(self.__aura, (rect_x, rect_y))
             screen.blit(
                 self.animator.current_image,
                 (self.rect.x + Config.RESOLUTION.WIDTH * i, self.rect.y),

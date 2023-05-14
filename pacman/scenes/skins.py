@@ -1,8 +1,9 @@
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import PathManager, Dirs, Config
+from pacman.data_core import Config
 from pacman.misc import Font, BUTTON_SKIN_BUY
+from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.misc.serializers import MainStorage, SkinStorage
 from pacman.misc.skins import Skin
 from pacman.misc.util import is_esc_pressed
@@ -17,14 +18,14 @@ class SkinsScene(BaseScene):
         self.button_pos_y = 90
         self.button_pos_multiply_y = 25
 
-        self.fruit_images = PathManager.get_list_path(f"{Dirs.IMAGE}/fruit", ext="png")
+        self.fruit_images = sprite_slice(f"fruits", (12, 12))
 
         self.skins = [
             ("PACMAN", self.game.skins.default),
-            ("HALF-LIFE", self.game.skins.half_life),
-            ("WINDOWS", self.game.skins.windows),
-            ("POKEBALL", self.game.skins.pokeball),
             ("EDGE", self.game.skins.edge),
+            ("POKEBALL", self.game.skins.pokeball),
+            ("WINDOWS", self.game.skins.windows),
+            ("HALF-LIFE", self.game.skins.half_life),
             ("CHROME", self.game.skins.chrome),
         ]
         self.preview = self.game.skins.current.prerender_surface()
@@ -40,10 +41,8 @@ class SkinsScene(BaseScene):
     def create_fruits_and_text_we_have(self) -> None:
         for i, fruit_img in enumerate(self.fruit_images):
             self.objects += [
-                ImageObject(fruit_img, (Config.RESOLUTION.WIDTH // 8 - 9 + i * 25, 60)),
-                Text(f"{MainStorage().eaten_fruits[i]}", 10).move_center(
-                    Config.RESOLUTION.WIDTH // 8 - 10 + i * 25, 60
-                ),
+                ImageObject(fruit_img, (Config.RESOLUTION.WIDTH // 7 + i * 25, 60)),
+                Text(f"{MainStorage().eaten_fruits[i]}", 10).move_center(Config.RESOLUTION.WIDTH // 7 + i * 25, 60),
             ]
 
     def create_fruits_and_text_for_skins(self) -> None:
