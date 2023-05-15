@@ -3,8 +3,10 @@ from pygame import Surface
 from pygame.event import Event
 
 from pacman.data_core import Config
+from pacman.events.events import EvenType
+from pacman.events.utils import event_append
 from pacman.misc import Font
-from pacman.misc.serializers import LevelStorage, MainStorage
+from pacman.misc.serializers import LevelStorage, MainStorage, StorageLoader
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, Button, Text
 from pacman.scene_manager import SceneManager
@@ -70,7 +72,7 @@ class GameWinScene(BlurScene):
     def __next_level(self):
         from pacman.scenes.main import MainScene
 
-        LevelStorage().current += 1
+        LevelStorage().set_next_level()
         SceneManager().reset(MainScene(self.game))
 
     def __is_last_level(self) -> bool:
@@ -87,4 +89,5 @@ class GameWinScene(BlurScene):
         self.game.sounds.gameover.play()
 
     def on_exit(self) -> None:
+        event_append(EvenType.SET_SETTINGS)
         self.game.sounds.gameover.stop()

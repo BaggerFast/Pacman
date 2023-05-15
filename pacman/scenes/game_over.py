@@ -2,6 +2,8 @@ import pygame as pg
 from pygame import Surface
 
 from pacman.data_core import Config
+from pacman.events.events import EvenType
+from pacman.events.utils import event_append
 from pacman.misc import Font
 from pacman.misc.serializers import MainStorage
 from pacman.objects import ButtonController, Text, Button
@@ -46,6 +48,7 @@ class GameOverScene(BlurScene):
         self.objects.append(ButtonController(buttons))
 
     def on_enter(self) -> None:
+        event_append(EvenType.GET_SETTINGS)
         self.game.sounds.gameover.play()
 
     def on_exit(self) -> None:

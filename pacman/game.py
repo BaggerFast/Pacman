@@ -2,8 +2,10 @@ from random import choice
 from typing import List
 
 import pygame as pg
+from pygame.event import Event
 
-from pacman.data_core import Colors, PathManager, Dirs, Sounds, Config
+from pacman.data_core import PathManager, Dirs, Sounds, Config
+from pacman.events.events import EvenType
 from pacman.misc import LevelLoader, Skins
 from pacman.misc.serializers import StorageLoader, SettingsStorage, SkinStorage, LevelStorage
 from pacman.misc.sound_controller import SoundController
@@ -100,32 +102,37 @@ class Game:
         self.storage_loader = StorageLoader(PathManager.get_path("storage.json"))
         self.storage_loader.from_file()
 
-        self.__game_over = False
         self.maps = self.Maps()
-        self.screen = pg.display.set_mode(tuple(Config.RESOLUTION), pg.SCALED)
+        self._screen = pg.display.set_mode(tuple(Config.RESOLUTION), pg.SCALED)
         self.__clock = pg.time.Clock()
         self.time_out = 125
         self.animate_timer = 0
+
         self.skins = Skins()
         self.sounds = self.Music(self)
 
         self.skins.current = "default"
+
         SceneManager().reset(MenuScene(self))
 
     # region Exit
 
     @staticmethod
-    def __exit_hotkey_pressed(event: pg.event.Event) -> bool:
+    def __exit_hotkey_pressed(event: Event) -> bool:
         return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
 
-    def __process_exit_events(self, event: pg.event.Event) -> None:
-        if event.type == pg.QUIT or Game.__exit_hotkey_pressed(event):
+    def __process_exit_events(self, event: Event) -> None:
+        if event.type in (pg.QUIT, EvenType.EXIT) or Game.__exit_hotkey_pressed(event):
             self.exit_game()
+        elif event.type == EvenType.SET_SETTINGS:
+            self.storage_loader.to_file()
+        elif event.type == EvenType.GET_SETTINGS:
+            self.storage_loader.from_file()
 
     def exit_game(self) -> None:
         self.storage_loader.to_file()
-        self.__game_over = True
         print("Bye bye")
+        exit()
 
     # endregion
 
@@ -140,13 +147,11 @@ class Game:
         SceneManager().current.process_logic()
 
     def __process_all_draw(self) -> None:
-        self.screen.blit(
-            SceneManager().current.draw(), (0, 0)
-        )
+        self._screen.blit(SceneManager().current.draw(), (0, 0))
         pg.display.flip()
 
     def main_loop(self) -> None:
-        while not self.__game_over:
+        while True:
             self.__process_all_events()
             self.__process_all_logic()
             self.__process_all_draw()

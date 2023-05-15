@@ -1,10 +1,10 @@
 import pygame as pg
-from PIL import ImageFilter, Image
-
 from pacman.data_core import Colors, Config
+from pacman.events.events import EvenType
+from pacman.events.utils import event_append
 from pacman.misc import Font
-from pacman.misc.serializers import LevelStorage
-from pacman.objects import ButtonController, Text, ImageObject, Button
+from pacman.misc.serializers import LevelStorage, StorageLoader
+from pacman.objects import ButtonController, Text, Button, ImageObject
 from pacman.objects.map import rand_color
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
@@ -12,36 +12,24 @@ from pacman.scenes.base_scene import BaseScene
 
 class MenuScene(BaseScene):
     def _create_objects(self) -> None:
-        self.preview = self.game.maps.full_surface
-        self.color = rand_color()
-        self.change_color()
-        self.blur()
-        self.image = ImageObject(self.preview, (0, 0))
-        self.objects.append(self.image)
+        super()._create_objects()
+        self.preview = ImageObject(self.game.maps.full_surface).swap_color(Colors.MAIN_MAP, rand_color()).blur(3)
+        self.preview.scale(*tuple(Config.RESOLUTION))
+        self.__level_text = Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 60)
+        self.objects += [
+            self.preview,
+            Text("PACMAN", 36, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
+            self.__level_text,
+        ]
         self.create_buttons()
-        self.__create_indicator()
-        self.objects.append(Text("PACMAN", 36, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30))
 
-    def change_color(self):
-        for x in range(self.preview.get_width()):
-            for y in range(self.preview.get_height()):
-                if self.preview.get_at((x, y)) == Colors.MAIN_MAP:
-                    self.preview.set_at((x, y), self.color)
+    def play_game(self) -> None:
+        from pacman.scenes.main import MainScene
 
-    def blur(self):
-        blur_count = 5
-        rect = self.preview.get_rect()
-        surify = pg.image.tostring(self.preview, "RGBA")
-        impil = Image.frombytes("RGBA", (rect.width, rect.height), surify)
-        piler = impil.resize(tuple(Config.RESOLUTION)).filter(ImageFilter.GaussianBlur(radius=blur_count))
-        self.preview = pg.image.fromstring(piler.tobytes(), piler.size, piler.mode).convert()
-
-    def __create_indicator(self) -> None:
-        self.__indicator = Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 60)
-        self.objects.append(self.__indicator)
+        event_append(EvenType.SET_SETTINGS)
+        SceneManager().append(MainScene(self.game))
 
     def create_buttons(self) -> None:
-        from pacman.scenes.main import MainScene
         from pacman.scenes.skins import SkinsScene
         from pacman.scenes.levels import LevelsScene
         from pacman.scenes.records import RecordsScene
@@ -49,12 +37,12 @@ class MenuScene(BaseScene):
 
         scene_manager = SceneManager()
         names = [
-            ("PLAY", lambda: scene_manager.append(MainScene(self.game))),
+            ("PLAY", self.play_game),
             ("LEVELS", lambda: scene_manager.append(LevelsScene(self.game))),
             ("SKINS", lambda: scene_manager.append(SkinsScene(self.game))),
             ("RECORDS", lambda: scene_manager.append(RecordsScene(self.game))),
             ("SETTINGS", lambda: scene_manager.append(SettingsScene(self.game))),
-            ("EXIT", self.game.exit_game),
+            ("EXIT", lambda: event_append(EvenType.EXIT)),
         ]
         buttons = []
         for i, (name, fn) in enumerate(names):
@@ -68,3 +56,6 @@ class MenuScene(BaseScene):
                 ).move_center(Config.RESOLUTION.half_width, 95 + i * 28)
             )
         self.objects.append(ButtonController(buttons))
+
+    def on_enter(self) -> None:
+        self.__level_text.text = f"{LevelStorage()}"

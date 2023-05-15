@@ -1,6 +1,8 @@
 import pygame as pg
 from pygame.event import Event
 from pacman.data_core import Config
+from pacman.events.events import EvenType
+from pacman.events.utils import event_append
 from pacman.misc import Font
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, Text, Button
@@ -9,17 +11,28 @@ from pacman.scenes.blur_scene import BlurScene
 
 
 class PauseScene(BlurScene):
+    def __stop_game(self) -> None:
+        from pacman.scenes.menu import MenuScene
+
+        event_append(EvenType.GET_SETTINGS)
+        SceneManager().reset(MenuScene(self.game))
+
+    def __restart_game(self) -> None:
+        from pacman.scenes.main import MainScene
+
+        event_append(EvenType.GET_SETTINGS)
+        SceneManager().reset(MainScene(self.game))
+
     def _create_objects(self) -> None:
         super()._create_objects()
-        from pacman.scenes.main import MainScene
-        from pacman.scenes.menu import MenuScene
+
         from pacman.scenes.settings import SettingsScene
 
         names = [
             ("CONTINUE", SceneManager().pop),
             ("SETTINGS", lambda: SceneManager().append(SettingsScene(self.game))),
-            ("RESTART", lambda: SceneManager().reset(MainScene(self.game))),
-            ("MENU", lambda: SceneManager().append(MenuScene(self.game))),
+            ("RESTART", self.__restart_game),
+            ("MENU", self.__stop_game),
         ]
         buttons = []
         for i, (txt, fn) in enumerate(names):

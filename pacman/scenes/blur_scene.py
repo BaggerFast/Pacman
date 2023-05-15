@@ -7,7 +7,6 @@ from pacman.scenes.base_scene import BaseScene
 
 
 class BlurScene(BaseScene):
-
     def __init__(self, game, blur_surface: Surface):
         super().__init__(game)
         self.blur_time = self._start_time

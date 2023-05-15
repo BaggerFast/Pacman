@@ -15,8 +15,8 @@ class Score:
         return self.__update_score(10)
 
     def eat_fruit(self) -> int:
-        self.__eaten_fruits += 1
         MainStorage().store_fruit(self.__eaten_fruits, 1)
+        self.__eaten_fruits += 1
         return self.__update_score(300 * self.__eaten_fruits)
 
     def eat_ghost(self) -> int:

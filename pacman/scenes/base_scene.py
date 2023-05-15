@@ -7,7 +7,6 @@ from pacman.data_core.game_objects import GameObjects
 
 
 class BaseScene:
-
     def __init__(self, game):
         self.game = game
         self._start_time = time.get_ticks() / 1000

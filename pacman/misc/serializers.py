@@ -57,10 +57,10 @@ class LevelStorage(SerDes):
 
     @current.setter
     def current(self, value):
-        if isinstance(value, int):
+        if isinstance(value, int) and 0 <= value < self.level_count:
             self.__current = value
         else:
-            raise Exception("Current level must be a positive integer")
+            raise Exception(f"Current level must be in 0 <= {value} < {self.level_count}")
 
     def __str__(self):
         return f"Level {self.current + 1}"

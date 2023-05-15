@@ -33,7 +33,7 @@ class ImageObject(MovementObject, IDrawable):
         return self
 
     def blur(self, blur_count: int = 5) -> "ImageObject":
-        impil = Image.frombytes('RGBA', self.rect.size, pg.image.tostring(self.image, 'RGBA'))
+        impil = Image.frombytes("RGBA", self.rect.size, pg.image.tostring(self.image, "RGBA"))
         impil = impil.filter(ImageFilter.GaussianBlur(radius=blur_count))
         self.image = pg.image.fromstring(impil.tobytes(), impil.size, "RGBA").convert()
         return self

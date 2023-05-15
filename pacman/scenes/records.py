@@ -1,8 +1,8 @@
 import pygame as pg
-from pygame import Surface
 from pygame.event import Event
 
 from pacman.data_core import Colors, Config
+from pacman.data_core.game_objects import GameObjects
 from pacman.misc import Font
 from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.misc.serializers import LevelStorage, MainStorage
@@ -55,15 +55,10 @@ class RecordsScene(BaseScene):
             y -= 1
 
     def __create_medals(self) -> None:
-        self.__medals = []
+        self.__medals = GameObjects()
         medals_sprite = sprite_slice("medals", (16, 16))
         for i, medal in enumerate(medals_sprite):
-            self.__medals.append(
-                ImageObject(
-                    medal,
-                    (16, 60 + 35 * i),
-                ).scale(30, 30)
-            )
+            self.__medals.append(ImageObject(medal, (16, 60 + 35 * i)).scale(30, 30))
 
     def draw(self) -> None:
         super().draw()
