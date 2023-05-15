@@ -1,8 +1,7 @@
 from typing import Tuple, Union
 import pygame as pg
-from pygame import Surface
-from pygame.transform import smoothscale
-
+from PIL import Image, ImageFilter
+from pygame import Surface, Rect
 from pacman.data_core.interfaces import IDrawable
 from pacman.misc.loaders import load_image
 from pacman.objects import MovementObject
@@ -33,14 +32,17 @@ class ImageObject(MovementObject, IDrawable):
         self.rect.topleft = topleft
         return self
 
-    def blur(self, blur_count) -> "ImageObject":
-        if blur_count <= 0:
-            raise ValueError("Amount must be greater than zero.")
-        scale = 1.0 / float(blur_count)
-        surf_size = self.image.get_size()
-        scale_size = (int(surf_size[0] * scale), int(surf_size[1] * scale))
-        self.image = smoothscale(self.image, scale_size)
-        self.image = smoothscale(self.image, surf_size)
+    def blur(self, blur_count: int = 5) -> "ImageObject":
+        impil = Image.frombytes('RGBA', self.rect.size, pg.image.tostring(self.image, 'RGBA'))
+        impil = impil.filter(ImageFilter.GaussianBlur(radius=blur_count))
+        self.image = pg.image.fromstring(impil.tobytes(), impil.size, "RGBA").convert()
+        return self
+
+    def swap_color(self, from_color, to_color) -> "ImageObject":
+        for x in range(self.image.get_width()):
+            for y in range(self.image.get_height()):
+                if self.image.get_at((x, y)) == from_color:
+                    self.image.set_at((x, y), to_color)
         return self
 
     def rotate(self, angle) -> "ImageObject":
@@ -49,6 +51,9 @@ class ImageObject(MovementObject, IDrawable):
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
         return self
+
+    def rect(self) -> Rect:
+        return self.image.get_rect()
 
     def draw(self, screen: Surface) -> None:
         screen.blit(self.image, self.rect)

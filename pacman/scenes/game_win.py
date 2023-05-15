@@ -1,4 +1,5 @@
 import pygame as pg
+from pygame import Surface
 from pygame.event import Event
 
 from pacman.data_core import Config
@@ -7,12 +8,12 @@ from pacman.misc.serializers import LevelStorage, MainStorage
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, Button, Text
 from pacman.scene_manager import SceneManager
-from pacman.scenes.base_scene import BaseScene
+from pacman.scenes.blur_scene import BlurScene
 
 
-class GameWinScene(BaseScene):
-    def __init__(self, game, score):
-        super().__init__(game)
+class GameWinScene(BlurScene):
+    def __init__(self, game, blur_surface: Surface, score: int):
+        super().__init__(game, blur_surface)
         self.score = score
 
     def _create_objects(self) -> None:

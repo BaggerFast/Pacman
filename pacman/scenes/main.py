@@ -198,14 +198,14 @@ class MainScene(BaseScene):
         if self.__seeds.is_field_empty():
             from pacman.scenes.game_win import GameWinScene
 
-            SceneManager().reset(GameWinScene(self.game, self.score))
+            SceneManager().reset(GameWinScene(self.game, self._screen, int(self.score)))
         elif self.pacman.death_is_finished() and not self.game.sounds.pacman.is_busy():
             if self.hp:
                 self._create_objects()
                 return
             from pacman.scenes.game_over import GameOverScene
 
-            SceneManager().reset(GameOverScene(self.game, self.score))
+            SceneManager().reset(GameOverScene(self.game, self._screen, int(self.score)))
 
     def __update_score_text(self):
         self.__scores_value_text.text = f"{'Mb' if self.game.skins.current.name == 'chrome' else self.score}"

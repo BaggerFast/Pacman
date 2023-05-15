@@ -1,16 +1,17 @@
 import pygame as pg
+from pygame import Surface
 
 from pacman.data_core import Config
 from pacman.misc import Font
 from pacman.misc.serializers import MainStorage
 from pacman.objects import ButtonController, Text, Button
 from pacman.scene_manager import SceneManager
-from pacman.scenes.base_scene import BaseScene
+from pacman.scenes.blur_scene import BlurScene
 
 
-class GameOverScene(BaseScene):
-    def __init__(self, game, score):
-        super().__init__(game)
+class GameOverScene(BlurScene):
+    def __init__(self, game, blur_surface: Surface, score: int):
+        super().__init__(game, blur_surface)
         self.score = score
 
     def _create_objects(self) -> None:
@@ -49,6 +50,3 @@ class GameOverScene(BaseScene):
 
     def on_exit(self) -> None:
         self.game.sounds.gameover.stop()
-
-    # def on_activate(self) -> None:
-    #     self.game.sounds.pacman.stop()
