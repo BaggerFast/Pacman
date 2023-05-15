@@ -25,8 +25,8 @@ class SceneManager(Singleton):
     def process_event(self, event) -> None:
         self.current.process_event(event)
 
-    def process_draw(self, screen: Surface) -> None:
-        self.current.draw(screen)
+    def process_draw(self) -> Surface:
+        return self.current.draw()
 
     def append(self, scene: BaseScene) -> None:
         self.exit_scene()

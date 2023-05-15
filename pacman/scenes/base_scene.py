@@ -1,15 +1,18 @@
 from pygame import Surface
 from pygame.event import Event
 from pygame import time
+
+from pacman.data_core import Config, Colors
 from pacman.data_core.game_objects import GameObjects
 
 
 class BaseScene:
+
     def __init__(self, game):
         self.game = game
-        self.start_time = time.get_ticks() / 1000
-        self.screen: Surface = self.game.screen
+        self._start_time = time.get_ticks() / 1000
         self.pre_init()
+        self._screen = Surface(tuple(Config.RESOLUTION))
         self.objects = GameObjects()
 
     def pre_init(self):
@@ -25,8 +28,10 @@ class BaseScene:
     def process_logic(self) -> None:
         self.objects.update()
 
-    def draw(self, screen: Surface) -> None:
-        self.objects.draw(screen)
+    def draw(self) -> Surface:
+        self._screen.fill(Colors.BLACK)
+        self.objects.draw(self._screen)
+        return self._screen
 
     # endregion
 

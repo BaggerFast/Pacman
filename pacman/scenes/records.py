@@ -2,10 +2,9 @@ import pygame as pg
 from pygame import Surface
 from pygame.event import Event
 
-from pacman.data_core import Colors, PathManager, Config
+from pacman.data_core import Colors, Config
 from pacman.misc import Font
 from pacman.misc.animator.sprite_sheet import sprite_slice
-from pacman.misc.loaders import load_image
 from pacman.misc.serializers import LevelStorage, MainStorage
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, ImageObject, Text, Button
@@ -66,17 +65,18 @@ class RecordsScene(BaseScene):
                 ).scale(30, 30)
             )
 
-    def draw(self, screen: Surface) -> None:
-        super().draw(screen)
+    def draw(self) -> None:
+        super().draw()
         if not sum(MainStorage().current_highscores()):
-            self.__error_text.draw(screen)
-            return
+            self.__error_text.draw(self._screen)
+            return self._screen
         y = 4
         for i in range(5):
             if y != -1:
-                self.medals_text[i].draw(screen)
-                self.__medals[i].draw(screen)
+                self.medals_text[i].draw(self._screen)
+                self.__medals[i].draw(self._screen)
             y -= 1
+        return self._screen
 
     def process_event(self, event: Event) -> None:
         super().process_event(event)

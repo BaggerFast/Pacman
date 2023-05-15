@@ -1,4 +1,5 @@
 import pygame as pg
+from pygame import Surface
 from pygame.event import Event
 
 from pacman.data_core import Config
@@ -76,7 +77,7 @@ class MainScene(BaseScene):
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.state_text = not self.state_text
         text_alpha = 255 if self.state_text else 0
-        if current_time - self.start_time > self.intro_sound.sound.get_length() / 4 * 3:
+        if current_time - self._start_time > self.intro_sound.sound.get_length() / 4 * 3:
             if len(self.text) > 1:
                 del self.text[0]
         self.text[0].surface.set_alpha(text_alpha)
@@ -89,11 +90,12 @@ class MainScene(BaseScene):
         if self.state in self.actions:
             self.actions[self.state]()
 
-    def draw(self, screen: pg.Surface) -> None:
-        super().draw(screen)
+    def draw(self) -> Surface:
+        super().draw()
         if self.state.INTRO:
             for txt in self.text[0:1]:
-                txt.draw(screen)
+                txt.draw(self._screen)
+        return self._screen
 
     # endregion
 
@@ -202,6 +204,7 @@ class MainScene(BaseScene):
                 self._create_objects()
                 return
             from pacman.scenes.game_over import GameOverScene
+
             SceneManager().reset(GameOverScene(self.game, self.score))
 
     def __update_score_text(self):
@@ -220,4 +223,4 @@ class MainScene(BaseScene):
         if is_esc_pressed(event) and self.state != GameStateEnum.INTRO:
             from pacman.scenes.pause import PauseScene
 
-            SceneManager().append(PauseScene(self.game))
+            SceneManager().append(PauseScene(self.game, self._screen))

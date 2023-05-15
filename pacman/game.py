@@ -140,8 +140,9 @@ class Game:
         SceneManager().current.process_logic()
 
     def __process_all_draw(self) -> None:
-        self.screen.fill(Colors.BLACK)
-        SceneManager().current.draw(self.screen)
+        self.screen.blit(
+            SceneManager().current.draw(), (0, 0)
+        )
         pg.display.flip()
 
     def main_loop(self) -> None:

@@ -9,7 +9,7 @@ from pacman.objects import MovementObject
 class Text(MovementObject, IDrawable):
     def __init__(
         self,
-        text: str = "",
+        text: str,
         size: int = 0,
         rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0),
         color=pg.Color(255, 255, 255),

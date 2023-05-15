@@ -1,8 +1,10 @@
 from typing import Tuple, Union
 import pygame as pg
 from pygame import Surface
+from pygame.transform import smoothscale
 
 from pacman.data_core.interfaces import IDrawable
+from pacman.misc.loaders import load_image
 from pacman.objects import MovementObject
 
 
@@ -10,8 +12,7 @@ class ImageObject(MovementObject, IDrawable):
     def __init__(self, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0)) -> None:
         super().__init__()
         if isinstance(image, str):
-            self.__filename = image
-            self.image = pg.image.load(self.__filename).convert_alpha()
+            self.image = load_image(image).convert_alpha()
         elif isinstance(image, pg.Surface):
             self.image = image
 
@@ -30,6 +31,16 @@ class ImageObject(MovementObject, IDrawable):
         topleft = self.rect.topleft
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
+        return self
+
+    def blur(self, blur_count) -> "ImageObject":
+        if blur_count <= 0:
+            raise ValueError("Amount must be greater than zero.")
+        scale = 1.0 / float(blur_count)
+        surf_size = self.image.get_size()
+        scale_size = (int(surf_size[0] * scale), int(surf_size[1] * scale))
+        self.image = smoothscale(self.image, scale_size)
+        self.image = smoothscale(self.image, surf_size)
         return self
 
     def rotate(self, angle) -> "ImageObject":

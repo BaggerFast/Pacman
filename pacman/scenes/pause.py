@@ -5,11 +5,12 @@ from pacman.misc import Font
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, Text, Button
 from pacman.scene_manager import SceneManager
-from pacman.scenes.base_scene import BaseScene
+from pacman.scenes.blur_scene import BlurScene
 
 
-class PauseScene(BaseScene):
+class PauseScene(BlurScene):
     def _create_objects(self) -> None:
+        super()._create_objects()
         from pacman.scenes.main import MainScene
         from pacman.scenes.menu import MenuScene
         from pacman.scenes.settings import SettingsScene
