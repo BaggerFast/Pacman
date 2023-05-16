@@ -1,11 +1,13 @@
 import pygame as pg
+from pygame import Surface
+from pygame.event import Event
 
 from pacman.data_core import Colors, Config
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
 from pacman.misc import Font
 from pacman.misc.serializers import LevelStorage
-from pacman.misc.util import rand_color
+from pacman.misc.util import rand_color, is_esc_pressed
 from pacman.objects import ButtonController, Text, Button, ImageObject
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
@@ -14,12 +16,10 @@ from pacman.scenes.base_scene import BaseScene
 class MenuScene(BaseScene):
     def _create_objects(self) -> None:
         super()._create_objects()
-        self.map_color = rand_color()
-        self.preview = ImageObject(self.game.maps.full_surface).swap_color(Colors.MAIN_MAP, self.map_color).blur(3)
-        self.preview.scale(*tuple(Config.RESOLUTION))
+        self.__map_color = rand_color()
+        self.preview = self.generate_map_preview()
         self.__level_text = Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 60)
         self.objects += [
-            self.preview,
             Text("PACMAN", 36, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
             self.__level_text,
         ]
@@ -29,7 +29,7 @@ class MenuScene(BaseScene):
         from pacman.scenes.main import MainScene
 
         event_append(EvenType.SET_SETTINGS)
-        SceneManager().append(MainScene(self.game, self.map_color))
+        SceneManager().append(MainScene(self.game, self.__map_color))
 
     def create_buttons(self) -> None:
         from pacman.scenes.skins import SkinsScene
@@ -58,6 +58,22 @@ class MenuScene(BaseScene):
                 ).move_center(Config.RESOLUTION.half_width, 95 + i * 28)
             )
         self.objects.append(ButtonController(buttons))
+
+    def process_event(self, event: Event) -> None:
+        super().process_event(event)
+        if is_esc_pressed(event):
+            self.preview = self.generate_map_preview()
+
+    def draw(self) -> Surface:
+        self.preview.draw(self._screen)
+        self.objects.draw(self._screen)
+        return self._screen
+
+    def generate_map_preview(self):
+        self.__map_color = rand_color()
+        return ImageObject(self.game.maps.full_surface)\
+            .swap_color(Colors.MAIN_MAP, self.__map_color)\
+            .scale(*tuple(Config.RESOLUTION)).blur(3)
 
     def on_enter(self) -> None:
         self.__level_text.text = f"{LevelStorage()}"

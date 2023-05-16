@@ -1,5 +1,4 @@
-import pygame as pg
-from pygame import Surface
+from pygame import Surface, Rect
 
 from pacman.data_core import Config
 from pacman.events.events import EvenType
@@ -39,7 +38,7 @@ class GameOverScene(BlurScene):
             buttons.append(
                 Button(
                     game=self.game,
-                    rect=pg.Rect(0, 0, 180, 35),
+                    rect=Rect(0, 0, 180, 35),
                     text=name,
                     function=fn,
                     text_size=Font.BUTTON_TEXT_SIZE,

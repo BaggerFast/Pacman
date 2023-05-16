@@ -37,11 +37,11 @@ class Character(MovementObject, ILogical, IDrawable):
 
     def step(self) -> None:
         self.rect.centerx = (
-                                self.rect.centerx + self.shift_x * self.speed + Config.RESOLUTION.WIDTH
-                            ) % Config.RESOLUTION.WIDTH
+            self.rect.centerx + self.shift_x * self.speed + Config.RESOLUTION.WIDTH
+        ) % Config.RESOLUTION.WIDTH
         self.rect.centery = (
-                                self.rect.centery + self.shift_y * self.speed + Config.RESOLUTION.HEIGHT
-                            ) % Config.RESOLUTION.HEIGHT
+            self.rect.centery + self.shift_y * self.speed + Config.RESOLUTION.HEIGHT
+        ) % Config.RESOLUTION.HEIGHT
 
     def go(self) -> None:
         if self.speed != 0:

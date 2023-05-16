@@ -20,7 +20,7 @@ class Score:
         return self.__update_score(300 * self.__eaten_fruits)
 
     def eat_ghost(self) -> int:
-        score_diff = self.__update_score(200 * 2 ** self.__fear_count)
+        score_diff = self.__update_score(200 * 2**self.__fear_count)
         self.__fear_count += 1
         return score_diff
 

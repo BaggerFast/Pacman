@@ -19,8 +19,8 @@ from pacman.scenes.base_scene import BaseScene
 class MainScene(BaseScene):
     # region COMPLETE:
 
-    def __init__(self, game, map_color=Colors.MAIN_MAP):
-        self._map_color = rand_color() if map_color == Colors.MAIN_MAP else map_color
+    def __init__(self, game, map_color=None):
+        self._map_color = rand_color() if not map_color else map_color
         super().__init__(game)
 
     def __play_sound(self):

@@ -62,4 +62,5 @@ class RotateEnum(Enum):
     LEFT = auto()
     UP = auto()
 
+
 # endregion

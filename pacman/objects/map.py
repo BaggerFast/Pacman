@@ -10,7 +10,6 @@ from pacman.objects import MovementObject, ImageObject
 
 
 class Map(MovementObject, IDrawable):
-
     def __init__(self, map_data, color=Colors.MAIN_MAP) -> None:
         super().__init__()
         self._color = color
