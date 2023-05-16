@@ -1,6 +1,6 @@
 from pygame import Surface
-from pygame.event import Event
 from pygame import time
+from pygame.event import Event
 
 from pacman.data_core import Config, Colors
 from pacman.data_core.game_objects import GameObjects

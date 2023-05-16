@@ -1,4 +1,5 @@
 from pygame import Surface, time
+
 from pacman.data_core.interfaces import ILogical
 
 

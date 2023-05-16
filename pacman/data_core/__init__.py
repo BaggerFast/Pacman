@@ -1,4 +1,4 @@
-from .path_manager import PathManager, Dirs
+from .config import Config
 from .constants import KbKeys, Colors, Sounds
 from .enums import DifficultEnum, SkinEnum
-from .config import Config
+from .path_manager import PathManager, Dirs

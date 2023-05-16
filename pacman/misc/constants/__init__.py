@@ -1,3 +1,3 @@
-from .variables import *
-from .classes import Font
 from .button import *
+from .classes import Font
+from .variables import *

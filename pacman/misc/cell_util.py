@@ -1,6 +1,7 @@
 from abc import ABC
-from typing import Tuple, Final
 from math import hypot
+from typing import Tuple, Final
+
 import pygame as pg
 
 

@@ -1,13 +1,14 @@
 import random
 from functools import wraps
+
 import pygame as pg
+
 from pacman.data_core.data_classes import GhostDifficult
 from pacman.data_core.enums import GhostStateEnum
 from pacman.misc.animator.animator import Animator
 from pacman.misc.animator.sprite_animator import SpriteSheetAnimator
 from pacman.misc.animator.sprite_sheet import sprite_slice, advanced_sprite_slice
 from pacman.misc.cell_util import CellUtil
-from pacman.misc.loaders import load_image
 from pacman.objects import Text
 from pacman.objects.heroes.character_base import Character
 from pacman.scene_manager import SceneManager

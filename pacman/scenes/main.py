@@ -2,16 +2,14 @@ import pygame as pg
 from pygame import Surface
 from pygame.event import Event
 
-from pacman.data_core import Config
+from pacman.data_core import Config, Colors
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
 from pacman.misc import ControlCheats, LevelLoader, Font, Health, INFINITY_LIVES, Score
 from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.misc.serializers import LevelStorage, MainStorage
-from pacman.misc.util import is_esc_pressed
+from pacman.misc.util import is_esc_pressed, rand_color
 from pacman.objects import SeedContainer, Map, ImageObject, Text
 from pacman.objects.fruits import Fruit
-
-
 from pacman.objects.heroes.ghosts import Inky, Pinky, Clyde, Blinky
 from pacman.objects.heroes.pacman import Pacman
 from pacman.scene_manager import SceneManager
@@ -20,6 +18,10 @@ from pacman.scenes.base_scene import BaseScene
 
 class MainScene(BaseScene):
     # region COMPLETE:
+
+    def __init__(self, game, map_color=Colors.MAIN_MAP):
+        self._map_color = rand_color() if map_color == Colors.MAIN_MAP else map_color
+        super().__init__(game)
 
     def __play_sound(self):
         if not self.game.sounds.siren.is_busy():
@@ -101,9 +103,6 @@ class MainScene(BaseScene):
 
     # region Temp
 
-    def add_hp(self):
-        self.hp += 1
-
     def on_enter(self) -> None:
         if self.pacman.animator != self.pacman.dead_anim:
             self.game.sounds.siren.unpause()
@@ -129,7 +128,7 @@ class MainScene(BaseScene):
         self.state = GameStateEnum.INTRO
         self.__loader = LevelLoader(self.game.maps.levels[LevelStorage().current])
         self.__seeds = SeedContainer(self.game, self.__loader.seeds_map, self.__loader.energizers_pos)
-        self.__map = Map(self.__loader.map)
+        self.__map = Map(self.__loader.map, self._map_color)
         self.intro_sound = self.game.sounds.intro
         self.__create_start_anim()
         self.hp = Health(3, 4)

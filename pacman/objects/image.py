@@ -1,7 +1,9 @@
 from typing import Tuple, Union
+
 import pygame as pg
 from PIL import Image, ImageFilter
 from pygame import Surface, Rect
+
 from pacman.data_core.interfaces import IDrawable
 from pacman.misc.loaders import load_image
 from pacman.objects import MovementObject

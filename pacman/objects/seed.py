@@ -1,4 +1,5 @@
 import pygame as pg
+
 from pacman.data_core import Colors, PathManager
 from pacman.data_core.data_classes import Cell
 from pacman.data_core.interfaces import IDrawable

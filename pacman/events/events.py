@@ -1,4 +1,5 @@
 from enum import IntEnum, auto
+
 from pygame import USEREVENT
 
 

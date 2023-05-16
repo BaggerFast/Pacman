@@ -1,11 +1,12 @@
 import pygame as pg
+
 from pacman.data_core import Colors, Config
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
 from pacman.misc import Font
-from pacman.misc.serializers import LevelStorage, StorageLoader
+from pacman.misc.serializers import LevelStorage
+from pacman.misc.util import rand_color
 from pacman.objects import ButtonController, Text, Button, ImageObject
-from pacman.objects.map import rand_color
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
 
@@ -13,7 +14,8 @@ from pacman.scenes.base_scene import BaseScene
 class MenuScene(BaseScene):
     def _create_objects(self) -> None:
         super()._create_objects()
-        self.preview = ImageObject(self.game.maps.full_surface).swap_color(Colors.MAIN_MAP, rand_color()).blur(3)
+        self.map_color = rand_color()
+        self.preview = ImageObject(self.game.maps.full_surface).swap_color(Colors.MAIN_MAP, self.map_color).blur(3)
         self.preview.scale(*tuple(Config.RESOLUTION))
         self.__level_text = Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 60)
         self.objects += [
@@ -27,7 +29,7 @@ class MenuScene(BaseScene):
         from pacman.scenes.main import MainScene
 
         event_append(EvenType.SET_SETTINGS)
-        SceneManager().append(MainScene(self.game))
+        SceneManager().append(MainScene(self.game, self.map_color))
 
     def create_buttons(self) -> None:
         from pacman.scenes.skins import SkinsScene

@@ -6,7 +6,7 @@ from pacman.data_core import Config
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
 from pacman.misc import Font
-from pacman.misc.serializers import LevelStorage, MainStorage, StorageLoader
+from pacman.misc.serializers import LevelStorage, MainStorage
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, Button, Text
 from pacman.scene_manager import SceneManager

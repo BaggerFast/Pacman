@@ -15,7 +15,7 @@ from pacman.scenes.base_scene import BaseScene
 class RecordsScene(BaseScene):
     def _create_objects(self) -> None:
         super()._create_objects()
-        self.__indicator = Text(f"level {LevelStorage().current+1}", 12, font=Font.DEFAULT).move_center(
+        self.__indicator = Text(f"level {LevelStorage().current + 1}", 12, font=Font.DEFAULT).move_center(
             Config.RESOLUTION.half_width, 55
         )
         self.objects += [

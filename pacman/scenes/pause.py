@@ -1,5 +1,6 @@
 import pygame as pg
 from pygame.event import Event
+
 from pacman.data_core import Config
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
@@ -26,11 +27,8 @@ class PauseScene(BlurScene):
     def _create_objects(self) -> None:
         super()._create_objects()
 
-        from pacman.scenes.settings import SettingsScene
-
         names = [
             ("CONTINUE", SceneManager().pop),
-            ("SETTINGS", lambda: SceneManager().append(SettingsScene(self.game))),
             ("RESTART", self.__restart_game),
             ("MENU", self.__stop_game),
         ]

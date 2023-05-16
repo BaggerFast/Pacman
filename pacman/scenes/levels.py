@@ -1,5 +1,6 @@
 import pygame as pg
 from pygame.event import Event
+
 from pacman.data_core import KbKeys, Colors, Config
 from pacman.misc import Font
 from pacman.misc.serializers import LevelStorage
@@ -35,7 +36,7 @@ class LevelsScene(BaseScene):
         self.objects.append(self.preview)
         self.objects.append(Text("SELECT LEVEL", 25, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30))
 
-        self.text = Text(f"Level: {self.current_level+1}/{LevelStorage().level_count}", 20).move_center(
+        self.text = Text(f"Level: {self.current_level + 1}/{LevelStorage().level_count}", 20).move_center(
             Config.RESOLUTION.half_width, Config.RESOLUTION.half_height
         )
         self.text2 = Text(f"L", 40, color=Colors.DARK_GRAY).move_center(

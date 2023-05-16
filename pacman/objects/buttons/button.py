@@ -1,4 +1,5 @@
 from typing import List, Union, Callable, Tuple
+
 import pygame as pg
 
 from pacman.data_core.enums import BtnStateEnum

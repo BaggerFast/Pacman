@@ -1,4 +1,5 @@
 import pygame as pg
+
 from pacman.misc.animator.animator import Animator
 
 
