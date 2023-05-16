@@ -34,12 +34,12 @@ class SeedContainer(MovementObject, IDrawable):
 
     def __draw_seeds(self, screen) -> None:
         for seed in self.__seeds:
-            if self.game.skins.current.name == "chrome":
-                screen.blit(
-                    self.__ram_img,
-                    seed.rect.center,
-                )
-                continue
+            # if self.game.skins.current.name == "chrome":
+            #     screen.blit(
+            #         self.__ram_img,
+            #         seed.rect.center,
+            #     )
+            #     continue
             pg.draw.circle(
                 screen,
                 Colors.WHITE,

@@ -1,4 +1,4 @@
-import pygame as pg
+from pygame import Rect
 from pygame.event import Event
 
 from pacman.data_core import Colors, Config
@@ -30,7 +30,7 @@ class RecordsScene(BaseScene):
     def create_buttons(self) -> None:
         back_button = Button(
             game=self.game,
-            rect=pg.Rect(0, 0, 180, 40),
+            rect=Rect(0, 0, 180, 40),
             text="MENU",
             function=SceneManager().pop,
             text_size=Font.BUTTON_TEXT_SIZE,
@@ -45,12 +45,7 @@ class RecordsScene(BaseScene):
             text = "." * 12 if not MainStorage().current_highscores()[y] else f"{MainStorage().current_highscores()[y]}"
             text_color = Colors.WHITE if not MainStorage().current_highscores()[y] else text_colors[i]
             self.medals_text.append(
-                Text(
-                    text,
-                    25,
-                    pg.Rect(60, 60 + 35 * i, 0, 0),
-                    text_color,
-                )
+                Text(text, 25, Rect(60, 60 + 35 * i, 0, 0), text_color)
             )
             y -= 1
 

@@ -6,9 +6,10 @@ from pygame.event import Event
 
 from pacman.data_core import PathManager, Dirs, Sounds, Config
 from pacman.events.events import EvenType
-from pacman.misc import LevelLoader, Skins
+from pacman.misc import LevelLoader
 from pacman.misc.serializers import StorageLoader, SettingsStorage, SkinStorage, LevelStorage
 from pacman.misc.sound_controller import SoundController
+from pacman.misc.tmp_skin import SkinEnum
 from pacman.objects import Map, ImageObject
 from pacman.scene_manager import SceneManager
 from pacman.scenes.menu import MenuScene
@@ -35,7 +36,7 @@ class Game:
                 self.intro = SoundController(
                     channel=1,
                     sound_path=(
-                        Sounds.INTRO[0] if not SkinStorage().current == game.skins.pokeball else Sounds.POC_INTRO
+                        Sounds.INTRO[0] if not SkinStorage().equals(SkinEnum.POKEBALL) else Sounds.POC_INTRO
                     ),
                 )
                 self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
@@ -53,7 +54,7 @@ class Game:
                 self.intro = SoundController(
                     channel=1,
                     sound_path=(
-                        Sounds.INTRO[0] if not SkinStorage().current == game.skins.pokeball else Sounds.POC_INTRO
+                        Sounds.INTRO[0] if not SkinStorage().equals(SkinEnum.POKEBALL) else Sounds.POC_INTRO
                     ),
                 )
                 self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
@@ -107,11 +108,7 @@ class Game:
         self.__clock = pg.time.Clock()
         self.time_out = 125
         self.animate_timer = 0
-
-        self.skins = Skins()
         self.sounds = self.Music(self)
-
-        self.skins.current = "default"
 
         SceneManager().reset(MenuScene(self))
 

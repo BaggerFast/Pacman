@@ -2,6 +2,7 @@ import pygame as pg
 
 from pacman.data_core.interfaces import IEventful
 from pacman.misc.cell_util import CellUtil
+from pacman.misc.serializers import SkinStorage
 from pacman.objects.heroes.character_base import Character
 
 
@@ -10,9 +11,10 @@ class Pacman(Character, IEventful):
 
     def __init__(self, game, loader) -> None:
         self.game = game
-        self.__walk_anim = game.skins.current.walk
-        self.__dead_anim = game.skins.current.dead
-        super().__init__(self.__walk_anim, loader, f"pacman/{game.skins.current.name}/aura")
+        skin_instanse = SkinStorage().current_instance
+        self.__walk_anim = skin_instanse.walk
+        self.__dead_anim = skin_instanse.dead
+        super().__init__(self.__walk_anim, loader, f"pacman/{skin_instanse.name}/aura")
         self.is_dead = False
         self.__feature_rotate = "none"
         self.__ai_timer = 0

@@ -23,7 +23,7 @@ class Clyde(Base):
         if self.rect.centerx == self.room_center_pos[0]:
             self.set_direction("up")
         if self.rect.centery == self.door_room_pos[1]:
-            self.state = GhostStateEnum.SCATTER
+            self.state = GhostStateEnum.CHASE
             self.set_direction(choice(("left", "right")))
 
     @ghost_state(GhostStateEnum.CHASE)

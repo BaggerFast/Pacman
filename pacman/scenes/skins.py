@@ -6,6 +6,7 @@ from pacman.misc import Font, BUTTON_SKIN_BUY
 from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.misc.serializers import MainStorage, SkinStorage
 from pacman.misc.skins import Skin
+from pacman.misc.tmp_skin import SkinEnum
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, Text, Button, ImageObject
 from pacman.scene_manager import SceneManager
@@ -14,6 +15,7 @@ from pacman.scenes.base_scene import BaseScene
 
 class SkinsScene(BaseScene):
     def _create_objects(self) -> None:
+        self.skin_storage = SkinStorage()
         self.button_pos_x = Config.RESOLUTION.half_width - 65
         self.button_pos_y = 90
         self.button_pos_multiply_y = 25
@@ -21,14 +23,14 @@ class SkinsScene(BaseScene):
         self.fruit_images = sprite_slice(f"fruits", (12, 12))
 
         self.skins = [
-            ("PACMAN", self.game.skins.default),
-            ("EDGE", self.game.skins.edge),
-            ("POKEBALL", self.game.skins.pokeball),
-            ("WINDOWS", self.game.skins.windows),
-            ("HALF-LIFE", self.game.skins.half_life),
-            ("CHROME", self.game.skins.chrome),
+            ("PACMAN", SkinEnum.DEFAULT),
+            ("EDGE", SkinEnum.EDGE),
+            ("POKEBALL", SkinEnum.POKEBALL),
+            ("WINDOWS", SkinEnum.WINDOWS),
+            ("HALF-LIFE",  SkinEnum.HALF_LIFE),
+            ("CHROME", SkinEnum.CHROME),
         ]
-        self.preview = self.game.skins.current.prerender_surface()
+        self.preview = self.skin_storage.current_instance.prerender_surface()
 
         self.objects += [
             Text("SELECT SKIN", 25, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
@@ -52,8 +54,9 @@ class SkinsScene(BaseScene):
         pos_regarding_buttons_y = self.button_pos_y - 6
         for i, (skin_name, skin) in enumerate(self.skins):
             multiply_x = 0
-            if not skin.is_unlocked:
-                for j in skin.skin_cost:
+            if not self.skin_storage.is_unlocked(skin):
+                skin_class = skin.value
+                for j in skin_class.skin_cost:
                     fruit = ImageObject(
                         self.fruit_images[j],
                         (
@@ -61,34 +64,36 @@ class SkinsScene(BaseScene):
                             pos_regarding_buttons_y + index_pos_y * i,
                         ),
                     )
-                    text = Text(f"{skin.skin_cost[j]}", 10).move_center(
+                    text = Text(f"{skin_class.skin_cost[j]}", 10).move_center(
                         pos_regarding_buttons_x + index_pos_x * multiply_x,
                         pos_regarding_buttons_y + index_pos_y * i,
                     )
                     self.objects += [fruit, text]
                     multiply_x += 1
 
-    def skin_button(self, skin: Skin):
-        self.preview.image = skin.image.image
+    def skin_button(self, skin: SkinEnum):
+        self.preview.image = skin.value.image.image
 
-    def select_skin(self, skin: Skin) -> None:
-        if skin.is_unlocked:
-            self.game.skins.current = skin
+    def select_skin(self, skin: SkinEnum) -> None:
+        if self.skin_storage.is_unlocked(skin):
+            self.skin_storage.set_skin(skin)
             SceneManager().pop()
             return
-        for key in skin.skin_cost.keys():
-            if MainStorage().eaten_fruits[key] < skin.skin_cost[key]:
+
+        skin_class = skin.value
+        for key in skin_class.skin_cost.keys():
+            if MainStorage().eaten_fruits[key] < skin_class.skin_cost[key]:
                 return
-        for key in skin.skin_cost.keys():
-            MainStorage().store_fruit(key, -skin.skin_cost[key])
-        SkinStorage().unlock_skin(skin.name)
-        self.game.skins.current = skin
+        for key in skin_class.skin_cost.keys():
+            MainStorage().store_fruit(key, -abs(skin_class.skin_cost[key]))
+
+        self.skin_storage.unlock_skin(skin)
         SceneManager().pop()
 
     def create_buttons(self) -> None:
         buttons = []
         for i, (skin_name, skin) in enumerate(self.skins):
-            if skin.is_unlocked:
+            if self.skin_storage.is_unlocked(skin):
                 buttons.append(
                     Button(
                         game=self.game,
@@ -118,7 +123,7 @@ class SkinsScene(BaseScene):
                 rect=pg.Rect(0, 0, 180, 40),
                 text="MENU",
                 function=SceneManager().pop,
-                select_function=lambda: self.skin_button(self.game.skins.default),
+                select_function=lambda: self.skin_button(self.skin_storage.current),
                 text_size=Font.BUTTON_TEXT_SIZE,
             ).move_center(Config.RESOLUTION.half_width, 250)
         )

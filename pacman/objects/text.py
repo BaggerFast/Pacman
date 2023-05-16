@@ -1,6 +1,7 @@
 import pygame as pg
-from pygame import Surface
+from pygame import Surface, Rect, Color
 
+from pacman.data_core import Colors
 from pacman.data_core.interfaces import IDrawable
 from pacman.misc import Font
 from pacman.objects import MovementObject
@@ -11,48 +12,45 @@ class Text(MovementObject, IDrawable):
         self,
         text: str,
         size: int = 0,
-        rect: pg.Rect = pg.rect.Rect(0, 0, 0, 0),
-        color=pg.Color(255, 255, 255),
+        rect: Rect = Rect(0, 0, 0, 0),
+        color=Colors.WHITE,
         font=Font.DEFAULT,
     ):
         super().__init__()
-        self.rect = rect
-        self.__pos = rect
-        self.size = size
-        self.__color = color
-        self.font = pg.font.Font(font, self.size)
         self.__text = ""
-        self.text = text
-        self.surface: pg.Surface
+        self.rect = rect
+        self.__color = color
+        self.__font = pg.font.Font(font, size)
+        self.__surface = self.__font.render(self.__text, False, self.__color)
 
-    @property
-    def pos(self):
-        return self.__pos
+        self.text = text
 
     @property
     def text(self):
         return self.__text
 
-    @property
-    def color(self):
-        return self.color
-
     @text.setter
     def text(self, text: str):
         self.__text = text if text else self.__text
-        self.surface = self.font.render(self.__text, False, self.__color)
-        if type(self.rect) != tuple:
-            topleft = self.rect.topleft
-            self.rect = self.surface.get_rect()
-            self.rect.topleft = topleft
+        self.__surface = self.__font.render(self.__text, False, self.__color)
+        topleft = self.rect.topleft
+        self.rect = self.__surface.get_rect()
+        self.rect.topleft = topleft
+
+    @property
+    def color(self):
+        return self.__color
 
     @color.setter
-    def color(self, color: pg.color):
+    def color(self, color: Color):
         self.__color = color
-        self.surface = self.font.render(self.__text, False, self.__color)
+        self.__surface = self.__font.render(self.__text, False, self.__color)
 
     def draw(self, screen: Surface) -> None:
-        screen.blit(self.surface, self.rect)
+        screen.blit(self.__surface, self.rect)
+
+    def set_alpha(self, alpha: int) -> None:
+        self.__surface.set_alpha(alpha)
 
     def __repr__(self):
         return f"Text: {self.__text}"

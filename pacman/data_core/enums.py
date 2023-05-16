@@ -47,15 +47,6 @@ class DifficultEnum(Enum):
     HARD = auto()
 
 
-class SkinEnum(Enum):
-    EDGE = auto()
-    CHROME = auto()
-    DEFAULT = auto()
-    WINDOWS = auto()
-    POKEBALL = auto()
-    HALF_LIFE = auto()
-
-
 class RotateEnum(Enum):
     RIGHT = 0
     DOWN = auto()

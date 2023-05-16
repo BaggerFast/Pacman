@@ -3,6 +3,8 @@ from json import JSONDecodeError
 
 from pacman.misc import FRUITS_COUNT, HIGHSCORES_COUNT
 from pacman.misc.singleton import Singleton
+from pacman.misc.skins import Skin
+from pacman.misc.tmp_skin import SkinEnum
 
 
 class JsonSerializer:
@@ -37,12 +39,40 @@ class SerDes(Singleton, JsonSerializer, JsonDeserializer):
 
 class SkinStorage(SerDes):
     def __init__(self):
-        self.unlocked = ["default"]
-        self.current = "default"
+        self.__unlocked = [SkinEnum.DEFAULT.name]
+        self.__current = SkinEnum.DEFAULT.name
 
-    def unlock_skin(self, skin_name: str = 0) -> None:
-        if skin_name not in MainStorage().skins.unlocked:
-            self.unlocked.append(skin_name)
+    def unlock_skin(self, skin: SkinEnum) -> None:
+        skin_name = skin.name
+        if not self.is_unlocked(skin):
+            self.__unlocked.append(skin_name)
+            self.__current = skin.name
+
+    def is_unlocked(self, skin: SkinEnum) -> bool:
+        return skin.name in self.__unlocked
+
+    @property
+    def current(self) -> SkinEnum:
+        try:
+            return SkinEnum[self.__current]
+        except KeyError:
+            raise Exception("Invalid skin")
+
+    @property
+    def current_instance(self) -> Skin:
+        try:
+            return SkinEnum[self.__current].value
+        except KeyError:
+            raise Exception("Invalid skin")
+
+    def equals(self, skin: SkinEnum) -> bool:
+        return self.__current is skin
+
+    def set_skin(self, skin: SkinEnum):
+        if self.is_unlocked(skin):
+            self.__current = skin.name
+        else:
+            raise Exception("Invalid skin")
 
 
 class LevelStorage(SerDes):

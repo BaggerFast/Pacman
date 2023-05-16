@@ -3,4 +3,3 @@ from .constants import *
 from .health import Health
 from .loader import LevelLoader
 from .score import Score
-from .skins import Skins

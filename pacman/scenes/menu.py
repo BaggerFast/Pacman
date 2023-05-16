@@ -1,5 +1,4 @@
-import pygame as pg
-from pygame import Surface
+from pygame import Surface, Rect
 from pygame.event import Event
 
 from pacman.data_core import Colors, Config
@@ -51,7 +50,7 @@ class MenuScene(BaseScene):
             buttons.append(
                 Button(
                     game=self.game,
-                    rect=pg.Rect(0, 0, 180, 26),
+                    rect=Rect(0, 0, 180, 26),
                     text=name,
                     function=fn,
                     text_size=Font.BUTTON_TEXT_SIZE,
@@ -69,11 +68,14 @@ class MenuScene(BaseScene):
         self.objects.draw(self._screen)
         return self._screen
 
-    def generate_map_preview(self):
+    def generate_map_preview(self) -> ImageObject:
         self.__map_color = rand_color()
-        return ImageObject(self.game.maps.full_surface)\
-            .swap_color(Colors.MAIN_MAP, self.__map_color)\
-            .scale(*tuple(Config.RESOLUTION)).blur(3)
+        return (
+            ImageObject(self.game.maps.full_surface)
+            .swap_color(Colors.MAIN_MAP, self.__map_color)
+            .scale(*tuple(Config.RESOLUTION))
+            .blur(3)
+        )
 
     def on_enter(self) -> None:
         self.__level_text.text = f"{LevelStorage()}"

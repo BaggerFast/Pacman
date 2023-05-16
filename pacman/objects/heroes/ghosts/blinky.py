@@ -12,7 +12,7 @@ class Blinky(Base):
 
     def __init__(self, game, loader, seed_count):
         super().__init__(game, loader, seed_count)
-        self.state = GhostStateEnum.SCATTER
+        self.state = GhostStateEnum.CHASE
         self.set_direction(choice(("left", "right")))
 
     @ghost_state(GhostStateEnum.CHASE)

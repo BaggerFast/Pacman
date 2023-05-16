@@ -2,13 +2,14 @@ import pygame as pg
 from pygame import Surface
 from pygame.event import Event
 
-from pacman.data_core import Config, Colors
+from pacman.data_core import Config
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
+from pacman.data_core.game_objects import GameObjects
 from pacman.misc import ControlCheats, LevelLoader, Font, Health, INFINITY_LIVES, Score
-from pacman.misc.animator.sprite_sheet import sprite_slice
-from pacman.misc.serializers import LevelStorage, MainStorage
+from pacman.misc.serializers import LevelStorage, MainStorage, SkinStorage
+from pacman.misc.tmp_skin import SkinEnum
 from pacman.misc.util import is_esc_pressed, rand_color
-from pacman.objects import SeedContainer, Map, ImageObject, Text
+from pacman.objects import SeedContainer, Map, Text
 from pacman.objects.fruits import Fruit
 from pacman.objects.heroes.ghosts import Inky, Pinky, Clyde, Blinky
 from pacman.objects.heroes.pacman import Pacman
@@ -38,27 +39,22 @@ class MainScene(BaseScene):
     def __create_start_anim(self):
         self.text = []
         for i, txt in enumerate(["READY", "GO!"]):
-            self.text.append(Text(txt, 30, font=Font.TITLE, rect=pg.Rect(20, 0, 20, 20)))
+            self.text.append(Text(txt, 30, rect=pg.Rect(20, 0, 20, 20), font=Font.TITLE))
             self.text[-1].move_center(Config.RESOLUTION.half_width, Config.RESOLUTION.half_height)
 
     def __create_hud(self):
         self.objects += [
             Text("HIGHSCORE", Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)),
-            Text(
-                f"{MainStorage().get_highscore()}",
-                size=Font.MAIN_SCENE_SIZE,
-                rect=pg.Rect(130, 8, 20, 20),
-            ),
-            Text(
-                text="MEMORY" if self.game.skins.current.name == "chrome" else "SCORE",
-                size=Font.MAIN_SCENE_SIZE,
-                rect=pg.Rect(10, 0, 20, 20),
-            ),
+            Text(f"{MainStorage().get_highscore()}", size=Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 8, 20, 20)),
+            Text(text="MEMORY" if SkinStorage().equals(SkinEnum.CHROME) else "SCORE", size=Font.MAIN_SCENE_SIZE,
+                 rect=pg.Rect(10, 0, 20, 20)),
             self.__scores_value_text,
         ]
-        sprite = sprite_slice(f"pacman/{self.game.skins.current.name}/walk", (13, 13))
+
         for i in range(int(self.hp) - 1):
-            self.objects.append(ImageObject(sprite[0], (5 + i * 20, 270)).rotate(180))
+            self.objects.append(
+                SkinStorage().current_instance.walk
+            )
 
     # endregion
 
@@ -82,7 +78,7 @@ class MainScene(BaseScene):
         if current_time - self._start_time > self.intro_sound.sound.get_length() / 4 * 3:
             if len(self.text) > 1:
                 del self.text[0]
-        self.text[0].surface.set_alpha(text_alpha)
+        self.text[0].set_alpha(text_alpha)
 
     # endregion
 
@@ -135,11 +131,8 @@ class MainScene(BaseScene):
         self.__seeds_eaten = 0
         self.fruit = Fruit(self.__loader.fruit_pos)
         self.state_text = True
-        self.__scores_value_text = Text(
-            f"{'Mb' if self.game.skins.current.name == 'chrome' else self.score}",
-            size=Font.MAIN_SCENE_SIZE,
-            rect=pg.Rect(10, 8, 20, 20),
-        )
+        self.__scores_value_text = Text(f"{'Mb' if SkinStorage().equals(SkinEnum.CHROME) else self.score}",
+                                        size=Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
 
     def _create_objects(self):
         super()._create_objects()
@@ -207,7 +200,7 @@ class MainScene(BaseScene):
             SceneManager().reset(GameOverScene(self.game, self._screen, int(self.score)))
 
     def __update_score_text(self):
-        self.__scores_value_text.text = f"{'Mb' if self.game.skins.current.name == 'chrome' else self.score}"
+        self.__scores_value_text.text = f"{'Mb' if SkinStorage().equals(SkinEnum.CHROME) else self.score}"
 
     def game_logic(self):
         super().process_logic()

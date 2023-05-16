@@ -24,7 +24,7 @@ class Inky(Base):
             self.set_direction("up")
         if self.rect.centery == self.door_room_pos[1]:
             self.set_direction(choice(("left", "right")))
-            self.state = GhostStateEnum.SCATTER
+            self.state = GhostStateEnum.CHASE
 
     @ghost_state(GhostStateEnum.CHASE)
     def chase_ai(self):
