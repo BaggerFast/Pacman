@@ -31,5 +31,3 @@ class Skin:
 
     def __str__(self):
         return self.name
-
-

@@ -4,8 +4,7 @@ from pygame.event import Event
 from pacman.data_core import Config
 from pacman.misc import Font, BUTTON_SKIN_BUY
 from pacman.misc.animator.sprite_sheet import sprite_slice
-from pacman.misc.serializers import MainStorage, SkinStorage
-from pacman.misc.skins import Skin
+from pacman.misc.serializers import SkinStorage, FruitStorage
 from pacman.misc.tmp_skin import SkinEnum
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, Text, Button, ImageObject
@@ -27,7 +26,7 @@ class SkinsScene(BaseScene):
             ("EDGE", SkinEnum.EDGE),
             ("POKEBALL", SkinEnum.POKEBALL),
             ("WINDOWS", SkinEnum.WINDOWS),
-            ("HALF-LIFE",  SkinEnum.HALF_LIFE),
+            ("HALF-LIFE", SkinEnum.HALF_LIFE),
             ("CHROME", SkinEnum.CHROME),
         ]
         self.preview = self.skin_storage.current_instance.prerender_surface()
@@ -44,7 +43,7 @@ class SkinsScene(BaseScene):
         for i, fruit_img in enumerate(self.fruit_images):
             self.objects += [
                 ImageObject(fruit_img, (Config.RESOLUTION.WIDTH // 7 + i * 25, 60)),
-                Text(f"{MainStorage().eaten_fruits[i]}", 10).move_center(Config.RESOLUTION.WIDTH // 7 + i * 25, 60),
+                Text(f"{FruitStorage().eaten_fruits[i]}", 10).move_center(Config.RESOLUTION.WIDTH // 7 + i * 25, 60),
             ]
 
     def create_fruits_and_text_for_skins(self) -> None:
@@ -82,10 +81,10 @@ class SkinsScene(BaseScene):
 
         skin_class = skin.value
         for key in skin_class.skin_cost.keys():
-            if MainStorage().eaten_fruits[key] < skin_class.skin_cost[key]:
+            if FruitStorage().eaten_fruits[key] < skin_class.skin_cost[key]:
                 return
         for key in skin_class.skin_cost.keys():
-            MainStorage().store_fruit(key, -abs(skin_class.skin_cost[key]))
+            FruitStorage().store_fruit(key, -abs(skin_class.skin_cost[key]))
 
         self.skin_storage.unlock_skin(skin)
         SceneManager().pop()

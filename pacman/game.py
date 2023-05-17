@@ -16,8 +16,9 @@ from pacman.scenes.menu import MenuScene
 
 
 class Game:
+
     class Music:
-        def __init__(self, game):
+        def __init__(self):
             self.click = SoundController(sound_path=Sounds.CLICK)
             self.siren = SoundController(channel=3, sound_path=choice(Sounds.SIREN))
             self.fruit = SoundController(channel=4, sound_path=Sounds.FRUIT)
@@ -35,9 +36,7 @@ class Game:
                 self.seed = SoundController(channel=4, sound_path=Sounds.SEED)
                 self.intro = SoundController(
                     channel=1,
-                    sound_path=(
-                        Sounds.INTRO[0] if not SkinStorage().equals(SkinEnum.POKEBALL) else Sounds.POC_INTRO
-                    ),
+                    sound_path=(Sounds.INTRO[0] if not SkinStorage().equals(SkinEnum.POKEBALL) else Sounds.POC_INTRO),
                 )
                 self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
 
@@ -53,9 +52,7 @@ class Game:
                 self.seed = SoundController(channel=4, sound_path=Sounds.SEED)
                 self.intro = SoundController(
                     channel=1,
-                    sound_path=(
-                        Sounds.INTRO[0] if not SkinStorage().equals(SkinEnum.POKEBALL) else Sounds.POC_INTRO
-                    ),
+                    sound_path=(Sounds.INTRO[0] if not SkinStorage().equals(SkinEnum.POKEBALL) else Sounds.POC_INTRO),
                 )
                 self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
 
@@ -75,17 +72,10 @@ class Game:
             self.__load_from_map(LevelStorage().current)
             return self.__map.prerender_map_surface()
 
-        @staticmethod
-        def level_name(level_id: int = 0) -> str:
-            return f"Level {level_id + 1}"
-
         def __load_from_map(self, level_id: int = 0) -> None:
             self.__loader = LevelLoader(self.levels[level_id])
             self.__map_data = self.__loader.map
             self.__map = Map(self.__map_data)
-
-        def keys(self) -> List[int]:
-            return [i for i in range(self.count)]
 
         def read_levels(self) -> None:
             self.levels = PathManager.get_list_path(f"{Dirs.ASSET}/maps", ext="json")

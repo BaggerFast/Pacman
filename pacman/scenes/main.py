@@ -4,9 +4,8 @@ from pygame.event import Event
 
 from pacman.data_core import Config
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
-from pacman.data_core.game_objects import GameObjects
 from pacman.misc import ControlCheats, LevelLoader, Font, Health, INFINITY_LIVES, Score
-from pacman.misc.serializers import LevelStorage, MainStorage, SkinStorage
+from pacman.misc.serializers import LevelStorage, SkinStorage
 from pacman.misc.tmp_skin import SkinEnum
 from pacman.misc.util import is_esc_pressed, rand_color
 from pacman.objects import SeedContainer, Map, Text
@@ -45,16 +44,17 @@ class MainScene(BaseScene):
     def __create_hud(self):
         self.objects += [
             Text("HIGHSCORE", Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)),
-            Text(f"{MainStorage().get_highscore()}", size=Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 8, 20, 20)),
-            Text(text="MEMORY" if SkinStorage().equals(SkinEnum.CHROME) else "SCORE", size=Font.MAIN_SCENE_SIZE,
-                 rect=pg.Rect(10, 0, 20, 20)),
+            Text(f"{LevelStorage().get_highscore()}", size=Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 8, 20, 20)),
+            Text(
+                text="MEMORY" if SkinStorage().equals(SkinEnum.CHROME) else "SCORE",
+                size=Font.MAIN_SCENE_SIZE,
+                rect=pg.Rect(10, 0, 20, 20),
+            ),
             self.__scores_value_text,
         ]
 
         for i in range(int(self.hp) - 1):
-            self.objects.append(
-                SkinStorage().current_instance.walk
-            )
+            self.objects.append(SkinStorage().current_instance.walk)
 
     # endregion
 
@@ -131,8 +131,11 @@ class MainScene(BaseScene):
         self.__seeds_eaten = 0
         self.fruit = Fruit(self.__loader.fruit_pos)
         self.state_text = True
-        self.__scores_value_text = Text(f"{'Mb' if SkinStorage().equals(SkinEnum.CHROME) else self.score}",
-                                        size=Font.MAIN_SCENE_SIZE, rect=pg.Rect(10, 8, 20, 20))
+        self.__scores_value_text = Text(
+            f"{'Mb' if SkinStorage().equals(SkinEnum.CHROME) else self.score}",
+            size=Font.MAIN_SCENE_SIZE,
+            rect=pg.Rect(10, 8, 20, 20),
+        )
 
     def _create_objects(self):
         super()._create_objects()

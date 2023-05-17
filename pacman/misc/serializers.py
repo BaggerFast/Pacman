@@ -1,7 +1,5 @@
 import json
 from json import JSONDecodeError
-
-from pacman.misc import FRUITS_COUNT, HIGHSCORES_COUNT
 from pacman.misc.singleton import Singleton
 from pacman.misc.skins import Skin
 from pacman.misc.tmp_skin import SkinEnum
@@ -78,8 +76,8 @@ class SkinStorage(SerDes):
 class LevelStorage(SerDes):
     def __init__(self):
         self.level_count = 10
+        self.unlocked = []
         self.__current = 0
-        self.unlocked = [0]
 
     @property
     def current(self) -> int:
@@ -88,22 +86,45 @@ class LevelStorage(SerDes):
     @current.setter
     def current(self, value):
         if isinstance(value, int) and 0 <= value < self.level_count:
-            self.__current = value
+            self.__current = value % len(self.unlocked)
         else:
             raise Exception(f"Current level must be in 0 <= {value} < {self.level_count}")
 
-    def __str__(self):
-        return f"Level {self.current + 1}"
-
-    def unlock_level(self, level_id: int = 0) -> None:
-        if level_id not in MainStorage().levels.unlocked:
-            self.unlocked.append(level_id)
+    def unlock_next_level(self) -> None:
+        if len(self.unlocked) < self.level_count:
+            self.unlocked.append([0])
 
     def set_next_level(self):
-        self.current = (self.current + 1) % self.level_count
+        self.current = self.current + 1
 
     def set_prev_level(self):
-        self.current = (self.current - 1) % self.level_count
+        self.current = self.current - 1
+
+    def current_highscores(self):
+        if self.__current > len(self.unlocked) - 1:
+            return []
+        self.unlocked[self.__current] = sorted(self.unlocked[self.__current], reverse=True)[0:5]
+        return self.unlocked[self.__current]
+
+    def get_highscore(self) -> int:
+        if self.__current > len(self.unlocked) - 1:
+            return 0
+        highscore = self.current_highscores()
+        if not highscore:
+            return 0
+        return highscore[0]
+
+    def add_record(self, score: int):
+        if self.__current > len(self.unlocked) - 1:
+            return
+        self.unlocked[self.__current].append(int(score))
+        self.unlocked = self.current_highscores()
+
+    def is_last_level(self) -> bool:
+        return LevelStorage().current + 1 >= self.level_count
+
+    def __str__(self):
+        return f"Level {self.current + 1}"
 
 
 class SettingsStorage(SerDes):
@@ -129,32 +150,28 @@ class SettingsStorage(SerDes):
             raise ValueError("Difficult must be integer of [0, 3]")
         self.difficulty = value % 3
 
+
+class FruitStorage(SerDes):
+
+    def __init__(self):
+        self.__fruit_count = 7
+        self.eaten_fruits = [0 for _ in range(self.__fruit_count)]
+
+    def store_fruit(self, fruit_id: int = 0, value: int = 0) -> None:
+        if fruit_id in range(7):
+            self.eaten_fruits[fruit_id] += value
+        else:
+            raise Exception(f"id error. Fruit id: {fruit_id} doesn't exist")
+
     # endregion
 
 
 class MainStorage(SerDes):
     def __init__(self):
-        self.settings = SettingsStorage()
-        self.skins = SkinStorage()
-        self.levels = LevelStorage()
-        self.eaten_fruits = [0 for _ in range(FRUITS_COUNT)]
-        self.highscores = [[0 for _ in range(HIGHSCORES_COUNT)] for _ in range(10)]
-
-    def add_record(self, score: int):
-        self.highscores[self.levels.current].append(int(score))
-        self.highscores[self.levels.current] = sorted(self.highscores[self.levels.current])[-HIGHSCORES_COUNT:]
-
-    def current_highscores(self):
-        return self.highscores[self.levels.current][:]
-
-    def get_highscore(self) -> int:
-        return self.highscores[self.levels.current][-1]
-
-    def store_fruit(self, fruit_id: int = 0, value: int = 0) -> None:
-        if fruit_id in range(FRUITS_COUNT):
-            self.eaten_fruits[fruit_id] += value
-        else:
-            raise Exception(f"id error. Fruit id: {fruit_id} doesn't exist")
+        self.__settings = SettingsStorage()
+        self.__skins = SkinStorage()
+        self.__levels = LevelStorage()
+        self.__fruit = FruitStorage()
 
 
 class StorageLoader:

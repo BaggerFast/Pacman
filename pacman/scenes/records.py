@@ -5,7 +5,7 @@ from pacman.data_core import Colors, Config
 from pacman.data_core.game_objects import GameObjects
 from pacman.misc import Font
 from pacman.misc.animator.sprite_sheet import sprite_slice
-from pacman.misc.serializers import LevelStorage, MainStorage
+from pacman.misc.serializers import LevelStorage
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import ButtonController, ImageObject, Text, Button
 from pacman.scene_manager import SceneManager
@@ -40,14 +40,9 @@ class RecordsScene(BaseScene):
     def __create_text_labels(self) -> None:
         self.medals_text = []
         text_colors = [Colors.GOLD, Colors.SILVER, Colors.BRONZE, Colors.WHITE, Colors.WHITE]
-        y = 4
-        for i in range(5):
-            text = "." * 12 if not MainStorage().current_highscores()[y] else f"{MainStorage().current_highscores()[y]}"
-            text_color = Colors.WHITE if not MainStorage().current_highscores()[y] else text_colors[i]
-            self.medals_text.append(
-                Text(text, 25, Rect(60, 60 + 35 * i, 0, 0), text_color)
-            )
-            y -= 1
+        current_highscores = LevelStorage().current_highscores()
+        for i, score in enumerate(current_highscores):
+            self.medals_text.append(Text(f"{score}", 25, Rect(60, 60 + 35 * i, 0, 0), text_colors[i]))
 
     def __create_medals(self) -> None:
         self.__medals = GameObjects()
@@ -57,15 +52,13 @@ class RecordsScene(BaseScene):
 
     def draw(self) -> None:
         super().draw()
-        if not sum(MainStorage().current_highscores()):
+        current_highscores = LevelStorage().current_highscores()
+        if not sum(current_highscores):
             self.__error_text.draw(self._screen)
             return self._screen
-        y = 4
-        for i in range(5):
-            if y != -1:
-                self.medals_text[i].draw(self._screen)
-                self.__medals[i].draw(self._screen)
-            y -= 1
+        for i in range(len(current_highscores)):
+            self.__medals[i].draw(self._screen)
+            self.medals_text[i].draw(self._screen)
         return self._screen
 
     def process_event(self, event: Event) -> None:

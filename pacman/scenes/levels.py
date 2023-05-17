@@ -52,7 +52,7 @@ class LevelsScene(BaseScene):
             self.text = Text(f"Level: {self.current_level + 1}", 20).move_center(
                 Config.RESOLUTION.half_width, Config.RESOLUTION.half_height
             )
-        elif self.current_level + 1 not in LevelStorage().unlocked:
+        elif self.current_level + 1 >= len(LevelStorage().unlocked):
             self.text3.color = Colors.BLACK
 
         self.objects.append(self.text)
@@ -66,7 +66,7 @@ class LevelsScene(BaseScene):
             SceneManager().pop()
         if event.type == pg.KEYDOWN:
             if event.key in KbKeys.RIGHT and self.current_level != LevelStorage().level_count - 1:
-                if self.current_level + 1 in LevelStorage().unlocked:
+                if not (self.current_level + 1 >= len(LevelStorage().unlocked)):
                     LevelStorage().set_next_level()
             elif event.key in KbKeys.LEFT and self.current_level != 0:
                 LevelStorage().set_prev_level()
@@ -85,7 +85,7 @@ class LevelsScene(BaseScene):
                 self.text = Text(f"Level: {self.current_level + 1}", 20).move_center(
                     Config.RESOLUTION.half_width, Config.RESOLUTION.half_height
                 )
-            elif self.current_level + 1 not in LevelStorage().unlocked:
+            elif self.current_level + 1 >= len(LevelStorage().unlocked):
                 self.text3.color = Colors.BLACK
             self.text = Text(f"Level: {self.current_level + 1}/{LevelStorage().level_count}", 20).move_center(
                 Config.RESOLUTION.half_width, Config.RESOLUTION.half_height

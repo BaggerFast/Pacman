@@ -4,7 +4,7 @@ from pacman.data_core import Config
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
 from pacman.misc import Font
-from pacman.misc.serializers import MainStorage
+from pacman.misc.serializers import LevelStorage
 from pacman.objects import ButtonController, Text, Button
 from pacman.scene_manager import SceneManager
 from pacman.scenes.blur_scene import BlurScene
@@ -21,7 +21,7 @@ class GameOverScene(BlurScene):
             Text("GAME", 40, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
             Text("OVER", 40, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 70),
             Text(f"Score: {self.score}", 20).move_center(Config.RESOLUTION.half_width, 135),
-            Text(f"High score: {MainStorage().get_highscore()}", 20).move_center(Config.RESOLUTION.half_width, 165),
+            Text(f"High score: {LevelStorage().get_highscore()}", 20).move_center(Config.RESOLUTION.half_width, 165),
         ]
         self.create_buttons()
 
