@@ -7,7 +7,7 @@ from pacman.events.utils import event_append
 from pacman.misc.constants import Font
 from pacman.misc.util import is_esc_pressed
 from pacman.objects import Text
-from pacman.objects.buttons import ButtonController, Button
+from pacman.objects.buttons import Button, ButtonController
 from pacman.scene_manager import SceneManager
 from pacman.scenes.blur_scene import BlurScene
 

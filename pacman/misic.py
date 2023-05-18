@@ -3,7 +3,6 @@ from random import choice
 from pacman.data_core.constants import Sounds
 from pacman.misc.serializers import SettingsStorage, SkinStorage
 from pacman.misc.singleton import Singleton
-
 from pacman.misc.sound_controller import SoundController
 from pacman.misc.tmp_skin import SkinEnum
 

@@ -1,4 +1,4 @@
-from pygame import transform, Surface
+from pygame import Surface, transform
 
 from pacman.misc.loaders import load_image
 
@@ -11,7 +11,6 @@ def sprite_slice(image: str | Surface, size: tuple[int, int], scale: tuple[int, 
     for i in range(image.get_width() // size[0]):
         frame = image.subsurface((i * size[0], 0, *size))
         if scale:
-            scale = int(scale[0]), int(scale[1])
             frame = transform.scale(frame, scale)
         frames.append(frame)
     if not len(frames):

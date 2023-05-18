@@ -4,7 +4,7 @@ from typing import Final
 import pygame.locals as keys
 from pygame import Color
 
-from .path_util import PathUtil, Dirs
+from .path_util import Dirs, PathUtil
 
 
 class KbKeys(ABC):

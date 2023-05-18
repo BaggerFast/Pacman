@@ -1,6 +1,6 @@
 from random import randint
 
-from pygame import KEYDOWN, K_ESCAPE
+from pygame import K_ESCAPE, KEYDOWN
 
 
 def is_esc_pressed(event):

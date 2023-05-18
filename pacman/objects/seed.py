@@ -1,4 +1,4 @@
-from pygame import time, draw, Surface, Rect
+from pygame import Rect, Surface, draw, time
 
 from pacman.data_core import Colors
 from pacman.data_core.data_classes import Cell

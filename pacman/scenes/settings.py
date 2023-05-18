@@ -2,7 +2,7 @@ import pygame as pg
 from pygame.event import Event
 
 from pacman.data_core import Cfg
-from pacman.misc.constants import BUTTON_GREEN_COLORS, Font, BUTTON_RED_COLORS
+from pacman.misc.constants import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS, Font
 from pacman.misc.serializers import SettingsStorage
 from pacman.misc.util import is_esc_pressed
 from pacman.misic import Music

@@ -3,18 +3,17 @@ from typing import List
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import PathUtil, Dirs, Cfg, GameObjects
+from pacman.data_core import Cfg, Dirs, GameObjects, PathUtil
 from pacman.events.events import EvenType
 from pacman.misc import LevelLoader
-from pacman.misc.serializers import StorageLoader, LevelStorage
+from pacman.misc.serializers import LevelStorage, StorageLoader
 from pacman.misic import Music
-from pacman.objects import Map, ImageObject
+from pacman.objects import ImageObject, Map
 from pacman.scene_manager import SceneManager
 from pacman.scenes.menu import MenuScene
 
 
 class Game:
-
     class Maps:
         def __init__(self):
             self.levels = []

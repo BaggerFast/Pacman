@@ -3,12 +3,12 @@ from pygame.event import Event
 
 from pacman.data_core import Cfg
 from pacman.misc.animator.sprite_sheet import sprite_slice
-from pacman.misc.constants import Font, BUTTON_SKIN_BUY
-from pacman.misc.serializers import SkinStorage, FruitStorage
+from pacman.misc.constants import BUTTON_SKIN_BUY, Font
+from pacman.misc.serializers import FruitStorage, SkinStorage
 from pacman.misc.tmp_skin import SkinEnum
 from pacman.misc.util import is_esc_pressed
-from pacman.objects import Text, ImageObject
-from pacman.objects.buttons import ButtonController, Button
+from pacman.objects import ImageObject, Text
+from pacman.objects.buttons import Button, ButtonController
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
 

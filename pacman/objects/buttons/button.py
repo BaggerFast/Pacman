@@ -1,4 +1,4 @@
-from typing import List, Union, Callable, Tuple
+from typing import Callable, List, Tuple, Union
 
 import pygame as pg
 
@@ -6,7 +6,6 @@ from pacman.data_core.enums import BtnStateEnum
 from pacman.data_core.interfaces import IDrawable, IEventful
 from pacman.misc.constants import BUTTON_DEFAULT_COLORS, ButtonColor, Font
 from pacman.misic import Music
-
 from pacman.objects.base import MovementObject
 
 

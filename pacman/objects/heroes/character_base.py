@@ -1,9 +1,9 @@
-from typing import Tuple, List
+from typing import List, Tuple
 
 import pygame as pg
 
 from pacman.data_core import Cfg
-from pacman.data_core.interfaces import ILogical, IDrawable
+from pacman.data_core.interfaces import IDrawable, ILogical
 from pacman.misc import LevelLoader
 from pacman.misc.animator.animator import Animator
 from pacman.misc.animator.sprite_animator import SpriteSheetAnimator

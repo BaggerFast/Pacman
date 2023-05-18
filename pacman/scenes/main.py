@@ -4,16 +4,14 @@ from pygame.event import Event
 
 from pacman.data_core import Cfg
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
-from pacman.misc import ControlCheats, LevelLoader, Health, Score
-from pacman.misc.constants import Font, INFINITY_LIVES
+from pacman.misc import ControlCheats, Health, LevelLoader, Score
+from pacman.misc.constants import INFINITY_LIVES, Font
 from pacman.misc.serializers import LevelStorage, SkinStorage
 from pacman.misc.tmp_skin import SkinEnum
 from pacman.misc.util import is_esc_pressed, rand_color
 from pacman.misic import Music
-
-from pacman.objects import SeedContainer, Map, Text, Fruit
-from pacman.objects.heroes import Pacman, Inky, Pinky, Clyde, Blinky
-
+from pacman.objects import Fruit, Map, SeedContainer, Text
+from pacman.objects.heroes import Blinky, Clyde, Inky, Pacman, Pinky
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
 

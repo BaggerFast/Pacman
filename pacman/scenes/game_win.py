@@ -1,6 +1,7 @@
 import pygame as pg
 from pygame import Surface
 from pygame.event import Event
+
 from pacman.data_core import Cfg
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append

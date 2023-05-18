@@ -1,4 +1,4 @@
-from pygame import transform, font, mixer, display
+from pygame import display, font, mixer, transform
 
 from pacman import Game
 from pacman.misc.loaders import load_image

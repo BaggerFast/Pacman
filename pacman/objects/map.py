@@ -6,7 +6,7 @@ from pygame import Surface
 from pacman.data_core import Colors
 from pacman.data_core.interfaces import IDrawable
 from pacman.misc.animator.sprite_sheet import sprite_slice
-from pacman.objects import MovementObject, ImageObject
+from pacman.objects import ImageObject, MovementObject
 
 
 class Map(MovementObject, IDrawable):

@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core.interfaces import ILogical, IEventful
+from pacman.data_core.interfaces import IEventful, ILogical
 
 
 class Cheat:

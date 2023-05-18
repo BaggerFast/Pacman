@@ -1,4 +1,4 @@
-from pygame import image, Surface
+from pygame import Surface, image
 
 from pacman.data_core import PathUtil
 

@@ -1,7 +1,7 @@
 from pygame import Rect
 from pygame.event import Event
 
-from pacman.data_core import Colors, Cfg, GameObjects
+from pacman.data_core import Cfg, Colors, GameObjects
 from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.misc.constants import Font
 from pacman.misc.serializers import LevelStorage

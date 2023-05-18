@@ -2,7 +2,7 @@ from pygame import Surface
 
 from pacman.data_core.game_objects import GameObjects
 from pacman.data_core.interfaces import IDrawable
-from pacman.objects import Inky, Pinky, Clyde, Blinky
+from pacman.objects import Blinky, Clyde, Inky, Pinky
 
 
 class GhostManager(IDrawable):

@@ -1,7 +1,7 @@
 from pacman.data_core import Dirs
 from pacman.misc.animator.animator import Animator
 from pacman.misc.animator.sprite_animator import SpriteSheetAnimator
-from pacman.misc.animator.sprite_sheet import sprite_slice, advanced_sprite_slice
+from pacman.misc.animator.sprite_sheet import advanced_sprite_slice, sprite_slice
 from pacman.objects import ImageObject
 
 

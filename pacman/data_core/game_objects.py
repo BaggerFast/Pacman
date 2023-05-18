@@ -1,8 +1,8 @@
-from typing import List, Iterable
+from typing import Iterable, List
 
 import pygame as pg
 
-from pacman.data_core.interfaces import IDrawable, ILogical, IEventful
+from pacman.data_core.interfaces import IDrawable, IEventful, ILogical
 
 
 class GameObjects(List):

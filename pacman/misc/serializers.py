@@ -2,12 +2,11 @@ from json import JSONDecodeError, dumps, load
 
 from pygame.event import Event
 
-from pacman.misc.skins import Skin
-from pacman.misc.singleton import Singleton
-from pacman.misc.tmp_skin import SkinEnum
-
 from pacman.data_core.interfaces import IEventful
 from pacman.events.events import EvenType
+from pacman.misc.singleton import Singleton
+from pacman.misc.skins import Skin
+from pacman.misc.tmp_skin import SkinEnum
 
 
 class JsonSerializer:
@@ -157,7 +156,6 @@ class SettingsStorage(SerDes):
 
 
 class FruitStorage(SerDes):
-
     def __init__(self):
         self.__fruit_count = 7
         self.eaten_fruits = [0 for _ in range(self.__fruit_count)]
