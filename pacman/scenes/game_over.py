@@ -49,7 +49,7 @@ class GameOverScene(BlurScene):
 
     def on_enter(self) -> None:
         event_append(EvenType.GET_SETTINGS)
-        Music().gameover.play()
+        Music().GAME_OVER.play()
 
     def on_exit(self) -> None:
-        Music().gameover.stop()
+        Music().GAME_OVER.stop()

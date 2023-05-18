@@ -10,5 +10,6 @@ class EvenType(IntEnum):
     WIN = auto()
     LOSE = auto()
     EXIT = auto()
+    UPDATE_SOUND = auto()
     SET_SETTINGS = auto()
     GET_SETTINGS = auto()

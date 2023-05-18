@@ -123,7 +123,7 @@ class Button(MovementObject, IDrawable, IEventful):
         self.state = BtnStateEnum.CLICK
 
     def click(self) -> None:
-        Music().click.play()
+        Music().CLICK.play()
         if isinstance(self.function, Callable):
             self.function()
 

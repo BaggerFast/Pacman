@@ -5,6 +5,7 @@ from pygame.event import Event
 
 from pacman.data_core import Cfg, Dirs, GameObjects, PathUtil
 from pacman.events.events import EvenType
+from pacman.events.utils import event_append
 from pacman.misc import LevelLoader
 from pacman.misc.serializers import LevelStorage, StorageLoader
 from pacman.misic import Music
@@ -57,8 +58,6 @@ class Game:
         self.time_out = 125
         self.animate_timer = 0
 
-        Music().reload_sounds()
-
         self.objects = GameObjects()
         self.objects.append(self.storage_loader)
 
@@ -85,6 +84,7 @@ class Game:
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
+            Music().event_handler(event)
             SceneManager().current.process_event(event)
             self.objects.event_handler(event)
             self.__process_exit_events(event)

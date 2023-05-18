@@ -2,6 +2,8 @@ import pygame as pg
 from pygame.event import Event
 
 from pacman.data_core import Cfg
+from pacman.events.events import EvenType
+from pacman.events.utils import event_append
 from pacman.misc.constants import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS, Font
 from pacman.misc.serializers import SettingsStorage
 from pacman.misc.util import is_esc_pressed
@@ -29,13 +31,14 @@ class SettingsScene(BaseScene):
         def click(self):
             flag_var = not getattr(SettingsStorage(), self.var)
             setattr(SettingsStorage(), self.var, flag_var)
+            event_append(EvenType.UPDATE_SOUND)
             if flag_var:
                 self.text = self.name + " ON"
                 self.colors = BUTTON_GREEN_COLORS
             else:
                 self.text = self.name + " OFF"
                 self.colors = BUTTON_RED_COLORS
-            Music().click.play()
+            Music().CLICK.play()
 
     __volume_position = 150
     __difficulty_pos = 210
@@ -75,6 +78,7 @@ class SettingsScene(BaseScene):
         self.buttons = []
         for i in range(len(names)):
             self.buttons.append(self.SettingButton(names[i][0], i, names[i][1]))
+
         self.buttons += [
             Button(
                 rect=pg.Rect(0, 0, 40, 35),

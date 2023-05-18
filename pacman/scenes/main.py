@@ -22,18 +22,19 @@ class MainScene(BaseScene):
     def __init__(self, game, map_color=None):
         self._map_color = rand_color() if not map_color else map_color
         super().__init__(game)
+        Music().update_fun()
 
     def __play_sound(self):
-        if not Music().siren.is_busy():
-            Music().siren.play()
+        if not Music().BACK.is_busy():
+            Music().BACK.play()
         if self.pacman.animator != self.pacman.dead_anim:
             if any(ghost.state is GhostStateEnum.FRIGHTENED for ghost in self.__ghosts):
-                Music().siren.pause()
-                if not Music().pellet.is_busy():
-                    Music().pellet.play()
+                Music().BACK.pause()
+                if not Music().FRIGHTENED.is_busy():
+                    Music().FRIGHTENED.play()
             else:
-                Music().siren.unpause()
-                Music().pellet.stop()
+                Music().BACK.unpause()
+                Music().FRIGHTENED.stop()
 
     def __create_start_anim(self):
         self.text = []
@@ -64,7 +65,7 @@ class MainScene(BaseScene):
         if self.state is not GameStateEnum.INTRO:
             return
         self.__start_label()
-        if not Music().intro.is_busy():
+        if not Music().INTRO.is_busy():
             self.state = GameStateEnum.ACTION
             self.text.clear()
             for ghost in self.__ghosts:
@@ -75,7 +76,7 @@ class MainScene(BaseScene):
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.state_text = not self.state_text
         text_alpha = 255 if self.state_text else 0
-        if current_time - self._start_time > Music().intro.sound.get_length() / 4 * 3:
+        if current_time - self._start_time > Music().INTRO.sound.get_length() / 4 * 3:
             if len(self.text) > 1:
                 del self.text[0]
         self.text[0].set_alpha(text_alpha)
@@ -101,14 +102,14 @@ class MainScene(BaseScene):
 
     def on_enter(self) -> None:
         if self.pacman.animator != self.pacman.dead_anim:
-            Music().siren.unpause()
+            Music().BACK.unpause()
         if any(ghost.state is GhostStateEnum.FRIGHTENED for ghost in self.__ghosts):
-            Music().siren.pause()
-            Music().pellet.unpause()
+            Music().BACK.pause()
+            Music().FRIGHTENED.unpause()
 
     def on_exit(self) -> None:
-        Music().siren.stop()
-        Music().pellet.stop()
+        Music().BACK.stop()
+        Music().FRIGHTENED.stop()
 
     # endregion
 
@@ -119,8 +120,7 @@ class MainScene(BaseScene):
         }
 
         self.score = Score()
-        Music().intro.play()
-        Music().reload_sounds()
+        Music().INTRO.play()
         self.state = GameStateEnum.INTRO
         self.__loader = LevelLoader(self.game.maps.levels[LevelStorage().current])
         self.__seeds = SeedContainer(self.game, self.__loader.seeds_map, self.__loader.energizers_pos)
@@ -163,7 +163,7 @@ class MainScene(BaseScene):
     def __process_collision(self) -> None:
         pacman_rect = self.pacman.rect
         if self.fruit.process_collision(pacman_rect):
-            Music().fruit.play()
+            Music().FRUIT.play()
             score = self.score.eat_fruit()
             self.fruit.toggle_mode_to_eaten(score)
         elif self.__seeds.energizer_collision(pacman_rect):
@@ -173,8 +173,8 @@ class MainScene(BaseScene):
         elif self.__seeds.seed_collision(pacman_rect):
             self.__seeds_eaten += 1
             self.score.eat_seed()
-            if not Music().seed.is_busy():
-                Music().seed.play()
+            if not Music().SEED.is_busy():
+                Music().SEED.play()
         else:
             for ghost in self.__ghosts:
                 if ghost.collision_check(pacman_rect):
@@ -193,7 +193,7 @@ class MainScene(BaseScene):
             from pacman.scenes.game_win import GameWinScene
 
             SceneManager().reset(GameWinScene(self.game, self._screen, int(self.score)))
-        elif self.pacman.death_is_finished() and not Music().pacman.is_busy():
+        elif self.pacman.death_is_finished() and not Music().DEATH.is_busy():
             if self.hp:
                 self._create_objects()
                 return

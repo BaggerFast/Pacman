@@ -38,16 +38,6 @@ class Colors(ABC):
 
 
 class Sounds(ABC):
-    SEED: Final[str] = "munch"
-    FRUIT: Final[str] = "eat_fruit"
-    GHOST: Final[str] = "eat_ghost"
-    SEED_FUN: Final[str] = "leader"
-    CLICK: Final[str] = "navigation"
-    PELLET: Final[str] = "power_pellet"
-    POC_INTRO: Final[str] = "pokemon_intro"
-    INTERMISSION: Final[str] = "intermission"
-
-    DEAD = PathUtil.get_list_path(f"{Dirs.SOUND}/death", ext="ogg")
-    SIREN = PathUtil.get_list_path(f"{Dirs.SOUND}/siren", ext="ogg")
-    INTRO = PathUtil.get_list_path(f"{Dirs.SOUND}/intro", ext="ogg")
-    GAME_OVER = PathUtil.get_list_path(f"{Dirs.SOUND}/gameover", ext="ogg")
+    FUN_DEAD = PathUtil.get_list_path(f"{Dirs.SOUND}/fun/death", ext="ogg")
+    FUN_INTRO = PathUtil.get_list_path(f"{Dirs.SOUND}/fun/intro", ext="ogg")
+    FUN_GAME_OVER = PathUtil.get_list_path(f"{Dirs.SOUND}/fun/game_over", ext="ogg")

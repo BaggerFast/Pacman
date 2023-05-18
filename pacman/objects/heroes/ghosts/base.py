@@ -141,7 +141,7 @@ class Base(Character):
         self.go_to_random_cell()
         if self.check_ai_timer(self.diffucult_settings.frightened):
             SceneManager().current.score.deactivate_fear_mode()
-            Music().pellet.stop()
+            Music().FRIGHTENED.stop()
             self.deceleration_multiplier = 1
             self.state = GhostStateEnum.SCATTER
             self.animator = self.walk_anim
@@ -206,7 +206,7 @@ class Base(Character):
         self.gg_text.text = f"{score}"
         self.update_ai_timer()
         if self.state is not GhostStateEnum.HIDDEN:
-            Music().ghost.play()
+            Music().GHOST.play()
         self.state = GhostStateEnum.HIDDEN
         self.animator = self.eatten_anim
 
