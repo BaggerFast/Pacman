@@ -4,10 +4,12 @@ from pygame.event import Event
 
 from pacman.data_core import Cfg
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
-from pacman.misc import ControlCheats, LevelLoader, Font, Health, INFINITY_LIVES, Score
+from pacman.misc import ControlCheats, LevelLoader, Health, Score
+from pacman.misc.constants import Font, INFINITY_LIVES
 from pacman.misc.serializers import LevelStorage, SkinStorage
 from pacman.misc.tmp_skin import SkinEnum
 from pacman.misc.util import is_esc_pressed, rand_color
+from pacman.misic import Music
 
 from pacman.objects import SeedContainer, Map, Text, Fruit
 from pacman.objects.heroes import Pacman, Inky, Pinky, Clyde, Blinky
@@ -24,16 +26,16 @@ class MainScene(BaseScene):
         super().__init__(game)
 
     def __play_sound(self):
-        if not self.game.sounds.siren.is_busy():
-            self.game.sounds.siren.play()
+        if not Music().siren.is_busy():
+            Music().siren.play()
         if self.pacman.animator != self.pacman.dead_anim:
             if any(ghost.state is GhostStateEnum.FRIGHTENED for ghost in self.__ghosts):
-                self.game.sounds.siren.pause()
-                if not self.game.sounds.pellet.is_busy():
-                    self.game.sounds.pellet.play()
+                Music().siren.pause()
+                if not Music().pellet.is_busy():
+                    Music().pellet.play()
             else:
-                self.game.sounds.siren.unpause()
-                self.game.sounds.pellet.stop()
+                Music().siren.unpause()
+                Music().pellet.stop()
 
     def __create_start_anim(self):
         self.text = []
@@ -64,7 +66,7 @@ class MainScene(BaseScene):
         if self.state is not GameStateEnum.INTRO:
             return
         self.__start_label()
-        if not self.game.sounds.intro.is_busy():
+        if not Music().intro.is_busy():
             self.state = GameStateEnum.ACTION
             self.text.clear()
             for ghost in self.__ghosts:
@@ -75,7 +77,7 @@ class MainScene(BaseScene):
         if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.state_text = not self.state_text
         text_alpha = 255 if self.state_text else 0
-        if current_time - self._start_time > self.intro_sound.sound.get_length() / 4 * 3:
+        if current_time - self._start_time > Music().intro.sound.get_length() / 4 * 3:
             if len(self.text) > 1:
                 del self.text[0]
         self.text[0].set_alpha(text_alpha)
@@ -101,14 +103,14 @@ class MainScene(BaseScene):
 
     def on_enter(self) -> None:
         if self.pacman.animator != self.pacman.dead_anim:
-            self.game.sounds.siren.unpause()
+            Music().siren.unpause()
         if any(ghost.state is GhostStateEnum.FRIGHTENED for ghost in self.__ghosts):
-            self.game.sounds.siren.pause()
-            self.game.sounds.pellet.unpause()
+            Music().siren.pause()
+            Music().pellet.unpause()
 
     def on_exit(self) -> None:
-        self.game.sounds.siren.stop()
-        self.game.sounds.pellet.stop()
+        Music().siren.stop()
+        Music().pellet.stop()
 
     # endregion
 
@@ -119,13 +121,12 @@ class MainScene(BaseScene):
         }
 
         self.score = Score()
-        self.game.sounds.intro.play()
-        self.game.sounds.reload_sounds()
+        Music().intro.play()
+        Music().reload_sounds()
         self.state = GameStateEnum.INTRO
         self.__loader = LevelLoader(self.game.maps.levels[LevelStorage().current])
         self.__seeds = SeedContainer(self.game, self.__loader.seeds_map, self.__loader.energizers_pos)
         self.__map = Map(self.__loader.map, self._map_color)
-        self.intro_sound = self.game.sounds.intro
         self.__create_start_anim()
         self.hp = Health(3, 4)
         self.__seeds_eaten = 0
@@ -146,11 +147,11 @@ class MainScene(BaseScene):
         self.objects.append(ControlCheats([["aezakmi", self.hp.add]]))
 
     def __create_characters(self):
-        self.pacman = Pacman(self.game, self.__loader)
-        self.inky = Inky(self.game, self.__loader, len(self.__seeds))
-        self.pinky = Pinky(self.game, self.__loader, len(self.__seeds))
-        self.clyde = Clyde(self.game, self.__loader, len(self.__seeds))
-        self.blinky = Blinky(self.game, self.__loader, len(self.__seeds))
+        self.pacman = Pacman(self.__loader)
+        self.inky = Inky(self.__loader, len(self.__seeds))
+        self.pinky = Pinky(self.__loader, len(self.__seeds))
+        self.clyde = Clyde(self.__loader, len(self.__seeds))
+        self.blinky = Blinky(self.__loader, len(self.__seeds))
 
         self.__ghosts = [self.blinky, self.pinky, self.inky, self.clyde]
 
@@ -164,7 +165,7 @@ class MainScene(BaseScene):
     def __process_collision(self) -> None:
         pacman_rect = self.pacman.rect
         if self.fruit.process_collision(pacman_rect):
-            self.game.sounds.fruit.play()
+            Music().fruit.play()
             score = self.score.eat_fruit()
             self.fruit.toggle_mode_to_eaten(score)
         elif self.__seeds.energizer_collision(pacman_rect):
@@ -174,8 +175,8 @@ class MainScene(BaseScene):
         elif self.__seeds.seed_collision(pacman_rect):
             self.__seeds_eaten += 1
             self.score.eat_seed()
-            if not self.game.sounds.seed.is_busy():
-                self.game.sounds.seed.play()
+            if not Music().seed.is_busy():
+                Music().seed.play()
         else:
             for ghost in self.__ghosts:
                 if ghost.collision_check(pacman_rect):
@@ -194,7 +195,7 @@ class MainScene(BaseScene):
             from pacman.scenes.game_win import GameWinScene
 
             SceneManager().reset(GameWinScene(self.game, self._screen, int(self.score)))
-        elif self.pacman.death_is_finished() and not self.game.sounds.pacman.is_busy():
+        elif self.pacman.death_is_finished() and not Music().pacman.is_busy():
             if self.hp:
                 self._create_objects()
                 return

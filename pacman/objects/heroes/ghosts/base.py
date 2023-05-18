@@ -9,6 +9,7 @@ from pacman.misc.animator.animator import Animator
 from pacman.misc.animator.sprite_animator import SpriteSheetAnimator
 from pacman.misc.animator.sprite_sheet import sprite_slice, advanced_sprite_slice
 from pacman.misc.cell_util import CellUtil
+from pacman.misic import Music
 from pacman.objects import Text
 from pacman.objects.heroes.character_base import Character
 from pacman.scene_manager import SceneManager
@@ -33,8 +34,7 @@ class Base(Character):
     direction2 = {0: (1, 0, 0), 1: (0, 1, 1), 2: (-1, 0, 2), 3: (0, -1, 3)}
     PEACEFULL_STATES = (GhostStateEnum.EATEN, GhostStateEnum.HIDDEN, GhostStateEnum.INDOOR)
 
-    def __init__(self, game, loader, seed_count):
-        self.game = game
+    def __init__(self, loader, seed_count):
         self.__seed_count = seed_count
         self.process_logic_iterator = 0
         self.deceleration_multiplier = 1
@@ -141,8 +141,8 @@ class Base(Character):
         self.go_to_random_cell()
         if self.check_ai_timer(self.diffucult_settings.frightened):
             SceneManager().current.score.deactivate_fear_mode()
+            Music().pellet.stop()
             self.deceleration_multiplier = 1
-            self.game.sounds.pellet.stop()
             self.state = GhostStateEnum.SCATTER
             self.animator = self.walk_anim
         elif pg.time.get_ticks() - self.ai_timer >= self.diffucult_settings.frightened - 2000:
@@ -206,7 +206,7 @@ class Base(Character):
         self.gg_text.text = f"{score}"
         self.update_ai_timer()
         if self.state is not GhostStateEnum.HIDDEN:
-            self.game.sounds.ghost.play()
+            Music().ghost.play()
         self.state = GhostStateEnum.HIDDEN
         self.animator = self.eatten_anim
 

@@ -3,7 +3,8 @@ from pygame import Surface, Rect, Color
 
 from pacman.data_core import Colors
 from pacman.data_core.interfaces import IDrawable
-from pacman.misc import Font
+from pacman.misc.constants import Font
+
 from pacman.objects import MovementObject
 
 

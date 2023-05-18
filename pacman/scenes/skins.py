@@ -2,12 +2,13 @@ import pygame as pg
 from pygame.event import Event
 
 from pacman.data_core import Cfg
-from pacman.misc import Font, BUTTON_SKIN_BUY
 from pacman.misc.animator.sprite_sheet import sprite_slice
+from pacman.misc.constants import Font, BUTTON_SKIN_BUY
 from pacman.misc.serializers import SkinStorage, FruitStorage
 from pacman.misc.tmp_skin import SkinEnum
 from pacman.misc.util import is_esc_pressed
-from pacman.objects import ButtonController, Text, Button, ImageObject
+from pacman.objects import Text, ImageObject
+from pacman.objects.buttons import ButtonController, Button
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
 
@@ -95,7 +96,6 @@ class SkinsScene(BaseScene):
             if self.skin_storage.is_unlocked(skin):
                 buttons.append(
                     Button(
-                        game=self.game,
                         rect=pg.Rect(0, 0, 90, 25),
                         text=skin_name,
                         function=lambda s=skin: self.select_skin(s),
@@ -106,7 +106,6 @@ class SkinsScene(BaseScene):
             else:
                 buttons.append(
                     Button(
-                        game=self.game,
                         rect=pg.Rect(0, 0, 90, 25),
                         text=skin_name,
                         function=lambda s=skin: self.select_skin(s),
@@ -118,7 +117,6 @@ class SkinsScene(BaseScene):
 
         buttons.append(
             Button(
-                game=self.game,
                 rect=pg.Rect(0, 0, 180, 40),
                 text="MENU",
                 function=SceneManager().pop,

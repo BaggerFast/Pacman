@@ -3,14 +3,14 @@ import pygame as pg
 from pacman.data_core.interfaces import IEventful
 from pacman.misc.cell_util import CellUtil
 from pacman.misc.serializers import SkinStorage
+from pacman.misic import Music
 from pacman.objects.heroes.character_base import Character
 
 
 class Pacman(Character, IEventful):
     action = {pg.K_w: "up", pg.K_a: "left", pg.K_s: "down", pg.K_d: "right"}
 
-    def __init__(self, game, loader) -> None:
-        self.game = game
+    def __init__(self, loader) -> None:
         skin_instanse = SkinStorage().current_instance
         self.__walk_anim = skin_instanse.walk
         self.__dead_anim = skin_instanse.dead
@@ -46,9 +46,9 @@ class Pacman(Character, IEventful):
     def death(self) -> None:
         self.__ai_timer = pg.time.get_ticks()
         self.animator = self.__dead_anim
-        self.game.sounds.siren.pause()
-        self.game.sounds.pellet.stop()
-        self.game.sounds.pacman.play()
+        Music().siren.pause()
+        Music().pellet.stop()
+        Music().pacman.play()
         self.animator.start()
         self.is_dead = True
 

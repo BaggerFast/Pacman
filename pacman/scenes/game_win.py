@@ -1,14 +1,15 @@
 import pygame as pg
 from pygame import Surface
 from pygame.event import Event
-
 from pacman.data_core import Cfg
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
-from pacman.misc import Font
+from pacman.misc.constants import Font
 from pacman.misc.serializers import LevelStorage
 from pacman.misc.util import is_esc_pressed
-from pacman.objects import ButtonController, Button, Text
+from pacman.misic import Music
+from pacman.objects import Text
+from pacman.objects.buttons import Button, ButtonController
 from pacman.scene_manager import SceneManager
 from pacman.scenes.blur_scene import BlurScene
 
@@ -38,7 +39,6 @@ class GameWinScene(BlurScene):
         if not LevelStorage().is_last_level():
             buttons.append(
                 Button(
-                    game=self.game,
                     rect=pg.Rect(0, 0, 180, 35),
                     function=self.__next_level,
                     text="NEXT LEVEL",
@@ -48,7 +48,6 @@ class GameWinScene(BlurScene):
         else:
             buttons.append(
                 Button(
-                    game=self.game,
                     rect=pg.Rect(0, 0, 180, 35),
                     text="EXIT",
                     function=lambda: SceneManager().reset(MenuScene(self.game)),
@@ -57,7 +56,6 @@ class GameWinScene(BlurScene):
             )
         buttons.append(
             Button(
-                game=self.game,
                 rect=pg.Rect(0, 0, 180, 35),
                 text="MENU",
                 function=lambda: SceneManager().reset(MenuScene(self.game)),
@@ -80,8 +78,8 @@ class GameWinScene(BlurScene):
             SceneManager().reset(MenuScene(self.game))
 
     def on_enter(self) -> None:
-        self.game.sounds.gameover.play()
+        Music().gameover.play()
 
     def on_exit(self) -> None:
         event_append(EvenType.SET_SETTINGS)
-        self.game.sounds.gameover.stop()
+        Music().gameover.stop()

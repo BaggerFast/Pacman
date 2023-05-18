@@ -1,13 +1,13 @@
-import json
-from json import JSONDecodeError
+from json import JSONDecodeError, dumps, load
 
 from pygame.event import Event
 
+from pacman.misc.skins import Skin
+from pacman.misc.singleton import Singleton
+from pacman.misc.tmp_skin import SkinEnum
+
 from pacman.data_core.interfaces import IEventful
 from pacman.events.events import EvenType
-from pacman.misc.singleton import Singleton
-from pacman.misc.skins import Skin
-from pacman.misc.tmp_skin import SkinEnum
 
 
 class JsonSerializer:
@@ -123,7 +123,7 @@ class LevelStorage(SerDes):
         if self.__current > len(self.unlocked) - 1:
             return
         self.unlocked[self.__current].append(int(score))
-        self.unlocked = self.current_highscores()
+        self.unlocked[self.__current] = self.current_highscores()
 
     def is_last_level(self) -> bool:
         return LevelStorage().current + 1 >= self.level_count
@@ -184,14 +184,14 @@ class StorageLoader(IEventful):
         self.__path = path
 
     def to_file(self) -> None:
-        string = json.dumps(MainStorage().serialize(), indent=2)
+        string = dumps(MainStorage().serialize(), indent=2)
         with open(self.__path, "w") as f:
             f.write(string)
 
     def from_file(self) -> None:
         try:
             with open(self.__path, "r") as f:
-                MainStorage().deserialize(json.load(f))
+                MainStorage().deserialize(load(f))
         except (FileNotFoundError, JSONDecodeError):
             self.to_file()
 
@@ -200,4 +200,3 @@ class StorageLoader(IEventful):
             self.to_file()
         elif event.type == EvenType.GET_SETTINGS:
             self.from_file()
-

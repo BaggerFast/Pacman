@@ -11,8 +11,8 @@ class Clyde(Base):
     seed_percent_in_home = 15
     love_point_in_scatter_mode = (0, 32)
 
-    def __init__(self, game, loader, seed_count):
-        super().__init__(game, loader, seed_count)
+    def __init__(self, loader, seed_count):
+        super().__init__(loader, seed_count)
         self.set_direction("up")
 
     @ghost_state(GhostStateEnum.INDOOR)

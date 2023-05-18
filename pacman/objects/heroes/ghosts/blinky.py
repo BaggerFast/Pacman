@@ -10,8 +10,8 @@ from .base import Base, ghost_state
 class Blinky(Base):
     love_point_in_scatter_mode = (33, -3)
 
-    def __init__(self, game, loader, seed_count):
-        super().__init__(game, loader, seed_count)
+    def __init__(self, loader, seed_count):
+        super().__init__(loader, seed_count)
         self.state = GhostStateEnum.CHASE
         self.set_direction(choice(("left", "right")))
 

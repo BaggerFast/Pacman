@@ -1,60 +1,19 @@
-from random import choice
 from typing import List
 
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import PathUtil, Dirs, Sounds, Cfg, GameObjects
+from pacman.data_core import PathUtil, Dirs, Cfg, GameObjects
 from pacman.events.events import EvenType
 from pacman.misc import LevelLoader
-from pacman.misc.serializers import StorageLoader, SettingsStorage, SkinStorage, LevelStorage
-from pacman.misc.sound_controller import SoundController
-from pacman.misc.tmp_skin import SkinEnum
+from pacman.misc.serializers import StorageLoader, LevelStorage
+from pacman.misic import Music
 from pacman.objects import Map, ImageObject
 from pacman.scene_manager import SceneManager
 from pacman.scenes.menu import MenuScene
 
 
 class Game:
-
-    class Music:
-        def __init__(self):
-            self.click = SoundController(sound_path=Sounds.CLICK)
-            self.siren = SoundController(channel=3, sound_path=choice(Sounds.SIREN))
-            self.fruit = SoundController(channel=4, sound_path=Sounds.FRUIT)
-            self.ghost = SoundController(channel=4, sound_path=Sounds.GHOST)
-            self.pellet = SoundController(channel=6, sound_path=Sounds.PELLET)
-            self.menu = SoundController(channel=4, sound_path=Sounds.INTERMISSION)
-
-            if SettingsStorage().fun:
-                self.pacman = SoundController(sound_path=choice(Sounds.DEAD))
-                self.seed = SoundController(channel=4, sound_path=Sounds.SEED_FUN)
-                self.intro = SoundController(channel=1, sound_path=choice(Sounds.INTRO))
-                self.gameover = SoundController(channel=2, sound_path=choice(Sounds.GAME_OVER))
-            else:
-                self.pacman = SoundController(sound_path=Sounds.DEAD[0])
-                self.seed = SoundController(channel=4, sound_path=Sounds.SEED)
-                self.intro = SoundController(
-                    channel=1,
-                    sound_path=(Sounds.INTRO[0] if not SkinStorage().equals(SkinEnum.POKEBALL) else Sounds.POC_INTRO),
-                )
-                self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
-
-        def reload_sounds(self):
-            self.siren = SoundController(channel=3, sound_path=choice(Sounds.SIREN))
-            if SettingsStorage().fun:
-                self.pacman = SoundController(sound_path=choice(Sounds.DEAD))
-                self.seed = SoundController(channel=4, sound_path=Sounds.SEED_FUN)
-                self.intro = SoundController(channel=1, sound_path=choice(Sounds.INTRO))
-                self.gameover = SoundController(channel=2, sound_path=choice(Sounds.GAME_OVER))
-            else:
-                self.pacman = SoundController(sound_path=Sounds.DEAD[0])
-                self.seed = SoundController(channel=4, sound_path=Sounds.SEED)
-                self.intro = SoundController(
-                    channel=1,
-                    sound_path=(Sounds.INTRO[0] if not SkinStorage().equals(SkinEnum.POKEBALL) else Sounds.POC_INTRO),
-                )
-                self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
 
     class Maps:
         def __init__(self):
@@ -98,7 +57,8 @@ class Game:
         self.__clock = pg.time.Clock()
         self.time_out = 125
         self.animate_timer = 0
-        self.sounds = self.Music()
+
+        Music().reload_sounds()
 
         self.objects = GameObjects()
         self.objects.append(self.storage_loader)

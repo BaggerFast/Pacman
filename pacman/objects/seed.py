@@ -3,7 +3,7 @@ from pygame import time, draw, Surface, Rect
 from pacman.data_core import Colors
 from pacman.data_core.data_classes import Cell
 from pacman.data_core.interfaces import IDrawable
-from pacman.misc import HIGH_CALORIE_SEEDS
+from pacman.misc.constants import HIGH_CALORIE_SEEDS
 from pacman.misc.loaders import load_image
 from pacman.objects import MovementObject
 

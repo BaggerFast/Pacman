@@ -2,11 +2,12 @@ from pygame import Rect
 from pygame.event import Event
 
 from pacman.data_core import Colors, Cfg, GameObjects
-from pacman.misc import Font
 from pacman.misc.animator.sprite_sheet import sprite_slice
+from pacman.misc.constants import Font
 from pacman.misc.serializers import LevelStorage
 from pacman.misc.util import is_esc_pressed
-from pacman.objects import ButtonController, ImageObject, Text, Button
+from pacman.objects import ImageObject, Text
+from pacman.objects.buttons import Button, ButtonController
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
 
@@ -28,7 +29,6 @@ class RecordsScene(BaseScene):
 
     def create_buttons(self) -> None:
         back_button = Button(
-            game=self.game,
             rect=Rect(0, 0, 180, 40),
             text="MENU",
             function=SceneManager().pop,

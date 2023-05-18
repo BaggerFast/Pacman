@@ -3,9 +3,11 @@ from pygame import Surface, Rect
 from pacman.data_core import Cfg
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
-from pacman.misc import Font
+from pacman.misc.constants import Font
 from pacman.misc.serializers import LevelStorage
-from pacman.objects import ButtonController, Text, Button
+from pacman.misic import Music
+from pacman.objects import Text
+from pacman.objects.buttons import ButtonController, Button
 from pacman.scene_manager import SceneManager
 from pacman.scenes.blur_scene import BlurScene
 
@@ -37,7 +39,6 @@ class GameOverScene(BlurScene):
         for i, (name, fn) in enumerate(names):
             buttons.append(
                 Button(
-                    game=self.game,
                     rect=Rect(0, 0, 180, 35),
                     text=name,
                     function=fn,
@@ -48,7 +49,7 @@ class GameOverScene(BlurScene):
 
     def on_enter(self) -> None:
         event_append(EvenType.GET_SETTINGS)
-        self.game.sounds.gameover.play()
+        Music().gameover.play()
 
     def on_exit(self) -> None:
-        self.game.sounds.gameover.stop()
+        Music().gameover.stop()

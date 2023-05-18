@@ -2,21 +2,21 @@ import pygame as pg
 from pygame.event import Event
 
 from pacman.data_core import Cfg
-from pacman.misc import Font, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
+from pacman.misc.constants import BUTTON_GREEN_COLORS, Font, BUTTON_RED_COLORS
 from pacman.misc.serializers import SettingsStorage
 from pacman.misc.util import is_esc_pressed
-from pacman.objects import ButtonController, Text
-from pacman.objects.buttons import Button
+from pacman.misic import Music
+from pacman.objects import Text
+from pacman.objects.buttons import Button, ButtonController
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
 
 
 class SettingsScene(BaseScene):
     class SettingButton(Button):
-        def __init__(self, game, name, i, var):
+        def __init__(self, name, i, var):
             flag_var = getattr(SettingsStorage(), var)
             super().__init__(
-                game=game,
                 rect=pg.Rect(0, 0, 180, 35),
                 text=name + (" ON" if flag_var else " OFF"),
                 text_size=Font.BUTTON_TEXT_SIZE,
@@ -27,17 +27,15 @@ class SettingsScene(BaseScene):
             self.var = var
 
         def click(self):
-            self.game.sounds.click.play()
             flag_var = not getattr(SettingsStorage(), self.var)
             setattr(SettingsStorage(), self.var, flag_var)
-            for sound in self.game.sounds.__dict__.keys():
-                self.game.sounds.__dict__[sound].update()
             if flag_var:
                 self.text = self.name + " ON"
                 self.colors = BUTTON_GREEN_COLORS
             else:
                 self.text = self.name + " OFF"
                 self.colors = BUTTON_RED_COLORS
+            Music().click.play()
 
     __volume_position = 150
     __difficulty_pos = 210
@@ -45,7 +43,6 @@ class SettingsScene(BaseScene):
 
     def _create_objects(self) -> None:
         self.difficult_button = Button(
-            game=self.game,
             rect=pg.Rect(0, 0, 120, 35),
             function=self.click_difficult,
             text_size=Font.BUTTON_TEXT_SIZE,
@@ -65,8 +62,6 @@ class SettingsScene(BaseScene):
     def click_sound(self, step):
         SettingsStorage().set_volume(SettingsStorage().volume + step)
         self.volume_value.text = f"{SettingsStorage().volume}%"
-        for sound in self.game.sounds.__dict__.keys():
-            self.game.sounds.__dict__[sound].update()
 
     def click_difficult(self) -> None:
         SettingsStorage().difficulty = (SettingsStorage().difficulty + 1) % len(self.__dificulties)
@@ -79,23 +74,20 @@ class SettingsScene(BaseScene):
         ]
         self.buttons = []
         for i in range(len(names)):
-            self.buttons.append(self.SettingButton(self.game, names[i][0], i, names[i][1]))
+            self.buttons.append(self.SettingButton(names[i][0], i, names[i][1]))
         self.buttons += [
             Button(
-                game=self.game,
                 rect=pg.Rect(0, 0, 40, 35),
                 text="-",
                 function=lambda: self.click_sound(-5),
             ).move_center(Cfg.RESOLUTION.half_width - 60, self.__volume_position + 30),
             Button(
-                game=self.game,
                 rect=pg.Rect(0, 0, 40, 35),
                 text="+",
                 function=lambda: self.click_sound(5),
             ).move_center(Cfg.RESOLUTION.half_width + 65, self.__volume_position + 30),
             self.difficult_button,
             Button(
-                game=self.game,
                 rect=pg.Rect(0, 0, 180, 40),
                 text="BACK",
                 function=SceneManager().pop,

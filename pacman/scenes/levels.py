@@ -2,10 +2,11 @@ import pygame as pg
 from pygame.event import Event
 
 from pacman.data_core import KbKeys, Colors, Cfg
-from pacman.misc import Font
+from pacman.misc.constants import Font
 from pacman.misc.serializers import LevelStorage
 from pacman.misc.util import is_esc_pressed
-from pacman.objects import ButtonController, Text, ImageObject, Button
+from pacman.objects import Text, ImageObject
+from pacman.objects.buttons import ButtonController, Button
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
 
@@ -14,7 +15,6 @@ class LevelsScene(BaseScene):
     def create_buttons(self) -> None:
         buttons = [
             Button(
-                game=self.game,
                 rect=pg.Rect(0, 0, 180, 40),
                 text="",
                 function=SceneManager().pop,

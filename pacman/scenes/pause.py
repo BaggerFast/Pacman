@@ -4,9 +4,10 @@ from pygame.event import Event
 from pacman.data_core import Cfg
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
-from pacman.misc import Font
+from pacman.misc.constants import Font
 from pacman.misc.util import is_esc_pressed
-from pacman.objects import ButtonController, Text, Button
+from pacman.objects import Text
+from pacman.objects.buttons import ButtonController, Button
 from pacman.scene_manager import SceneManager
 from pacman.scenes.blur_scene import BlurScene
 
@@ -36,7 +37,6 @@ class PauseScene(BlurScene):
         for i, (txt, fn) in enumerate(names):
             buttons.append(
                 Button(
-                    game=self.game,
                     rect=pg.Rect(0, 0, 180, 40),
                     text=txt,
                     function=fn,

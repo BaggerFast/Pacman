@@ -4,14 +4,15 @@ import pygame as pg
 
 from pacman.data_core.enums import BtnStateEnum
 from pacman.data_core.interfaces import IDrawable, IEventful
-from pacman.misc import Font, ButtonColor, BUTTON_DEFAULT_COLORS
+from pacman.misc.constants import BUTTON_DEFAULT_COLORS, ButtonColor, Font
+from pacman.misic import Music
+
 from pacman.objects.base import MovementObject
 
 
 class Button(MovementObject, IDrawable, IEventful):
     def __init__(
         self,
-        game,
         rect: Union[tuple, pg.Rect],
         function: Callable = None,
         select_function: Callable = None,
@@ -22,7 +23,6 @@ class Button(MovementObject, IDrawable, IEventful):
         active: bool = True,
     ):
         super().__init__()
-        self.game = game
         self.rect = rect
         self.function = function
         self.select_function = select_function
@@ -124,7 +124,7 @@ class Button(MovementObject, IDrawable, IEventful):
         self.state = BtnStateEnum.CLICK
 
     def click(self) -> None:
-        self.game.sounds.click.play()
+        Music().click.play()
         if isinstance(self.function, Callable):
             self.function()
 

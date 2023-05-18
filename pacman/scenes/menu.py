@@ -4,10 +4,11 @@ from pygame.event import Event
 from pacman.data_core import Colors, Cfg
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
-from pacman.misc import Font
+from pacman.misc.constants import Font
 from pacman.misc.serializers import LevelStorage
 from pacman.misc.util import rand_color, is_esc_pressed
-from pacman.objects import ButtonController, Text, Button, ImageObject
+from pacman.objects import Text, ImageObject
+from pacman.objects.buttons import ButtonController, Button
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
 
@@ -49,7 +50,6 @@ class MenuScene(BaseScene):
         for i, (name, fn) in enumerate(names):
             buttons.append(
                 Button(
-                    game=self.game,
                     rect=Rect(0, 0, 180, 26),
                     text=name,
                     function=fn,
