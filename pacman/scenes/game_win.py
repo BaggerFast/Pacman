@@ -2,7 +2,7 @@ import pygame as pg
 from pygame import Surface
 from pygame.event import Event
 
-from pacman.data_core import Config
+from pacman.data_core import Cfg
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
 from pacman.misc import Font
@@ -23,10 +23,10 @@ class GameWinScene(BlurScene):
         LevelStorage().add_record(self.score)
         LevelStorage().unlock_next_level()
         self.objects += [
-            Text("YOU", 40, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
-            Text("WON", 40, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 70),
-            Text(f"Score: {self.score}", 20).move_center(Config.RESOLUTION.half_width, 135),
-            Text(f"High score: {LevelStorage().get_highscore()}", 20).move_center(Config.RESOLUTION.half_width, 165),
+            Text("YOU", 40, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
+            Text("WON", 40, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 70),
+            Text(f"Score: {self.score}", 20).move_center(Cfg.RESOLUTION.half_width, 135),
+            Text(f"High score: {LevelStorage().get_highscore()}", 20).move_center(Cfg.RESOLUTION.half_width, 165),
         ]
         self.create_buttons()
 
@@ -43,7 +43,7 @@ class GameWinScene(BlurScene):
                     function=self.__next_level,
                     text="NEXT LEVEL",
                     text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Config.RESOLUTION.half_width, 210)
+                ).move_center(Cfg.RESOLUTION.half_width, 210)
             )
         else:
             buttons.append(
@@ -53,7 +53,7 @@ class GameWinScene(BlurScene):
                     text="EXIT",
                     function=lambda: SceneManager().reset(MenuScene(self.game)),
                     text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Config.RESOLUTION.half_width, 210)
+                ).move_center(Cfg.RESOLUTION.half_width, 210)
             )
         buttons.append(
             Button(
@@ -62,7 +62,7 @@ class GameWinScene(BlurScene):
                 text="MENU",
                 function=lambda: SceneManager().reset(MenuScene(self.game)),
                 text_size=Font.BUTTON_TEXT_SIZE,
-            ).move_center(Config.RESOLUTION.half_width, 250)
+            ).move_center(Cfg.RESOLUTION.half_width, 250)
         )
         self.objects.append(ButtonController(buttons))
 

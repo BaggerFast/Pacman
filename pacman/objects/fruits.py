@@ -2,7 +2,7 @@ import pygame as pg
 from pygame import Surface
 
 from pacman.data_core.enums import FruitStateEnum
-from pacman.data_core.game_objects import GameObjects
+from pacman.data_core import GameObjects
 from pacman.data_core.interfaces import IDrawable, ILogical
 from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.misc.cell_util import CellUtil

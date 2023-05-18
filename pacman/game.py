@@ -4,7 +4,7 @@ from typing import List
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import PathManager, Dirs, Sounds, Config
+from pacman.data_core import PathUtil, Dirs, Sounds, Cfg, GameObjects
 from pacman.events.events import EvenType
 from pacman.misc import LevelLoader
 from pacman.misc.serializers import StorageLoader, SettingsStorage, SkinStorage, LevelStorage
@@ -40,7 +40,7 @@ class Game:
                 )
                 self.gameover = SoundController(channel=2, sound_path=Sounds.GAME_OVER[0])
 
-        def reload_sounds(self, game):
+        def reload_sounds(self):
             self.siren = SoundController(channel=3, sound_path=choice(Sounds.SIREN))
             if SettingsStorage().fun:
                 self.pacman = SoundController(sound_path=choice(Sounds.DEAD))
@@ -78,7 +78,7 @@ class Game:
             self.__map = Map(self.__map_data)
 
         def read_levels(self) -> None:
-            self.levels = PathManager.get_list_path(f"{Dirs.ASSET}/maps", ext="json")
+            self.levels = PathUtil.get_list_path(f"{Dirs.ASSET}/maps", ext="json")
             self.count = len(self.levels)
 
         def prerender_surfaces(self) -> list[ImageObject]:
@@ -90,15 +90,18 @@ class Game:
             return images
 
     def __init__(self) -> None:
-        self.storage_loader = StorageLoader(PathManager.get_path("storage.json"))
+        self.storage_loader = StorageLoader(PathUtil.get("storage.json"))
         self.storage_loader.from_file()
 
         self.maps = self.Maps()
-        self._screen = pg.display.set_mode(tuple(Config.RESOLUTION), pg.SCALED)
+        self._screen = pg.display.set_mode(tuple(Cfg.RESOLUTION), pg.SCALED)
         self.__clock = pg.time.Clock()
         self.time_out = 125
         self.animate_timer = 0
-        self.sounds = self.Music(self)
+        self.sounds = self.Music()
+
+        self.objects = GameObjects()
+        self.objects.append(self.storage_loader)
 
         SceneManager().reset(MenuScene(self))
 
@@ -111,10 +114,6 @@ class Game:
     def __process_exit_events(self, event: Event) -> None:
         if event.type in (pg.QUIT, EvenType.EXIT) or Game.__exit_hotkey_pressed(event):
             self.exit_game()
-        elif event.type == EvenType.SET_SETTINGS:
-            self.storage_loader.to_file()
-        elif event.type == EvenType.GET_SETTINGS:
-            self.storage_loader.from_file()
 
     def exit_game(self) -> None:
         self.storage_loader.to_file()
@@ -128,6 +127,7 @@ class Game:
     def __process_all_events(self) -> None:
         for event in pg.event.get():
             SceneManager().current.process_event(event)
+            self.objects.event_handler(event)
             self.__process_exit_events(event)
 
     def __process_all_logic(self) -> None:
@@ -142,6 +142,6 @@ class Game:
             self.__process_all_events()
             self.__process_all_logic()
             self.__process_all_draw()
-            self.__clock.tick(Config.FPS)
+            self.__clock.tick(Cfg.FPS)
 
     # endregion

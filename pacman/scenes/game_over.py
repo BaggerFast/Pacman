@@ -1,6 +1,6 @@
 from pygame import Surface, Rect
 
-from pacman.data_core import Config
+from pacman.data_core import Cfg
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
 from pacman.misc import Font
@@ -18,10 +18,10 @@ class GameOverScene(BlurScene):
     def _create_objects(self) -> None:
         super()._create_objects()
         self.objects += [
-            Text("GAME", 40, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
-            Text("OVER", 40, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 70),
-            Text(f"Score: {self.score}", 20).move_center(Config.RESOLUTION.half_width, 135),
-            Text(f"High score: {LevelStorage().get_highscore()}", 20).move_center(Config.RESOLUTION.half_width, 165),
+            Text("GAME", 40, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
+            Text("OVER", 40, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 70),
+            Text(f"Score: {self.score}", 20).move_center(Cfg.RESOLUTION.half_width, 135),
+            Text(f"High score: {LevelStorage().get_highscore()}", 20).move_center(Cfg.RESOLUTION.half_width, 165),
         ]
         self.create_buttons()
 
@@ -42,7 +42,7 @@ class GameOverScene(BlurScene):
                     text=name,
                     function=fn,
                     text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Config.RESOLUTION.half_width, 210 + 40 * i)
+                ).move_center(Cfg.RESOLUTION.half_width, 210 + 40 * i)
             )
         self.objects.append(ButtonController(buttons))
 

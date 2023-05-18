@@ -2,7 +2,7 @@ from typing import Tuple, List
 
 import pygame as pg
 
-from pacman.data_core import Config
+from pacman.data_core import Cfg
 from pacman.data_core.interfaces import ILogical, IDrawable
 from pacman.misc import LevelLoader
 from pacman.misc.animator.animator import Animator
@@ -37,11 +37,11 @@ class Character(MovementObject, ILogical, IDrawable):
 
     def step(self) -> None:
         self.rect.centerx = (
-            self.rect.centerx + self.shift_x * self.speed + Config.RESOLUTION.WIDTH
-        ) % Config.RESOLUTION.WIDTH
+            self.rect.centerx + self.shift_x * self.speed + Cfg.RESOLUTION.WIDTH
+        ) % Cfg.RESOLUTION.WIDTH
         self.rect.centery = (
-            self.rect.centery + self.shift_y * self.speed + Config.RESOLUTION.HEIGHT
-        ) % Config.RESOLUTION.HEIGHT
+            self.rect.centery + self.shift_y * self.speed + Cfg.RESOLUTION.HEIGHT
+        ) % Cfg.RESOLUTION.HEIGHT
 
     def go(self) -> None:
         if self.speed != 0:
@@ -71,7 +71,7 @@ class Character(MovementObject, ILogical, IDrawable):
             screen.blit(self.__aura, (rect_x, rect_y))
             screen.blit(
                 self.animator.current_image,
-                (self.rect.x + Config.RESOLUTION.WIDTH * i, self.rect.y),
+                (self.rect.x + Cfg.RESOLUTION.WIDTH * i, self.rect.y),
             )
 
     def movement_cell(self, cell: Tuple[int, int]) -> list:

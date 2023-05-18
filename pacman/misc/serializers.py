@@ -1,5 +1,10 @@
 import json
 from json import JSONDecodeError
+
+from pygame.event import Event
+
+from pacman.data_core.interfaces import IEventful
+from pacman.events.events import EvenType
 from pacman.misc.singleton import Singleton
 from pacman.misc.skins import Skin
 from pacman.misc.tmp_skin import SkinEnum
@@ -174,7 +179,7 @@ class MainStorage(SerDes):
         self.__fruit = FruitStorage()
 
 
-class StorageLoader:
+class StorageLoader(IEventful):
     def __init__(self, path: str):
         self.__path = path
 
@@ -189,3 +194,10 @@ class StorageLoader:
                 MainStorage().deserialize(json.load(f))
         except (FileNotFoundError, JSONDecodeError):
             self.to_file()
+
+    def event_handler(self, event: Event):
+        if event.type == EvenType.SET_SETTINGS:
+            self.to_file()
+        elif event.type == EvenType.GET_SETTINGS:
+            self.from_file()
+

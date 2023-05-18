@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import Config
+from pacman.data_core import Cfg
 from pacman.misc import Font, BUTTON_SKIN_BUY
 from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.misc.serializers import SkinStorage, FruitStorage
@@ -15,7 +15,7 @@ from pacman.scenes.base_scene import BaseScene
 class SkinsScene(BaseScene):
     def _create_objects(self) -> None:
         self.skin_storage = SkinStorage()
-        self.button_pos_x = Config.RESOLUTION.half_width - 65
+        self.button_pos_x = Cfg.RESOLUTION.half_width - 65
         self.button_pos_y = 90
         self.button_pos_multiply_y = 25
 
@@ -32,7 +32,7 @@ class SkinsScene(BaseScene):
         self.preview = self.skin_storage.current_instance.prerender_surface()
 
         self.objects += [
-            Text("SELECT SKIN", 25, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
+            Text("SELECT SKIN", 25, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
             self.preview,
         ]
         self.create_buttons()
@@ -42,8 +42,8 @@ class SkinsScene(BaseScene):
     def create_fruits_and_text_we_have(self) -> None:
         for i, fruit_img in enumerate(self.fruit_images):
             self.objects += [
-                ImageObject(fruit_img, (Config.RESOLUTION.WIDTH // 7 + i * 25, 60)),
-                Text(f"{FruitStorage().eaten_fruits[i]}", 10).move_center(Config.RESOLUTION.WIDTH // 7 + i * 25, 60),
+                ImageObject(fruit_img, (Cfg.RESOLUTION.WIDTH // 7 + i * 25, 60)),
+                Text(f"{FruitStorage().eaten_fruits[i]}", 10).move_center(Cfg.RESOLUTION.WIDTH // 7 + i * 25, 60),
             ]
 
     def create_fruits_and_text_for_skins(self) -> None:
@@ -124,7 +124,7 @@ class SkinsScene(BaseScene):
                 function=SceneManager().pop,
                 select_function=lambda: self.skin_button(self.skin_storage.current),
                 text_size=Font.BUTTON_TEXT_SIZE,
-            ).move_center(Config.RESOLUTION.half_width, 250)
+            ).move_center(Cfg.RESOLUTION.half_width, 250)
         )
         self.objects.append(ButtonController(buttons))
 

@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import Config
+from pacman.data_core import Cfg
 from pacman.misc import Font, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from pacman.misc.serializers import SettingsStorage
 from pacman.misc.util import is_esc_pressed
@@ -22,7 +22,7 @@ class SettingsScene(BaseScene):
                 text_size=Font.BUTTON_TEXT_SIZE,
                 colors=BUTTON_GREEN_COLORS if flag_var else BUTTON_RED_COLORS,
             )
-            self.move_center(Config.RESOLUTION.half_width, 75 + i * 40)
+            self.move_center(Cfg.RESOLUTION.half_width, 75 + i * 40)
             self.name = name
             self.var = var
 
@@ -50,15 +50,15 @@ class SettingsScene(BaseScene):
             function=self.click_difficult,
             text_size=Font.BUTTON_TEXT_SIZE,
             text=self.__dificulties[SettingsStorage().difficulty],
-        ).move_center(Config.RESOLUTION.half_width, self.__difficulty_pos)
+        ).move_center(Cfg.RESOLUTION.half_width, self.__difficulty_pos)
         self.create_buttons()
         self.volume_value = Text(f"{SettingsStorage().volume}%", 20).move_center(
-            Config.RESOLUTION.half_width,
+            Cfg.RESOLUTION.half_width,
             self.__volume_position + 30,
         )
         self.objects += [
-            Text("SETTINGS", 30, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
-            Text("VOLUME", 20).move_center(Config.RESOLUTION.half_width, self.__volume_position),
+            Text("SETTINGS", 30, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
+            Text("VOLUME", 20).move_center(Cfg.RESOLUTION.half_width, self.__volume_position),
             self.volume_value,
         ]
 
@@ -86,13 +86,13 @@ class SettingsScene(BaseScene):
                 rect=pg.Rect(0, 0, 40, 35),
                 text="-",
                 function=lambda: self.click_sound(-5),
-            ).move_center(Config.RESOLUTION.half_width - 60, self.__volume_position + 30),
+            ).move_center(Cfg.RESOLUTION.half_width - 60, self.__volume_position + 30),
             Button(
                 game=self.game,
                 rect=pg.Rect(0, 0, 40, 35),
                 text="+",
                 function=lambda: self.click_sound(5),
-            ).move_center(Config.RESOLUTION.half_width + 65, self.__volume_position + 30),
+            ).move_center(Cfg.RESOLUTION.half_width + 65, self.__volume_position + 30),
             self.difficult_button,
             Button(
                 game=self.game,
@@ -100,7 +100,7 @@ class SettingsScene(BaseScene):
                 text="BACK",
                 function=SceneManager().pop,
                 text_size=Font.BUTTON_TEXT_SIZE,
-            ).move_center(Config.RESOLUTION.half_width, 250),
+            ).move_center(Cfg.RESOLUTION.half_width, 250),
         ]
         self.objects.append(ButtonController(self.buttons))
 

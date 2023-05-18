@@ -1,8 +1,7 @@
 from pygame import Rect
 from pygame.event import Event
 
-from pacman.data_core import Colors, Config
-from pacman.data_core.game_objects import GameObjects
+from pacman.data_core import Colors, Cfg, GameObjects
 from pacman.misc import Font
 from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.misc.serializers import LevelStorage
@@ -16,13 +15,13 @@ class RecordsScene(BaseScene):
     def _create_objects(self) -> None:
         super()._create_objects()
         self.__indicator = Text(f"level {LevelStorage().current + 1}", 12, font=Font.DEFAULT).move_center(
-            Config.RESOLUTION.half_width, 55
+            Cfg.RESOLUTION.half_width, 55
         )
         self.objects += [
             self.__indicator,
-            Text("RECORDS", 32, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
+            Text("RECORDS", 32, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
         ]
-        self.__error_text = Text("NO RECORDS", 24, color=Colors.RED).move_center(Config.RESOLUTION.half_width, 100)
+        self.__error_text = Text("NO RECORDS", 24, color=Colors.RED).move_center(Cfg.RESOLUTION.half_width, 100)
         self.__create_text_labels()
         self.__create_medals()
         self.create_buttons()
@@ -34,7 +33,7 @@ class RecordsScene(BaseScene):
             text="MENU",
             function=SceneManager().pop,
             text_size=Font.BUTTON_TEXT_SIZE,
-        ).move_center(Config.RESOLUTION.half_width, 250)
+        ).move_center(Cfg.RESOLUTION.half_width, 250)
         self.objects.append(ButtonController([back_button]))
 
     def __create_text_labels(self) -> None:

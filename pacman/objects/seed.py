@@ -1,9 +1,10 @@
-import pygame as pg
+from pygame import time, draw, Surface, Rect
 
-from pacman.data_core import Colors, PathManager
+from pacman.data_core import Colors
 from pacman.data_core.data_classes import Cell
 from pacman.data_core.interfaces import IDrawable
 from pacman.misc import HIGH_CALORIE_SEEDS
+from pacman.misc.loaders import load_image
 from pacman.objects import MovementObject
 
 
@@ -13,7 +14,7 @@ class SeedContainer(MovementObject, IDrawable):
         self.game = game
         self.__seeds = self.prepare_seeds(seed_data)
         self.__energizers = self.prepare_energizers(energizer_data)
-        self.__ram_img = pg.image.load(PathManager.get_image_path("ram"))
+        self.__ram_img = load_image("ram")
 
         self.__show_energizer = True
         self.__max_seeds = len(self.__seeds)
@@ -40,7 +41,7 @@ class SeedContainer(MovementObject, IDrawable):
             #         seed.rect.center,
             #     )
             #     continue
-            pg.draw.circle(
+            draw.circle(
                 screen,
                 Colors.WHITE,
                 seed.rect.center,
@@ -48,24 +49,24 @@ class SeedContainer(MovementObject, IDrawable):
             )
 
     def __draw_energizers(self, screen) -> None:
-        if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
-            self.game.animate_timer = pg.time.get_ticks()
+        if time.get_ticks() - self.game.animate_timer > self.game.time_out:
+            self.game.animate_timer = time.get_ticks()
             self.__show_energizer = not self.__show_energizer
         if not self.__show_energizer:
             return
         for energizer in self.__energizers:
-            pg.draw.circle(
+            draw.circle(
                 screen,
                 Colors.WHITE,
                 energizer.rect.center,
                 4,
             )
 
-    def draw(self, screen: pg.Surface) -> None:
+    def draw(self, screen: Surface) -> None:
         self.__draw_seeds(screen)
         self.__draw_energizers(screen)
 
-    def seed_collision(self, rect: pg.Rect) -> bool:
+    def seed_collision(self, rect: Rect) -> bool:
         if not len(self.__seeds):
             return False
         for i, cell in enumerate(self.__seeds):
@@ -74,7 +75,7 @@ class SeedContainer(MovementObject, IDrawable):
                 return True
         return False
 
-    def energizer_collision(self, rect: pg.Rect) -> bool:
+    def energizer_collision(self, rect: Rect) -> bool:
         for i, energizer in enumerate(self.__energizers):
             if energizer.rect.center == rect.center:
                 del self.__energizers[i]

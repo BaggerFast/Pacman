@@ -1,9 +1,7 @@
-from pygame import Surface
-from pygame import time
+from pygame import Surface, time
 from pygame.event import Event
 
-from pacman.data_core import Config, Colors
-from pacman.data_core.game_objects import GameObjects
+from pacman.data_core import Cfg, Colors, GameObjects
 
 
 class BaseScene:
@@ -11,7 +9,7 @@ class BaseScene:
         self.game = game
         self._start_time = time.get_ticks() / 1000
         self.pre_init()
-        self._screen = Surface(tuple(Config.RESOLUTION))
+        self._screen = Surface(tuple(Cfg.RESOLUTION))
         self.objects = GameObjects()
 
     def pre_init(self):

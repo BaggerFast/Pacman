@@ -1,7 +1,7 @@
 from pygame import Surface, Rect
 from pygame.event import Event
 
-from pacman.data_core import Colors, Config
+from pacman.data_core import Colors, Cfg
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
 from pacman.misc import Font
@@ -17,9 +17,9 @@ class MenuScene(BaseScene):
         super()._create_objects()
         self.__map_color = rand_color()
         self.preview = self.generate_map_preview()
-        self.__level_text = Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 60)
+        self.__level_text = Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 60)
         self.objects += [
-            Text("PACMAN", 36, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 30),
+            Text("PACMAN", 36, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
             self.__level_text,
         ]
         self.create_buttons()
@@ -54,7 +54,7 @@ class MenuScene(BaseScene):
                     text=name,
                     function=fn,
                     text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Config.RESOLUTION.half_width, 95 + i * 28)
+                ).move_center(Cfg.RESOLUTION.half_width, 95 + i * 28)
             )
         self.objects.append(ButtonController(buttons))
 
@@ -73,7 +73,7 @@ class MenuScene(BaseScene):
         return (
             ImageObject(self.game.maps.full_surface)
             .swap_color(Colors.MAIN_MAP, self.__map_color)
-            .scale(*tuple(Config.RESOLUTION))
+            .scale(*tuple(Cfg.RESOLUTION))
             .blur(3)
         )
 

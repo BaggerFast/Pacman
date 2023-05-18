@@ -2,16 +2,16 @@ import pygame as pg
 from pygame import Surface
 from pygame.event import Event
 
-from pacman.data_core import Config
+from pacman.data_core import Cfg
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
 from pacman.misc import ControlCheats, LevelLoader, Font, Health, INFINITY_LIVES, Score
 from pacman.misc.serializers import LevelStorage, SkinStorage
 from pacman.misc.tmp_skin import SkinEnum
 from pacman.misc.util import is_esc_pressed, rand_color
-from pacman.objects import SeedContainer, Map, Text
-from pacman.objects.fruits import Fruit
-from pacman.objects.heroes.ghosts import Inky, Pinky, Clyde, Blinky
-from pacman.objects.heroes.pacman import Pacman
+
+from pacman.objects import SeedContainer, Map, Text, Fruit
+from pacman.objects.heroes import Pacman, Inky, Pinky, Clyde, Blinky
+
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
 
@@ -39,7 +39,7 @@ class MainScene(BaseScene):
         self.text = []
         for i, txt in enumerate(["READY", "GO!"]):
             self.text.append(Text(txt, 30, rect=pg.Rect(20, 0, 20, 20), font=Font.TITLE))
-            self.text[-1].move_center(Config.RESOLUTION.half_width, Config.RESOLUTION.half_height)
+            self.text[-1].move_center(Cfg.RESOLUTION.half_width, Cfg.RESOLUTION.half_height)
 
     def __create_hud(self):
         self.objects += [
@@ -104,7 +104,7 @@ class MainScene(BaseScene):
             self.game.sounds.siren.unpause()
         if any(ghost.state is GhostStateEnum.FRIGHTENED for ghost in self.__ghosts):
             self.game.sounds.siren.pause()
-            self.game.sounds.pellet.play()
+            self.game.sounds.pellet.unpause()
 
     def on_exit(self) -> None:
         self.game.sounds.siren.stop()
@@ -120,7 +120,7 @@ class MainScene(BaseScene):
 
         self.score = Score()
         self.game.sounds.intro.play()
-        self.game.sounds.reload_sounds(self.game)
+        self.game.sounds.reload_sounds()
         self.state = GameStateEnum.INTRO
         self.__loader = LevelLoader(self.game.maps.levels[LevelStorage().current])
         self.__seeds = SeedContainer(self.game, self.__loader.seeds_map, self.__loader.energizers_pos)

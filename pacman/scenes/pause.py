@@ -1,7 +1,7 @@
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import Config
+from pacman.data_core import Cfg
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
 from pacman.misc import Font
@@ -41,11 +41,11 @@ class PauseScene(BlurScene):
                     text=txt,
                     function=fn,
                     text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Config.RESOLUTION.half_width, 100 + 45 * i)
+                ).move_center(Cfg.RESOLUTION.half_width, 100 + 45 * i)
             )
         self.objects += [
             ButtonController(buttons),
-            Text("PAUSE", 40, font=Font.TITLE).move_center(Config.RESOLUTION.half_width, 35),
+            Text("PAUSE", 40, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 35),
         ]
 
     def process_event(self, event: Event) -> None:
