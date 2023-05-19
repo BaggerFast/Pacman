@@ -1,11 +1,11 @@
-from pygame import Rect, Surface
+from pygame import Rect, Surface, draw, transform
 from pygame.event import Event
 
 from pacman.data_core import Cfg, Colors
 from pacman.events.events import EvenType
 from pacman.events.utils import event_append
 from pacman.misc.constants import Font
-from pacman.misc.serializers import LevelStorage
+from pacman.misc.serializers import LevelStorage, SkinStorage
 from pacman.misc.util import is_esc_pressed, rand_color
 from pacman.objects import ImageObject, Text
 from pacman.objects.buttons import Button, ButtonController
@@ -23,6 +23,7 @@ class MenuScene(BaseScene):
             Text("PACMAN", 36, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
             self.__level_text,
         ]
+        self.pacman_anim = SkinStorage().current_instance.walk
         self.create_buttons()
 
     def play_game(self) -> None:
@@ -54,7 +55,7 @@ class MenuScene(BaseScene):
                     text=name,
                     function=fn,
                     text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Cfg.RESOLUTION.half_width, 95 + i * 28)
+                ).move_center(Cfg.RESOLUTION.half_width // 1.5, 92 + i * 28)
             )
         self.objects.append(ButtonController(buttons))
 
@@ -66,7 +67,11 @@ class MenuScene(BaseScene):
     def draw(self) -> Surface:
         self.preview.draw(self._screen)
         self.objects.draw(self._screen)
+        ImageObject(self.pacman_anim.current_image).scale(75, 75).move_center(Cfg.RESOLUTION.half_width + Cfg.RESOLUTION.half_width // 2, Cfg.RESOLUTION.half_height).draw(self._screen)
         return self._screen
+
+    def process_logic(self) -> None:
+        self.pacman_anim.update()
 
     def generate_map_preview(self) -> ImageObject:
         self.__map_color = rand_color()
@@ -78,4 +83,5 @@ class MenuScene(BaseScene):
         )
 
     def on_enter(self) -> None:
+        self.pacman_anim = SkinStorage().current_instance.walk
         self.__level_text.text = f"{LevelStorage()}"

@@ -4,8 +4,7 @@ from pacman.data_core import Colors
 from pacman.data_core.data_classes import Cell
 from pacman.data_core.interfaces import IDrawable
 from pacman.misc.constants import HIGH_CALORIE_SEEDS
-from pacman.misc.loaders import load_image
-from pacman.objects import MovementObject
+from pacman.objects import MovementObject, ImageObject
 
 
 class SeedContainer(MovementObject, IDrawable):
@@ -14,7 +13,9 @@ class SeedContainer(MovementObject, IDrawable):
         self.game = game
         self.__seeds = self.prepare_seeds(seed_data)
         self.__energizers = self.prepare_energizers(energizer_data)
-        self.__ram_img = load_image("ram")
+
+        self.__ram_img = ImageObject("pacman/chrome/seed")
+        self.__yandex_img = ImageObject("pacman/chrome/energizer")
 
         self.__show_energizer = True
         self.__max_seeds = len(self.__seeds)
@@ -34,19 +35,15 @@ class SeedContainer(MovementObject, IDrawable):
         return [Cell(*cell) for cell in energizer_data]
 
     def __draw_seeds(self, screen) -> None:
+        from pacman.misc.tmp_skin import SkinEnum
+        from pacman.misc.serializers import SkinStorage
+
+        if SkinStorage().equals(SkinEnum.CHROME):
+            for seed in self.__seeds:
+                self.__ram_img.move_center(*seed.rect.center).draw(screen)
+            return
         for seed in self.__seeds:
-            # if self.game.skins.current.name == "chrome":
-            #     screen.blit(
-            #         self.__ram_img,
-            #         seed.rect.center,
-            #     )
-            #     continue
-            draw.circle(
-                screen,
-                Colors.WHITE,
-                seed.rect.center,
-                1,
-            )
+            draw.circle(screen, Colors.WHITE, seed.rect.center, 1)
 
     def __draw_energizers(self, screen) -> None:
         if time.get_ticks() - self.game.animate_timer > self.game.time_out:
@@ -54,13 +51,15 @@ class SeedContainer(MovementObject, IDrawable):
             self.__show_energizer = not self.__show_energizer
         if not self.__show_energizer:
             return
+        from pacman.misc.tmp_skin import SkinEnum
+        from pacman.misc.serializers import SkinStorage
+
+        if SkinStorage().equals(SkinEnum.CHROME):
+            for energizer in self.__energizers:
+                self.__yandex_img.move_center(*energizer.rect.center).draw(screen)
+            return
         for energizer in self.__energizers:
-            draw.circle(
-                screen,
-                Colors.WHITE,
-                energizer.rect.center,
-                4,
-            )
+            draw.circle(screen, Colors.WHITE, energizer.rect.center, 4)
 
     def draw(self, screen: Surface) -> None:
         self.__draw_seeds(screen)

@@ -3,7 +3,7 @@ from copy import copy
 import pygame as pg
 from pygame import Surface
 
-from pacman.data_core import Colors
+from pacman.data_core import Colors, Cfg
 from pacman.data_core.interfaces import IDrawable
 from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.objects import ImageObject, MovementObject
@@ -40,8 +40,7 @@ class Map(MovementObject, IDrawable):
         return copy(self._image)
 
     def prerender_map_image_scaled(self) -> ImageObject:
-        image = ImageObject(self.prerender_map_surface(), (110, 96))
-        return image
+        return ImageObject(self.prerender_map_surface())
 
     def draw(self, screen: Surface) -> None:
         screen.blit(self.surface_for_draw, (0, 20))

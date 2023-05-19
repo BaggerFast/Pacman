@@ -43,8 +43,9 @@ class MainScene(BaseScene):
             self.text[-1].move_center(Cfg.RESOLUTION.half_width, Cfg.RESOLUTION.half_height)
 
     def __create_hud(self):
+        text = f"{'MAX MB' if SkinStorage().equals(SkinEnum.CHROME) else 'HIGHSCORE'}"
         self.objects += [
-            Text("HIGHSCORE", Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)),
+            Text(text, Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)),
             Text(f"{LevelStorage().get_highscore()}", size=Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 8, 20, 20)),
             Text(
                 text="MEMORY" if SkinStorage().equals(SkinEnum.CHROME) else "SCORE",
@@ -131,7 +132,7 @@ class MainScene(BaseScene):
         self.fruit = Fruit(self.__loader.fruit_pos)
         self.state_text = True
         self.__scores_value_text = Text(
-            f"{'Mb' if SkinStorage().equals(SkinEnum.CHROME) else self.score}",
+            f"{self.score} {'Mb' if SkinStorage().equals(SkinEnum.CHROME) else ''}",
             size=Font.MAIN_SCENE_SIZE,
             rect=pg.Rect(10, 8, 20, 20),
         )
@@ -202,7 +203,7 @@ class MainScene(BaseScene):
             SceneManager().reset(GameOverScene(self.game, self._screen, int(self.score)))
 
     def __update_score_text(self):
-        self.__scores_value_text.text = f"{'Mb' if SkinStorage().equals(SkinEnum.CHROME) else self.score}"
+        self.__scores_value_text.text = f"{self.score} {'Mb' if SkinStorage().equals(SkinEnum.CHROME) else ''}"
 
     def game_logic(self):
         super().process_logic()

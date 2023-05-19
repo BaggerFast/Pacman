@@ -1,6 +1,6 @@
 from .base import MovementObject
 from .image import ImageObject
-from .map import Map
 from .seed import SeedContainer
+from .map import Map
 from .text import Text
 from .fruits import Fruit

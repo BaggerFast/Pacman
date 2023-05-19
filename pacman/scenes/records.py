@@ -15,11 +15,9 @@ from pacman.scenes.base_scene import BaseScene
 class RecordsScene(BaseScene):
     def _create_objects(self) -> None:
         super()._create_objects()
-        self.__indicator = Text(f"level {LevelStorage().current + 1}", 12, font=Font.DEFAULT).move_center(
-            Cfg.RESOLUTION.half_width, 55
-        )
+
         self.objects += [
-            self.__indicator,
+            Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 60),
             Text("RECORDS", 32, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
         ]
         self.__error_text = Text("NO RECORDS", 24, color=Colors.RED).move_center(Cfg.RESOLUTION.half_width, 100)
@@ -41,13 +39,13 @@ class RecordsScene(BaseScene):
         text_colors = [Colors.GOLD, Colors.SILVER, Colors.BRONZE, Colors.WHITE, Colors.WHITE]
         current_highscores = LevelStorage().current_highscores()
         for i, score in enumerate(current_highscores):
-            self.medals_text.append(Text(f"{score}", 25, Rect(60, 60 + 35 * i, 0, 0), text_colors[i]))
+            self.medals_text.append(Text(f"{score}", 25, Rect(60, 75 + 35 * i, 0, 0), text_colors[i]))
 
     def __create_medals(self) -> None:
         self.__medals = GameObjects()
         medals_sprite = sprite_slice("medals", (16, 16))
         for i, medal in enumerate(medals_sprite):
-            self.__medals.append(ImageObject(medal, (16, 60 + 35 * i)).scale(30, 30))
+            self.__medals.append(ImageObject(medal, (16, 75 + 35 * i)).scale(30, 30))
 
     def draw(self) -> None:
         super().draw()

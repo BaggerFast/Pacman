@@ -15,8 +15,7 @@ class LevelsScene(BaseScene):
     def create_buttons(self) -> None:
         buttons = [
             Button(
-                rect=pg.Rect(0, 0, 180, 40),
-                text="",
+                rect=self.preview.rect,
                 function=SceneManager().pop,
                 text_size=Font.BUTTON_TEXT_SIZE,
             )
