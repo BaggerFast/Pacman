@@ -1,4 +1,5 @@
 import pygame as pg
+
 from pacman.misc.loaders import load_sound
 from pacman.misc.serializers import SettingsStorage
 

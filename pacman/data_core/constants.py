@@ -4,8 +4,6 @@ from typing import Final
 import pygame.locals as keys
 from pygame import Color
 
-from .path_util import Dirs, PathUtil
-
 
 class KbKeys(ABC):
     UP: Final = (keys.K_UP, keys.K_w)
@@ -35,9 +33,3 @@ class Colors(ABC):
     DARK_GREEN: Final = Color(0, 125, 0)
     HALF_TRANSPARENT: Final = Color(0, 0, 0, 40)
     TRANSPARENT: Final = Color(0, 0, 0, 0)
-
-
-class Sounds(ABC):
-    FUN_DEAD = PathUtil.get_list_path(f"{Dirs.SOUND}/fun/death", ext="ogg")
-    FUN_INTRO = PathUtil.get_list_path(f"{Dirs.SOUND}/fun/intro", ext="ogg")
-    FUN_GAME_OVER = PathUtil.get_list_path(f"{Dirs.SOUND}/fun/game_over", ext="ogg")

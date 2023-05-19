@@ -27,9 +27,10 @@ class SkinsScene(BaseScene):
             ("EDGE", SkinEnum.EDGE),
             ("POKEBALL", SkinEnum.POKEBALL),
             ("WINDOWS", SkinEnum.WINDOWS),
-            ("HALF-LIFE", SkinEnum.HALF_LIFE),
+            ("VALVE", SkinEnum.VALVE),
             ("CHROME", SkinEnum.CHROME),
         ]
+        self.skins = sorted(self.skins, key=lambda s: self.skin_storage.is_unlocked(s[1]), reverse=True)
         self.preview = self.skin_storage.current_instance.prerender_surface()
 
         self.objects += [
@@ -92,12 +93,13 @@ class SkinsScene(BaseScene):
 
     def create_buttons(self) -> None:
         buttons = []
+        btn_active_index = 0
         for i, (skin_name, skin) in enumerate(self.skins):
             if self.skin_storage.is_unlocked(skin):
                 buttons.append(
                     Button(
                         rect=pg.Rect(0, 0, 90, 25),
-                        text=skin_name,
+                        text=f'-{skin_name}-' if SkinStorage().current is skin else skin_name,
                         function=lambda s=skin: self.select_skin(s),
                         select_function=lambda s=skin: self.skin_button(s),
                         text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
@@ -114,6 +116,8 @@ class SkinsScene(BaseScene):
                         colors=BUTTON_SKIN_BUY,
                     ).move_center(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y)
                 )
+            if skin is SkinStorage().current:
+                btn_active_index = len(buttons) - 1
 
         buttons.append(
             Button(
@@ -124,7 +128,7 @@ class SkinsScene(BaseScene):
                 text_size=Font.BUTTON_TEXT_SIZE,
             ).move_center(Cfg.RESOLUTION.half_width, 250)
         )
-        self.objects.append(ButtonController(buttons))
+        self.objects.append(ButtonController(buttons, btn_active_index))
 
     def process_event(self, event: Event) -> None:
         super().process_event(event)

@@ -10,10 +10,10 @@ from pacman.objects.buttons.button import Button
 
 
 class ButtonController(MovementObject, IDrawable, IEventful):
-    def __init__(self, buttons: List[Button]):
+    def __init__(self, buttons: List[Button], active_index: int = 0):
         super().__init__()
         self.buttons = buttons
-        self.active_button_index = 0
+        self.active_button_index = active_index
         self.current.select()
 
         self.kb_down_actions = {
