@@ -3,8 +3,8 @@ from pygame.event import Event
 
 from pacman.data_core import Cfg, Colors, KbKeys
 from pacman.misc import is_esc_pressed
-from pacman.objects import ImageObject, Text
-from pacman.objects.buttons import Button, ButtonController
+from pacman.objects import ImgObj, Text
+from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import LevelStorage
 
 from ..data_core.config import FontCfg
@@ -15,7 +15,8 @@ from .scene_manager import SceneManager
 class LevelsScene(BaseScene):
     def create_buttons(self) -> None:
         buttons = [
-            Button(
+            Btn(
+                text="",
                 rect=self.preview.rect,
                 function=SceneManager().pop,
                 text_size=FontCfg.BUTTON_TEXT_SIZE,
@@ -30,9 +31,11 @@ class LevelsScene(BaseScene):
 
     def _create_objects(self) -> None:
         super()._create_objects()
-        self.preview: ImageObject = self.game.maps.images[LevelStorage().current]
-        self.preview.smoothscale(224 * 0.6, 248 * 0.6)
-        self.preview.move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)
+        self.preview: ImgObj = (
+            self.game.maps.images[LevelStorage().current]
+            .smoothscale(224 * 0.6, 248 * 0.6)
+            .move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)
+        )
         self.objects.append(self.preview)
         self.objects.append(Text("SELECT LEVEL", 25, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30))
 
@@ -70,7 +73,7 @@ class LevelsScene(BaseScene):
                     LevelStorage().set_next_level()
             elif event.key in KbKeys.LEFT and self.current_level != 0:
                 LevelStorage().set_prev_level()
-            self.preview: ImageObject = self.game.maps.images[self.current_level]
+            self.preview: ImgObj = self.game.maps.images[self.current_level]
             self.preview.smoothscale(224 * 0.6, 248 * 0.6)
             self.preview.move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)
 

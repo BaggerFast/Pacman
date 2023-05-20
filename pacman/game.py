@@ -6,7 +6,7 @@ from pygame.event import Event
 from pacman.data_core import Cfg, Dirs, EvenType, GameObjects, PathUtl
 from pacman.misc import LevelLoader
 from pacman.misic import Music
-from pacman.objects import ImageObject, Map
+from pacman.objects import ImgObj, Map
 from pacman.scenes import SceneManager
 from pacman.scenes.menu import MenuScene
 from pacman.storage import LevelStorage, StorageLoader
@@ -21,7 +21,7 @@ class Game:
             self.__images = self.prerender_surfaces()
 
         @property
-        def images(self) -> List[ImageObject]:
+        def images(self) -> List[ImgObj]:
             return self.__images
 
         @property
@@ -38,7 +38,7 @@ class Game:
             self.levels = sorted(PathUtl.get_list(f"{Dirs.ASSET}/maps"))
             self.count = len(self.levels)
 
-        def prerender_surfaces(self) -> list[ImageObject]:
+        def prerender_surfaces(self) -> list[ImgObj]:
             images = []
             for level_id in range(self.count):
                 self.__load_from_map(level_id)

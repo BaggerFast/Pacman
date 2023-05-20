@@ -4,8 +4,8 @@ from pygame.event import Event
 from pacman.animator import sprite_slice
 from pacman.data_core import Cfg, Colors, GameObjects
 from pacman.misc import is_esc_pressed
-from pacman.objects import ImageObject, Text
-from pacman.objects.buttons import Button, ButtonController
+from pacman.objects import ImgObj, Text
+from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import LevelStorage
 
 from ..data_core.config import FontCfg
@@ -27,7 +27,7 @@ class RecordsScene(BaseScene):
         self.create_buttons()
 
     def create_buttons(self) -> None:
-        back_button = Button(
+        back_button = Btn(
             rect=Rect(0, 0, 180, 40),
             text="MENU",
             function=SceneManager().pop,
@@ -46,7 +46,7 @@ class RecordsScene(BaseScene):
         self.__medals = GameObjects()
         medals_sprite = sprite_slice("other/medals", (16, 16))
         for i, medal in enumerate(medals_sprite):
-            self.__medals.append(ImageObject(medal, (16, 75 + 35 * i)).scale(30, 30))
+            self.__medals.append(ImgObj(medal, (16, 75 + 35 * i)).scale(30, 30))
 
     def draw(self) -> None:
         super().draw()

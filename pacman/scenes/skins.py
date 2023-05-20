@@ -4,8 +4,8 @@ from pygame.event import Event
 from pacman.animator import sprite_slice
 from pacman.data_core import Cfg
 from pacman.misc import is_esc_pressed
-from pacman.objects import ImageObject, Text
-from pacman.objects.buttons import Button, ButtonController
+from pacman.objects import ImgObj, Text
+from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import FruitStorage, SkinStorage
 from pacman.tmp_skin import SkinEnum
 
@@ -47,7 +47,7 @@ class SkinsScene(BaseScene):
     def create_fruits_and_text_we_have(self) -> None:
         for i, fruit_img in enumerate(self.fruit_images):
             self.objects += [
-                ImageObject(fruit_img, (Cfg.RESOLUTION.WIDTH // 7 + i * 25, 60)),
+                ImgObj(fruit_img, (Cfg.RESOLUTION.WIDTH // 7 + i * 25, 60)),
                 Text(f"{FruitStorage().eaten_fruits[i]}", 10).move_center(Cfg.RESOLUTION.WIDTH // 7 + i * 25, 60),
             ]
 
@@ -61,7 +61,7 @@ class SkinsScene(BaseScene):
             if not self.skin_storage.is_unlocked(skin):
                 skin_class = skin.value
                 for j in skin_class.skin_cost:
-                    fruit = ImageObject(
+                    fruit = ImgObj(
                         self.fruit_images[j],
                         (
                             pos_regarding_buttons_x + index_pos_x * multiply_x,
@@ -100,7 +100,7 @@ class SkinsScene(BaseScene):
         for i, (skin_name, skin) in enumerate(self.skins):
             if self.skin_storage.is_unlocked(skin):
                 buttons.append(
-                    Button(
+                    Btn(
                         rect=pg.Rect(0, 0, 90, 25),
                         text=f"-{skin_name}-" if SkinStorage().current is skin else skin_name,
                         function=lambda s=skin: self.select_skin(s),
@@ -110,7 +110,7 @@ class SkinsScene(BaseScene):
                 )
             else:
                 buttons.append(
-                    Button(
+                    Btn(
                         rect=pg.Rect(0, 0, 90, 25),
                         text=skin_name,
                         function=lambda s=skin: self.select_skin(s),
@@ -123,7 +123,7 @@ class SkinsScene(BaseScene):
                 btn_active_index = len(buttons) - 1
 
         buttons.append(
-            Button(
+            Btn(
                 rect=pg.Rect(0, 0, 180, 40),
                 text="MENU",
                 function=SceneManager().pop,

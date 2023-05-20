@@ -8,6 +8,7 @@ from .path_util import PathUtl
 class Cfg(ABC):
     FPS: Final[int] = 60
     RESOLUTION: Final = ResolutionSize(224, 285)
+    TILE_SIZE: Final[int] = 8
 
 
 class FontCfg(ABC):

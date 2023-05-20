@@ -6,10 +6,10 @@ from pacman.animator import Animator, SpriteSheetAnimator
 from pacman.data_core import Cfg, IDrawable, ILogical
 from pacman.misc import LevelLoader, load_image
 from pacman.misc.cell_util import CellUtil
-from pacman.objects.base import MovementObject
+from pacman.objects.rect_obj import RectObj
 
 
-class Character(MovementObject, ILogical, IDrawable):
+class Character(RectObj, ILogical, IDrawable):
     direction = {
         "right": (1, 0, 0),
         "down": (0, 1, 1),

@@ -3,17 +3,14 @@ from copy import copy
 from pygame import Surface
 
 from pacman.animator import sprite_slice
-from pacman.data_core import Colors, IDrawable
+from pacman.data_core import Cfg, Colors, IDrawable
 
-from .base import MovementObject
-from .image import ImageObject
+from .img_obj import ImgObj
 
 
-class Map(MovementObject, IDrawable):
-    def __init__(self, map_data, color=Colors.MAIN_MAP) -> None:
-        super().__init__()
+class Map(IDrawable):
+    def __init__(self, map_data: list[list[int]], color=Colors.MAIN_MAP) -> None:
         self._color = color
-        self._tile_size = 8
         self._map_data = map_data
         self._tiles = sprite_slice("other/map", (8, 8))
         self._image = self.__load_surface()
@@ -30,17 +27,17 @@ class Map(MovementObject, IDrawable):
         return srf
 
     def __load_surface(self) -> Surface:
-        surface = Surface((len(self._map_data[0]) * self._tile_size, len(self._map_data) * self._tile_size))
+        surface = Surface((len(self._map_data[0]) * Cfg.TILE_SIZE, len(self._map_data) * Cfg.TILE_SIZE))
         for y, row in enumerate(self._map_data):
             for x, tile in enumerate(row):
-                surface.blit(self._tiles[tile - 1], (x * self._tile_size, y * self._tile_size))
+                surface.blit(self._tiles[tile - 1], (x * Cfg.TILE_SIZE, y * Cfg.TILE_SIZE))
         return surface
 
     def prerender_map_surface(self) -> Surface:
         return copy(self._image)
 
-    def prerender_map_image_scaled(self) -> ImageObject:
-        return ImageObject(self.prerender_map_surface())
+    def prerender_map_image_scaled(self) -> ImgObj:
+        return ImgObj(self.prerender_map_surface())
 
     def draw(self, screen: Surface) -> None:
         screen.blit(self.surface_for_draw, (0, 20))

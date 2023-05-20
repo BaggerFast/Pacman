@@ -5,7 +5,7 @@ from pacman.data_core import Cfg, EvenType, event_append
 from pacman.misc import is_esc_pressed
 from pacman.misic import Music
 from pacman.objects import Text
-from pacman.objects.buttons import Button, ButtonController
+from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import SettingsStorage
 
 from ..data_core.config import FontCfg
@@ -15,7 +15,7 @@ from .scene_manager import SceneManager
 
 
 class SettingsScene(BaseScene):
-    class SettingButton(Button):
+    class SettingButton(Btn):
         def __init__(self, name, i, var):
             flag_var = getattr(SettingsStorage(), var)
             super().__init__(
@@ -45,7 +45,7 @@ class SettingsScene(BaseScene):
     __dificulties = {0: "easy", 1: "medium", 2: "hard"}
 
     def _create_objects(self) -> None:
-        self.difficult_button = Button(
+        self.difficult_button = Btn(
             rect=Rect(0, 0, 120, 35),
             function=self.click_difficult,
             text_size=FontCfg.BUTTON_TEXT_SIZE,
@@ -80,18 +80,18 @@ class SettingsScene(BaseScene):
             self.buttons.append(self.SettingButton(names[i][0], i, names[i][1]))
 
         self.buttons += [
-            Button(
+            Btn(
                 rect=Rect(0, 0, 40, 35),
                 text="-",
                 function=lambda: self.click_sound(-5),
             ).move_center(Cfg.RESOLUTION.h_width - 60, self.__volume_position + 30),
-            Button(
+            Btn(
                 rect=Rect(0, 0, 40, 35),
                 text="+",
                 function=lambda: self.click_sound(5),
             ).move_center(Cfg.RESOLUTION.h_width + 65, self.__volume_position + 30),
             self.difficult_button,
-            Button(
+            Btn(
                 rect=Rect(0, 0, 180, 40),
                 text="BACK",
                 function=SceneManager().pop,

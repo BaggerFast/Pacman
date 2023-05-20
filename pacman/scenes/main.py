@@ -5,7 +5,7 @@ from pacman.data_core import Cfg
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
 from pacman.misc import Health, LevelLoader, Score, is_esc_pressed, rand_color
 from pacman.misic import Music
-from pacman.objects import Fruit, ImageObject, Map, SeedContainer, Text
+from pacman.objects import Fruit, ImgObj, Map, SeedContainer, Text
 from pacman.objects.heroes import Blinky, Clyde, Inky, Pacman, Pinky
 from pacman.storage import LevelStorage, SettingsStorage, SkinStorage
 from pacman.tmp_skin import SkinEnum
@@ -56,7 +56,7 @@ class MainScene(BaseScene):
         ]
 
         for i in range(int(self.hp) - 1):
-            image = ImageObject(SkinStorage().current_instance.walk.current_image, (5 + i * 16, 270))
+            image = ImgObj(SkinStorage().current_instance.walk.current_image, (5 + i * 16, 270))
             self.objects.append(image)
 
     # endregion

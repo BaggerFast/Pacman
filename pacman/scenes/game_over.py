@@ -3,7 +3,7 @@ from pygame import Rect, Surface
 from pacman.data_core import Cfg, EvenType, event_append
 from pacman.misic import Music
 from pacman.objects import Text
-from pacman.objects.buttons import Button, ButtonController
+from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import LevelStorage
 
 from ..data_core.config import FontCfg
@@ -37,7 +37,7 @@ class GameOverScene(BlurScene):
         buttons = []
         for i, (name, fn) in enumerate(names):
             buttons.append(
-                Button(
+                Btn(
                     rect=Rect(0, 0, 180, 35),
                     text=name,
                     function=fn,

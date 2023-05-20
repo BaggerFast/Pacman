@@ -5,12 +5,12 @@ from pacman.data_core import GameObjects, IDrawable, ILogical
 from pacman.data_core.enums import FruitStateEnum
 from pacman.misc.cell_util import CellUtil
 
-from .base import MovementObject
-from .image import ImageObject
+from .img_obj import ImgObj
+from .rect_obj import RectObj
 from .text import Text
 
 
-class Fruit(MovementObject, IDrawable, ILogical):
+class Fruit(RectObj, IDrawable, ILogical):
     def __init__(self, pos: tuple) -> None:
         super().__init__()
         self.__fruit_sprite = list(sprite_slice("other/fruits", (12, 12)))[::-1]
@@ -32,7 +32,7 @@ class Fruit(MovementObject, IDrawable, ILogical):
         self.eaten_text.text = f"{score}"
         x_offset = len(self.eaten_fruits_hud)
         pos_x_hud = 130 + x_offset + x_offset * self.rect.width
-        self.eaten_fruits_hud.append(ImageObject(self.__fruit_sprite.pop(), (pos_x_hud, 270)))
+        self.eaten_fruits_hud.append(ImgObj(self.__fruit_sprite.pop(), (pos_x_hud, 270)))
         self.change_state(FruitStateEnum.EATEN)
 
     def process_collision(self, rect: Rect) -> bool:

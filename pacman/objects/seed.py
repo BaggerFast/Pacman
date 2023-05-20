@@ -3,19 +3,18 @@ from pygame import Rect, Surface, draw, time
 from pacman.data_core import Colors, IDrawable
 from pacman.data_core.data_classes import Cell
 
-from .base import MovementObject
-from .image import ImageObject
+from .img_obj import ImgObj
 
 
-class SeedContainer(MovementObject, IDrawable):
+class SeedContainer(IDrawable):
     def __init__(self, game, seed_data, energizer_data) -> None:
         super().__init__()
         self.game = game
         self.__seeds = self.prepare_seeds(seed_data)
         self.__energizers = self.prepare_energizers(energizer_data)
 
-        self.__ram_img = ImageObject("other/ram")
-        self.__yandex_img = ImageObject("other/yandex")
+        self.__ram_img = ImgObj("other/ram")
+        self.__yandex_img = ImgObj("other/yandex")
 
         self.__show_energizer = True
         self.__max_seeds = len(self.__seeds)

@@ -4,21 +4,15 @@ from pygame import Color, Rect, Surface
 from pacman.data_core import Colors, IDrawable
 
 from ..data_core.config import FontCfg
-from .base import MovementObject
+from .rect_obj import RectObj
 
 
-class Text(MovementObject, IDrawable):
+class Text(RectObj, IDrawable):
     def __init__(
-        self,
-        text: str,
-        size: int = 0,
-        rect: Rect = Rect(0, 0, 0, 0),
-        color=Colors.WHITE,
-        font=FontCfg.DEFAULT,
+        self, text: str, size: int = 0, rect: Rect = Rect(0, 0, 0, 0), color=Colors.WHITE, font=FontCfg.DEFAULT
     ):
-        super().__init__()
+        super().__init__(rect)
         self.__text = ""
-        self.rect = rect
         self.__color = color
         self.__font = pg.font.Font(font, size)
         self.__surface = self.__font.render(self.__text, False, self.__color)

@@ -1,7 +1,7 @@
 from pacman.animator import Animator, SpriteSheetAnimator, advanced_sprite_slice, sprite_slice
 from pacman.data_core import Cfg, Dirs
 
-from .image import ImageObject
+from .img_obj import ImgObj
 
 
 class Skin:
@@ -24,10 +24,10 @@ class Skin:
     def image(self):
         return self.__image
 
-    def prerender_surface(self) -> ImageObject:
+    def prerender_surface(self) -> ImgObj:
         img = sprite_slice(f"pacman/{self.name}/walk", (13, 13))[0]
         pos = Cfg.RESOLUTION.h_width + Cfg.RESOLUTION.h_width // 2, Cfg.RESOLUTION.h_height
-        return ImageObject(img, (145, 125)).scale(80, 80).move_center(*pos)
+        return ImgObj(img, (145, 125)).scale(80, 80).move_center(*pos)
 
     def __str__(self):
         return self.name

@@ -2,7 +2,7 @@ from copy import copy
 
 from pygame import Surface, time
 
-from pacman.objects import ImageObject
+from pacman.objects import ImgObj
 
 from .base_scene import BaseScene
 
@@ -12,7 +12,7 @@ class BlurScene(BaseScene):
         super().__init__(game)
         self._blur_count = 1
         self._blur_finished = False
-        self._blur_surface = ImageObject(copy(blur_surface), (0, 0))
+        self._blur_surface = ImgObj(copy(blur_surface), (0, 0))
 
     def process_logic(self) -> None:
         if not self._blur_finished:
