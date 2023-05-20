@@ -18,9 +18,9 @@ class SkinsScene(BaseScene):
         self.skin_storage = SkinStorage()
         self.button_pos_x = Cfg.RESOLUTION.half_width - 65
         self.button_pos_y = 90
-        self.button_pos_multiply_y = 25
+        self.button_pos_multiply_y = 22
 
-        self.fruit_images = sprite_slice(f"fruits", (12, 12))
+        self.fruit_images = sprite_slice(f"other/fruits", (12, 12))
 
         self.skins = [
             ("PACMAN", SkinEnum.DEFAULT),
@@ -29,6 +29,7 @@ class SkinsScene(BaseScene):
             ("WINDOWS", SkinEnum.WINDOWS),
             ("VALVE", SkinEnum.VALVE),
             ("CHROME", SkinEnum.CHROME),
+            ("STALKER", SkinEnum.STALKER),
         ]
         self.skins = sorted(self.skins, key=lambda s: self.skin_storage.is_unlocked(s[1]), reverse=True)
         self.preview = self.skin_storage.current_instance.prerender_surface()

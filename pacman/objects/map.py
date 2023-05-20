@@ -15,7 +15,7 @@ class Map(MovementObject, IDrawable):
         self._color = color
         self._tile_size = 8
         self._map_data = map_data
-        self._tiles = sprite_slice("map.png", (8, 8))
+        self._tiles = sprite_slice("other/map", (8, 8))
         self._image = self.__load_surface()
         self.surface_for_draw = self.__surface_recolor()
 

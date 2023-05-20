@@ -10,4 +10,4 @@ class SkinEnum(Enum):
     WINDOWS = Skin("windows", {3: 12, 4: 5})
     VALVE = Skin("half_life", {4: 12, 5: 5})
     CHROME = Skin("chrome", {5: 12, 6: 5})
-    # STALKER = Skin("stalker", {5: 12, 6: 5})
+    STALKER = Skin("stalker", {5: 15, 6: 15})

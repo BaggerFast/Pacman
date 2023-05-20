@@ -14,8 +14,8 @@ class SeedContainer(MovementObject, IDrawable):
         self.__seeds = self.prepare_seeds(seed_data)
         self.__energizers = self.prepare_energizers(energizer_data)
 
-        self.__ram_img = ImageObject("pacman/chrome/seed")
-        self.__yandex_img = ImageObject("pacman/chrome/energizer")
+        self.__ram_img = ImageObject("other/ram")
+        self.__yandex_img = ImageObject("other/yandex")
 
         self.__show_energizer = True
         self.__max_seeds = len(self.__seeds)

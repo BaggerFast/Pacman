@@ -37,4 +37,4 @@ class PathUtil(ABC):
     @classmethod
     def get_list(cls, path: str) -> List[str]:
         path = cls.get(path)
-        return [join(path, file) for file in sorted(listdir(path))]
+        return [join(path, file) for file in listdir(path)]

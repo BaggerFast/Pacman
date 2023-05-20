@@ -6,11 +6,11 @@ from pacman.data_core import Cfg
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
 from pacman.misc import ControlCheats, Health, LevelLoader, Score
 from pacman.misc.constants import INFINITY_LIVES, Font
-from pacman.misc.serializers import LevelStorage, SkinStorage
+from pacman.misc.serializers import LevelStorage, SkinStorage, SettingsStorage
 from pacman.misc.tmp_skin import SkinEnum
 from pacman.misc.util import is_esc_pressed, rand_color
 from pacman.misic import Music
-from pacman.objects import Fruit, Map, SeedContainer, Text
+from pacman.objects import Fruit, Map, SeedContainer, Text, ImageObject
 from pacman.objects.heroes import Blinky, Clyde, Inky, Pacman, Pinky
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene
@@ -22,7 +22,7 @@ class MainScene(BaseScene):
     def __init__(self, game, map_color=None):
         self._map_color = rand_color() if not map_color else map_color
         super().__init__(game)
-        Music().update_fun()
+        Music().update_random_sounds()
 
     def __play_sound(self):
         if not Music().BACK.is_busy():
@@ -56,7 +56,8 @@ class MainScene(BaseScene):
         ]
 
         for i in range(int(self.hp) - 1):
-            self.objects.append(SkinStorage().current_instance.walk)
+            image = ImageObject(SkinStorage().current_instance.walk.current_image, (5 + i * 16, 270))
+            self.objects.append(image)
 
     # endregion
 
@@ -127,7 +128,8 @@ class MainScene(BaseScene):
         self.__seeds = SeedContainer(self.game, self.__loader.seeds_map, self.__loader.energizers_pos)
         self.__map = Map(self.__loader.map, self._map_color)
         self.__create_start_anim()
-        self.hp = Health(3, 4)
+        hp = 3 - SettingsStorage().difficulty
+        self.hp = Health(hp, 4)
         self.__seeds_eaten = 0
         self.fruit = Fruit(self.__loader.fruit_pos)
         self.state_text = True

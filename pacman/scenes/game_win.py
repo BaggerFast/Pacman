@@ -79,8 +79,8 @@ class GameWinScene(BlurScene):
             SceneManager().reset(MenuScene(self.game))
 
     def on_enter(self) -> None:
-        Music().LOSE.play()
+        Music().WIN.play()
 
     def on_exit(self) -> None:
         event_append(EvenType.SET_SETTINGS)
-        Music().LOSE.stop()
+        Music().WIN.stop()

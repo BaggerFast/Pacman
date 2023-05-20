@@ -43,7 +43,7 @@ class RecordsScene(BaseScene):
 
     def __create_medals(self) -> None:
         self.__medals = GameObjects()
-        medals_sprite = sprite_slice("medals", (16, 16))
+        medals_sprite = sprite_slice("other/medals", (16, 16))
         for i, medal in enumerate(medals_sprite):
             self.__medals.append(ImageObject(medal, (16, 75 + 35 * i)).scale(30, 30))
 

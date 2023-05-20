@@ -4,14 +4,14 @@ from pacman.misc.loaders import load_sound
 from pacman.misc.serializers import SettingsStorage
 
 
-class SoundController:
+class Sound:
     def __init__(self, sound_path: str, channel: int = 0, volume: int = 1):
         self.sound = load_sound(sound_path)
         self.channel = pg.mixer.Channel(channel)
         self.volume = volume
         self.update()
 
-    def set_sound(self, sound_path: str):
+    def set(self, sound_path: str):
         self.sound = load_sound(sound_path)
 
     def update(self):
