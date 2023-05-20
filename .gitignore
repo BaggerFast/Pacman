@@ -307,3 +307,4 @@ storage.json
 saves/*
 !.gitkeep
 pacman/misc/constants/variables.py
+build

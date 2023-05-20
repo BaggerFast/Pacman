@@ -4,7 +4,7 @@ from pacman.data_core import Colors
 from pacman.data_core.data_classes import Cell
 from pacman.data_core.interfaces import IDrawable
 from pacman.misc.constants import HIGH_CALORIE_SEEDS
-from pacman.objects import MovementObject, ImageObject
+from pacman.objects import ImageObject, MovementObject
 
 
 class SeedContainer(MovementObject, IDrawable):
@@ -35,8 +35,8 @@ class SeedContainer(MovementObject, IDrawable):
         return [Cell(*cell) for cell in energizer_data]
 
     def __draw_seeds(self, screen) -> None:
-        from pacman.misc.tmp_skin import SkinEnum
         from pacman.misc.serializers import SkinStorage
+        from pacman.misc.tmp_skin import SkinEnum
 
         if SkinStorage().equals(SkinEnum.CHROME):
             for seed in self.__seeds:
@@ -51,8 +51,8 @@ class SeedContainer(MovementObject, IDrawable):
             self.__show_energizer = not self.__show_energizer
         if not self.__show_energizer:
             return
-        from pacman.misc.tmp_skin import SkinEnum
         from pacman.misc.serializers import SkinStorage
+        from pacman.misc.tmp_skin import SkinEnum
 
         if SkinStorage().equals(SkinEnum.CHROME):
             for energizer in self.__energizers:

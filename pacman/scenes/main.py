@@ -6,11 +6,11 @@ from pacman.data_core import Cfg
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
 from pacman.misc import ControlCheats, Health, LevelLoader, Score
 from pacman.misc.constants import INFINITY_LIVES, Font
-from pacman.misc.serializers import LevelStorage, SkinStorage, SettingsStorage
+from pacman.misc.serializers import LevelStorage, SettingsStorage, SkinStorage
 from pacman.misc.tmp_skin import SkinEnum
 from pacman.misc.util import is_esc_pressed, rand_color
 from pacman.misic import Music
-from pacman.objects import Fruit, Map, SeedContainer, Text, ImageObject
+from pacman.objects import Fruit, ImageObject, Map, SeedContainer, Text
 from pacman.objects.heroes import Blinky, Clyde, Inky, Pacman, Pinky
 from pacman.scene_manager import SceneManager
 from pacman.scenes.base_scene import BaseScene

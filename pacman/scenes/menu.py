@@ -1,4 +1,4 @@
-from pygame import Rect, Surface, draw, transform
+from pygame import Rect, Surface
 from pygame.event import Event
 
 from pacman.data_core import Cfg, Colors
@@ -67,7 +67,9 @@ class MenuScene(BaseScene):
     def draw(self) -> Surface:
         self.preview.draw(self._screen)
         self.objects.draw(self._screen)
-        ImageObject(self.pacman_anim.current_image).scale(75, 75).move_center(Cfg.RESOLUTION.half_width + Cfg.RESOLUTION.half_width // 2, Cfg.RESOLUTION.half_height).draw(self._screen)
+        ImageObject(self.pacman_anim.current_image).scale(75, 75).move_center(
+            Cfg.RESOLUTION.half_width + Cfg.RESOLUTION.half_width // 2, Cfg.RESOLUTION.half_height
+        ).draw(self._screen)
         return self._screen
 
     def process_logic(self) -> None:

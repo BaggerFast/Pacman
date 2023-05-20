@@ -100,7 +100,7 @@ class SkinsScene(BaseScene):
                 buttons.append(
                     Button(
                         rect=pg.Rect(0, 0, 90, 25),
-                        text=f'-{skin_name}-' if SkinStorage().current is skin else skin_name,
+                        text=f"-{skin_name}-" if SkinStorage().current is skin else skin_name,
                         function=lambda s=skin: self.select_skin(s),
                         select_function=lambda s=skin: self.skin_button(s),
                         text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,

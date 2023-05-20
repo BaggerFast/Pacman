@@ -1,4 +1,4 @@
-from pacman.data_core import Dirs, Cfg
+from pacman.data_core import Cfg, Dirs
 from pacman.misc.animator.animator import Animator
 from pacman.misc.animator.sprite_animator import SpriteSheetAnimator
 from pacman.misc.animator.sprite_sheet import advanced_sprite_slice, sprite_slice
