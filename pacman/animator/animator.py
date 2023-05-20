@@ -4,22 +4,16 @@ from pacman.data_core import ILogical
 
 
 class Animator(ILogical):
-    def __init__(self, images: tuple[Surface], time_out: int = 125, repeat: bool = True):
-        self.__time_out = time_out
+    def __init__(self, images: tuple[Surface], time_step: int = 125, endless: bool = True):
+        self.__time_step = time_step
         self.__animate_timer = 0
-        self.__repeat = repeat
+        self.__endless = endless
         self.__run = True
         self.__images = images
         self._current_index = 0
         self.__is_anim_finished = False
 
     # region Public
-
-    def update(self) -> None:
-        tmp_time = time.get_ticks()
-        if tmp_time - self.__animate_timer > self.__time_out and self.__run:
-            self.__animate_timer = tmp_time
-            self.__next_frame()
 
     @property
     def is_finished(self) -> bool:
@@ -29,17 +23,20 @@ class Animator(ILogical):
     def current_image(self) -> Surface:
         return self.__images[self._current_index]
 
-    def stop(self) -> None:
-        self.__run = False
-
     def start(self) -> None:
         self.__run = True
 
-    def set_cur_image(self, index: int) -> None:
-        self._current_index = index
+    def stop(self) -> None:
+        self.__run = False
 
-    def reset(self):
-        self._current_index = 0
+    def set_cur_image(self, index: int) -> None:
+        self._current_index = abs(index) % len(self.__images)
+
+    def update(self) -> None:
+        tmp_time = time.get_ticks()
+        if tmp_time - self.__animate_timer > self.__time_step and self.__run:
+            self.__animate_timer = tmp_time
+            self.__next_frame()
 
     # endregion
 
@@ -47,7 +44,7 @@ class Animator(ILogical):
 
     def __next_frame(self) -> None:
         current_frame_is_last = self._current_index == len(self) - 1
-        if current_frame_is_last and not self.__repeat:
+        if current_frame_is_last and not self.__endless:
             self.stop()
             self.__is_anim_finished = True
             return

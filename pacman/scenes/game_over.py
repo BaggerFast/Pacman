@@ -1,12 +1,10 @@
 from pygame import Rect, Surface
 
-from pacman.data_core import Cfg, EvenType, event_append
+from pacman.data_core import Cfg, EvenType, event_append, FontCfg
 from pacman.misic import Music
 from pacman.objects import Text
 from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import LevelStorage
-
-from ..data_core.config import FontCfg
 from .blur_scene import BlurScene
 from .scene_manager import SceneManager
 

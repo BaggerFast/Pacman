@@ -18,7 +18,7 @@ class Skin:
     @property
     def dead(self):
         dead = sprite_slice(f"pacman/{self.name}/dead", (15, 15))
-        return Animator(dead, repeat=False)
+        return Animator(dead, endless=False)
 
     @property
     def image(self):

@@ -4,7 +4,7 @@ from typing import List, Tuple
 
 
 class SeedLoader:
-    def __init__(self, data) -> None:
+    def __init__(self, data: json) -> None:
         self.__json = data
         self.__seeds = []
         self.__prepare_seeds()
@@ -53,7 +53,7 @@ class LevelLoader:
         self.__seed_loader = SeedLoader(self.__json)
 
     @staticmethod
-    def __load_map_json(file_name) -> dict:
+    def __load_map_json(file_name) -> json:
         with open(os.path.join("maps", file_name)) as f:
             return json.load(f)
 

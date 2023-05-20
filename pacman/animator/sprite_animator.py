@@ -1,21 +1,27 @@
-import pygame as pg
+from pygame import Surface
+
+from pacman.data_core.enums import RotateEnum
 
 from .animator import Animator
 
 
 class SpriteSheetAnimator(Animator):
-    def __init__(self, sheet, time_out: int = 125, repeat: bool = True):
-        if len(sheet) < 4:
-            raise Exception
+    def __init__(self, sheet, time_step: int = 125, endless: bool = True):
+        if len(sheet) < len(RotateEnum):
+            raise ValueError("Len of sprite sheet is not compatible")
         self.__sheet = sheet
-        self.__rotate = 0
-        super().__init__(self.__sheet[0], time_out, repeat)
+        self.__rotate = RotateEnum.RIGHT.value
+        super().__init__(self.__sheet[RotateEnum.RIGHT.value], time_step, endless)
 
-    def rotate(self, value) -> None:
-        if abs(value) > 4:
-            raise Exception
-        self.__rotate = abs(value)
+    # region Public
 
     @property
-    def current_image(self) -> pg.Surface:
+    def current_image(self) -> Surface:
         return self.__sheet[self.__rotate][self._current_index]
+
+    def rotate(self, value) -> None:
+        if abs(value) > len(RotateEnum):
+            raise ValueError("Len of sprite sheet is not compatible")
+        self.__rotate = abs(value)
+
+    # endregion
