@@ -1,4 +1,4 @@
-import pygame as pg
+from pygame.mixer import Channel
 
 from pacman.storage import SettingsStorage
 
@@ -7,30 +7,42 @@ from .utils import load_sound
 
 class Sound:
     def __init__(self, sound_path: str, channel: int = 0, volume: int = 1):
-        self.sound = load_sound(sound_path)
-        self.channel = pg.mixer.Channel(channel)
-        self.volume = volume
-        self.update()
+        self.__sound = load_sound(sound_path)
+        self.__channel = Channel(channel)
+        self.__volume = volume
+        self.__update()
+
+    # region Public
+
+    @property
+    def length(self) -> float:
+        return self.__sound.get_length()
 
     def set(self, sound_path: str):
-        self.sound = load_sound(sound_path)
-
-    def update(self):
-        self.volume = 0 if not SettingsStorage().mute else SettingsStorage().volume / 100
-        self.sound.set_volume(self.volume)
+        self.__sound = load_sound(sound_path)
 
     def play(self, loop: int = 0):
-        self.update()
-        self.channel.play(self.sound, loops=loop)
-
-    def pause(self):
-        self.channel.pause()
-
-    def unpause(self):
-        self.channel.unpause()
+        self.__update()
+        self.__channel.play(self.__sound, loops=loop)
 
     def stop(self):
-        self.channel.stop()
+        self.__channel.stop()
+
+    def pause(self):
+        self.__channel.pause()
+
+    def unpause(self):
+        self.__channel.unpause()
 
     def is_busy(self):
-        return self.channel.get_busy()
+        return self.__channel.get_busy()
+
+    # endregion
+
+    # region Private
+
+    def __update(self):
+        self.__volume = 0 if not SettingsStorage().mute else SettingsStorage().volume / 100
+        self.__sound.set_volume(self.__volume)
+
+    # endregion

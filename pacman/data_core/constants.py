@@ -5,7 +5,7 @@ import pygame.locals as keys
 from pygame import Color
 
 from .data_classes import ResolutionSize
-from .path_util import PathUtl
+from .path_utl import PathUtl
 
 
 class Cfg(ABC):

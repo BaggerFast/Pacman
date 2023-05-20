@@ -14,7 +14,7 @@ class Fruit(RectObj, IDrawable, ILogical):
     def __init__(self, pos: tuple) -> None:
         self.__fruit_sprite = list(sprite_slice("other/fruits", (12, 12)))[::-1]
         super().__init__(self.__fruit_sprite[0].get_rect())
-        self.move_center(*CellUtil.center_pos_from_cell(pos))
+        self.move_center(*CellUtil.get_center_pos(pos))
         self.state = FruitStateEnum.DISABLED
 
         self.timer = time.get_ticks()

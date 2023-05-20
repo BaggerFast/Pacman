@@ -53,8 +53,8 @@ class Base(Character):
         self.gg_text = Text(" ", 10)
         self.ghost_entered_home = False
 
-        self.door_room_pos = CellUtil.center_pos_from_cell(self.hero_pos["blinky"])
-        self.room_center_pos = CellUtil.center_pos_from_cell(self.hero_pos["pinky"])
+        self.door_room_pos = CellUtil.get_center_pos(self.hero_pos["blinky"])
+        self.room_center_pos = CellUtil.get_center_pos(self.hero_pos["pinky"])
         self.diffucult_settings = self.generate_difficulty_settings()
         self.go()
 
@@ -138,6 +138,7 @@ class Base(Character):
     def frightened_ai(self):
         self.go_to_random_cell()
         if self.check_ai_timer(self.diffucult_settings.frightened):
+            # todo: fix score problem
             SceneManager().current.score.deactivate_fear_mode()
             Music().FRIGHTENED.stop()
             self.deceleration_multiplier = 1
@@ -157,7 +158,7 @@ class Base(Character):
     # endregion
 
     def go_to_cell(self, cell):
-        if CellUtil.in_cell_center(self.rect):
+        if CellUtil.is_in_cell_center(self.rect):
             if self.can_rotate_to(self.rotate):
                 self.go()
             available_dirs = self.movement_cell(CellUtil.get_cell(self.rect))
@@ -180,7 +181,7 @@ class Base(Character):
         self.step()
 
     def go_to_random_cell(self):
-        if CellUtil.in_cell_center(self.rect):
+        if CellUtil.is_in_cell_center(self.rect):
             if self.can_rotate_to(self.rotate):
                 self.go()
             cell = self.movement_cell(CellUtil.get_cell(self.rect))

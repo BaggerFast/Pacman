@@ -77,7 +77,7 @@ class MainScene(BaseScene):
         if time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.state_text = not self.state_text
         text_alpha = 255 if self.state_text else 0
-        if current_time - self._start_time > Music().INTRO.sound.get_length() / 4 * 3:
+        if current_time - self._start_time > Music().INTRO.length / 4 * 3:
             if len(self.text) > 1:
                 del self.text[0]
         self.text[0].set_alpha(text_alpha)

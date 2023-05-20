@@ -1,6 +1,5 @@
 import json
 import os
-from typing import List, Tuple
 
 
 class SeedLoader:
@@ -9,13 +8,19 @@ class SeedLoader:
         self.__seeds = []
         self.__prepare_seeds()
 
+    # region Public
+
     @property
-    def seeds(self) -> List[bool]:
+    def seeds(self) -> list[list[bool]]:
         return self.__seeds
 
     @property
-    def energizers(self) -> List[Tuple[int, int]]:
+    def energizers(self) -> list[list[int]]:
         return self.__json["static_objects"]["big_dots"]
+
+    # endregion
+
+    # region Private
 
     def __prepare_seeds(self) -> None:
         self.__seeds = [[bool(x) for x in y] for y in self.__json["collision_map"]]
@@ -46,31 +51,28 @@ class SeedLoader:
         for x, y in self.__json["static_objects"]["big_dots"]:
             self.__seeds[y][x] = False
 
+    # endregion
+
 
 class LevelLoader:
     def __init__(self, file_name: str) -> None:
         self.__json = self.__load_map_json(file_name)
         self.__seed_loader = SeedLoader(self.__json)
 
-    @staticmethod
-    def __load_map_json(file_name) -> json:
-        with open(os.path.join("maps", file_name)) as f:
-            return json.load(f)
-
     @property
-    def map(self) -> List[List[int]]:
+    def map(self) -> list[list[int]]:
         return self.__json["map"]
 
     @property
-    def collision_map(self) -> List[List[int]]:
+    def collision_map(self) -> list[list[int]]:
         return self.__json["collision_map"]
 
     @property
-    def seeds_map(self) -> List[bool]:
+    def seeds_map(self) -> list[list[bool]]:
         return self.__seed_loader.seeds
 
     @property
-    def energizers_pos(self) -> List[Tuple[int, int]]:
+    def energizers_pos(self) -> list[list[int]]:
         return self.__seed_loader.energizers
 
     @property
@@ -78,9 +80,14 @@ class LevelLoader:
         return self.__json["characters"]
 
     @property
-    def fruit_pos(self) -> Tuple[float, float]:
+    def fruit_pos(self):
         return self.__json["static_objects"]["fruit"]
 
     @property
     def slow_ghost_rect(self):
         return self.__json["rects"]["slow_zone"]
+
+    @staticmethod
+    def __load_map_json(file_name) -> json:
+        with open(os.path.join("maps", file_name)) as f:
+            return json.load(f)

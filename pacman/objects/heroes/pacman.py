@@ -32,7 +32,7 @@ class Pacman(Character, IEventful):
     def update(self) -> None:
         self.animator.update()
         if not self.is_dead:
-            if CellUtil.in_cell_center(self.rect):
+            if CellUtil.is_in_cell_center(self.rect):
                 if self.can_rotate_to(self.rotate):
                     self.go()
                 else:

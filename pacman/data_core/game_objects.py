@@ -1,6 +1,7 @@
 from typing import Iterable, List
 
-import pygame as pg
+from pygame import Surface
+from pygame.event import Event
 
 from .interfaces import IDrawable, IEventful, ILogical
 
@@ -8,7 +9,7 @@ from .interfaces import IDrawable, IEventful, ILogical
 class GameObjects(List):
     __included_types = (IDrawable, IEventful, ILogical)
 
-    # region List methods
+    # region Public
 
     def append(self, item) -> None:
         self.__check_type(item)
@@ -23,32 +24,32 @@ class GameObjects(List):
             self.__check_type(item)
         super().extend(iterable)
 
-    def __iadd__(self, other):
-        for item in other:
-            self.__check_type(item)
-        return super().__iadd__(other)
+    def update(self) -> None:
+        filtered: Iterable[ILogical] = filter(lambda x: isinstance(x, ILogical), self)
+        for obj in filtered:
+            obj.update()
+
+    def draw(self, screen: Surface) -> None:
+        filtered: Iterable[IDrawable] = filter(lambda x: isinstance(x, IDrawable), self)
+        for obj in filtered:
+            obj.draw(screen)
+
+    def event_handler(self, event: Event) -> None:
+        filtered: Iterable[IEventful] = filter(lambda x: isinstance(x, IEventful), self)
+        for obj in filtered:
+            obj.event_handler(event)
 
     # endregion
 
-    # region Custom
+    # region Private
 
     def __check_type(self, item):
         if not isinstance(item, self.__included_types):
             raise Exception("Wrong type")
 
-    def update(self):
-        filtered: Iterable[ILogical] = filter(lambda x: isinstance(x, ILogical), self)
-        for obj in filtered:
-            obj.update()
-
-    def event_handler(self, event: pg.event.Event):
-        filtered: Iterable[IEventful] = filter(lambda x: isinstance(x, IEventful), self)
-        for obj in filtered:
-            obj.event_handler(event)
-
-    def draw(self, screen: pg.Surface):
-        filtered: Iterable[IDrawable] = filter(lambda x: isinstance(x, IDrawable), self)
-        for obj in filtered:
-            obj.draw(screen)
+    def __iadd__(self, other):
+        for item in other:
+            self.__check_type(item)
+        return super().__iadd__(other)
 
     # endregion
