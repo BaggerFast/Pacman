@@ -1,20 +1,19 @@
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import Cfg
-from pacman.events.events import EvenType
-from pacman.events.utils import event_append
-from pacman.misc.constants import Font
-from pacman.misc.util import is_esc_pressed
+from pacman.data_core import Cfg, EvenType, event_append
+from pacman.misc import is_esc_pressed
+from pacman.misc.constants import FontCfg
 from pacman.objects import Text
 from pacman.objects.buttons import Button, ButtonController
-from pacman.scene_manager import SceneManager
-from pacman.scenes.blur_scene import BlurScene
+
+from .blur_scene import BlurScene
+from .scene_manager import SceneManager
 
 
 class PauseScene(BlurScene):
     def __stop_game(self) -> None:
-        from pacman.scenes.menu import MenuScene
+        from .menu import MenuScene
 
         event_append(EvenType.GET_SETTINGS)
         SceneManager().reset(MenuScene(self.game))
@@ -40,12 +39,12 @@ class PauseScene(BlurScene):
                     rect=pg.Rect(0, 0, 180, 40),
                     text=txt,
                     function=fn,
-                    text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Cfg.RESOLUTION.half_width, 100 + 45 * i)
+                    text_size=FontCfg.BUTTON_TEXT_SIZE,
+                ).move_center(Cfg.RESOLUTION.h_width, 100 + 45 * i)
             )
         self.objects += [
             ButtonController(buttons),
-            Text("PAUSE", 40, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 35),
+            Text("PAUSE", 40, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 35),
         ]
 
     def process_event(self, event: Event) -> None:

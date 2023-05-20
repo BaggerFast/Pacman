@@ -3,16 +3,14 @@ from functools import wraps
 
 import pygame as pg
 
+from pacman.animator import Animator, SpriteSheetAnimator, advanced_sprite_slice, sprite_slice
 from pacman.data_core.data_classes import GhostDifficult
 from pacman.data_core.enums import GhostStateEnum
-from pacman.misc.animator.animator import Animator
-from pacman.misc.animator.sprite_animator import SpriteSheetAnimator
-from pacman.misc.animator.sprite_sheet import advanced_sprite_slice, sprite_slice
 from pacman.misc.cell_util import CellUtil
 from pacman.misic import Music
 from pacman.objects import Text
 from pacman.objects.heroes.character_base import Character
-from pacman.scene_manager import SceneManager
+from pacman.scenes import SceneManager
 
 
 def ghost_state(state: GhostStateEnum):

@@ -2,13 +2,14 @@ import pygame as pg
 from pygame.event import Event
 
 from pacman.data_core import Cfg, Colors, KbKeys
-from pacman.misc.constants import Font
-from pacman.misc.serializers import LevelStorage
-from pacman.misc.util import is_esc_pressed
+from pacman.misc import is_esc_pressed
 from pacman.objects import ImageObject, Text
 from pacman.objects.buttons import Button, ButtonController
-from pacman.scene_manager import SceneManager
-from pacman.scenes.base_scene import BaseScene
+from pacman.storage import LevelStorage
+
+from ..data_core.config import FontCfg
+from .base_scene import BaseScene
+from .scene_manager import SceneManager
 
 
 class LevelsScene(BaseScene):
@@ -17,7 +18,7 @@ class LevelsScene(BaseScene):
             Button(
                 rect=self.preview.rect,
                 function=SceneManager().pop,
-                text_size=Font.BUTTON_TEXT_SIZE,
+                text_size=FontCfg.BUTTON_TEXT_SIZE,
             )
         ]
         self.__button_controller = ButtonController(buttons)
@@ -31,25 +32,25 @@ class LevelsScene(BaseScene):
         super()._create_objects()
         self.preview: ImageObject = self.game.maps.images[LevelStorage().current]
         self.preview.smoothscale(224 * 0.6, 248 * 0.6)
-        self.preview.move_center(Cfg.RESOLUTION.half_width, Cfg.RESOLUTION.half_height)
+        self.preview.move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)
         self.objects.append(self.preview)
-        self.objects.append(Text("SELECT LEVEL", 25, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30))
+        self.objects.append(Text("SELECT LEVEL", 25, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30))
 
         self.text = Text(f"Level: {self.current_level + 1}/{LevelStorage().level_count}", 20).move_center(
-            Cfg.RESOLUTION.half_width, Cfg.RESOLUTION.half_height
+            Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height
         )
         self.text2 = Text(f"L", 40, color=Colors.DARK_GRAY).move_center(
-            Cfg.RESOLUTION.WIDTH // 6 - 10, Cfg.RESOLUTION.half_height
+            Cfg.RESOLUTION.WIDTH // 6 - 10, Cfg.RESOLUTION.h_height
         )
         self.text3 = Text(f"R", 40, color=Colors.DARK_GRAY).move_center(
-            Cfg.RESOLUTION.WIDTH - (Cfg.RESOLUTION.WIDTH // 6 - 16), Cfg.RESOLUTION.half_height
+            Cfg.RESOLUTION.WIDTH - (Cfg.RESOLUTION.WIDTH // 6 - 16), Cfg.RESOLUTION.h_height
         )
         if self.current_level == 0:
             self.text2.color = Colors.BLACK
         if self.current_level == LevelStorage().level_count - 1:
             self.text3.color = Colors.BLACK
             self.text = Text(f"Level: {self.current_level + 1}", 20).move_center(
-                Cfg.RESOLUTION.half_width, Cfg.RESOLUTION.half_height
+                Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height
             )
         elif self.current_level + 1 >= len(LevelStorage().unlocked):
             self.text3.color = Colors.BLACK
@@ -71,7 +72,7 @@ class LevelsScene(BaseScene):
                 LevelStorage().set_prev_level()
             self.preview: ImageObject = self.game.maps.images[self.current_level]
             self.preview.smoothscale(224 * 0.6, 248 * 0.6)
-            self.preview.move_center(Cfg.RESOLUTION.half_width, Cfg.RESOLUTION.half_height)
+            self.preview.move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)
 
             self.objects.append(self.preview)
 
@@ -82,11 +83,11 @@ class LevelsScene(BaseScene):
             if self.current_level == LevelStorage().level_count - 1:
                 self.text3.color = Colors.BLACK
                 self.text = Text(f"Level: {self.current_level + 1}", 20).move_center(
-                    Cfg.RESOLUTION.half_width, Cfg.RESOLUTION.half_height
+                    Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height
                 )
             elif self.current_level + 1 >= len(LevelStorage().unlocked):
                 self.text3.color = Colors.BLACK
             self.text = Text(f"Level: {self.current_level + 1}/{LevelStorage().level_count}", 20).move_center(
-                Cfg.RESOLUTION.half_width, Cfg.RESOLUTION.half_height
+                Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height
             )
             self.objects.append(self.text)

@@ -1,17 +1,17 @@
-import pygame as pg
+from pygame import Rect
 from pygame.event import Event
 
-from pacman.data_core import Cfg
-from pacman.events.events import EvenType
-from pacman.events.utils import event_append
-from pacman.misc.constants import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS, Font
-from pacman.misc.serializers import SettingsStorage
-from pacman.misc.util import is_esc_pressed
+from pacman.data_core import Cfg, EvenType, event_append
+from pacman.misc import is_esc_pressed
 from pacman.misic import Music
 from pacman.objects import Text
 from pacman.objects.buttons import Button, ButtonController
-from pacman.scene_manager import SceneManager
-from pacman.scenes.base_scene import BaseScene
+from pacman.storage import SettingsStorage
+
+from ..data_core.config import FontCfg
+from ..objects.buttons.utils import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
+from .base_scene import BaseScene
+from .scene_manager import SceneManager
 
 
 class SettingsScene(BaseScene):
@@ -19,12 +19,12 @@ class SettingsScene(BaseScene):
         def __init__(self, name, i, var):
             flag_var = getattr(SettingsStorage(), var)
             super().__init__(
-                rect=pg.Rect(0, 0, 180, 35),
+                rect=Rect(0, 0, 180, 35),
                 text=name + (" ON" if flag_var else " OFF"),
-                text_size=Font.BUTTON_TEXT_SIZE,
+                text_size=FontCfg.BUTTON_TEXT_SIZE,
                 colors=BUTTON_GREEN_COLORS if flag_var else BUTTON_RED_COLORS,
             )
-            self.move_center(Cfg.RESOLUTION.half_width, 75 + i * 40)
+            self.move_center(Cfg.RESOLUTION.h_width, 75 + i * 40)
             self.name = name
             self.var = var
 
@@ -46,19 +46,19 @@ class SettingsScene(BaseScene):
 
     def _create_objects(self) -> None:
         self.difficult_button = Button(
-            rect=pg.Rect(0, 0, 120, 35),
+            rect=Rect(0, 0, 120, 35),
             function=self.click_difficult,
-            text_size=Font.BUTTON_TEXT_SIZE,
+            text_size=FontCfg.BUTTON_TEXT_SIZE,
             text=self.__dificulties[SettingsStorage().difficulty],
-        ).move_center(Cfg.RESOLUTION.half_width, self.__difficulty_pos)
+        ).move_center(Cfg.RESOLUTION.h_width, self.__difficulty_pos)
         self.create_buttons()
         self.volume_value = Text(f"{SettingsStorage().volume}%", 20).move_center(
-            Cfg.RESOLUTION.half_width,
+            Cfg.RESOLUTION.h_width,
             self.__volume_position + 30,
         )
         self.objects += [
-            Text("SETTINGS", 30, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
-            Text("VOLUME", 20).move_center(Cfg.RESOLUTION.half_width, self.__volume_position),
+            Text("SETTINGS", 30, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30),
+            Text("VOLUME", 20).move_center(Cfg.RESOLUTION.h_width, self.__volume_position),
             self.volume_value,
         ]
 
@@ -81,22 +81,22 @@ class SettingsScene(BaseScene):
 
         self.buttons += [
             Button(
-                rect=pg.Rect(0, 0, 40, 35),
+                rect=Rect(0, 0, 40, 35),
                 text="-",
                 function=lambda: self.click_sound(-5),
-            ).move_center(Cfg.RESOLUTION.half_width - 60, self.__volume_position + 30),
+            ).move_center(Cfg.RESOLUTION.h_width - 60, self.__volume_position + 30),
             Button(
-                rect=pg.Rect(0, 0, 40, 35),
+                rect=Rect(0, 0, 40, 35),
                 text="+",
                 function=lambda: self.click_sound(5),
-            ).move_center(Cfg.RESOLUTION.half_width + 65, self.__volume_position + 30),
+            ).move_center(Cfg.RESOLUTION.h_width + 65, self.__volume_position + 30),
             self.difficult_button,
             Button(
-                rect=pg.Rect(0, 0, 180, 40),
+                rect=Rect(0, 0, 180, 40),
                 text="BACK",
                 function=SceneManager().pop,
-                text_size=Font.BUTTON_TEXT_SIZE,
-            ).move_center(Cfg.RESOLUTION.half_width, 250),
+                text_size=FontCfg.BUTTON_TEXT_SIZE,
+            ).move_center(Cfg.RESOLUTION.h_width, 250),
         ]
         self.objects.append(ButtonController(self.buttons))
 

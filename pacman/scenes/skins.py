@@ -1,22 +1,24 @@
 import pygame as pg
 from pygame.event import Event
 
+from pacman.animator import sprite_slice
 from pacman.data_core import Cfg
-from pacman.misc.animator.sprite_sheet import sprite_slice
-from pacman.misc.constants import BUTTON_SKIN_BUY, Font
-from pacman.misc.serializers import FruitStorage, SkinStorage
-from pacman.misc.tmp_skin import SkinEnum
-from pacman.misc.util import is_esc_pressed
+from pacman.misc import is_esc_pressed
 from pacman.objects import ImageObject, Text
 from pacman.objects.buttons import Button, ButtonController
-from pacman.scene_manager import SceneManager
-from pacman.scenes.base_scene import BaseScene
+from pacman.storage import FruitStorage, SkinStorage
+from pacman.tmp_skin import SkinEnum
+
+from ..data_core.config import FontCfg
+from ..objects.buttons.utils import BUTTON_SKIN_BUY
+from .base_scene import BaseScene
+from .scene_manager import SceneManager
 
 
 class SkinsScene(BaseScene):
     def _create_objects(self) -> None:
         self.skin_storage = SkinStorage()
-        self.button_pos_x = Cfg.RESOLUTION.half_width - 65
+        self.button_pos_x = Cfg.RESOLUTION.h_width - 65
         self.button_pos_y = 90
         self.button_pos_multiply_y = 22
 
@@ -35,7 +37,7 @@ class SkinsScene(BaseScene):
         self.preview = self.skin_storage.current_instance.prerender_surface()
 
         self.objects += [
-            Text("SELECT SKIN", 25, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
+            Text("SELECT SKIN", 25, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30),
             self.preview,
         ]
         self.create_buttons()
@@ -103,7 +105,7 @@ class SkinsScene(BaseScene):
                         text=f"-{skin_name}-" if SkinStorage().current is skin else skin_name,
                         function=lambda s=skin: self.select_skin(s),
                         select_function=lambda s=skin: self.skin_button(s),
-                        text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
+                        text_size=FontCfg.BUTTON_FOR_SKINS_TEXT_SIZE,
                     ).move_center(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y)
                 )
             else:
@@ -113,7 +115,7 @@ class SkinsScene(BaseScene):
                         text=skin_name,
                         function=lambda s=skin: self.select_skin(s),
                         select_function=lambda s=skin: self.skin_button(s),
-                        text_size=Font.BUTTON_FOR_SKINS_TEXT_SIZE,
+                        text_size=FontCfg.BUTTON_FOR_SKINS_TEXT_SIZE,
                         colors=BUTTON_SKIN_BUY,
                     ).move_center(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y)
                 )
@@ -126,8 +128,8 @@ class SkinsScene(BaseScene):
                 text="MENU",
                 function=SceneManager().pop,
                 select_function=lambda: self.skin_button(self.skin_storage.current),
-                text_size=Font.BUTTON_TEXT_SIZE,
-            ).move_center(Cfg.RESOLUTION.half_width, 250)
+                text_size=FontCfg.BUTTON_TEXT_SIZE,
+            ).move_center(Cfg.RESOLUTION.h_width, 250)
         )
         self.objects.append(ButtonController(buttons, btn_active_index))
 

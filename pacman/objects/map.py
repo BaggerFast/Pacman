@@ -1,12 +1,12 @@
 from copy import copy
 
-import pygame as pg
 from pygame import Surface
 
-from pacman.data_core import Colors
-from pacman.data_core.interfaces import IDrawable
-from pacman.misc.animator.sprite_sheet import sprite_slice
-from pacman.objects import ImageObject, MovementObject
+from pacman.animator import sprite_slice
+from pacman.data_core import Colors, IDrawable
+
+from .base import MovementObject
+from .image import ImageObject
 
 
 class Map(MovementObject, IDrawable):
@@ -30,7 +30,7 @@ class Map(MovementObject, IDrawable):
         return srf
 
     def __load_surface(self) -> Surface:
-        surface = pg.Surface((len(self._map_data[0]) * self._tile_size, len(self._map_data) * self._tile_size))
+        surface = Surface((len(self._map_data[0]) * self._tile_size, len(self._map_data) * self._tile_size))
         for y, row in enumerate(self._map_data):
             for x, tile in enumerate(row):
                 surface.blit(self._tiles[tile - 1], (x * self._tile_size, y * self._tile_size))

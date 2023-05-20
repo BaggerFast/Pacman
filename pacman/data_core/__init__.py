@@ -1,5 +1,7 @@
 from .config import Cfg
-from .constants import KbKeys, Colors
+from .constants import Colors, KbKeys
 from .enums import DifficultEnum
+from .events import *
 from .game_objects import GameObjects
-from .path_util import PathUtil, Dirs
+from .interfaces import *
+from .path_util import Dirs, PathUtl

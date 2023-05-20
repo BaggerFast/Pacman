@@ -1,10 +1,10 @@
 import pygame as pg
 
-from pacman.data_core.interfaces import IEventful
+from pacman.data_core import IEventful
 from pacman.misc.cell_util import CellUtil
-from pacman.misc.serializers import SkinStorage
 from pacman.misic import Music
 from pacman.objects.heroes.character_base import Character
+from pacman.storage import SkinStorage
 
 
 class Pacman(Character, IEventful):

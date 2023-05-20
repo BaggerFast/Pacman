@@ -1,16 +1,15 @@
 from pygame import Rect, Surface
 from pygame.event import Event
 
-from pacman.data_core import Cfg, Colors
-from pacman.events.events import EvenType
-from pacman.events.utils import event_append
-from pacman.misc.constants import Font
-from pacman.misc.serializers import LevelStorage, SkinStorage
-from pacman.misc.util import is_esc_pressed, rand_color
+from pacman.data_core import Cfg, Colors, EvenType, event_append
+from pacman.misc import is_esc_pressed, rand_color
 from pacman.objects import ImageObject, Text
 from pacman.objects.buttons import Button, ButtonController
-from pacman.scene_manager import SceneManager
-from pacman.scenes.base_scene import BaseScene
+from pacman.storage import LevelStorage, SkinStorage
+
+from ..data_core.config import FontCfg
+from .base_scene import BaseScene
+from .scene_manager import SceneManager
 
 
 class MenuScene(BaseScene):
@@ -18,9 +17,9 @@ class MenuScene(BaseScene):
         super()._create_objects()
         self.__map_color = rand_color()
         self.preview = self.generate_map_preview()
-        self.__level_text = Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 60)
+        self.__level_text = Text(f"{LevelStorage()}", 15, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 60)
         self.objects += [
-            Text("PACMAN", 36, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
+            Text("PACMAN", 36, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30),
             self.__level_text,
         ]
         self.pacman_anim = SkinStorage().current_instance.walk
@@ -33,10 +32,10 @@ class MenuScene(BaseScene):
         SceneManager().append(MainScene(self.game, self.__map_color))
 
     def create_buttons(self) -> None:
-        from pacman.scenes.levels import LevelsScene
-        from pacman.scenes.records import RecordsScene
-        from pacman.scenes.settings import SettingsScene
-        from pacman.scenes.skins import SkinsScene
+        from .levels import LevelsScene
+        from .records import RecordsScene
+        from .settings import SettingsScene
+        from .skins import SkinsScene
 
         scene_manager = SceneManager()
         names = [
@@ -54,8 +53,8 @@ class MenuScene(BaseScene):
                     rect=Rect(0, 0, 180, 26),
                     text=name,
                     function=fn,
-                    text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Cfg.RESOLUTION.half_width // 1.5, 92 + i * 28)
+                    text_size=FontCfg.BUTTON_TEXT_SIZE,
+                ).move_center(Cfg.RESOLUTION.h_width // 1.5, 92 + i * 28)
             )
         self.objects.append(ButtonController(buttons))
 
@@ -68,7 +67,7 @@ class MenuScene(BaseScene):
         self.preview.draw(self._screen)
         self.objects.draw(self._screen)
         ImageObject(self.pacman_anim.current_image).scale(75, 75).move_center(
-            Cfg.RESOLUTION.half_width + Cfg.RESOLUTION.half_width // 2, Cfg.RESOLUTION.half_height
+            Cfg.RESOLUTION.h_width + Cfg.RESOLUTION.h_width // 2, Cfg.RESOLUTION.h_height
         ).draw(self._screen)
         return self._screen
 

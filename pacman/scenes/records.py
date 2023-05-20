@@ -1,15 +1,16 @@
 from pygame import Rect
 from pygame.event import Event
 
+from pacman.animator import sprite_slice
 from pacman.data_core import Cfg, Colors, GameObjects
-from pacman.misc.animator.sprite_sheet import sprite_slice
-from pacman.misc.constants import Font
-from pacman.misc.serializers import LevelStorage
-from pacman.misc.util import is_esc_pressed
+from pacman.misc import is_esc_pressed
 from pacman.objects import ImageObject, Text
 from pacman.objects.buttons import Button, ButtonController
-from pacman.scene_manager import SceneManager
-from pacman.scenes.base_scene import BaseScene
+from pacman.storage import LevelStorage
+
+from ..data_core.config import FontCfg
+from .base_scene import BaseScene
+from .scene_manager import SceneManager
 
 
 class RecordsScene(BaseScene):
@@ -17,10 +18,10 @@ class RecordsScene(BaseScene):
         super()._create_objects()
 
         self.objects += [
-            Text(f"{LevelStorage()}", 15, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 60),
-            Text("RECORDS", 32, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
+            Text(f"{LevelStorage()}", 15, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 60),
+            Text("RECORDS", 32, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30),
         ]
-        self.__error_text = Text("NO RECORDS", 24, color=Colors.RED).move_center(Cfg.RESOLUTION.half_width, 100)
+        self.__error_text = Text("NO RECORDS", 24, color=Colors.RED).move_center(Cfg.RESOLUTION.h_width, 100)
         self.__create_text_labels()
         self.__create_medals()
         self.create_buttons()
@@ -30,8 +31,8 @@ class RecordsScene(BaseScene):
             rect=Rect(0, 0, 180, 40),
             text="MENU",
             function=SceneManager().pop,
-            text_size=Font.BUTTON_TEXT_SIZE,
-        ).move_center(Cfg.RESOLUTION.half_width, 250)
+            text_size=FontCfg.BUTTON_TEXT_SIZE,
+        ).move_center(Cfg.RESOLUTION.h_width, 250)
         self.objects.append(ButtonController([back_button]))
 
     def __create_text_labels(self) -> None:

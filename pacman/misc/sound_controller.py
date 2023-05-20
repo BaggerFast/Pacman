@@ -1,7 +1,8 @@
 import pygame as pg
 
-from pacman.misc.loaders import load_sound
-from pacman.misc.serializers import SettingsStorage
+from pacman.storage import SettingsStorage
+
+from .utils import load_sound
 
 
 class Sound:

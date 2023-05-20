@@ -1,13 +1,13 @@
-import pygame as pg
-from pygame import Surface
+from pygame import Rect, Surface, time
 
-from pacman.data_core import GameObjects
+from pacman.animator import sprite_slice
+from pacman.data_core import GameObjects, IDrawable, ILogical
 from pacman.data_core.enums import FruitStateEnum
-from pacman.data_core.interfaces import IDrawable, ILogical
-from pacman.misc.animator.sprite_sheet import sprite_slice
 from pacman.misc.cell_util import CellUtil
-from pacman.objects import ImageObject, Text
-from pacman.objects.base import MovementObject
+
+from .base import MovementObject
+from .image import ImageObject
+from .text import Text
 
 
 class Fruit(MovementObject, IDrawable, ILogical):
@@ -18,13 +18,13 @@ class Fruit(MovementObject, IDrawable, ILogical):
         self.move_center(*CellUtil.center_pos_from_cell(pos))
         self.state = FruitStateEnum.DISABLED
 
-        self.timer = pg.time.get_ticks()
+        self.timer = time.get_ticks()
         self.eaten_text = Text(f" ", 10, self.rect)
         self.eaten_fruits_hud = GameObjects()
 
     def change_state(self, state: FruitStateEnum):
         self.state = state
-        self.timer = pg.time.get_ticks()
+        self.timer = time.get_ticks()
 
     def toggle_mode_to_eaten(self, score):
         if not self.__fruit_sprite:
@@ -35,13 +35,13 @@ class Fruit(MovementObject, IDrawable, ILogical):
         self.eaten_fruits_hud.append(ImageObject(self.__fruit_sprite.pop(), (pos_x_hud, 270)))
         self.change_state(FruitStateEnum.EATEN)
 
-    def process_collision(self, rect: pg.Rect) -> bool:
+    def process_collision(self, rect: Rect) -> bool:
         return self.state == FruitStateEnum.ACTIVE and self.rect.center == rect.center and self.__fruit_sprite
 
     def update(self):
-        if self.state is FruitStateEnum.DISABLED and pg.time.get_ticks() - self.timer >= 9000:
+        if self.state is FruitStateEnum.DISABLED and time.get_ticks() - self.timer >= 9000:
             self.change_state(FruitStateEnum.ACTIVE)
-        elif self.state is FruitStateEnum.EATEN and pg.time.get_ticks() - self.timer >= 500:
+        elif self.state is FruitStateEnum.EATEN and time.get_ticks() - self.timer >= 500:
             self.change_state(FruitStateEnum.DISABLED)
 
     def draw(self, screen: Surface) -> None:

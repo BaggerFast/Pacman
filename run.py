@@ -1,7 +1,7 @@
 from pygame import display, font, mixer, transform
 
 from pacman import Game
-from pacman.misc.loaders import load_image
+from pacman.misc import load_image
 
 
 def pg_setup():

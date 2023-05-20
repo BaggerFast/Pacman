@@ -1,10 +1,10 @@
 from pygame import Rect, Surface, draw, time
 
-from pacman.data_core import Colors
+from pacman.data_core import Colors, IDrawable
 from pacman.data_core.data_classes import Cell
-from pacman.data_core.interfaces import IDrawable
-from pacman.misc.constants import HIGH_CALORIE_SEEDS
-from pacman.objects import ImageObject, MovementObject
+
+from .base import MovementObject
+from .image import ImageObject
 
 
 class SeedContainer(MovementObject, IDrawable):
@@ -35,8 +35,8 @@ class SeedContainer(MovementObject, IDrawable):
         return [Cell(*cell) for cell in energizer_data]
 
     def __draw_seeds(self, screen) -> None:
-        from pacman.misc.serializers import SkinStorage
-        from pacman.misc.tmp_skin import SkinEnum
+        from ..storage import SkinStorage
+        from ..tmp_skin import SkinEnum
 
         if SkinStorage().equals(SkinEnum.CHROME):
             for seed in self.__seeds:
@@ -51,8 +51,8 @@ class SeedContainer(MovementObject, IDrawable):
             self.__show_energizer = not self.__show_energizer
         if not self.__show_energizer:
             return
-        from pacman.misc.serializers import SkinStorage
-        from pacman.misc.tmp_skin import SkinEnum
+        from ..storage import SkinStorage
+        from ..tmp_skin import SkinEnum
 
         if SkinStorage().equals(SkinEnum.CHROME):
             for energizer in self.__energizers:
@@ -82,7 +82,7 @@ class SeedContainer(MovementObject, IDrawable):
         return False
 
     def is_field_empty(self) -> bool:
-        return len(self.__seeds) == (self.__max_seeds - 10 if HIGH_CALORIE_SEEDS else 0)
+        return len(self.__seeds) == 0
 
     def __len__(self):
         return len(self.__seeds)

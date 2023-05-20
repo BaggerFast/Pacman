@@ -3,14 +3,13 @@ from typing import List
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import Cfg, Dirs, GameObjects, PathUtil
-from pacman.events.events import EvenType
+from pacman.data_core import Cfg, Dirs, EvenType, GameObjects, PathUtl
 from pacman.misc import LevelLoader
-from pacman.misc.serializers import LevelStorage, StorageLoader
 from pacman.misic import Music
 from pacman.objects import ImageObject, Map
-from pacman.scene_manager import SceneManager
+from pacman.scenes import SceneManager
 from pacman.scenes.menu import MenuScene
+from pacman.storage import LevelStorage, StorageLoader
 
 
 class Game:
@@ -36,7 +35,7 @@ class Game:
             self.__map = Map(self.__map_data)
 
         def read_levels(self) -> None:
-            self.levels = sorted(PathUtil.get_list(f"{Dirs.ASSET}/maps"))
+            self.levels = sorted(PathUtl.get_list(f"{Dirs.ASSET}/maps"))
             self.count = len(self.levels)
 
         def prerender_surfaces(self) -> list[ImageObject]:
@@ -48,7 +47,7 @@ class Game:
             return images
 
     def __init__(self) -> None:
-        self.storage_loader = StorageLoader(PathUtil.get("storage.json"))
+        self.storage_loader = StorageLoader(PathUtl.get("storage.json"))
         self.storage_loader.from_file()
 
         self.maps = self.Maps()

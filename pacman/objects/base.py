@@ -1,9 +1,9 @@
-import pygame as pg
+from pygame import Rect
 
 
 class MovementObject:
     def __init__(self):
-        self.rect = pg.rect.Rect(0, 0, 0, 0)
+        self.rect = Rect(0, 0, 0, 0)
 
     def move(self, x, y) -> "MovementObject":
         self.rect.x, self.rect.y = x, y

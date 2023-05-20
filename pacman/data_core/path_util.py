@@ -11,7 +11,11 @@ class Dirs(ABC):
     SOUND: Final[str] = join(ASSET, "sounds")
 
 
-class PathUtil(ABC):
+class PathUtl(ABC):
+    @staticmethod
+    def get_asset(path: str) -> str:
+        return join(Dirs.ASSET, f"{path}")
+
     @staticmethod
     def get_sound(path: str, extension="ogg") -> str:
         pth = join(Dirs.SOUND, path)
@@ -25,10 +29,6 @@ class PathUtil(ABC):
         if pth.endswith(f".{extension}"):
             return pth
         return f"{pth}.{extension}"
-
-    @staticmethod
-    def get_asset(path: str) -> str:
-        return join(Dirs.ASSET, f"{path}")
 
     @staticmethod
     def get(path: str) -> str:

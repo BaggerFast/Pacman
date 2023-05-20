@@ -2,14 +2,11 @@ from typing import List, Tuple
 
 import pygame as pg
 
-from pacman.data_core import Cfg
-from pacman.data_core.interfaces import IDrawable, ILogical
-from pacman.misc import LevelLoader
-from pacman.misc.animator.animator import Animator
-from pacman.misc.animator.sprite_animator import SpriteSheetAnimator
+from pacman.animator import Animator, SpriteSheetAnimator
+from pacman.data_core import Cfg, IDrawable, ILogical
+from pacman.misc import LevelLoader, load_image
 from pacman.misc.cell_util import CellUtil
-from pacman.misc.loaders import load_image
-from pacman.objects import MovementObject
+from pacman.objects.base import MovementObject
 
 
 class Character(MovementObject, ILogical, IDrawable):

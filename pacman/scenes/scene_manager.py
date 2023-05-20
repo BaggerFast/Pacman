@@ -1,7 +1,8 @@
 from pygame import Surface
 
 from pacman.misc.singleton import Singleton
-from pacman.scenes.base_scene import BaseScene
+
+from .base_scene import BaseScene
 
 
 class SceneManager(Singleton):

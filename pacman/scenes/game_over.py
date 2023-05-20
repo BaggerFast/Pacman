@@ -1,15 +1,14 @@
 from pygame import Rect, Surface
 
-from pacman.data_core import Cfg
-from pacman.events.events import EvenType
-from pacman.events.utils import event_append
-from pacman.misc.constants import Font
-from pacman.misc.serializers import LevelStorage
+from pacman.data_core import Cfg, EvenType, event_append
 from pacman.misic import Music
 from pacman.objects import Text
 from pacman.objects.buttons import Button, ButtonController
-from pacman.scene_manager import SceneManager
-from pacman.scenes.blur_scene import BlurScene
+from pacman.storage import LevelStorage
+
+from ..data_core.config import FontCfg
+from .blur_scene import BlurScene
+from .scene_manager import SceneManager
 
 
 class GameOverScene(BlurScene):
@@ -20,16 +19,16 @@ class GameOverScene(BlurScene):
     def _create_objects(self) -> None:
         super()._create_objects()
         self.objects += [
-            Text("GAME", 40, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
-            Text("OVER", 40, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 70),
-            Text(f"Score: {self.score}", 20).move_center(Cfg.RESOLUTION.half_width, 135),
-            Text(f"High score: {LevelStorage().get_highscore()}", 20).move_center(Cfg.RESOLUTION.half_width, 165),
+            Text("GAME", 40, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30),
+            Text("OVER", 40, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 70),
+            Text(f"Score: {self.score}", 20).move_center(Cfg.RESOLUTION.h_width, 135),
+            Text(f"High score: {LevelStorage().get_highscore()}", 20).move_center(Cfg.RESOLUTION.h_width, 165),
         ]
         self.create_buttons()
 
     def create_buttons(self) -> None:
-        from pacman.scenes.main import MainScene
-        from pacman.scenes.menu import MenuScene
+        from .main import MainScene
+        from .menu import MenuScene
 
         names = [
             ("RESTART", lambda: SceneManager().reset(MainScene(self.game))),
@@ -42,8 +41,8 @@ class GameOverScene(BlurScene):
                     rect=Rect(0, 0, 180, 35),
                     text=name,
                     function=fn,
-                    text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Cfg.RESOLUTION.half_width, 210 + 40 * i)
+                    text_size=FontCfg.BUTTON_TEXT_SIZE,
+                ).move_center(Cfg.RESOLUTION.h_width, 210 + 40 * i)
             )
         self.objects.append(ButtonController(buttons))
 

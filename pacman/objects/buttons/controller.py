@@ -2,10 +2,9 @@ from typing import List
 
 import pygame as pg
 
-from pacman.data_core import KbKeys
+from pacman.data_core import IDrawable, IEventful, KbKeys
 from pacman.data_core.enums import BtnStateEnum
-from pacman.data_core.interfaces import IDrawable, IEventful
-from pacman.objects import MovementObject
+from pacman.objects.base import MovementObject
 from pacman.objects.buttons.button import Button
 
 

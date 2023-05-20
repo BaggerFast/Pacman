@@ -1,19 +1,19 @@
-import pygame as pg
-from pygame import Surface
+from pygame import Rect, Surface, time
 from pygame.event import Event
 
 from pacman.data_core import Cfg
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
-from pacman.misc import ControlCheats, Health, LevelLoader, Score
-from pacman.misc.constants import INFINITY_LIVES, Font
-from pacman.misc.serializers import LevelStorage, SettingsStorage, SkinStorage
-from pacman.misc.tmp_skin import SkinEnum
-from pacman.misc.util import is_esc_pressed, rand_color
+from pacman.misc import Health, LevelLoader, Score, is_esc_pressed, rand_color
 from pacman.misic import Music
 from pacman.objects import Fruit, ImageObject, Map, SeedContainer, Text
 from pacman.objects.heroes import Blinky, Clyde, Inky, Pacman, Pinky
-from pacman.scene_manager import SceneManager
-from pacman.scenes.base_scene import BaseScene
+from pacman.storage import LevelStorage, SettingsStorage, SkinStorage
+from pacman.tmp_skin import SkinEnum
+
+from ..data_core.config import FontCfg
+from ..objects.cheat_codes import ControlCheats
+from .base_scene import BaseScene
+from .scene_manager import SceneManager
 
 
 class MainScene(BaseScene):
@@ -39,18 +39,18 @@ class MainScene(BaseScene):
     def __create_start_anim(self):
         self.text = []
         for i, txt in enumerate(["READY", "GO!"]):
-            self.text.append(Text(txt, 30, rect=pg.Rect(20, 0, 20, 20), font=Font.TITLE))
-            self.text[-1].move_center(Cfg.RESOLUTION.half_width, Cfg.RESOLUTION.half_height)
+            self.text.append(Text(txt, 30, rect=Rect(20, 0, 20, 20), font=FontCfg.TITLE))
+            self.text[-1].move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)
 
     def __create_hud(self):
         text = f"{'MAX MB' if SkinStorage().equals(SkinEnum.CHROME) else 'HIGHSCORE'}"
         self.objects += [
-            Text(text, Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 0, 20, 20)),
-            Text(f"{LevelStorage().get_highscore()}", size=Font.MAIN_SCENE_SIZE, rect=pg.Rect(130, 8, 20, 20)),
+            Text(text, FontCfg.MAIN_SCENE_SIZE, rect=Rect(130, 0, 20, 20)),
+            Text(f"{LevelStorage().get_highscore()}", size=FontCfg.MAIN_SCENE_SIZE, rect=Rect(130, 8, 20, 20)),
             Text(
                 text="MEMORY" if SkinStorage().equals(SkinEnum.CHROME) else "SCORE",
-                size=Font.MAIN_SCENE_SIZE,
-                rect=pg.Rect(10, 0, 20, 20),
+                size=FontCfg.MAIN_SCENE_SIZE,
+                rect=Rect(10, 0, 20, 20),
             ),
             self.__scores_value_text,
         ]
@@ -74,8 +74,8 @@ class MainScene(BaseScene):
                 ghost.update_ai_timer()
 
     def __start_label(self) -> None:
-        current_time = pg.time.get_ticks() / 1000
-        if pg.time.get_ticks() - self.game.animate_timer > self.game.time_out:
+        current_time = time.get_ticks() / 1000
+        if time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.state_text = not self.state_text
         text_alpha = 255 if self.state_text else 0
         if current_time - self._start_time > Music().INTRO.sound.get_length() / 4 * 3:
@@ -135,8 +135,8 @@ class MainScene(BaseScene):
         self.state_text = True
         self.__scores_value_text = Text(
             f"{self.score} {'Mb' if SkinStorage().equals(SkinEnum.CHROME) else ''}",
-            size=Font.MAIN_SCENE_SIZE,
-            rect=pg.Rect(10, 8, 20, 20),
+            size=FontCfg.MAIN_SCENE_SIZE,
+            rect=Rect(10, 8, 20, 20),
         )
 
     def _create_objects(self):
@@ -186,7 +186,7 @@ class MainScene(BaseScene):
                         ghost.toggle_to_hidden(score)
                         break
                     else:
-                        if not self.pacman.is_dead and not INFINITY_LIVES:
+                        if not self.pacman.is_dead:
                             self.hp.remove()
                             self.pacman.death()
                         break

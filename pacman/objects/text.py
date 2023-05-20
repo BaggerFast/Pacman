@@ -1,10 +1,10 @@
 import pygame as pg
 from pygame import Color, Rect, Surface
 
-from pacman.data_core import Colors
-from pacman.data_core.interfaces import IDrawable
-from pacman.misc.constants import Font
-from pacman.objects import MovementObject
+from pacman.data_core import Colors, IDrawable
+
+from ..data_core.config import FontCfg
+from .base import MovementObject
 
 
 class Text(MovementObject, IDrawable):
@@ -14,7 +14,7 @@ class Text(MovementObject, IDrawable):
         size: int = 0,
         rect: Rect = Rect(0, 0, 0, 0),
         color=Colors.WHITE,
-        font=Font.DEFAULT,
+        font=FontCfg.DEFAULT,
     ):
         super().__init__()
         self.__text = ""

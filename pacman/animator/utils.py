@@ -1,6 +1,6 @@
 from pygame import Surface, transform
 
-from pacman.misc.loaders import load_image
+from pacman.misc.utils import load_image
 
 
 def sprite_slice(image: str | Surface, size: tuple[int, int], scale: tuple[int, int] = None) -> tuple[Surface]:

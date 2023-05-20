@@ -1,6 +1,6 @@
 import pygame as pg
 
-from pacman.misc.animator.animator import Animator
+from .animator import Animator
 
 
 class SpriteSheetAnimator(Animator):

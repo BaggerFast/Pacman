@@ -1,18 +1,16 @@
-import pygame as pg
-from pygame import Surface
+from pygame import Rect, Surface
 from pygame.event import Event
 
-from pacman.data_core import Cfg
-from pacman.events.events import EvenType
-from pacman.events.utils import event_append
-from pacman.misc.constants import Font
-from pacman.misc.serializers import LevelStorage
-from pacman.misc.util import is_esc_pressed
+from pacman.data_core import Cfg, EvenType, event_append
+from pacman.misc import is_esc_pressed
 from pacman.misic import Music
 from pacman.objects import Text
 from pacman.objects.buttons import Button, ButtonController
-from pacman.scene_manager import SceneManager
-from pacman.scenes.blur_scene import BlurScene
+from pacman.storage import LevelStorage
+
+from ..data_core.config import FontCfg
+from .blur_scene import BlurScene
+from .scene_manager import SceneManager
 
 
 class GameWinScene(BlurScene):
@@ -25,43 +23,43 @@ class GameWinScene(BlurScene):
         LevelStorage().add_record(self.score)
         LevelStorage().unlock_next_level()
         self.objects += [
-            Text("YOU", 40, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 30),
-            Text("WON", 40, font=Font.TITLE).move_center(Cfg.RESOLUTION.half_width, 70),
-            Text(f"Score: {self.score}", 20).move_center(Cfg.RESOLUTION.half_width, 135),
-            Text(f"High score: {LevelStorage().get_highscore()}", 20).move_center(Cfg.RESOLUTION.half_width, 165),
+            Text("YOU", 40, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30),
+            Text("WON", 40, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 70),
+            Text(f"Score: {self.score}", 20).move_center(Cfg.RESOLUTION.h_width, 135),
+            Text(f"High score: {LevelStorage().get_highscore()}", 20).move_center(Cfg.RESOLUTION.h_width, 165),
         ]
         self.create_buttons()
 
     def create_buttons(self) -> None:
-        from pacman.scenes.menu import MenuScene
+        from .menu import MenuScene
 
         buttons = []
 
         if not LevelStorage().is_last_level():
             buttons.append(
                 Button(
-                    rect=pg.Rect(0, 0, 180, 35),
+                    rect=Rect(0, 0, 180, 35),
                     function=self.__next_level,
                     text="NEXT LEVEL",
-                    text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Cfg.RESOLUTION.half_width, 210)
+                    text_size=FontCfg.BUTTON_TEXT_SIZE,
+                ).move_center(Cfg.RESOLUTION.h_width, 210)
             )
         else:
             buttons.append(
                 Button(
-                    rect=pg.Rect(0, 0, 180, 35),
+                    rect=Rect(0, 0, 180, 35),
                     text="EXIT",
                     function=lambda: SceneManager().reset(MenuScene(self.game)),
-                    text_size=Font.BUTTON_TEXT_SIZE,
-                ).move_center(Cfg.RESOLUTION.half_width, 210)
+                    text_size=FontCfg.BUTTON_TEXT_SIZE,
+                ).move_center(Cfg.RESOLUTION.h_width, 210)
             )
         buttons.append(
             Button(
-                rect=pg.Rect(0, 0, 180, 35),
+                rect=Rect(0, 0, 180, 35),
                 text="MENU",
                 function=lambda: SceneManager().reset(MenuScene(self.game)),
-                text_size=Font.BUTTON_TEXT_SIZE,
-            ).move_center(Cfg.RESOLUTION.half_width, 250)
+                text_size=FontCfg.BUTTON_TEXT_SIZE,
+            ).move_center(Cfg.RESOLUTION.h_width, 250)
         )
         self.objects.append(ButtonController(buttons))
 

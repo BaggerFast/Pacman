@@ -1,43 +1,45 @@
 from typing import Tuple, Union
 
-import pygame as pg
 from PIL import Image, ImageFilter
 from pygame import Rect, Surface
+from pygame import image as img
+from pygame import transform
 
-from pacman.data_core.interfaces import IDrawable
-from pacman.misc.loaders import load_image
-from pacman.objects import MovementObject
+from pacman.data_core import IDrawable
+from pacman.misc.utils import load_image
+
+from .base import MovementObject
 
 
 class ImageObject(MovementObject, IDrawable):
-    def __init__(self, image: Union[str, pg.Surface] = None, pos: Tuple[int, int] = (0, 0)) -> None:
+    def __init__(self, image: Union[str, Surface] = None, pos: Tuple[int, int] = (0, 0)) -> None:
         super().__init__()
         if isinstance(image, str):
             self.image = load_image(image).convert_alpha()
-        elif isinstance(image, pg.Surface):
+        elif isinstance(image, Surface):
             self.image = image
 
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = pos
 
     def scale(self, x, y) -> "ImageObject":
-        self.image = pg.transform.scale(self.image, (x, y))
+        self.image = transform.scale(self.image, (x, y))
         topleft = self.rect.topleft
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
         return self
 
     def smoothscale(self, x, y) -> "ImageObject":
-        self.image = pg.transform.smoothscale(self.image, (x, y))
+        self.image = transform.smoothscale(self.image, (x, y))
         topleft = self.rect.topleft
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
         return self
 
     def blur(self, blur_count: int = 5) -> "ImageObject":
-        impil = Image.frombytes("RGBA", self.rect.size, pg.image.tostring(self.image, "RGBA"))
+        impil = Image.frombytes("RGBA", self.rect.size, img.tostring(self.image, "RGBA"))
         impil = impil.filter(ImageFilter.GaussianBlur(radius=blur_count))
-        self.image = pg.image.fromstring(impil.tobytes(), impil.size, "RGBA").convert()
+        self.image = img.fromstring(impil.tobytes(), impil.size, "RGBA").convert()
         return self
 
     def swap_color(self, from_color, to_color) -> "ImageObject":
@@ -48,7 +50,7 @@ class ImageObject(MovementObject, IDrawable):
         return self
 
     def rotate(self, angle) -> "ImageObject":
-        self.image = pg.transform.rotate(self.image, angle)
+        self.image = transform.rotate(self.image, angle)
         topleft = self.rect.topleft
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft

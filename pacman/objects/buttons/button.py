@@ -1,24 +1,27 @@
 from typing import Callable, List, Tuple, Union
 
-import pygame as pg
+from pygame import BUTTON_LEFT, MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION, Rect, Surface, draw
+from pygame.event import Event
+from pygame.font import Font
 
+from pacman.data_core import IDrawable, IEventful
+from pacman.data_core.config import FontCfg
 from pacman.data_core.enums import BtnStateEnum
-from pacman.data_core.interfaces import IDrawable, IEventful
-from pacman.misc.constants import BUTTON_DEFAULT_COLORS, ButtonColor, Font
 from pacman.misic import Music
 from pacman.objects.base import MovementObject
+from pacman.objects.buttons.utils import BUTTON_DEFAULT_COLORS, ButtonColor
 
 
 class Button(MovementObject, IDrawable, IEventful):
     def __init__(
         self,
-        rect: Union[tuple, pg.Rect],
+        rect: Union[tuple, Rect],
         function: Callable = None,
         select_function: Callable = None,
         text: str = "",
         colors: ButtonColor = BUTTON_DEFAULT_COLORS,
         text_size: int = 60,
-        font=Font.DEFAULT,
+        font=FontCfg.DEFAULT,
         active: bool = True,
     ):
         super().__init__()
@@ -26,7 +29,7 @@ class Button(MovementObject, IDrawable, IEventful):
         self.function = function
         self.select_function = select_function
         self.__text = text
-        self.font = pg.font.Font(font, text_size)
+        self.font = Font(font, text_size)
         self.active = active
         self.__colors: ButtonColor = colors
         self.state = BtnStateEnum.INITIAL
@@ -35,28 +38,28 @@ class Button(MovementObject, IDrawable, IEventful):
     def mouse_hover(self, pos: Tuple[Union[int, float], Union[int, float]]) -> bool:
         return self.rect.collidepoint(pos) and self.active
 
-    def process_mouse_motion(self, event: pg.event.Event) -> None:
-        if event.type != pg.MOUSEMOTION:
+    def process_mouse_motion(self, event: Event) -> None:
+        if event.type != MOUSEMOTION:
             return
         if self.mouse_hover(event.pos):
             self.select()
         elif self.state != BtnStateEnum.INITIAL:
             self.deselect()
 
-    def process_mouse_button_down(self, event: pg.event.Event) -> None:
-        if event.type != pg.MOUSEBUTTONDOWN or event.type == pg.MOUSEWHEEL:
+    def process_mouse_button_down(self, event: Event) -> None:
+        if event.type != MOUSEBUTTONDOWN:
             return
         if self.mouse_hover(event.pos):
             self.activate()
 
-    def process_mouse_button_up(self, event: pg.event.Event) -> None:
-        if event.type != pg.MOUSEBUTTONUP or event.type == pg.MOUSEWHEEL:
+    def process_mouse_button_up(self, event: Event) -> None:
+        if event.type != MOUSEBUTTONUP:
             return
-        if self.mouse_hover(event.pos) and event.button == pg.BUTTON_LEFT and self.state != BtnStateEnum.INITIAL:
+        if self.mouse_hover(event.pos) and event.button == BUTTON_LEFT and self.state != BtnStateEnum.INITIAL:
             self.deselect()
 
-    def process_mouse_click(self, event: pg.event.Event) -> None:
-        if not (event.type == pg.MOUSEBUTTONUP and event.type != pg.MOUSEWHEEL):
+    def process_mouse_click(self, event: Event) -> None:
+        if not (event.type == MOUSEBUTTONUP):
             return
         if self.rect.collidepoint(event.pos):
             self.select()
@@ -80,14 +83,14 @@ class Button(MovementObject, IDrawable, IEventful):
         self.__text = text
         self.surfaces = self.prepare_surfaces()
 
-    def prepare_surfaces(self) -> List[pg.Surface]:
+    def prepare_surfaces(self) -> List[Surface]:
         surfaces = []
         for index in range(len(self.__colors)):
             surfaces.append(self.prepare_surface(index))
         return surfaces
 
-    def prepare_surface(self, state_index: int) -> pg.Surface:
-        surface = pg.Surface(self.rect.size)
+    def prepare_surface(self, state_index: int) -> Surface:
+        surface = Surface(self.rect.size)
         surface = surface.convert_alpha()
         zero_rect = surface.get_rect()
 
@@ -95,15 +98,15 @@ class Button(MovementObject, IDrawable, IEventful):
         zero_text_rect = text_surface.get_rect()
         zero_text_rect.center = zero_rect.center
 
-        pg.draw.rect(surface, self.__colors[state_index].background, zero_rect, 0)
+        draw.rect(surface, self.__colors[state_index].background, zero_rect, 0)
         surface.blit(text_surface, zero_text_rect)
 
         return surface
 
-    def draw(self, screen: pg.Surface) -> None:
+    def draw(self, screen: Surface) -> None:
         screen.blit(self.surfaces[self.state.value], self.rect.topleft)
 
-    def event_handler(self, event: pg.event.Event) -> None:
+    def event_handler(self, event: Event) -> None:
         if not self.active:
             return
         self.process_mouse_button_down(event)

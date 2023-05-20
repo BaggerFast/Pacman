@@ -1,2 +1,2 @@
-from .pacman import Pacman
 from .ghosts import *
+from .pacman import Pacman

@@ -2,8 +2,8 @@ from random import choice
 
 from pacman.data_core.data_classes import GhostDifficult
 from pacman.data_core.enums import GhostStateEnum
-from pacman.misc.serializers import SettingsStorage
-from pacman.scene_manager import SceneManager
+from pacman.scenes import SceneManager
+from pacman.storage import SettingsStorage
 
 from .base import Base, ghost_state
 

@@ -2,7 +2,7 @@ from typing import Iterable, List
 
 import pygame as pg
 
-from pacman.data_core.interfaces import IDrawable, IEventful, ILogical
+from .interfaces import IDrawable, IEventful, ILogical
 
 
 class GameObjects(List):

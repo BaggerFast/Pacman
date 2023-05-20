@@ -1,6 +1,6 @@
 from pygame import Surface, time
 
-from pacman.data_core.interfaces import ILogical
+from pacman.data_core import ILogical
 
 
 class Animator(ILogical):

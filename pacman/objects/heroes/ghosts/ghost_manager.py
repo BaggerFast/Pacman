@@ -1,7 +1,6 @@
 from pygame import Surface
 
-from pacman.data_core.game_objects import GameObjects
-from pacman.data_core.interfaces import IDrawable
+from pacman.data_core import GameObjects, IDrawable
 from pacman.objects import Blinky, Clyde, Inky, Pinky
 
 

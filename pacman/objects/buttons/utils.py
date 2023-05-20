@@ -1,13 +1,13 @@
 from typing import NamedTuple
 
-import pygame as pg
+from pygame import Color
 
 from pacman.data_core import Colors
 
 
 class ButtonStateColor(NamedTuple):
-    text: pg.Color = Colors.WHITE
-    background: pg.Color = Colors.BLACK
+    text: Color = Colors.WHITE
+    background: Color = Colors.BLACK
 
 
 class ButtonColor(NamedTuple):

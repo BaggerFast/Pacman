@@ -3,7 +3,8 @@ from copy import copy
 from pygame import Surface, time
 
 from pacman.objects import ImageObject
-from pacman.scenes.base_scene import BaseScene
+
+from .base_scene import BaseScene
 
 
 class BlurScene(BaseScene):

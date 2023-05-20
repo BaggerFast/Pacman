@@ -4,12 +4,11 @@ from secrets import choice
 
 from pygame.event import Event
 
-from pacman.data_core import Dirs, PathUtil
-from pacman.events.events import EvenType
-from pacman.misc.serializers import SettingsStorage, SkinStorage
+from pacman.data_core import Dirs, EvenType, PathUtl
 from pacman.misc.singleton import Singleton
 from pacman.misc.sound_controller import Sound
-from pacman.misc.tmp_skin import SkinEnum
+from pacman.storage import SettingsStorage, SkinStorage
+from pacman.tmp_skin import SkinEnum
 
 
 class PtxUtl(ABC):
@@ -19,7 +18,7 @@ class PtxUtl(ABC):
 
     @staticmethod
     def fun(path: str) -> str:
-        pathes = PathUtil.get_list(f"{Dirs.SOUND}/fun/{path}")
+        pathes = PathUtl.get_list(f"{Dirs.SOUND}/fun/{path}")
         shuffle(pathes)
         return choice(pathes)
 
@@ -33,7 +32,7 @@ class PtxUtl(ABC):
 
     @staticmethod
     def stalker(path: str) -> str:
-        pathes = PathUtil.get_list(f"{Dirs.SOUND}/stalker/{path}")
+        pathes = PathUtl.get_list(f"{Dirs.SOUND}/stalker/{path}")
         shuffle(pathes)
         return choice(pathes)
 

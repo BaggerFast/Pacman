@@ -26,11 +26,11 @@ class ResolutionSize:
     HEIGHT: int
 
     @property
-    def half_width(self) -> int:
+    def h_width(self) -> int:
         return self.WIDTH // 2
 
     @property
-    def half_height(self) -> int:
+    def h_height(self) -> int:
         return self.HEIGHT // 2
 
     def __iter__(self):

@@ -1,4 +1,4 @@
-from pacman.misc.serializers import FruitStorage
+from pacman.storage import FruitStorage
 
 
 class Score:
