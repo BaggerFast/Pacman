@@ -1,15 +1,13 @@
 from pygame import Rect
 from pygame.event import Event
 
-from pacman.data_core import Cfg, EvenType, event_append
+from pacman.data_core import Cfg, EvenType, FontCfg, event_append
 from pacman.misc import is_esc_pressed
 from pacman.misic import Music
 from pacman.objects import Text
-from pacman.objects.buttons import Btn, ButtonController
+from pacman.objects.buttons import BTN_GREEN_COLORS, BTN_RED_COLORS, Btn, ButtonController
 from pacman.storage import SettingsStorage
 
-from ..data_core.config import FontCfg
-from ..objects.buttons.utils import BUTTON_GREEN_COLORS, BUTTON_RED_COLORS
 from .base_scene import BaseScene
 from .scene_manager import SceneManager
 
@@ -22,7 +20,7 @@ class SettingsScene(BaseScene):
                 rect=Rect(0, 0, 180, 35),
                 text=name + (" ON" if flag_var else " OFF"),
                 text_size=FontCfg.BUTTON_TEXT_SIZE,
-                colors=BUTTON_GREEN_COLORS if flag_var else BUTTON_RED_COLORS,
+                colors=BTN_GREEN_COLORS if flag_var else BTN_RED_COLORS,
             )
             self.move_center(Cfg.RESOLUTION.h_width, 75 + i * 40)
             self.name = name
@@ -34,10 +32,10 @@ class SettingsScene(BaseScene):
             event_append(EvenType.UPDATE_SOUND)
             if flag_var:
                 self.text = self.name + " ON"
-                self.colors = BUTTON_GREEN_COLORS
+                self.colors = BTN_GREEN_COLORS
             else:
                 self.text = self.name + " OFF"
-                self.colors = BUTTON_RED_COLORS
+                self.colors = BTN_RED_COLORS
             Music().CLICK.play()
 
     __volume_position = 150

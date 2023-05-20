@@ -4,11 +4,10 @@ from pygame import BUTTON_LEFT, MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION, Rec
 from pygame.event import Event
 from pygame.font import Font
 
-from pacman.data_core import IDrawable, IEventful
-from pacman.data_core.config import FontCfg
+from pacman.data_core import FontCfg, IDrawable, IEventful
 from pacman.data_core.enums import BtnStateEnum
 from pacman.misic import Music
-from pacman.objects.buttons.utils import BUTTON_DEFAULT_COLORS, ButtonColor
+from pacman.objects.buttons.utils import BTN_DEF_COLORS, BtnColor
 from pacman.objects.rect_obj import RectObj
 
 
@@ -19,7 +18,7 @@ class Btn(RectObj, IDrawable, IEventful):
         rect: Rect,
         function: Callable = None,
         select_function: Callable = None,
-        colors: ButtonColor = BUTTON_DEFAULT_COLORS,
+        colors: BtnColor = BTN_DEF_COLORS,
         text_size: int = 60,
         font: str = FontCfg.DEFAULT,
     ):
@@ -28,18 +27,18 @@ class Btn(RectObj, IDrawable, IEventful):
         self.__select_function = select_function
         self.__text = text
         self.__font = Font(font, text_size)
-        self.__colors: ButtonColor = colors
+        self.__colors: BtnColor = colors
         self.__state = BtnStateEnum.INITIAL
         self.__surfaces = self.__prepare_surfaces()
 
     # region Public
 
     @property
-    def colors(self) -> ButtonColor:
+    def colors(self) -> BtnColor:
         return self.__colors
 
     @colors.setter
-    def colors(self, colors: ButtonColor) -> None:
+    def colors(self, colors: BtnColor) -> None:
         self.__colors = colors
         self.__surfaces = self.__prepare_surfaces()
 

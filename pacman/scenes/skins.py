@@ -2,15 +2,14 @@ import pygame as pg
 from pygame.event import Event
 
 from pacman.animator import sprite_slice
-from pacman.data_core import Cfg
+from pacman.data_core import Cfg, FontCfg
 from pacman.misc import is_esc_pressed
 from pacman.objects import ImgObj, Text
 from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import FruitStorage, SkinStorage
 from pacman.tmp_skin import SkinEnum
 
-from ..data_core.config import FontCfg
-from ..objects.buttons.utils import BUTTON_SKIN_BUY
+from ..objects.buttons.utils import BTN_SKIN_BUY
 from .base_scene import BaseScene
 from .scene_manager import SceneManager
 
@@ -116,7 +115,7 @@ class SkinsScene(BaseScene):
                         function=lambda s=skin: self.select_skin(s),
                         select_function=lambda s=skin: self.skin_button(s),
                         text_size=FontCfg.BUTTON_FOR_SKINS_TEXT_SIZE,
-                        colors=BUTTON_SKIN_BUY,
+                        colors=BTN_SKIN_BUY,
                     ).move_center(self.button_pos_x, self.button_pos_y + i * self.button_pos_multiply_y)
                 )
             if skin is SkinStorage().current:

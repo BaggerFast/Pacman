@@ -1,9 +1,8 @@
 import pygame as pg
 from pygame import Color, Rect, Surface
 
-from pacman.data_core import Colors, IDrawable
+from pacman.data_core import Colors, FontCfg, IDrawable
 
-from ..data_core.config import FontCfg
 from .rect_obj import RectObj
 
 

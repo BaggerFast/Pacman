@@ -1,13 +1,12 @@
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import Cfg, Colors, KbKeys
+from pacman.data_core import Cfg, Colors, FontCfg, KbKeys
 from pacman.misc import is_esc_pressed
 from pacman.objects import ImgObj, Text
 from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import LevelStorage
 
-from ..data_core.config import FontCfg
 from .base_scene import BaseScene
 from .scene_manager import SceneManager
 

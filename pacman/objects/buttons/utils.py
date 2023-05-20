@@ -5,37 +5,37 @@ from pygame import Color
 from pacman.data_core import Colors
 
 
-class ButtonStateColor(NamedTuple):
+class BtnStateColor(NamedTuple):
     text: Color = Colors.WHITE
     background: Color = Colors.BLACK
 
 
-class ButtonColor(NamedTuple):
-    static: ButtonStateColor = ButtonStateColor(background=Colors.RED)
-    hover: ButtonStateColor = ButtonStateColor(background=Colors.BLUE)
-    click: ButtonStateColor = ButtonStateColor(background=Colors.GREEN)
+class BtnColor(NamedTuple):
+    static: BtnStateColor = BtnStateColor(background=Colors.RED)
+    hover: BtnStateColor = BtnStateColor(background=Colors.BLUE)
+    click: BtnStateColor = BtnStateColor(background=Colors.GREEN)
 
 
-BUTTON_DEFAULT_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Colors.GRAY, background=Colors.TRANSPARENT),
-    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.TRANSPARENT),
-    click=ButtonStateColor(text=Colors.DARK_GRAY, background=Colors.HALF_TRANSPARENT),
+BTN_DEF_COLORS = BtnColor(
+    static=BtnStateColor(text=Colors.GRAY, background=Colors.TRANSPARENT),
+    hover=BtnStateColor(text=Colors.WHITE, background=Colors.TRANSPARENT),
+    click=BtnStateColor(text=Colors.DARK_GRAY, background=Colors.HALF_TRANSPARENT),
 )
 
-BUTTON_GREEN_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Colors.WHITE, background=Colors.DARK_GREEN),
-    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.GREEN),
-    click=ButtonStateColor(text=Colors.WHITE, background=Colors.DARK_GREEN),
+BTN_GREEN_COLORS = BtnColor(
+    static=BtnStateColor(text=Colors.WHITE, background=Colors.DARK_GREEN),
+    hover=BtnStateColor(text=Colors.WHITE, background=Colors.GREEN),
+    click=BtnStateColor(text=Colors.WHITE, background=Colors.DARK_GREEN),
 )
 
-BUTTON_RED_COLORS = ButtonColor(
-    static=ButtonStateColor(text=Colors.WHITE, background=Colors.DARK_RED),
-    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.RED),
-    click=ButtonStateColor(text=Colors.WHITE, background=Colors.DARK_RED),
+BTN_RED_COLORS = BtnColor(
+    static=BtnStateColor(text=Colors.WHITE, background=Colors.DARK_RED),
+    hover=BtnStateColor(text=Colors.WHITE, background=Colors.RED),
+    click=BtnStateColor(text=Colors.WHITE, background=Colors.DARK_RED),
 )
 
-BUTTON_SKIN_BUY = ButtonColor(
-    static=ButtonStateColor(text=Colors.YELLOW, background=Colors.BLACK),
-    hover=ButtonStateColor(text=Colors.WHITE, background=Colors.JET),
-    click=ButtonStateColor(text=Colors.BLACK, background=Colors.BLACK),
+BTN_SKIN_BUY = BtnColor(
+    static=BtnStateColor(text=Colors.YELLOW, background=Colors.BLACK),
+    hover=BtnStateColor(text=Colors.WHITE, background=Colors.JET),
+    click=BtnStateColor(text=Colors.BLACK, background=Colors.BLACK),
 )

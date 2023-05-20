@@ -1,3 +1,3 @@
 from .btn import Btn
 from .btn_controller import ButtonController
-from .utils import BUTTON_DEFAULT_COLORS, BUTTON_GREEN_COLORS, BUTTON_RED_COLORS, BUTTON_SKIN_BUY
+from .utils import BTN_DEF_COLORS, BTN_GREEN_COLORS, BTN_RED_COLORS, BTN_SKIN_BUY

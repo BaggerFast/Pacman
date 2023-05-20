@@ -1,7 +1,7 @@
 from pygame import Rect, Surface, time
 from pygame.event import Event
 
-from pacman.data_core import Cfg
+from pacman.data_core import Cfg, FontCfg
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
 from pacman.misc import Health, LevelLoader, Score, is_esc_pressed, rand_color
 from pacman.misic import Music
@@ -10,7 +10,6 @@ from pacman.objects.heroes import Blinky, Clyde, Inky, Pacman, Pinky
 from pacman.storage import LevelStorage, SettingsStorage, SkinStorage
 from pacman.tmp_skin import SkinEnum
 
-from ..data_core.config import FontCfg
 from ..objects.cheat_codes import ControlCheats
 from .base_scene import BaseScene
 from .scene_manager import SceneManager

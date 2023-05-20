@@ -1,12 +1,11 @@
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import Cfg, EvenType, event_append
+from pacman.data_core import Cfg, EvenType, FontCfg, event_append
 from pacman.misc import is_esc_pressed
 from pacman.objects import Text
 from pacman.objects.buttons import Btn, ButtonController
 
-from ..data_core.config import FontCfg
 from .blur_scene import BlurScene
 from .scene_manager import SceneManager
 

@@ -1,13 +1,12 @@
 from pygame import Rect, Surface
 from pygame.event import Event
 
-from pacman.data_core import Cfg, Colors, EvenType, event_append
+from pacman.data_core import Cfg, Colors, EvenType, FontCfg, event_append
 from pacman.misc import is_esc_pressed, rand_color
 from pacman.objects import ImgObj, Text
 from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import LevelStorage, SkinStorage
 
-from ..data_core.config import FontCfg
 from .base_scene import BaseScene
 from .scene_manager import SceneManager
 
