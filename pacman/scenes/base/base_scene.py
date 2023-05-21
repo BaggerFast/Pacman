@@ -1,7 +1,8 @@
 from pygame import Surface, time
 from pygame.event import Event
 
-from pacman.data_core import Cfg, Colors, GameObjects
+from pacman.data_core import Cfg, Colors
+from pacman.misc import GameObjects
 
 
 class BaseScene:

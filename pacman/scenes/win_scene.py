@@ -1,19 +1,17 @@
 from pygame import Rect, Surface
 from pygame.event import Event
 
-from pacman.data_core import Cfg, EvenType, event_append
+from pacman.data_core import Cfg, EvenType, FontCfg, event_append
 from pacman.misc import is_esc_pressed
-from pacman.misic import Music
 from pacman.objects import Text
 from pacman.objects.buttons import Btn, ButtonController
+from pacman.sound import SoundController
 from pacman.storage import LevelStorage
 
-from ..data_core.config import FontCfg
-from .blur_scene import BlurScene
-from .scene_manager import SceneManager
+from .base import BlurScene, SceneManager
 
 
-class GameWinScene(BlurScene):
+class WinScene(BlurScene):
     def __init__(self, game, blur_surface: Surface, score: int):
         super().__init__(game, blur_surface)
         self.score = score
@@ -31,7 +29,7 @@ class GameWinScene(BlurScene):
         self.create_buttons()
 
     def create_buttons(self) -> None:
-        from .menu import MenuScene
+        from .menu_scene import MenuScene
 
         buttons = []
 
@@ -64,7 +62,7 @@ class GameWinScene(BlurScene):
         self.objects.append(ButtonController(buttons))
 
     def __next_level(self):
-        from pacman.scenes.main import MainScene
+        from pacman.scenes.main_scene import MainScene
 
         LevelStorage().set_next_level()
         SceneManager().reset(MainScene(self.game))
@@ -72,13 +70,13 @@ class GameWinScene(BlurScene):
     def process_event(self, event: Event) -> None:
         super().process_event(event)
         if is_esc_pressed(event):
-            from pacman.scenes.menu import MenuScene
+            from pacman.scenes.menu_scene import MenuScene
 
             SceneManager().reset(MenuScene(self.game))
 
     def on_enter(self) -> None:
-        Music().WIN.play()
+        SoundController().WIN.play()
 
     def on_exit(self) -> None:
         event_append(EvenType.SET_SETTINGS)
-        Music().WIN.stop()
+        SoundController().WIN.stop()

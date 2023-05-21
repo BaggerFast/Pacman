@@ -4,9 +4,7 @@ import pygame as pg
 
 from pacman.animator import Animator, SpriteSheetAnimator
 from pacman.data_core import Cfg, IDrawable, ILogical
-from pacman.misc import LevelLoader, load_image
-from pacman.misc.cell_util import CellUtil
-from pacman.objects.rect_obj import RectObj
+from pacman.misc import CellUtil, LevelLoader, RectObj, load_image
 
 
 class Character(RectObj, ILogical, IDrawable):

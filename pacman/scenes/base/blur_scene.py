@@ -2,7 +2,7 @@ from copy import copy
 
 from pygame import Surface, time
 
-from pacman.objects import ImgObj
+from pacman.misc import ImgObj
 
 from .base_scene import BaseScene
 

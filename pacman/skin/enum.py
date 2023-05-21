@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pacman.objects.skins import Skin
+from .skin import Skin
 
 
 class SkinEnum(Enum):

@@ -1,17 +1,15 @@
-import pygame as pg
+from pygame import Rect
 from pygame.event import Event
 
 from pacman.animator import sprite_slice
 from pacman.data_core import Cfg, FontCfg
-from pacman.misc import is_esc_pressed
-from pacman.objects import ImgObj, Text
-from pacman.objects.buttons import Btn, ButtonController
+from pacman.misc import ImgObj, is_esc_pressed
+from pacman.objects import Btn, ButtonController, Text
+from pacman.objects.buttons import BTN_SKIN_BUY
+from pacman.skin import SkinEnum
 from pacman.storage import FruitStorage, SkinStorage
-from pacman.tmp_skin import SkinEnum
 
-from ..objects.buttons.utils import BTN_SKIN_BUY
-from .base_scene import BaseScene
-from .scene_manager import SceneManager
+from .base import BaseScene, SceneManager
 
 
 class SkinsScene(BaseScene):
@@ -33,7 +31,7 @@ class SkinsScene(BaseScene):
             ("STALKER", SkinEnum.STALKER),
         ]
         self.skins = sorted(self.skins, key=lambda s: self.skin_storage.is_unlocked(s[1]), reverse=True)
-        self.preview = self.skin_storage.current_instance.prerender_surface()
+        self.preview = self.__get_skin_preview(self.skin_storage.current)
 
         self.objects += [
             Text("SELECT SKIN", 25, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30),
@@ -42,6 +40,11 @@ class SkinsScene(BaseScene):
         self.create_buttons()
         self.create_fruits_and_text_we_have()
         self.create_fruits_and_text_for_skins()
+
+    @staticmethod
+    def __get_skin_preview(skin: SkinEnum):
+        pos = Cfg.RESOLUTION.h_width + Cfg.RESOLUTION.h_width // 2, Cfg.RESOLUTION.h_height
+        return skin.value.preview().scale(80, 80).move_center(*pos)
 
     def create_fruits_and_text_we_have(self) -> None:
         for i, fruit_img in enumerate(self.fruit_images):
@@ -75,7 +78,7 @@ class SkinsScene(BaseScene):
                     multiply_x += 1
 
     def skin_button(self, skin: SkinEnum):
-        self.preview.image = skin.value.image.image
+        self.preview.image = self.__get_skin_preview(skin).image
 
     def select_skin(self, skin: SkinEnum) -> None:
         if self.skin_storage.is_unlocked(skin):
@@ -100,7 +103,7 @@ class SkinsScene(BaseScene):
             if self.skin_storage.is_unlocked(skin):
                 buttons.append(
                     Btn(
-                        rect=pg.Rect(0, 0, 90, 25),
+                        rect=Rect(0, 0, 90, 25),
                         text=f"-{skin_name}-" if SkinStorage().current is skin else skin_name,
                         function=lambda s=skin: self.select_skin(s),
                         select_function=lambda s=skin: self.skin_button(s),
@@ -110,7 +113,7 @@ class SkinsScene(BaseScene):
             else:
                 buttons.append(
                     Btn(
-                        rect=pg.Rect(0, 0, 90, 25),
+                        rect=Rect(0, 0, 90, 25),
                         text=skin_name,
                         function=lambda s=skin: self.select_skin(s),
                         select_function=lambda s=skin: self.skin_button(s),
@@ -123,7 +126,7 @@ class SkinsScene(BaseScene):
 
         buttons.append(
             Btn(
-                rect=pg.Rect(0, 0, 180, 40),
+                rect=Rect(0, 0, 180, 40),
                 text="MENU",
                 function=SceneManager().pop,
                 select_function=lambda: self.skin_button(self.skin_storage.current),

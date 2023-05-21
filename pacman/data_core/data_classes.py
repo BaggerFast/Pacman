@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Callable
 
 from pygame import Rect
 
@@ -8,6 +9,15 @@ class GhostDifficult:
     frightened: int
     chase: int
     scatter: int
+
+
+@dataclass(frozen=True)
+class Cheat:
+    cheat_code: str
+    function: Callable
+
+    def __call__(self):
+        self.function()
 
 
 @dataclass(frozen=True)

@@ -1,4 +1,4 @@
-class Health:
+class HpSystem:
     def __init__(self, lives: int = 1, max_lives: int = 5):
         self.__lives = lives
         self.__max_lives = max_lives

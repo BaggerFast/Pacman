@@ -2,14 +2,13 @@ from pygame import Rect
 from pygame.event import Event
 
 from pacman.animator import sprite_slice
-from pacman.data_core import Cfg, Colors, FontCfg, GameObjects
-from pacman.misc import is_esc_pressed
-from pacman.objects import ImgObj, Text
+from pacman.data_core import Cfg, Colors, FontCfg
+from pacman.misc import GameObjects, ImgObj, is_esc_pressed
+from pacman.objects import Text
 from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import LevelStorage
 
-from .base_scene import BaseScene
-from .scene_manager import SceneManager
+from .base import BaseScene, SceneManager
 
 
 class RecordsScene(BaseScene):

@@ -1,9 +1,11 @@
 from pygame import KEYDOWN, KEYUP, Surface
 from pygame.event import Event
 
-from pacman.data_core import GameObjects, IDrawable, IEventful, KbKeys
+from pacman.data_core import IDrawable, IEventful, KbKeys
 from pacman.data_core.enums import BtnStateEnum
-from pacman.objects.buttons.btn import Btn
+from pacman.misc import GameObjects
+
+from .btn import Btn
 
 
 class ButtonController(IDrawable, IEventful):

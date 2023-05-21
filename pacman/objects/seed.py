@@ -2,8 +2,9 @@ from pygame import Rect, Surface, draw, time
 
 from pacman.data_core import Colors, IDrawable
 from pacman.data_core.data_classes import Cell
-
-from .img_obj import ImgObj
+from pacman.misc import ImgObj
+from pacman.skin import SkinEnum
+from pacman.storage import SkinStorage
 
 
 class SeedContainer(IDrawable):
@@ -34,9 +35,6 @@ class SeedContainer(IDrawable):
         return [Cell(*cell) for cell in energizer_data]
 
     def __draw_seeds(self, screen) -> None:
-        from ..storage import SkinStorage
-        from ..tmp_skin import SkinEnum
-
         if SkinStorage().equals(SkinEnum.CHROME):
             for seed in self.__seeds:
                 self.__ram_img.move_center(*seed.rect.center).draw(screen)
@@ -50,9 +48,6 @@ class SeedContainer(IDrawable):
             self.__show_energizer = not self.__show_energizer
         if not self.__show_energizer:
             return
-        from ..storage import SkinStorage
-        from ..tmp_skin import SkinEnum
-
         if SkinStorage().equals(SkinEnum.CHROME):
             for energizer in self.__energizers:
                 self.__yandex_img.move_center(*energizer.rect.center).draw(screen)

@@ -3,16 +3,13 @@ from pygame.event import Event
 
 from pacman.data_core import Cfg, FontCfg
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
-from pacman.misc import Health, LevelLoader, Score, is_esc_pressed, rand_color
-from pacman.misic import Music
-from pacman.objects import Fruit, ImgObj, Map, SeedContainer, Text
-from pacman.objects.heroes import Blinky, Clyde, Inky, Pacman, Pinky
+from pacman.misc import HpSystem, ImgObj, LevelLoader, ScoreSystem, is_esc_pressed, rand_color
+from pacman.objects import Blinky, Clyde, Fruit, Inky, Map, Pacman, Pinky, SeedContainer, Text
+from pacman.skin import SkinEnum
+from pacman.sound import SoundController
 from pacman.storage import LevelStorage, SettingsStorage, SkinStorage
-from pacman.tmp_skin import SkinEnum
 
-from ..objects.cheat_codes import ControlCheats
-from .base_scene import BaseScene
-from .scene_manager import SceneManager
+from .base import BaseScene, SceneManager
 
 
 class MainScene(BaseScene):
@@ -21,19 +18,19 @@ class MainScene(BaseScene):
     def __init__(self, game, map_color=None):
         self._map_color = rand_color() if not map_color else map_color
         super().__init__(game)
-        Music().update_random_sounds()
+        SoundController().update_random_sounds()
 
     def __play_sound(self):
-        if not Music().BACK.is_busy():
-            Music().BACK.play()
+        if not SoundController().BACK.is_busy():
+            SoundController().BACK.play()
         if self.pacman.animator != self.pacman.dead_anim:
             if any(ghost.state is GhostStateEnum.FRIGHTENED for ghost in self.__ghosts):
-                Music().BACK.pause()
-                if not Music().FRIGHTENED.is_busy():
-                    Music().FRIGHTENED.play()
+                SoundController().BACK.pause()
+                if not SoundController().FRIGHTENED.is_busy():
+                    SoundController().FRIGHTENED.play()
             else:
-                Music().BACK.unpause()
-                Music().FRIGHTENED.stop()
+                SoundController().BACK.unpause()
+                SoundController().FRIGHTENED.stop()
 
     def __create_start_anim(self):
         self.text = []
@@ -66,7 +63,7 @@ class MainScene(BaseScene):
         if self.state is not GameStateEnum.INTRO:
             return
         self.__start_label()
-        if not Music().INTRO.is_busy():
+        if not SoundController().INTRO.is_busy():
             self.state = GameStateEnum.ACTION
             self.text.clear()
             for ghost in self.__ghosts:
@@ -77,7 +74,7 @@ class MainScene(BaseScene):
         if time.get_ticks() - self.game.animate_timer > self.game.time_out:
             self.state_text = not self.state_text
         text_alpha = 255 if self.state_text else 0
-        if current_time - self._start_time > Music().INTRO.length / 4 * 3:
+        if current_time - self._start_time > SoundController().INTRO.length / 4 * 3:
             if len(self.text) > 1:
                 del self.text[0]
         self.text[0].set_alpha(text_alpha)
@@ -103,14 +100,14 @@ class MainScene(BaseScene):
 
     def on_enter(self) -> None:
         if self.pacman.animator != self.pacman.dead_anim:
-            Music().BACK.unpause()
+            SoundController().BACK.unpause()
         if any(ghost.state is GhostStateEnum.FRIGHTENED for ghost in self.__ghosts):
-            Music().BACK.pause()
-            Music().FRIGHTENED.unpause()
+            SoundController().BACK.pause()
+            SoundController().FRIGHTENED.unpause()
 
     def on_exit(self) -> None:
-        Music().BACK.stop()
-        Music().FRIGHTENED.stop()
+        SoundController().BACK.stop()
+        SoundController().FRIGHTENED.stop()
 
     # endregion
 
@@ -120,15 +117,15 @@ class MainScene(BaseScene):
             GameStateEnum.ACTION: self.game_logic,
         }
 
-        self.score = Score()
-        Music().INTRO.play()
+        self.score = ScoreSystem()
+        SoundController().INTRO.play()
         self.state = GameStateEnum.INTRO
         self.__loader = LevelLoader(self.game.maps.levels[LevelStorage().current])
         self.__seeds = SeedContainer(self.game, self.__loader.seeds_map, self.__loader.energizers_pos)
         self.__map = Map(self.__loader.map, self._map_color)
         self.__create_start_anim()
         hp = 3 - SettingsStorage().difficulty
-        self.hp = Health(hp, 4)
+        self.hp = HpSystem(hp, 4)
         self.__seeds_eaten = 0
         self.fruit = Fruit(self.__loader.fruit_pos)
         self.state_text = True
@@ -144,7 +141,7 @@ class MainScene(BaseScene):
         self.objects += [self.__map, self.__seeds, self.fruit]
         self.__create_characters()
         self.__create_hud()
-        self.objects.append(ControlCheats([["aezakmi", self.hp.add]]))
+        # self.objects.append(ControlCheats([["aezakmi", self.hp.add]]))
 
     def __create_characters(self):
         self.pacman = Pacman(self.__loader)
@@ -165,7 +162,7 @@ class MainScene(BaseScene):
     def __process_collision(self) -> None:
         pacman_rect = self.pacman.rect
         if self.fruit.process_collision(pacman_rect):
-            Music().FRUIT.play()
+            SoundController().FRUIT.play()
             score = self.score.eat_fruit()
             self.fruit.toggle_mode_to_eaten(score)
         elif self.__seeds.energizer_collision(pacman_rect):
@@ -175,8 +172,8 @@ class MainScene(BaseScene):
         elif self.__seeds.seed_collision(pacman_rect):
             self.__seeds_eaten += 1
             self.score.eat_seed()
-            if not Music().SEED.is_busy():
-                Music().SEED.play()
+            if not SoundController().SEED.is_busy():
+                SoundController().SEED.play()
         else:
             for ghost in self.__ghosts:
                 if ghost.collision_check(pacman_rect):
@@ -192,16 +189,16 @@ class MainScene(BaseScene):
 
     def __check_game_status(self):
         if self.__seeds.is_field_empty():
-            from pacman.scenes.game_win import GameWinScene
+            from pacman.scenes.win_scene import WinScene
 
-            SceneManager().reset(GameWinScene(self.game, self._screen, int(self.score)))
-        elif self.pacman.death_is_finished() and not Music().DEATH.is_busy():
+            SceneManager().reset(WinScene(self.game, self._screen, int(self.score)))
+        elif self.pacman.death_is_finished() and not SoundController().DEATH.is_busy():
             if self.hp:
                 self._create_objects()
                 return
-            from pacman.scenes.game_over import GameOverScene
+            from pacman.scenes.lose_scene import LoseScene
 
-            SceneManager().reset(GameOverScene(self.game, self._screen, int(self.score)))
+            SceneManager().reset(LoseScene(self.game, self._screen, int(self.score)))
 
     def __update_score_text(self):
         self.__scores_value_text.text = f"{self.score} {'Mb' if SkinStorage().equals(SkinEnum.CHROME) else ''}"
@@ -217,6 +214,6 @@ class MainScene(BaseScene):
     def process_event(self, event: Event) -> None:
         super().process_event(event)
         if is_esc_pressed(event) and self.state != GameStateEnum.INTRO:
-            from pacman.scenes.pause import PauseScene
+            from pacman.scenes.pause_scene import PauseScene
 
             SceneManager().append(PauseScene(self.game, self._screen))

@@ -1,7 +1,6 @@
 from pacman.data_core import EvenType, event_append
-from pacman.objects.skins import Skin
+from pacman.skin import Skin, SkinEnum
 
-from ..tmp_skin import SkinEnum
 from .utils import SerDes
 
 

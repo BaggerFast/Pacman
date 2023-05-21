@@ -2,13 +2,12 @@ from pygame import Rect, Surface
 from pygame.event import Event
 
 from pacman.data_core import Cfg, Colors, EvenType, FontCfg, event_append
-from pacman.misc import is_esc_pressed, rand_color
-from pacman.objects import ImgObj, Text
+from pacman.misc import ImgObj, is_esc_pressed, rand_color
+from pacman.objects import Text
 from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import LevelStorage, SkinStorage
 
-from .base_scene import BaseScene
-from .scene_manager import SceneManager
+from .base import BaseScene, SceneManager
 
 
 class MenuScene(BaseScene):
@@ -25,16 +24,16 @@ class MenuScene(BaseScene):
         self.create_buttons()
 
     def play_game(self) -> None:
-        from pacman.scenes.main import MainScene
+        from pacman.scenes.main_scene import MainScene
 
         event_append(EvenType.SET_SETTINGS)
         SceneManager().append(MainScene(self.game, self.__map_color))
 
     def create_buttons(self) -> None:
-        from .levels import LevelsScene
-        from .records import RecordsScene
-        from .settings import SettingsScene
-        from .skins import SkinsScene
+        from .levels_scene import LevelsScene
+        from .records_scene import RecordsScene
+        from .settings_scene import SettingsScene
+        from .skins_scene import SkinsScene
 
         scene_manager = SceneManager()
         names = [

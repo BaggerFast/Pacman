@@ -21,6 +21,7 @@ def rand_color(brightness: int = 75) -> tuple[int, int, int]:
 
 
 def load_image(image_path: str, extension: str = "png") -> Surface:
+    print()
     return image.load(PathUtl.get_img(image_path, extension))
 
 

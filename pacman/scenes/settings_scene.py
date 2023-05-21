@@ -3,13 +3,12 @@ from pygame.event import Event
 
 from pacman.data_core import Cfg, EvenType, FontCfg, event_append
 from pacman.misc import is_esc_pressed
-from pacman.misic import Music
-from pacman.objects import Text
-from pacman.objects.buttons import BTN_GREEN_COLORS, BTN_RED_COLORS, Btn, ButtonController
+from pacman.objects import Btn, ButtonController, Text
+from pacman.objects.buttons import BTN_GREEN_COLORS, BTN_RED_COLORS
+from pacman.sound import SoundController
 from pacman.storage import SettingsStorage
 
-from .base_scene import BaseScene
-from .scene_manager import SceneManager
+from .base import BaseScene, SceneManager
 
 
 class SettingsScene(BaseScene):
@@ -36,7 +35,7 @@ class SettingsScene(BaseScene):
             else:
                 self.text = self.name + " OFF"
                 self.colors = BTN_RED_COLORS
-            Music().CLICK.play()
+            SoundController().CLICK.play()
 
     __volume_position = 150
     __difficulty_pos = 210

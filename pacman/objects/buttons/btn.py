@@ -6,9 +6,10 @@ from pygame.font import Font
 
 from pacman.data_core import FontCfg, IDrawable, IEventful
 from pacman.data_core.enums import BtnStateEnum
-from pacman.misic import Music
-from pacman.objects.buttons.utils import BTN_DEF_COLORS, BtnColor
-from pacman.objects.rect_obj import RectObj
+from pacman.misc import RectObj
+
+from ...sound import SoundController
+from .utils import BTN_DEF_COLORS, BtnColor
 
 
 class Btn(RectObj, IDrawable, IEventful):
@@ -63,7 +64,7 @@ class Btn(RectObj, IDrawable, IEventful):
         self.__state = BtnStateEnum.CLICK
 
     def click(self) -> None:
-        Music().CLICK.play()
+        SoundController().CLICK.play()
         if isinstance(self.__function, Callable):
             self.__function()
 

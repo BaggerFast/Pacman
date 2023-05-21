@@ -6,7 +6,7 @@ from pygame import image as img
 from pygame import transform
 
 from pacman.data_core import IDrawable
-from pacman.misc.utils import load_image
+from pacman.misc import load_image
 
 from .rect_obj import RectObj
 

@@ -1,12 +1,10 @@
 from pygame import Rect, Surface, time
 
 from pacman.animator import sprite_slice
-from pacman.data_core import GameObjects, IDrawable, ILogical
+from pacman.data_core import IDrawable, ILogical
 from pacman.data_core.enums import FruitStateEnum
-from pacman.misc.cell_util import CellUtil
+from pacman.misc import CellUtil, GameObjects, ImgObj, RectObj
 
-from .img_obj import ImgObj
-from .rect_obj import RectObj
 from .text import Text
 
 

@@ -1,15 +1,14 @@
 from pygame import Rect, Surface
 
-from pacman.data_core import Cfg, EvenType, event_append, FontCfg
-from pacman.misic import Music
-from pacman.objects import Text
-from pacman.objects.buttons import Btn, ButtonController
+from pacman.data_core import Cfg, EvenType, FontCfg, event_append
+from pacman.objects import Btn, ButtonController, Text
+from pacman.sound import SoundController
 from pacman.storage import LevelStorage
-from .blur_scene import BlurScene
-from .scene_manager import SceneManager
+
+from .base import BlurScene, SceneManager
 
 
-class GameOverScene(BlurScene):
+class LoseScene(BlurScene):
     def __init__(self, game, blur_surface: Surface, score: int):
         super().__init__(game, blur_surface)
         self.score = score
@@ -25,8 +24,8 @@ class GameOverScene(BlurScene):
         self.create_buttons()
 
     def create_buttons(self) -> None:
-        from .main import MainScene
-        from .menu import MenuScene
+        from .main_scene import MainScene
+        from .menu_scene import MenuScene
 
         names = [
             ("RESTART", lambda: SceneManager().reset(MainScene(self.game))),
@@ -46,7 +45,7 @@ class GameOverScene(BlurScene):
 
     def on_enter(self) -> None:
         event_append(EvenType.GET_SETTINGS)
-        Music().LOSE.play()
+        SoundController().LOSE.play()
 
     def on_exit(self) -> None:
-        Music().LOSE.stop()
+        SoundController().LOSE.stop()

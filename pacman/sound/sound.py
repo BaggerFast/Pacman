@@ -1,8 +1,7 @@
 from pygame.mixer import Channel
 
+from pacman.misc import load_sound
 from pacman.storage import SettingsStorage
-
-from .utils import load_sound
 
 
 class Sound:

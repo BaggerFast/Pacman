@@ -3,7 +3,7 @@ from typing import Iterable, List
 from pygame import Surface
 from pygame.event import Event
 
-from .interfaces import IDrawable, IEventful, ILogical
+from pacman.data_core import IDrawable, IEventful, ILogical
 
 
 class GameObjects(List):
@@ -45,7 +45,7 @@ class GameObjects(List):
 
     def __check_type(self, item):
         if not isinstance(item, self.__included_types):
-            raise Exception("Wrong type")
+            raise ValueError(f"Object type: {type(item)} is not in {self.__included_types}")
 
     def __iadd__(self, other):
         for item in other:

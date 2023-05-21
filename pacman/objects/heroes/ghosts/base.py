@@ -6,11 +6,12 @@ import pygame as pg
 from pacman.animator import Animator, SpriteSheetAnimator, advanced_sprite_slice, sprite_slice
 from pacman.data_core.data_classes import GhostDifficult
 from pacman.data_core.enums import GhostStateEnum
-from pacman.misc.cell_util import CellUtil
-from pacman.misic import Music
+from pacman.misc import CellUtil
 from pacman.objects import Text
-from pacman.objects.heroes.character_base import Character
 from pacman.scenes import SceneManager
+from pacman.sound import SoundController
+
+from ..character_base import Character
 
 
 def ghost_state(state: GhostStateEnum):
@@ -140,7 +141,7 @@ class Base(Character):
         if self.check_ai_timer(self.diffucult_settings.frightened):
             # todo: fix score problem
             SceneManager().current.score.deactivate_fear_mode()
-            Music().FRIGHTENED.stop()
+            SoundController().FRIGHTENED.stop()
             self.deceleration_multiplier = 1
             self.state = GhostStateEnum.SCATTER
             self.animator = self.walk_anim
@@ -205,7 +206,7 @@ class Base(Character):
         self.gg_text.text = f"{score}"
         self.update_ai_timer()
         if self.state is not GhostStateEnum.HIDDEN:
-            Music().GHOST.play()
+            SoundController().GHOST.play()
         self.state = GhostStateEnum.HIDDEN
         self.animator = self.eatten_anim
 

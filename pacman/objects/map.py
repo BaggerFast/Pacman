@@ -4,8 +4,7 @@ from pygame import Surface
 
 from pacman.animator import sprite_slice
 from pacman.data_core import Cfg, Colors, IDrawable
-
-from .img_obj import ImgObj
+from pacman.misc import ImgObj
 
 
 class Map(IDrawable):

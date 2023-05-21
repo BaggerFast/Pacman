@@ -1,6 +1,6 @@
 from abc import ABC
 from math import hypot
-from typing import Tuple, Final
+from typing import Final, Tuple
 
 from pygame import Rect
 

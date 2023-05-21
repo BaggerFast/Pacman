@@ -1,54 +1,27 @@
-from abc import ABC
-from random import shuffle
-from secrets import choice
-
 from pygame.event import Event
 
-from pacman.data_core import Dirs, EvenType, PathUtl
-from pacman.misc.singleton import Singleton
-from pacman.misc.sound_controller import Sound
+from pacman.data_core import EvenType
+from pacman.misc import Singleton
+from pacman.skin import SkinEnum
 from pacman.storage import SettingsStorage, SkinStorage
-from pacman.tmp_skin import SkinEnum
+
+from .sound import Sound
+from .utils import PtxUtl
 
 
-class PtxUtl(ABC):
-    @staticmethod
-    def norm(path: str) -> str:
-        return f"default/{path}"
-
-    @staticmethod
-    def fun(path: str) -> str:
-        pathes = PathUtl.get_list(f"{Dirs.SOUND}/fun/{path}")
-        shuffle(pathes)
-        return choice(pathes)
-
-    @staticmethod
-    def valve(path: str) -> str:
-        return f"valve/{path}"
-
-    @staticmethod
-    def win(path: str) -> str:
-        return f"windows/{path}"
-
-    @staticmethod
-    def stalker(path: str) -> str:
-        pathes = PathUtl.get_list(f"{Dirs.SOUND}/stalker/{path}")
-        shuffle(pathes)
-        return choice(pathes)
-
-
-class Music(Singleton):
+class SoundController(Singleton):
     def __init__(self):
+        self.WIN = Sound(PtxUtl.norm("lose"))
+        self.LOSE = Sound(PtxUtl.norm("lose"))
         self.CLICK = Sound(PtxUtl.norm("click"))
-        self.BACK = Sound(PtxUtl.norm("back"), 3)
-        self.SEED = Sound(PtxUtl.norm("seed"), 4)
         self.INTRO = Sound(PtxUtl.norm("intro"))
-        self.DEATH = Sound(PtxUtl.norm("death"))
-        self.FRUIT = Sound(PtxUtl.norm("eat_fruit"), 4)
-        self.GHOST = Sound(PtxUtl.norm("eat_ghost"), 4)
-        self.LOSE = Sound(PtxUtl.norm("lose"), 2)
-        self.WIN = Sound(PtxUtl.norm("lose"), 2)
-        self.FRIGHTENED = Sound(PtxUtl.norm("frightened"), 6)
+        self.BACK = Sound(PtxUtl.norm("back"))
+        self.SEED = Sound(PtxUtl.norm("seed"), 3)
+        self.DEATH = Sound(PtxUtl.norm("death"), 3)
+        self.FRUIT = Sound(PtxUtl.norm("eat_fruit"), 3)
+        self.GHOST = Sound(PtxUtl.norm("eat_ghost"), 3)
+
+        self.FRIGHTENED = Sound(PtxUtl.norm("frightened"), 4)
 
         self.__reload_sound(False)
 

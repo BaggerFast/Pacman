@@ -37,7 +37,7 @@ class GameStateEnum(Enum):
 
 # endregion
 
-# region ListEnum
+# region List
 
 
 class DifficultEnum(Enum):

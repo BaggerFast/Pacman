@@ -1,7 +1,4 @@
-from pacman.storage import FruitStorage, SettingsStorage
-
-
-class Score:
+class ScoreSystem:
     def __init__(self) -> None:
         self.__score = 0
         self.__fear_count = 0
@@ -18,6 +15,8 @@ class Score:
         return self.__update_score(10)
 
     def eat_fruit(self) -> int:
+        from pacman.storage import FruitStorage
+
         FruitStorage().store_fruit(self.__eaten_fruits, 1)
         self.__eaten_fruits += 1
         return self.__update_score(300 * self.__eaten_fruits, True)
@@ -43,6 +42,8 @@ class Score:
     def __update_score(self, value: int, diff_boost: bool = False) -> int:
         tmp_score = self.__score
         if diff_boost:
+            from pacman.storage import SettingsStorage
+
             value *= SettingsStorage().difficulty + 1
         self.__score += value
         return self.score - tmp_score

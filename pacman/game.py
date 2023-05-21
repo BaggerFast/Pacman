@@ -3,12 +3,12 @@ from typing import List
 import pygame as pg
 from pygame.event import Event
 
-from pacman.data_core import Cfg, Dirs, EvenType, GameObjects, PathUtl
-from pacman.misc import LevelLoader
-from pacman.misic import Music
-from pacman.objects import ImgObj, Map
+from pacman.data_core import Cfg, Dirs, EvenType, PathUtl
+from pacman.misc import GameObjects, ImgObj, LevelLoader
+from pacman.objects import Map
 from pacman.scenes import SceneManager
-from pacman.scenes.menu import MenuScene
+from pacman.scenes.menu_scene import MenuScene
+from pacman.sound import SoundController
 from pacman.storage import LevelStorage, StorageLoader
 
 
@@ -82,7 +82,7 @@ class Game:
 
     def __process_all_events(self) -> None:
         for event in pg.event.get():
-            Music().event_handler(event)
+            SoundController().event_handler(event)
             SceneManager().current.process_event(event)
             self.objects.event_handler(event)
             self.__process_exit_events(event)

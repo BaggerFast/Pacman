@@ -1,14 +1,13 @@
-import pygame as pg
+from pygame import KEYDOWN
 from pygame.event import Event
 
 from pacman.data_core import Cfg, Colors, FontCfg, KbKeys
-from pacman.misc import is_esc_pressed
-from pacman.objects import ImgObj, Text
+from pacman.misc import ImgObj, is_esc_pressed
+from pacman.objects import Text
 from pacman.objects.buttons import Btn, ButtonController
 from pacman.storage import LevelStorage
 
-from .base_scene import BaseScene
-from .scene_manager import SceneManager
+from .base import BaseScene, SceneManager
 
 
 class LevelsScene(BaseScene):
@@ -66,7 +65,7 @@ class LevelsScene(BaseScene):
         super().process_event(event)
         if is_esc_pressed(event):
             SceneManager().pop()
-        if event.type == pg.KEYDOWN:
+        if event.type == KEYDOWN:
             if event.key in KbKeys.RIGHT and self.current_level != LevelStorage().level_count - 1:
                 if not (self.current_level + 1 >= len(LevelStorage().unlocked)):
                     LevelStorage().set_next_level()
