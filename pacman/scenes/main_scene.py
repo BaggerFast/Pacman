@@ -2,9 +2,10 @@ from pygame import Rect, Surface, time
 from pygame.event import Event
 
 from pacman.data_core import Cfg, FontCfg
+from pacman.data_core.data_classes import Cheat
 from pacman.data_core.enums import GameStateEnum, GhostStateEnum
 from pacman.misc import HpSystem, ImgObj, LevelLoader, ScoreSystem, is_esc_pressed, rand_color
-from pacman.objects import Blinky, Clyde, Fruit, Inky, Map, Pacman, Pinky, SeedContainer, Text
+from pacman.objects import Blinky, CheatController, Clyde, Fruit, Inky, Map, Pacman, Pinky, SeedContainer, Text
 from pacman.skin import SkinEnum
 from pacman.sound import SoundController
 from pacman.storage import LevelStorage, SettingsStorage, SkinStorage
@@ -141,7 +142,7 @@ class MainScene(BaseScene):
         self.objects += [self.__map, self.__seeds, self.fruit]
         self.__create_characters()
         self.__create_hud()
-        # self.objects.append(ControlCheats([["aezakmi", self.hp.add]]))
+        self.objects.append(CheatController([Cheat("aezakmi", self.hp.add)]))
 
     def __create_characters(self):
         self.pacman = Pacman(self.__loader)

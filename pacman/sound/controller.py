@@ -11,6 +11,7 @@ from .utils import PtxUtl
 
 class SoundController(Singleton):
     def __init__(self):
+        self.CHEAT = Sound(PtxUtl.norm("cheat"))
         self.WIN = Sound(PtxUtl.norm("lose"))
         self.LOSE = Sound(PtxUtl.norm("lose"))
         self.CLICK = Sound(PtxUtl.norm("click"))
