@@ -16,7 +16,7 @@ class Fruit(RectObj, IDrawable, ILogical):
         self.state = FruitStateEnum.DISABLED
 
         self.timer = time.get_ticks()
-        self.eaten_text = Text(f" ", 10, self.rect)
+        self.eaten_text = Text(" ", 10, self.rect)
         self.eaten_fruits_hud = GameObjects()
 
     def change_state(self, state: FruitStateEnum):

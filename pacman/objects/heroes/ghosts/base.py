@@ -1,7 +1,7 @@
-import random
 from functools import wraps
+from random import choice, randrange
 
-import pygame as pg
+from pygame import Rect, Surface, time
 from pygame.event import Event
 
 from pacman.animator import Animator, SpriteSheetAnimator, advanced_sprite_slice, sprite_slice
@@ -10,7 +10,6 @@ from pacman.data_core.data_classes import GhostDifficult
 from pacman.data_core.enums import GhostStateEnum
 from pacman.misc import CellUtil
 from pacman.objects import Text
-from pacman.scenes import SceneManager
 from pacman.sound import SoundController
 
 from ..character_base import Character
@@ -49,7 +48,7 @@ class Base(Character, IEventful):
         self.frightened_walk_anim_2 = Animator(sprite_slice("ghost/frightened_2", (14, 14)))
 
         super().__init__(self.walk_anim, loader, f"ghost/{self.name}/aura")
-        self.ai_timer = pg.time.get_ticks()
+        self.ai_timer = time.get_ticks()
 
         self.love_cell = (0, 0)
         self.state = GhostStateEnum.INDOOR
@@ -89,15 +88,15 @@ class Base(Character, IEventful):
                     self.__states_ai[self.state]()
         self.process_logic_iterator += 1
 
-    def collision_check(self, rect: pg.Rect):
+    def collision_check(self, rect: Rect):
         return self.two_cells_dis(self.rect.center, rect.center) < 3 and self.state not in self.PEACEFULL_STATES
 
     def can_leave_home(self, eaten_seed) -> bool:
         percent_of_seeds = (self.__seed_count / 100) * self.seed_percent_in_home
-        return eaten_seed > percent_of_seeds or pg.time.get_ticks() - self.ai_timer >= 10000
+        return eaten_seed > percent_of_seeds or time.get_ticks() - self.ai_timer >= 10000
 
     def update_ai_timer(self):
-        self.ai_timer = pg.time.get_ticks()
+        self.ai_timer = time.get_ticks()
 
     # region States Ai
 
@@ -130,7 +129,7 @@ class Base(Character, IEventful):
                 self.ghost_entered_home = False
                 self.acceleration_multiplier = 1
                 self.state = GhostStateEnum.SCATTER
-                self.set_direction(random.choice(("left", "right")))
+                self.set_direction(choice(("left", "right")))
                 self.update_ai_timer()
             case self.room_center_pos:
                 self.animator = self.walk_anim
@@ -144,7 +143,7 @@ class Base(Character, IEventful):
             self.deceleration_multiplier = 1
             self.state = GhostStateEnum.SCATTER
             self.animator = self.walk_anim
-        elif pg.time.get_ticks() - self.ai_timer >= self.diffucult_settings.frightened - 2000:
+        elif time.get_ticks() - self.ai_timer >= self.diffucult_settings.frightened - 2000:
             self.animator = self.frightened_walk_anim_2
 
     @ghost_state(GhostStateEnum.CHASE)
@@ -190,7 +189,7 @@ class Base(Character, IEventful):
                 cell[(self.rotate + 2) % 4] = True
             rand = 0
             while not cell[rand]:
-                rand = random.randrange(len(cell))
+                rand = randrange(len(cell))
             self.shift_x, self.shift_y, self.rotate = self.direction2[rand]
         self.step()
 
@@ -209,8 +208,8 @@ class Base(Character, IEventful):
         self.state = GhostStateEnum.HIDDEN
         self.animator = self.eatten_anim
 
-    def check_ai_timer(self, time) -> bool:
-        if pg.time.get_ticks() - self.ai_timer >= time:
+    def check_ai_timer(self, timer) -> bool:
+        if time.get_ticks() - self.ai_timer >= timer:
             self.update_ai_timer()
             return True
         return False
@@ -218,7 +217,7 @@ class Base(Character, IEventful):
     def generate_difficulty_settings(self) -> GhostDifficult:
         raise NotImplementedError
 
-    def draw(self, screen: pg.Surface) -> None:
+    def draw(self, screen: Surface) -> None:
         if self.state is GhostStateEnum.HIDDEN:
             self.gg_text.rect = self.rect
             self.gg_text.draw(screen)

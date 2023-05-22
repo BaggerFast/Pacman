@@ -1,4 +1,4 @@
-import pygame as pg
+from pygame import KEYDOWN, KMOD_CTRL, QUIT, SCALED, K_q, display, event, time
 from pygame.event import Event
 
 from pacman.data_core import Cfg, EvenType, PathUtl
@@ -6,15 +6,15 @@ from pacman.misc import GameObjects
 from pacman.scenes import SceneManager
 from pacman.scenes.menu_scene import MenuScene
 from pacman.sound import SoundController
-from pacman.storage import LevelStorage, SkinStorage, StorageLoader
+from pacman.storage import StorageLoader
 
 
 class Game:
     def __init__(self) -> None:
         self.objects = GameObjects()
 
-        self.__screen = pg.display.set_mode(tuple(Cfg.RESOLUTION), pg.SCALED)
-        self.__clock = pg.time.Clock()
+        self.__screen = display.set_mode(tuple(Cfg.RESOLUTION), SCALED)
+        self.__clock = time.Clock()
 
         self.storage_loader = StorageLoader(PathUtl.get("storage.json"))
         self.storage_loader.from_file()
@@ -26,11 +26,11 @@ class Game:
     # region Exit
 
     @staticmethod
-    def __exit_hotkey_pressed(event: Event) -> bool:
-        return event.type == pg.KEYDOWN and event.mod & pg.KMOD_CTRL and event.key == pg.K_q
+    def __exit_hotkey_pressed(e: Event) -> bool:
+        return e.type == KEYDOWN and e.mod & KMOD_CTRL and e.key == K_q
 
-    def __process_exit_events(self, event: Event) -> None:
-        if event.type in (pg.QUIT, EvenType.EXIT) or Game.__exit_hotkey_pressed(event):
+    def __process_exit_events(self, e: Event) -> None:
+        if e.type in (QUIT, EvenType.EXIT) or Game.__exit_hotkey_pressed(e):
             self.exit_game()
 
     def exit_game(self) -> None:
@@ -43,18 +43,18 @@ class Game:
     # region Game Loop
 
     def __process_all_events(self) -> None:
-        for event in pg.event.get():
-            self.objects.event_handler(event)
-            SoundController().event_handler(event)
-            SceneManager().current.process_event(event)
-            self.__process_exit_events(event)
+        for e in event.get():
+            self.objects.event_handler(e)
+            SoundController().event_handler(e)
+            SceneManager().current.process_event(e)
+            self.__process_exit_events(e)
 
     def __process_all_logic(self) -> None:
         SceneManager().current.process_logic()
 
     def __process_all_draw(self) -> None:
         self.__screen.blit(SceneManager().current.draw(), (0, 0))
-        pg.display.flip()
+        display.flip()
 
     def main_loop(self) -> None:
         while True:

@@ -103,7 +103,7 @@ class MainScene(BaseScene):
     @staticmethod
     def __get__intro_text() -> list[Text]:
         text = []
-        for i, txt in enumerate(["READY", "GO!"]):
+        for txt in ["READY", "GO!"]:
             text.append(
                 Text(txt, 30, rect=Rect(20, 0, 20, 20), font=FontCfg.TITLE).move_center(
                     Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height
@@ -171,10 +171,9 @@ class MainScene(BaseScene):
                 score = self.__score.eat_ghost()
                 ghost.toggle_to_hidden(score)
                 break
-            else:
-                if not self.pacman.is_dead:
-                    self.hp.remove()
-                    self.pacman.death()
+            if not self.pacman.is_dead:
+                self.hp.remove()
+                self.pacman.death()
             return
 
     def __check_game_status(self):

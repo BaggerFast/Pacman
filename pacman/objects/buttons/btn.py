@@ -108,7 +108,7 @@ class Btn(RectObj, IDrawable, IEventful):
             self.deselect()
 
     def __check_mouse_click(self, event: Event) -> None:
-        if not (event.type == MOUSEBUTTONUP):
+        if not event.type == MOUSEBUTTONUP:
             return
         if self.rect.collidepoint(event.pos):
             self.select()

@@ -1,5 +1,5 @@
 from pacman.data_core import Dirs, PathUtl
-from pacman.misc import ImgObj, LevelLoader
+from pacman.misc import LevelLoader
 
 from .map import Map
 

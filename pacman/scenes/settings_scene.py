@@ -48,6 +48,7 @@ class SettingsScene(BaseScene):
     def click_sound(self, step):
         SettingsStorage().set_volume(SettingsStorage().volume + step)
         self.__volume_text.text = f"{SettingsStorage().volume}%"
+        self.__volume_text.move_center(Cfg.RESOLUTION.h_width, self.__volume_pos_y)
 
     # endregion
 

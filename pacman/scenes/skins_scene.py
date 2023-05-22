@@ -18,7 +18,6 @@ class SkinsScene(BaseScene):
     def __init__(self):
         super().__init__()
         self.__skin_storage = SkinStorage()
-        self.__fruit_storage = FruitStorage()
         self.__fruit_sprite = sprite_slice(f"other/fruits", (12, 12))
         self.__preview = self.__get_skin_preview(self.__skin_storage.current)
 

@@ -21,11 +21,11 @@ class LevelsScene(BaseScene):
 
         self.text_level = Text("", 20)
 
-        self.text_l = Text(f"L", 40, color=Colors.DARK_GRAY).move_center(
+        self.text_l = Text("L", 40, color=Colors.DARK_GRAY).move_center(
             Cfg.RESOLUTION.WIDTH // 6 - 10, Cfg.RESOLUTION.h_height
         )
 
-        self.text_r = Text(f"R", 40, color=Colors.DARK_GRAY).move_center(
+        self.text_r = Text("R", 40, color=Colors.DARK_GRAY).move_center(
             Cfg.RESOLUTION.WIDTH - (Cfg.RESOLUTION.WIDTH // 6 - 16), Cfg.RESOLUTION.h_height
         )
 
