@@ -55,7 +55,7 @@ class RecordsScene(BaseScene):
 
     def draw(self) -> None:
         super().draw()
-        if not sum(self.__highscores):
+        if not len(self.__highscores):
             self.__error_text.draw(self._screen)
         return self._screen
 

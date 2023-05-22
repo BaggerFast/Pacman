@@ -42,7 +42,6 @@ class SceneManager(Singleton):
         return pop_scene
 
     def reset(self, scene: BaseScene) -> None:
-        scene.setup()
         self.exit_scene()
-        self.scenes.clear()
-        self.append(scene)
+        scene.setup()
+        self.scenes = [scene]

@@ -18,7 +18,6 @@ from .base import BaseScene, SceneManager
 class MainScene(BaseScene):
     def __init__(self, map_color=None):
         super().__init__()
-        print(123123)
         SoundController().update_random_sounds()
 
         self._map_color = rand_color() if not map_color else map_color
@@ -59,6 +58,7 @@ class MainScene(BaseScene):
 
     def _generate_objects(self) -> Generator:
         self.__seeds_eaten = 0
+
         self.__create_heroes()
 
         yield Map(self.__loader.map, self._map_color)
@@ -86,7 +86,19 @@ class MainScene(BaseScene):
         for i in range(int(self.hp) - 1):
             yield ImgObj(SkinStorage().current_instance.walk.current_image, (5 + i * 16, 270))
 
-        yield CheatController([Cheat("aezakmi", self.hp.add)])
+        yield self.__get_cheats()
+
+    def __get_cheats(self) -> CheatController:
+        from .lose_scene import LoseScene
+        from .win_scene import WinScene
+
+        return CheatController(
+            [
+                Cheat("aezakmi", self.hp.add),
+                Cheat("win", lambda: SceneManager().reset(WinScene(self._screen, int(self.__score)))),
+                Cheat("lose", lambda: SceneManager().reset(LoseScene(self._screen, int(self.__score)))),
+            ]
+        )
 
     @staticmethod
     def __get__intro_text() -> list[Text]:
@@ -225,7 +237,6 @@ class MainScene(BaseScene):
     def on_enter(self) -> None:
         if self.pacman.animator != self.pacman.dead_anim:
             SoundController().BACK.unpause()
-            print(1)
         if any(ghost.state is GhostStateEnum.FRIGHTENED for ghost in self.__ghosts):
             SoundController().BACK.pause()
             SoundController().FRIGHTENED.unpause()

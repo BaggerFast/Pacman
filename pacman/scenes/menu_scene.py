@@ -35,7 +35,6 @@ class MenuScene(BaseScene):
         yield self.__level_text
         yield BtnController(self.__get_buttons())
         yield CheatController([Cheat("global", lambda: event_append(EvenType.UNLOCK_SAVES))])
-        print(4)
 
     def __play_game(self) -> None:
         from pacman.scenes.main_scene import MainScene
@@ -80,6 +79,7 @@ class MenuScene(BaseScene):
     # region Public
 
     def process_logic(self) -> None:
+        super().process_logic()
         self.__pacman_anim.update()
 
     def process_event(self, event: Event) -> None:

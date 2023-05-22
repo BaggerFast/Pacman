@@ -32,7 +32,6 @@ class CheatController(ILogical, IEventful):
 
     def __complete_cheat(self):
         for cheat in self.__cheats:
-            print(cheat.cheat_code, self.__code)
             if cheat.cheat_code not in self.__code:
                 continue
             cheat()

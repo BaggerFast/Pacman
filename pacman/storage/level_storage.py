@@ -65,7 +65,7 @@ class LevelStorage(SerDes):
 
     def event_handler(self, event: Event) -> None:
         if event.type == EvenType.UNLOCK_SAVES:
-            self.__unlocked = [[] * 10]
+            self.__unlocked = [[] for _ in range(self.__level_count)]
 
     def __str__(self):
         return f"Level {self.current + 1}"

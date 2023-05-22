@@ -4,7 +4,7 @@ from pygame.event import Event
 
 from pacman.data_core import EvenType, IEventful
 
-from . import LevelStorage, SettingsStorage, SkinStorage
+from . import LevelStorage, SkinStorage
 from .main_storage import MainStorage
 
 
@@ -24,17 +24,26 @@ class StorageLoader(IEventful):
         try:
             with open(self.__path, "r") as f:
                 MainStorage().deserialize(load(f))
+
         except (FileNotFoundError, JSONDecodeError):
             self.to_file()
 
     def event_handler(self, event: Event):
         if event.type == EvenType.UNLOCK_SAVES:
-            print(1)
             self.to_file()
-            LevelStorage().event_handler(event)
-            SkinStorage().event_handler(event)
-            self.__saves_on = False
+            self.__handle_unlock_saves_event(event)
         elif event.type == EvenType.SET_SETTINGS:
             self.to_file()
         elif event.type == EvenType.GET_SETTINGS:
             self.from_file()
+            self.__handle_get_settings_event(event)
+
+    def __handle_unlock_saves_event(self, event: Event):
+        SkinStorage().event_handler(event)
+        LevelStorage().event_handler(event)
+        self.__saves_on = False
+
+    def __handle_get_settings_event(self, event: Event):
+        if not self.__saves_on:
+            SkinStorage().event_handler(event)
+            LevelStorage().event_handler(event)
