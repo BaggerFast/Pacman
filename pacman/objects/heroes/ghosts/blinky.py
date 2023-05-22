@@ -34,4 +34,4 @@ class Blinky(Base):
             GhostDifficult(8000, 20000, 7000),
             GhostDifficult(4000, 40000, 5000),
             GhostDifficult(2000, 80000, 3000),
-        )[SettingsStorage().difficulty]
+        )[SettingsStorage().DIFFICULTY]

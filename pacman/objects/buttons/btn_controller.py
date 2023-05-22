@@ -8,7 +8,7 @@ from pacman.misc import GameObjects
 from .btn import Btn
 
 
-class ButtonController(IDrawable, IEventful):
+class BtnController(IDrawable, IEventful):
     def __init__(self, buttons: list[Btn], active_index: int = 0):
         self.__buttons = GameObjects()
         self.__buttons.extend(buttons)

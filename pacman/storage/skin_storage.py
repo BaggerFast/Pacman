@@ -1,3 +1,5 @@
+from pygame.event import Event
+
 from pacman.data_core import EvenType, event_append
 from pacman.skin import Skin, SkinEnum
 
@@ -41,3 +43,9 @@ class SkinStorage(SerDes):
             event_append(EvenType.UPDATE_SOUND)
         else:
             raise Exception("Invalid skin")
+
+    def event_handler(self, event: Event) -> None:
+        if event.type == EvenType.UNLOCK_SAVES:
+            self.__unlocked = []
+            for skin in SkinEnum:
+                self.__unlocked.append(skin.name)

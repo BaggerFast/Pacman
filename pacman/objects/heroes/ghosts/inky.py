@@ -62,4 +62,4 @@ class Inky(Base):
             GhostDifficult(8000, 20000, 5000),
             GhostDifficult(4000, 40000, 3000),
             GhostDifficult(2000, 80000, 1000),
-        )[SettingsStorage().difficulty]
+        )[SettingsStorage().DIFFICULTY]

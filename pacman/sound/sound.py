@@ -41,7 +41,7 @@ class Sound:
     # region Private
 
     def __update(self):
-        self.__volume = 0 if not SettingsStorage().mute else SettingsStorage().volume / 100
+        self.__volume = 0 if not SettingsStorage().MUTE else SettingsStorage().volume / 100
         self.__sound.set_volume(self.__volume)
 
     # endregion

@@ -1,35 +1,49 @@
+from typing import Generator
+
 from pygame import Rect, Surface
 from pygame.event import Event
 
 from pacman.data_core import Cfg, Colors, EvenType, FontCfg, event_append
 from pacman.misc import ImgObj, is_esc_pressed, rand_color
-from pacman.objects import Text
-from pacman.objects.buttons import Btn, ButtonController
+from pacman.objects import CheatController, MapViewLoader, Text
+from pacman.objects.buttons import Btn, BtnController
 from pacman.storage import LevelStorage, SkinStorage
 
+from ..data_core.data_classes import Cheat
 from .base import BaseScene, SceneManager
 
 
 class MenuScene(BaseScene):
-    def _create_objects(self) -> None:
-        super()._create_objects()
+    def __init__(self):
+        super().__init__()
         self.__map_color = rand_color()
-        self.preview = self.generate_map_preview()
+        self.__map_view_loader = MapViewLoader()
+        self.__preview = self.__generate_map_preview()
         self.__level_text = Text(f"{LevelStorage()}", 15, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 60)
-        self.objects += [
-            Text("PACMAN", 36, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30),
-            self.__level_text,
-        ]
-        self.pacman_anim = SkinStorage().current_instance.walk
-        self.create_buttons()
+        self.__pacman_anim = SkinStorage().current_instance.walk
+        self.__pacman_preview = (
+            ImgObj(self.__pacman_anim.current_image)
+            .scale(75, 75)
+            .move_center(Cfg.RESOLUTION.h_width + Cfg.RESOLUTION.h_width // 2, Cfg.RESOLUTION.h_height)
+        )
 
-    def play_game(self) -> None:
+    # region Private
+
+    def _generate_objects(self) -> Generator:
+        yield self.__level_text
+        yield Text("PACMAN", 36, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30)
+        yield self.__level_text
+        yield BtnController(self.__get_buttons())
+        yield CheatController([Cheat("global", lambda: event_append(EvenType.UNLOCK_SAVES))])
+        print(4)
+
+    def __play_game(self) -> None:
         from pacman.scenes.main_scene import MainScene
 
         event_append(EvenType.SET_SETTINGS)
-        SceneManager().append(MainScene(self.game, self.__map_color))
+        SceneManager().append(MainScene(self.__map_color))
 
-    def create_buttons(self) -> None:
+    def __get_buttons(self) -> list[Btn]:
         from .levels_scene import LevelsScene
         from .records_scene import RecordsScene
         from .settings_scene import SettingsScene
@@ -37,11 +51,11 @@ class MenuScene(BaseScene):
 
         scene_manager = SceneManager()
         names = [
-            ("PLAY", self.play_game),
-            ("LEVELS", lambda: scene_manager.append(LevelsScene(self.game))),
-            ("SKINS", lambda: scene_manager.append(SkinsScene(self.game))),
-            ("RECORDS", lambda: scene_manager.append(RecordsScene(self.game))),
-            ("SETTINGS", lambda: scene_manager.append(SettingsScene(self.game))),
+            ("PLAY", self.__play_game),
+            ("LEVELS", lambda: scene_manager.append(LevelsScene())),
+            ("SKINS", lambda: scene_manager.append(SkinsScene())),
+            ("RECORDS", lambda: scene_manager.append(RecordsScene())),
+            ("SETTINGS", lambda: scene_manager.append(SettingsScene())),
             ("EXIT", lambda: event_append(EvenType.EXIT)),
         ]
         buttons = []
@@ -54,33 +68,34 @@ class MenuScene(BaseScene):
                     text_size=FontCfg.BUTTON_TEXT_SIZE,
                 ).move_center(Cfg.RESOLUTION.h_width // 1.5, 92 + i * 28)
             )
-        self.objects.append(ButtonController(buttons))
+        return buttons
+
+    def __generate_map_preview(self) -> ImgObj:
+        self.__map_color = rand_color()
+        map_preview = self.__map_view_loader.get_view(LevelStorage().current).prerender()
+        return map_preview.swap_color(Colors.MAIN_MAP, self.__map_color).scale(*tuple(Cfg.RESOLUTION)).blur(3)
+
+    # endregion
+
+    # region Public
+
+    def process_logic(self) -> None:
+        self.__pacman_anim.update()
 
     def process_event(self, event: Event) -> None:
         super().process_event(event)
         if is_esc_pressed(event):
-            self.preview = self.generate_map_preview()
+            self.__preview = self.__generate_map_preview()
 
     def draw(self) -> Surface:
-        self.preview.draw(self._screen)
-        self.objects.draw(self._screen)
-        ImgObj(self.pacman_anim.current_image).scale(75, 75).move_center(
-            Cfg.RESOLUTION.h_width + Cfg.RESOLUTION.h_width // 2, Cfg.RESOLUTION.h_height
-        ).draw(self._screen)
+        self.__preview.draw(self._screen)
+        self._objects.draw(self._screen)
+        self.__pacman_preview.image = self.__pacman_anim.current_image
+        self.__pacman_preview.scale(75, 75).draw(self._screen)
         return self._screen
 
-    def process_logic(self) -> None:
-        self.pacman_anim.update()
-
-    def generate_map_preview(self) -> ImgObj:
-        self.__map_color = rand_color()
-        return (
-            ImgObj(self.game.maps.full_surface)
-            .swap_color(Colors.MAIN_MAP, self.__map_color)
-            .scale(*tuple(Cfg.RESOLUTION))
-            .blur(3)
-        )
-
     def on_enter(self) -> None:
-        self.pacman_anim = SkinStorage().current_instance.walk
+        self.__pacman_anim = SkinStorage().current_instance.walk
         self.__level_text.text = f"{LevelStorage()}"
+
+    # endregion

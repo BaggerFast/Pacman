@@ -19,3 +19,4 @@ class EvenType(IntEnum):
     UPDATE_SOUND = auto()
     SET_SETTINGS = auto()
     GET_SETTINGS = auto()
+    UNLOCK_SAVES = auto()

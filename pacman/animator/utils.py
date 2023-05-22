@@ -2,10 +2,10 @@ from pygame import Surface, transform
 
 from pacman.misc.utils import load_image
 
+SIZE = tuple[int, int]
 
-def sprite_slice(image: str | Surface, size: tuple[int, int], scale: tuple[int, int] = None) -> tuple[Surface]:
-    if size[0] <= 0 or size[1] <= 0:
-        raise Exception
+
+def sprite_slice(image: str | Surface, size: SIZE, scale: SIZE = None) -> tuple[Surface]:
     image = load_image(image) if isinstance(image, str) else image
     frames = []
     for i in range(image.get_width() // size[0]):
@@ -14,18 +14,16 @@ def sprite_slice(image: str | Surface, size: tuple[int, int], scale: tuple[int, 
             frame = transform.scale(frame, scale)
         frames.append(frame)
     if not len(frames):
-        raise Exception
+        raise ValueError("Sprite sheet is null")
     return tuple(frames)
 
 
-def advanced_sprite_slice(
-    image: str | Surface, size: tuple[int, int], scale: tuple[int, int] = None
-) -> tuple[tuple[Surface]]:
+def advanced_sprite_slice(image: str | Surface, size: SIZE, scale: SIZE = None) -> tuple[tuple[Surface]]:
     frames = []
     image = load_image(image) if isinstance(image, str) else image
     for i in range(image.get_height() // size[1]):
         frame = image.subsurface((0, i * size[1], image.get_width(), size[1]))
         frames.append(sprite_slice(frame, size, scale))
     if len(frames) != 4:
-        raise Exception
+        raise ValueError("Sprite sheet not compatible with this size")
     return tuple(frames)

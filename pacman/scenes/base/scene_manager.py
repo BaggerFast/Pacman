@@ -31,7 +31,7 @@ class SceneManager(Singleton):
 
     def append(self, scene: BaseScene) -> None:
         self.exit_scene()
-        scene.configure()
+        scene.setup()
         scene.on_enter()
         self.scenes.append(scene)
 
@@ -42,6 +42,7 @@ class SceneManager(Singleton):
         return pop_scene
 
     def reset(self, scene: BaseScene) -> None:
+        scene.setup()
         self.exit_scene()
         self.scenes.clear()
         self.append(scene)

@@ -1,7 +1,9 @@
+from typing import Generator
+
 from pygame import Rect, Surface
 
 from pacman.data_core import Cfg, EvenType, FontCfg, event_append
-from pacman.objects import Btn, ButtonController, Text
+from pacman.objects import Btn, BtnController, Text
 from pacman.sound import SoundController
 from pacman.storage import LevelStorage
 
@@ -9,27 +11,27 @@ from .base import BlurScene, SceneManager
 
 
 class LoseScene(BlurScene):
-    def __init__(self, game, blur_surface: Surface, score: int):
-        super().__init__(game, blur_surface)
-        self.score = score
+    def __init__(self, blur_surface: Surface, score: int):
+        super().__init__(blur_surface)
+        self.__score = score
 
-    def _create_objects(self) -> None:
-        super()._create_objects()
-        self.objects += [
-            Text("GAME", 40, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30),
-            Text("OVER", 40, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 70),
-            Text(f"Score: {self.score}", 20).move_center(Cfg.RESOLUTION.h_width, 135),
-            Text(f"High score: {LevelStorage().get_highscore()}", 20).move_center(Cfg.RESOLUTION.h_width, 165),
-        ]
-        self.create_buttons()
+    # region Private
 
-    def create_buttons(self) -> None:
+    def _generate_objects(self) -> Generator:
+        yield Text("GAME", 40, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30)
+        yield Text("OVER", 40, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 70)
+        yield Text(f"Score: {self.__score}", 20).move_center(Cfg.RESOLUTION.h_width, 135)
+        yield Text(f"High score: {LevelStorage().get_highscore()}", 20).move_center(Cfg.RESOLUTION.h_width, 165)
+        yield BtnController(self.__get_buttons())
+
+    @staticmethod
+    def __get_buttons() -> list[Btn]:
         from .main_scene import MainScene
         from .menu_scene import MenuScene
 
         names = [
-            ("RESTART", lambda: SceneManager().reset(MainScene(self.game))),
-            ("MENU", lambda: SceneManager().reset(MenuScene(self.game))),
+            ("RESTART", lambda: SceneManager().reset(MainScene())),
+            ("MENU", lambda: SceneManager().reset(MenuScene())),
         ]
         buttons = []
         for i, (name, fn) in enumerate(names):
@@ -41,7 +43,11 @@ class LoseScene(BlurScene):
                     text_size=FontCfg.BUTTON_TEXT_SIZE,
                 ).move_center(Cfg.RESOLUTION.h_width, 210 + 40 * i)
             )
-        self.objects.append(ButtonController(buttons))
+        return buttons
+
+    # endregion
+
+    # region Public
 
     def on_enter(self) -> None:
         event_append(EvenType.GET_SETTINGS)
@@ -49,3 +55,5 @@ class LoseScene(BlurScene):
 
     def on_exit(self) -> None:
         SoundController().LOSE.stop()
+
+    # endregion

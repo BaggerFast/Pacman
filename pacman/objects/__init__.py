@@ -1,7 +1,7 @@
 from .fruits import Fruit
-from .map import Map
+from .maps import Map, MapViewLoader
 from .seed import SeedContainer
 from .text import Text
-from .buttons import Btn, ButtonController
+from .buttons import Btn, BtnController
 from .cheat_controller import CheatController
 from .heroes import *

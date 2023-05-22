@@ -2,8 +2,10 @@ import random
 from functools import wraps
 
 import pygame as pg
+from pygame.event import Event
 
 from pacman.animator import Animator, SpriteSheetAnimator, advanced_sprite_slice, sprite_slice
+from pacman.data_core import EvenType, IEventful
 from pacman.data_core.data_classes import GhostDifficult
 from pacman.data_core.enums import GhostStateEnum
 from pacman.misc import CellUtil
@@ -27,7 +29,7 @@ def ghost_state(state: GhostStateEnum):
     return decorator
 
 
-class Base(Character):
+class Base(Character, IEventful):
     love_point_in_scatter_mode = (0, 0)
     seed_percent_in_home = 0
     direction2 = {0: (1, 0, 0), 1: (0, 1, 1), 2: (-1, 0, 2), 3: (0, -1, 3)}
@@ -139,9 +141,6 @@ class Base(Character):
     def frightened_ai(self):
         self.go_to_random_cell()
         if self.check_ai_timer(self.diffucult_settings.frightened):
-            # todo: fix score problem
-            SceneManager().current.score.deactivate_fear_mode()
-            SoundController().FRIGHTENED.stop()
             self.deceleration_multiplier = 1
             self.state = GhostStateEnum.SCATTER
             self.animator = self.walk_anim
@@ -225,6 +224,10 @@ class Base(Character):
             self.gg_text.draw(screen)
             return
         super().draw(screen)
+
+    def event_handler(self, event: Event):
+        if event.type == EvenType.GHOST_FRIGHTENED:
+            self.toggle_mode_to_frightened()
 
     @property
     def name(self) -> str:

@@ -1,94 +1,94 @@
-from pygame import KEYDOWN
+from copy import copy
+from typing import Generator
+
+from pygame import KEYDOWN, Surface
 from pygame.event import Event
 
 from pacman.data_core import Cfg, Colors, FontCfg, KbKeys
 from pacman.misc import ImgObj, is_esc_pressed
-from pacman.objects import Text
-from pacman.objects.buttons import Btn, ButtonController
+from pacman.objects import Btn, BtnController, MapViewLoader, Text
 from pacman.storage import LevelStorage
 
 from .base import BaseScene, SceneManager
 
 
 class LevelsScene(BaseScene):
-    def create_buttons(self) -> None:
-        buttons = [
+    def __init__(self):
+        super().__init__()
+        self.__map_view_loader = MapViewLoader()
+
+        self.preview = self.__get_level_preview(self.__current_level)
+
+        self.text_level = Text("", 20)
+
+        self.text_l = Text(f"L", 40, color=Colors.DARK_GRAY).move_center(
+            Cfg.RESOLUTION.WIDTH // 6 - 10, Cfg.RESOLUTION.h_height
+        )
+
+        self.text_r = Text(f"R", 40, color=Colors.DARK_GRAY).move_center(
+            Cfg.RESOLUTION.WIDTH - (Cfg.RESOLUTION.WIDTH // 6 - 16), Cfg.RESOLUTION.h_height
+        )
+
+        self.__set_text_level()
+
+    # region Private
+
+    def _generate_objects(self) -> Generator:
+        yield Text("SELECT LEVEL", 25, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30)
+        yield self.preview
+        yield self.text_level
+        yield BtnController(self.__get_buttons())
+
+    @property
+    def __current_level(self) -> int:
+        return LevelStorage().current
+
+    def __get_buttons(self) -> list[Btn]:
+        return [
             Btn(
                 text="",
-                rect=self.preview.rect,
+                rect=copy(self.preview.rect),
                 function=SceneManager().pop,
                 text_size=FontCfg.BUTTON_TEXT_SIZE,
             )
         ]
-        self.__button_controller = ButtonController(buttons)
-        self.objects.append(self.__button_controller)
 
-    @property
-    def current_level(self) -> int:
-        return LevelStorage().current
+    def __get_level_preview(self, level_id: id) -> ImgObj:
+        map_preview = self.__map_view_loader.get_view(level_id).prerender()
+        scale = Cfg.RESOLUTION.WIDTH * 0.6, Cfg.RESOLUTION.HEIGHT * 0.6
+        return map_preview.smoothscale(*scale).move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)
 
-    def _create_objects(self) -> None:
-        super()._create_objects()
-        self.preview: ImgObj = (
-            self.game.maps.images[LevelStorage().current]
-            .smoothscale(224 * 0.6, 248 * 0.6)
-            .move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)
-        )
-        self.objects.append(self.preview)
-        self.objects.append(Text("SELECT LEVEL", 25, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30))
+    def __update_preview(self):
+        self.preview.image = self.__get_level_preview(self.__current_level).image
+        self.__set_text_level()
 
-        self.text = Text(f"Level: {self.current_level + 1}/{LevelStorage().level_count}", 20).move_center(
-            Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height
-        )
-        self.text2 = Text(f"L", 40, color=Colors.DARK_GRAY).move_center(
-            Cfg.RESOLUTION.WIDTH // 6 - 10, Cfg.RESOLUTION.h_height
-        )
-        self.text3 = Text(f"R", 40, color=Colors.DARK_GRAY).move_center(
-            Cfg.RESOLUTION.WIDTH - (Cfg.RESOLUTION.WIDTH // 6 - 16), Cfg.RESOLUTION.h_height
-        )
-        if self.current_level == 0:
-            self.text2.color = Colors.BLACK
-        if self.current_level == LevelStorage().level_count - 1:
-            self.text3.color = Colors.BLACK
-            self.text = Text(f"Level: {self.current_level + 1}", 20).move_center(
-                Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height
-            )
-        elif self.current_level + 1 >= len(LevelStorage().unlocked):
-            self.text3.color = Colors.BLACK
+    def __set_text_level(self) -> None:
+        self.text_level.text = f"Level: {self.__current_level + 1}/{LevelStorage().len}"
+        self.text_level.move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)
 
-        self.objects.append(self.text)
-        self.objects.append(self.text2)
-        self.objects.append(self.text3)
-        self.create_buttons()
+    # endregion
+
+    # region Public
+
+    def draw(self) -> Surface:
+        super().draw()
+        if not self.__current_level == 0:
+            self.text_l.draw(self._screen)
+        if not self.__current_level + 1 >= LevelStorage().len_unlocked:
+            self.text_r.draw(self._screen)
+        return self._screen
 
     def process_event(self, event: Event) -> None:
         super().process_event(event)
         if is_esc_pressed(event):
             SceneManager().pop()
         if event.type == KEYDOWN:
-            if event.key in KbKeys.RIGHT and self.current_level != LevelStorage().level_count - 1:
-                if not (self.current_level + 1 >= len(LevelStorage().unlocked)):
+            if event.key in KbKeys.RIGHT and self.__current_level != LevelStorage().len - 1:
+                if not (self.__current_level + 1 >= LevelStorage().len_unlocked):
                     LevelStorage().set_next_level()
-            elif event.key in KbKeys.LEFT and self.current_level != 0:
+                    self.__update_preview()
+            elif event.key in KbKeys.LEFT and self.__current_level != 0:
                 LevelStorage().set_prev_level()
-            self.preview: ImgObj = self.game.maps.images[self.current_level]
-            self.preview.smoothscale(224 * 0.6, 248 * 0.6)
-            self.preview.move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)
+                self.__update_preview()
 
-            self.objects.append(self.preview)
-
-            self.text3.color = Colors.DARK_GRAY
-            self.text2.color = Colors.DARK_GRAY
-            if self.current_level == 0:
-                self.text2.color = Colors.BLACK
-            if self.current_level == LevelStorage().level_count - 1:
-                self.text3.color = Colors.BLACK
-                self.text = Text(f"Level: {self.current_level + 1}", 20).move_center(
-                    Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height
-                )
-            elif self.current_level + 1 >= len(LevelStorage().unlocked):
-                self.text3.color = Colors.BLACK
-            self.text = Text(f"Level: {self.current_level + 1}/{LevelStorage().level_count}", 20).move_center(
-                Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height
-            )
-            self.objects.append(self.text)
+    # endregion

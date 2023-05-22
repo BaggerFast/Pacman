@@ -7,8 +7,8 @@ from pygame.font import Font
 from pacman.data_core import FontCfg, IDrawable, IEventful
 from pacman.data_core.enums import BtnStateEnum
 from pacman.misc import RectObj
+from pacman.sound import SoundController
 
-from ...sound import SoundController
 from .utils import BTN_DEF_COLORS, BtnColor
 
 

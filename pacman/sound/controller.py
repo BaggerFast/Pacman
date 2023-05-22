@@ -15,7 +15,7 @@ class SoundController(Singleton):
         self.WIN = Sound(PtxUtl.norm("lose"))
         self.LOSE = Sound(PtxUtl.norm("lose"))
         self.CLICK = Sound(PtxUtl.norm("click"))
-        self.INTRO = Sound(PtxUtl.norm("intro"))
+        self.INTRO = Sound(PtxUtl.norm("intro"), 2)
         self.BACK = Sound(PtxUtl.norm("back"))
         self.SEED = Sound(PtxUtl.norm("seed"), 3)
         self.DEATH = Sound(PtxUtl.norm("death"), 3)
@@ -38,7 +38,7 @@ class SoundController(Singleton):
         self.FRIGHTENED.set(PtxUtl.norm("frightened"))
 
     def update_random_sounds(self):
-        if SettingsStorage().fun:
+        if SettingsStorage().FUN:
             self.SEED.set(PtxUtl.fun("seed"))
             self.INTRO.set(PtxUtl.fun("intro"))
             self.DEATH.set(PtxUtl.fun("death"))
@@ -56,7 +56,7 @@ class SoundController(Singleton):
         if with_default:
             self.__set_default()
         self.update_random_sounds()
-        if SettingsStorage().fun:
+        if SettingsStorage().FUN:
             return
         if SkinStorage().equals(SkinEnum.POKEBALL):
             self.INTRO.set("pokeball/intro")

@@ -1,3 +1,4 @@
+from abc import ABC
 from copy import copy
 
 from pygame import Surface, time
@@ -7,9 +8,9 @@ from pacman.misc import ImgObj
 from .base_scene import BaseScene
 
 
-class BlurScene(BaseScene):
-    def __init__(self, game, blur_surface: Surface):
-        super().__init__(game)
+class BlurScene(BaseScene, ABC):
+    def __init__(self, blur_surface: Surface):
+        super().__init__()
         self._blur_count = 1
         self._blur_finished = False
         self._blur_surface = ImgObj(copy(blur_surface), (0, 0))
@@ -24,5 +25,5 @@ class BlurScene(BaseScene):
 
     def draw(self) -> Surface:
         self._blur_surface.draw(self._screen)
-        self.objects.draw(self._screen)
+        self._objects.draw(self._screen)
         return self._screen

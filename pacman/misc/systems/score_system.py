@@ -3,7 +3,6 @@ class ScoreSystem:
         self.__score = 0
         self.__fear_count = 0
         self.__eaten_fruits = 0
-        self.__fear_mode = False
 
     # region Public
 
@@ -28,12 +27,7 @@ class ScoreSystem:
 
     def eat_energizer(self) -> int:
         self.__fear_count = 0
-        self.__fear_mode = True
         return self.__update_score(50, True)
-
-    def deactivate_fear_mode(self) -> None:
-        self.__fear_count = 0
-        self.__fear_mode = False
 
     # endregion
 
@@ -44,7 +38,7 @@ class ScoreSystem:
         if diff_boost:
             from pacman.storage import SettingsStorage
 
-            value *= SettingsStorage().difficulty + 1
+            value *= SettingsStorage().DIFFICULTY + 1
         self.__score += value
         return self.score - tmp_score
 

@@ -8,9 +8,10 @@ from pacman.storage import SkinStorage
 
 
 class SeedContainer(IDrawable):
-    def __init__(self, game, seed_data, energizer_data) -> None:
+    def __init__(self, seed_data, energizer_data, anim_step: int) -> None:
         super().__init__()
-        self.game = game
+        self.__timer = time.get_ticks()
+        self.__anim_step = anim_step
         self.__seeds = self.prepare_seeds(seed_data)
         self.__energizers = self.prepare_energizers(energizer_data)
 
@@ -43,8 +44,8 @@ class SeedContainer(IDrawable):
             draw.circle(screen, Colors.WHITE, seed.rect.center, 1)
 
     def __draw_energizers(self, screen) -> None:
-        if time.get_ticks() - self.game.animate_timer > self.game.time_out:
-            self.game.animate_timer = time.get_ticks()
+        if time.get_ticks() - self.__timer > self.__anim_step:
+            self.__timer = time.get_ticks()
             self.__show_energizer = not self.__show_energizer
         if not self.__show_energizer:
             return

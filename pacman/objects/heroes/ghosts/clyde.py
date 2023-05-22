@@ -44,5 +44,5 @@ class Clyde(Base):
 
     def generate_difficulty_settings(self) -> GhostDifficult:
         return (GhostDifficult(8000, 0, 0), GhostDifficult(4000, 0, 0), GhostDifficult(2000, 0, 0))[
-            SettingsStorage().difficulty
+            SettingsStorage().DIFFICULTY
         ]

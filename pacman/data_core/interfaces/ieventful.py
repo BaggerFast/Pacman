@@ -4,5 +4,5 @@ from pygame.event import Event
 
 
 class IEventful(ABC):
-    def event_handler(self, event: Event):
+    def event_handler(self, event: Event) -> None:
         raise NotImplementedError

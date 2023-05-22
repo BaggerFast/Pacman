@@ -45,7 +45,7 @@ class GameObjects(List):
 
     def __check_type(self, item):
         if not isinstance(item, self.__included_types):
-            raise ValueError(f"Object type: {type(item)} is not in {self.__included_types}")
+            raise ValueError(f"Object type: {type(item)}/{item} is not in {self.__included_types}")
 
     def __iadd__(self, other):
         for item in other:
