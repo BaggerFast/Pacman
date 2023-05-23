@@ -38,7 +38,7 @@ class SoundController(Singleton):
         self.FRIGHTENED.set(PtxUtl.norm("frightened"))
 
     def update_random_sounds(self):
-        if SettingsStorage().FUN:
+        if SettingsStorage().fun:
             self.SEED.set(PtxUtl.fun("seed"))
             self.INTRO.set(PtxUtl.fun("intro"))
             self.DEATH.set(PtxUtl.fun("death"))
@@ -56,7 +56,7 @@ class SoundController(Singleton):
         if with_default:
             self.__set_default()
         self.update_random_sounds()
-        if SettingsStorage().FUN:
+        if SettingsStorage().fun:
             return
         if SkinStorage().equals(SkinEnum.POKEBALL):
             self.INTRO.set("pokeball/intro")

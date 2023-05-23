@@ -28,20 +28,11 @@ class Btn(RectObj, IDrawable, IEventful):
         self.__select_function = select_function
         self.__text = text
         self.__font = Font(font, text_size)
-        self.__colors: BtnColor = colors
+        self._color: BtnColor = colors
         self.__state = BtnStateEnum.INITIAL
         self.__surfaces = self.__prepare_surfaces()
 
     # region Public
-
-    @property
-    def colors(self) -> BtnColor:
-        return self.__colors
-
-    @colors.setter
-    def colors(self, colors: BtnColor) -> None:
-        self.__colors = colors
-        self.__surfaces = self.__prepare_surfaces()
 
     @property
     def text(self) -> str:
@@ -50,6 +41,10 @@ class Btn(RectObj, IDrawable, IEventful):
     @text.setter
     def text(self, text: str) -> None:
         self.__text = text
+        self.__surfaces = self.__prepare_surfaces()
+
+    def _set_color(self, colors: BtnColor) -> None:
+        self._color = colors
         self.__surfaces = self.__prepare_surfaces()
 
     def select(self) -> None:
@@ -64,9 +59,9 @@ class Btn(RectObj, IDrawable, IEventful):
         self.__state = BtnStateEnum.CLICK
 
     def click(self) -> None:
-        SoundController().CLICK.play()
         if isinstance(self.__function, Callable):
             self.__function()
+        SoundController().CLICK.play()
 
     def is_state(self, state: BtnStateEnum) -> bool:
         return self.__state is state
@@ -116,7 +111,7 @@ class Btn(RectObj, IDrawable, IEventful):
 
     def __prepare_surfaces(self) -> List[Surface]:
         surfaces = []
-        for index in range(len(self.__colors)):
+        for index in range(len(self._color)):
             surfaces.append(self.__prepare_surface(index))
         return surfaces
 
@@ -125,11 +120,11 @@ class Btn(RectObj, IDrawable, IEventful):
         surface = surface.convert_alpha()
         zero_rect = surface.get_rect()
 
-        text_surface = self.__font.render(self.text, False, self.__colors[state_index].text)
+        text_surface = self.__font.render(self.text, False, self._color[state_index].text)
         zero_text_rect = text_surface.get_rect()
         zero_text_rect.center = zero_rect.center
 
-        draw.rect(surface, self.__colors[state_index].background, zero_rect, 0)
+        draw.rect(surface, self._color[state_index].background, zero_rect, 0)
         surface.blit(text_surface, zero_text_rect)
 
         return surface
