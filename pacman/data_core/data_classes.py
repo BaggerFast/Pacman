@@ -12,6 +12,13 @@ class GhostDifficult:
 
 
 @dataclass(frozen=True)
+class Direction:
+    x: int
+    y: int
+    rotate: int
+
+
+@dataclass(frozen=True)
 class Cheat:
     cheat_code: str
     function: Callable

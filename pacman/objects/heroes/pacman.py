@@ -1,6 +1,6 @@
 import pygame as pg
 
-from pacman.data_core import IEventful
+from pacman.data_core import EvenType, IEventful
 from pacman.misc import CellUtil
 from pacman.sound import SoundController
 from pacman.storage import SkinStorage
@@ -9,7 +9,7 @@ from .character_base import Character
 
 
 class Pacman(Character, IEventful):
-    action = {pg.K_w: "up", pg.K_a: "left", pg.K_s: "down", pg.K_d: "right"}
+    action = {EvenType.UP_BTN: "up", EvenType.LEFT_BTN: "left", EvenType.DONW_BTN: "down", EvenType.RIGHT_BTN: "right"}
 
     def __init__(self, loader) -> None:
         skin_instanse = SkinStorage().current_instance
@@ -26,9 +26,9 @@ class Pacman(Character, IEventful):
         return self.__dead_anim
 
     def event_handler(self, event: pg.event.Event) -> None:
-        if event.type == pg.KEYDOWN and event.key in self.action.keys() and not self.is_dead:
+        if event.type in self.action and not self.is_dead:
             self.go()
-            self.__feature_rotate = self.action[event.key]
+            self.__feature_rotate = self.action[event.type]
 
     def update(self) -> None:
         self.animator.update()

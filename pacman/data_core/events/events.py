@@ -20,3 +20,10 @@ class EvenType(IntEnum):
     SET_SETTINGS = auto()
     GET_SETTINGS = auto()
     UNLOCK_SAVES = auto()
+
+    # keyboard
+    RIGHT_BTN = auto()
+    LEFT_BTN = auto()
+    UP_BTN = auto()
+    DONW_BTN = auto()
+    ENTER_BTN = auto()

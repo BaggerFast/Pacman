@@ -1,7 +1,7 @@
-from pygame import KEYDOWN, KEYUP, Surface
+from pygame import KEYUP, Surface
 from pygame.event import Event
 
-from pacman.data_core import IDrawable, IEventful, KbKeys
+from pacman.data_core import EvenType, IDrawable, IEventful, KbKeys
 from pacman.data_core.enums import BtnStateEnum
 from pacman.misc import GameObjects
 
@@ -17,9 +17,9 @@ class BtnController(IDrawable, IEventful):
         self.__current.select()
 
         self.__kb_down_actions = {
-            KbKeys.DOWN: self.__move_down,
-            KbKeys.UP: self.__move_up,
-            KbKeys.ENTER: lambda: self.__current.activate(),
+            EvenType.DONW_BTN: self.__move_down,
+            EvenType.UP_BTN: self.__move_up,
+            EvenType.ENTER_BTN: lambda: self.__current.activate(),
         }
 
     # region Public
@@ -59,12 +59,9 @@ class BtnController(IDrawable, IEventful):
         self.__current.select()
         self.__current.click()
 
-    def __parse_keyboard(self, event) -> None:
-        if event.type == KEYDOWN:
-            for key in self.__kb_down_actions:
-                if event.key in key:
-                    self.__kb_down_actions[key]()
-                    return
+    def __parse_keyboard(self, event: Event) -> None:
+        if event.type in self.__kb_down_actions:
+            self.__kb_down_actions[event.type]()
         elif event.type == KEYUP:
             if event.key in KbKeys.ENTER:
                 self.__unpress_cur_btn()
