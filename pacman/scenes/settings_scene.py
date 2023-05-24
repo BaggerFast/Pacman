@@ -4,6 +4,7 @@ from pygame import Rect
 from pygame.event import Event
 
 from pacman.data_core import Cfg, FontCfg
+from pacman.data_core.enums import DifficultEnum
 from pacman.misc import is_esc_pressed
 from pacman.objects import Btn, BtnController, Text
 from pacman.objects.buttons import BTN_GREEN_COLORS, BTN_RED_COLORS, BoolBtn
@@ -17,10 +18,15 @@ class SettingsScene(BaseScene):
         super().__init__()
 
         self.__volume_pos_y = 180
-        self.__difficulty_pos = 210
         self.__volume_text = Text(f"{SettingsStorage().volume}%", 20).move_center(
             Cfg.RESOLUTION.h_width, self.__volume_pos_y
         )
+        self.__difficult_btn = Btn(
+            text=f"{self.__get_difficulty_text()}",
+            rect=Rect(0, 0, 120, 35),
+            function=self.__update_difficulty,
+            text_size=FontCfg.BUTTON_TEXT_SIZE,
+        ).move_center(Cfg.RESOLUTION.h_width, 210)
 
     # region Private
 
@@ -30,6 +36,18 @@ class SettingsScene(BaseScene):
 
         yield self.__volume_text
         yield BtnController(self.__get_buttons())
+
+    @staticmethod
+    def __update_mute():
+        SettingsStorage().MUTE = not SettingsStorage().MUTE
+
+    @staticmethod
+    def __get_difficulty_text() -> str:
+        return list(DifficultEnum)[SettingsStorage().DIFFICULTY].name
+
+    def __update_difficulty(self):
+        SettingsStorage().DIFFICULTY = (SettingsStorage().DIFFICULTY + 1) % len(DifficultEnum)
+        self.__difficult_btn.text = self.__get_difficulty_text()
 
     def __get_buttons(self) -> list[Btn]:
         return [
@@ -61,6 +79,7 @@ class SettingsScene(BaseScene):
                 text="+",
                 function=lambda: self.click_sound(5),
             ).move_center(Cfg.RESOLUTION.h_width + 65, self.__volume_pos_y),
+            self.__difficult_btn,
             Btn(
                 rect=Rect(0, 0, 180, 40),
                 text="BACK",
@@ -73,10 +92,6 @@ class SettingsScene(BaseScene):
         SettingsStorage().set_volume(SettingsStorage().volume + step)
         self.__volume_text.text = f"{SettingsStorage().volume}%"
         self.__volume_text.move_center(Cfg.RESOLUTION.h_width, self.__volume_pos_y)
-
-    @staticmethod
-    def __update_mute():
-        SettingsStorage().MUTE = not SettingsStorage().MUTE
 
     # endregion
 

@@ -11,9 +11,9 @@ class BtnStateColor(NamedTuple):
 
 
 class BtnColor(NamedTuple):
-    static: BtnStateColor = BtnStateColor(background=Colors.RED)
-    hover: BtnStateColor = BtnStateColor(background=Colors.BLUE)
-    click: BtnStateColor = BtnStateColor(background=Colors.GREEN)
+    static: BtnStateColor
+    hover: BtnStateColor
+    click: BtnStateColor
 
 
 BTN_DEF_COLORS = BtnColor(
@@ -35,7 +35,7 @@ BTN_RED_COLORS = BtnColor(
 )
 
 BTN_SKIN_BUY = BtnColor(
-    static=BtnStateColor(text=Colors.YELLOW, background=Colors.BLACK),
-    hover=BtnStateColor(text=Colors.WHITE, background=Colors.JET),
-    click=BtnStateColor(text=Colors.BLACK, background=Colors.BLACK),
+    static=BtnStateColor(text=Colors.YELLOW),
+    hover=BtnStateColor(text=Colors.WHITE),
+    click=BtnStateColor(text=Colors.ORANGE),
 )
