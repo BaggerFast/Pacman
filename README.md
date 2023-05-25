@@ -9,7 +9,9 @@ Pacman is a simple game written on Pygame. The game was created as a learning pr
 the possibilities of Pygame and develop game applications.
 
 ## 📺 Preview
-- Watch on [YouTube](https://youtu.be/2sRJK_TwXmk)
+https://github.com/BaggerFast/Pacman/assets/54527361/415e3585-086f-4111-822f-5049471ccbd8
+
+Watch  full video on [YouTube](https://youtu.be/2sRJK_TwXmk)
 
 ## 💻 Tech Stack
 - [Python 3.10](https://www.python.org/)
