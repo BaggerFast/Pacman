@@ -5,9 +5,10 @@ from pygame import KEYDOWN, Surface
 from pygame.event import Event
 
 from pacman.data_core import Cfg, Colors, FontCfg, KbKeys
+from pacman.data_core.enums import SoundCh
 from pacman.misc import ImgObj, is_esc_pressed
 from pacman.objects import Btn, BtnController, MapViewLoader, Text
-from pacman.sound import SoundController
+from pacman.sound import SoundController, Sounds
 from pacman.storage import LevelStorage
 
 from .base import BaseScene, SceneManager
@@ -60,7 +61,7 @@ class LevelsScene(BaseScene):
         return map_preview.smoothscale(*scale).move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)
 
     def __update_preview(self):
-        SoundController().CLICK.play()
+        SoundController.play(SoundCh.SYSTEM, Sounds.CLICK)
         self.preview.image = self.__get_level_preview(self.__current_level).image
         self.__set_text_level()
 

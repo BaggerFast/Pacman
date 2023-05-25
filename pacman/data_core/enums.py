@@ -1,5 +1,8 @@
 from enum import Enum, auto
 
+from pygame import mixer
+from pygame.mixer import Channel
+
 # region States
 
 
@@ -51,6 +54,13 @@ class RotateEnum(Enum):
     DOWN = auto()
     LEFT = auto()
     UP = auto()
+
+
+class SoundCh(Enum):
+    mixer.init()
+    SYSTEM = Channel(0)
+    BACKGROUND = Channel(1)
+    PLAYER = Channel(2)
 
 
 # endregion

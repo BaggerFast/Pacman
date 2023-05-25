@@ -1,1 +1,2 @@
-from .controller import SoundController
+from .sounds import Sounds
+from .sound_controller import SoundController

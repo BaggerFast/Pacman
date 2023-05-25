@@ -6,7 +6,7 @@ from pacman.misc import GameObjects
 from pacman.objects import KbEvent
 from pacman.scenes import SceneManager
 from pacman.scenes.menu_scene import MenuScene
-from pacman.sound import SoundController
+from pacman.sound import Sounds
 from pacman.storage import StorageLoader
 
 
@@ -46,7 +46,7 @@ class Game:
     def __process_all_events(self) -> None:
         for e in event.get():
             self.objects.event_handler(e)
-            SoundController().event_handler(e)
+            Sounds.event_handler(e)
             SceneManager().current.process_event(e)
             self.__process_exit_events(e)
 

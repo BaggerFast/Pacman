@@ -2,8 +2,9 @@ from pygame import KEYDOWN, K_a, K_z, time
 from pygame.event import Event
 
 from pacman.data_core.data_classes import Cheat
+from pacman.data_core.enums import SoundCh
 from pacman.data_core.interfaces import IEventful, ILogical
-from pacman.sound import SoundController
+from pacman.sound import SoundController, Sounds
 
 
 class CheatController(ILogical, IEventful):
@@ -34,8 +35,8 @@ class CheatController(ILogical, IEventful):
         for cheat in self.__cheats:
             if cheat.cheat_code not in self.__code:
                 continue
+            SoundController.play(SoundCh.SYSTEM, Sounds.CHEAT)
             cheat()
-            SoundController().CHEAT.play()
             self.__code = ""
             return
 

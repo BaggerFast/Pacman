@@ -4,9 +4,10 @@ from pygame import Rect, Surface
 
 from pacman.data_core import Cfg, EvenType, FontCfg, event_append
 from pacman.objects import Btn, BtnController, Text
-from pacman.sound import SoundController
+from pacman.sound import SoundController, Sounds
 from pacman.storage import LevelStorage
 
+from ..data_core.enums import SoundCh
 from .base import BlurScene, SceneManager
 
 
@@ -49,11 +50,11 @@ class LoseScene(BlurScene):
 
     # region Public
 
-    def on_enter(self) -> None:
+    def on_first_enter(self) -> None:
         event_append(EvenType.GET_SETTINGS)
-        SoundController().LOSE.play()
+        SoundController.reset_play(SoundCh.BACKGROUND, Sounds.LOSE)
 
-    def on_exit(self) -> None:
-        SoundController().LOSE.stop()
+    def on_last_exit(self) -> None:
+        SoundController.stop(SoundCh.BACKGROUND)
 
     # endregion

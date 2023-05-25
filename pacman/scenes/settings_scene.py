@@ -8,6 +8,7 @@ from pacman.data_core.enums import DifficultEnum
 from pacman.misc import is_esc_pressed
 from pacman.objects import Btn, BtnController, Text
 from pacman.objects.buttons import BTN_GREEN_COLORS, BTN_RED_COLORS, BoolBtn
+from pacman.sound import SoundController
 from pacman.storage import SettingsStorage
 
 from .base import BaseScene, SceneManager
@@ -40,6 +41,7 @@ class SettingsScene(BaseScene):
     @staticmethod
     def __update_mute():
         SettingsStorage().MUTE = not SettingsStorage().MUTE
+        SoundController.update_volume()
 
     @staticmethod
     def __get_difficulty_text() -> str:
@@ -90,6 +92,7 @@ class SettingsScene(BaseScene):
 
     def click_sound(self, step):
         SettingsStorage().set_volume(SettingsStorage().volume + step)
+        SoundController.update_volume()
         self.__volume_text.text = f"{SettingsStorage().volume}%"
         self.__volume_text.move_center(Cfg.RESOLUTION.h_width, self.__volume_pos_y)
 

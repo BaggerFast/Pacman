@@ -4,12 +4,12 @@ from pygame import Rect, Surface
 from pygame.event import Event
 
 from pacman.data_core import Cfg, Colors, EvenType, FontCfg, event_append
+from pacman.data_core.data_classes import Cheat
 from pacman.misc import ImgObj, is_esc_pressed, rand_color
 from pacman.objects import CheatController, MapViewLoader, Text
 from pacman.objects.buttons import Btn, BtnController
 from pacman.storage import LevelStorage, SkinStorage
 
-from ..data_core.data_classes import Cheat
 from .base import BaseScene, SceneManager
 
 

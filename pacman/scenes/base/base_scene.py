@@ -45,4 +45,10 @@ class BaseScene(ABC):
     def on_exit(self) -> None:
         pass
 
+    def on_first_enter(self) -> None:
+        pass
+
+    def on_last_exit(self) -> None:
+        pass
+
     # endregion

@@ -16,9 +16,13 @@ class SceneManager(Singleton):
         except IndexError:
             raise Exception("List of scenes is empty")
 
-    def exit_scene(self) -> None:
+    def on_exit_scene(self) -> None:
         if self.scenes:
             self.current.on_exit()
+
+    def on_last_exit_scene(self) -> None:
+        if self.scenes:
+            self.current.on_last_exit()
 
     def process_logic(self) -> None:
         self.current.process_logic()
@@ -30,18 +34,19 @@ class SceneManager(Singleton):
         return self.current.draw()
 
     def append(self, scene: BaseScene) -> None:
-        self.exit_scene()
+        self.on_exit_scene()
         scene.setup()
-        scene.on_enter()
+        scene.on_first_enter()
         self.scenes.append(scene)
 
     def pop(self) -> BaseScene:
-        self.exit_scene()
+        self.on_last_exit_scene()
         pop_scene = self.scenes.pop()
         self.current.on_enter()
         return pop_scene
 
     def reset(self, scene: BaseScene) -> None:
-        self.exit_scene()
+        self.on_last_exit_scene()
         scene.setup()
+        scene.on_first_enter()
         self.scenes = [scene]

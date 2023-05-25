@@ -4,10 +4,11 @@ from pygame import Rect, Surface
 from pygame.event import Event
 
 from pacman.data_core import Cfg, EvenType, FontCfg, event_append
+from pacman.data_core.enums import SoundCh
 from pacman.misc import is_esc_pressed
 from pacman.objects import Text
 from pacman.objects.buttons import Btn, BtnController
-from pacman.sound import SoundController
+from pacman.sound import SoundController, Sounds
 from pacman.storage import LevelStorage
 
 from .base import BlurScene, SceneManager
@@ -71,11 +72,11 @@ class WinScene(BlurScene):
 
             SceneManager().reset(MenuScene())
 
-    def on_enter(self) -> None:
-        SoundController().WIN.play()
+    def on_first_enter(self) -> None:
+        SoundController.reset_play(SoundCh.BACKGROUND, Sounds.WIN)
 
-    def on_exit(self) -> None:
+    def on_last_exit(self) -> None:
         event_append(EvenType.SET_SETTINGS)
-        SoundController().WIN.stop()
+        SoundController.stop(SoundCh.BACKGROUND)
 
     # endregion

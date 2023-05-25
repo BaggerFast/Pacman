@@ -7,10 +7,10 @@ from pygame.event import Event
 from pacman.animator import Animator, SpriteSheetAnimator, advanced_sprite_slice, sprite_slice
 from pacman.data_core import EvenType, IEventful
 from pacman.data_core.data_classes import GhostDifficult
-from pacman.data_core.enums import GhostStateEnum
+from pacman.data_core.enums import GhostStateEnum, SoundCh
 from pacman.misc import CellUtil
 from pacman.objects import Text
-from pacman.sound import SoundController
+from pacman.sound import SoundController, Sounds
 
 from ..character_base import Character
 
@@ -203,8 +203,7 @@ class Base(Character, IEventful):
     def toggle_to_hidden(self, score: int):
         self.gg_text.text = f"{score}"
         self.update_ai_timer()
-        if self.state is not GhostStateEnum.HIDDEN:
-            SoundController().GHOST.play()
+        SoundController.reset_play(SoundCh.PLAYER, Sounds.GHOST)
         self.state = GhostStateEnum.HIDDEN
         self.animator = self.eatten_anim
 

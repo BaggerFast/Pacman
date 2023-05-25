@@ -2,7 +2,6 @@ import pygame as pg
 
 from pacman.data_core import EvenType, IEventful
 from pacman.misc import CellUtil
-from pacman.sound import SoundController
 from pacman.storage import SkinStorage
 
 from .character_base import Character
@@ -47,9 +46,6 @@ class Pacman(Character, IEventful):
     def death(self) -> None:
         self.__ai_timer = pg.time.get_ticks()
         self.animator = self.__dead_anim
-        SoundController().BACK.pause()
-        SoundController().FRIGHTENED.stop()
-        SoundController().DEATH.play()
         self.animator.start()
         self.is_dead = True
 

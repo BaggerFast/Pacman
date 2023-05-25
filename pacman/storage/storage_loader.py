@@ -22,7 +22,7 @@ class StorageLoader(IEventful):
 
     def from_file(self) -> None:
         if self.__cheat_on:
-            event_append(EvenType.UNLOCK_SAVES)
+            return
         try:
             with open(self.__path, "r") as f:
                 MainStorage().deserialize(load(f))
@@ -31,6 +31,8 @@ class StorageLoader(IEventful):
             self.to_file()
 
     def event_handler(self, event: Event):
+        if self.__cheat_on:
+            return
         if event.type == EvenType.UNLOCK_SAVES:
             self.__handle_unlock_saves_event(event)
         elif event.type == EvenType.SET_SETTINGS:
