@@ -6,21 +6,23 @@ from pacman.misc import GameObjects
 from pacman.objects import KbEvent
 from pacman.scenes import SceneManager
 from pacman.scenes.menu_scene import MenuScene
-from pacman.sound import Sounds
+from pacman.sound import SoundController, Sounds
 from pacman.storage import StorageLoader
 
 
 class Game:
     def __init__(self) -> None:
-        self.objects = GameObjects()
+        self.__objects = GameObjects()
 
         self.__screen = display.set_mode(tuple(Cfg.RESOLUTION), SCALED)
         self.__clock = time.Clock()
 
-        self.storage_loader = StorageLoader(PathUtl.get("storage.json"))
-        self.storage_loader.from_file()
+        self.__storage_loader = StorageLoader(PathUtl.get("storage.json"))
 
-        self.objects += [self.storage_loader, KbEvent()]
+        self.__storage_loader.from_file()
+        SoundController.update_volume()
+
+        self.__objects += [self.__storage_loader, KbEvent()]
 
         SceneManager().reset(MenuScene())
 
@@ -35,7 +37,7 @@ class Game:
             self.exit_game()
 
     def exit_game(self) -> None:
-        self.storage_loader.to_file()
+        self.__storage_loader.to_file()
         print("Bye bye")
         exit()
 
@@ -45,7 +47,7 @@ class Game:
 
     def __process_all_events(self) -> None:
         for e in event.get():
-            self.objects.event_handler(e)
+            self.__objects.event_handler(e)
             Sounds.event_handler(e)
             SceneManager().current.process_event(e)
             self.__process_exit_events(e)

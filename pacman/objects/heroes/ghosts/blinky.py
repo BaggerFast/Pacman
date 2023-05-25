@@ -31,7 +31,7 @@ class Blinky(Base):
 
     def generate_difficulty_settings(self):
         return (
-            GhostDifficult(8000, 20000, 7000),
-            GhostDifficult(4000, 40000, 5000),
-            GhostDifficult(2000, 80000, 3000),
+            GhostDifficult(8000, 20000, 6000),
+            GhostDifficult(4000, 40000, 3000),
+            GhostDifficult(2000, 80000, 1500),
         )[SettingsStorage().DIFFICULTY]

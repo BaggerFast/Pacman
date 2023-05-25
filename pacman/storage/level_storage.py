@@ -34,16 +34,16 @@ class LevelStorage(SerDes):
         if len(self.__unlocked) < self.__level_count:
             self.__unlocked.append([0])
 
-    def set_next_level(self):
+    def set_next_level(self) -> None:
         self.current = self.current + 1
 
-    def set_prev_level(self):
+    def set_prev_level(self) -> None:
         self.current = self.current - 1
 
-    def current_highscores(self):
+    def current_highscores(self) -> list[int]:
         if self.__current > len(self.__unlocked) - 1:
             return []
-        self.__unlocked[self.__current] = sorted(self.__unlocked[self.__current], reverse=True)[0:5]
+        self.__unlocked[self.__current] = sorted(set(self.__unlocked[self.__current]), reverse=True)[0:5]
         return self.__unlocked[self.__current]
 
     def get_highscore(self) -> int:
@@ -54,11 +54,11 @@ class LevelStorage(SerDes):
             return 0
         return highscore[0]
 
-    def add_record(self, score: int):
+    def add_record(self, score: int) -> None:
         if self.__current > len(self.__unlocked) - 1:
             return
         self.__unlocked[self.__current].append(int(score))
-        self.__unlocked[self.__current] = self.current_highscores()
+        self.current_highscores()
 
     def is_last_level(self) -> bool:
         return LevelStorage().current + 1 >= self.__level_count

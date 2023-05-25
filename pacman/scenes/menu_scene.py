@@ -34,7 +34,7 @@ class MenuScene(BaseScene):
         yield Text("PACMAN", 36, font=FontCfg.TITLE).move_center(Cfg.RESOLUTION.h_width, 30)
         yield self.__level_text
         yield BtnController(self.__get_buttons())
-        yield CheatController([Cheat("global", lambda: event_append(EvenType.UNLOCK_SAVES))])
+        yield CheatController([Cheat("pycman", lambda: event_append(EvenType.UNLOCK_SAVES))])
 
     def __play_game(self) -> None:
         from pacman.scenes.main_scene import MainScene

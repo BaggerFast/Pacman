@@ -3,11 +3,11 @@ from typing import Generator
 from pygame import Rect, Surface
 
 from pacman.data_core import Cfg, EvenType, FontCfg, event_append
+from pacman.data_core.enums import SoundCh
 from pacman.objects import Btn, BtnController, Text
 from pacman.sound import SoundController, Sounds
 from pacman.storage import LevelStorage
 
-from ..data_core.enums import SoundCh
 from .base import BlurScene, SceneManager
 
 

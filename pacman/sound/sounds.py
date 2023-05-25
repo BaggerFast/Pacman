@@ -50,9 +50,8 @@ class Sounds:
             cls.WIN = load_sound(PtxUtl.stalker("win"))
 
     @classmethod
-    def __reload_sound(cls, with_default: bool = True):
-        if with_default:
-            cls.__set_default()
+    def __reload_sound(cls):
+        cls.__set_default()
         cls.update_random_sounds()
         if SettingsStorage().fun:
             return

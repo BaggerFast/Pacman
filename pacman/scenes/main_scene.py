@@ -25,15 +25,16 @@ class MainScene(BaseScene):
             GameStateEnum.INTRO: self.__intro_logic,
             GameStateEnum.ACTION: self.__game_logic,
         }
+        self.__state = GameStateEnum.INTRO
 
         self.__anim_step = 125
+        self._anim_timer = time.get_ticks() / 1000
 
         hp_value = len(DifficultEnum) - SettingsStorage().DIFFICULTY
 
         self.hp = HpSystem(hp_value, 4)
 
         self.__score = ScoreSystem()
-        self.__state = GameStateEnum.INTRO
 
         self.__loader = LevelLoader(PathUtl.get_asset(f"maps/{LevelStorage().current}.json"))
 
@@ -90,8 +91,8 @@ class MainScene(BaseScene):
         return CheatController(
             [
                 Cheat("aezakmi", self.hp.add),
-                Cheat("win", lambda: SceneManager().reset(WinScene(self._screen, int(self.__score)))),
-                Cheat("lose", lambda: SceneManager().reset(LoseScene(self._screen, int(self.__score)))),
+                Cheat("god", lambda: SceneManager().reset(WinScene(self._screen, int(self.__score)))),
+                Cheat("kill", lambda: SceneManager().reset(LoseScene(self._screen, int(self.__score)))),
             ]
         )
 
@@ -104,7 +105,7 @@ class MainScene(BaseScene):
                     Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height
                 )
             )
-            return text
+        return text
 
     def __create_heroes(self) -> None:
         self.pacman = Pacman(self.__loader)
@@ -128,11 +129,12 @@ class MainScene(BaseScene):
 
     def __start_label(self) -> None:
         current_time = time.get_ticks() / 1000
-        if time.get_ticks() - self._start_time > self.__anim_step:
+        if time.get_ticks() - self._anim_timer > self.__anim_step:
             self.__state_text = not self.__state_text
-            self._start_time = time.get_ticks()
+            self._anim_timer = time.get_ticks()
         text_alpha = 255 if self.__state_text else 0
-        if current_time - self._start_time > Sounds.INTRO.get_length() / 4 * 3:
+        if current_time - self._start_time > Sounds.INTRO.get_length() * 0.75:
+            self._start_time = time.get_ticks()
             if len(self.__into_text) > 1:
                 del self.__into_text[0]
         self.__into_text[0].set_alpha(text_alpha)

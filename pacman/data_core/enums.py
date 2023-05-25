@@ -44,9 +44,9 @@ class GameStateEnum(Enum):
 
 
 class DifficultEnum(Enum):
-    EASY = 0
-    MEDIUM = auto()
-    HARD = auto()
+    CHILD = 0
+    NORMAL = auto()
+    HARDCORE = auto()
 
 
 class RotateEnum(Enum):

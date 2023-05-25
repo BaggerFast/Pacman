@@ -7,21 +7,21 @@ from .base_scene import BaseScene
 
 class SceneManager(Singleton):
     def __init__(self):
-        self.scenes: list[BaseScene] = []
+        self.__scenes: list[BaseScene] = []
 
     @property
     def current(self) -> BaseScene:
         try:
-            return self.scenes[-1]
+            return self.__scenes[-1]
         except IndexError:
             raise Exception("List of scenes is empty")
 
     def on_exit_scene(self) -> None:
-        if self.scenes:
+        if self.__scenes:
             self.current.on_exit()
 
     def on_last_exit_scene(self) -> None:
-        if self.scenes:
+        if self.__scenes:
             self.current.on_last_exit()
 
     def process_logic(self) -> None:
@@ -37,16 +37,17 @@ class SceneManager(Singleton):
         self.on_exit_scene()
         scene.setup()
         scene.on_first_enter()
-        self.scenes.append(scene)
+        self.__scenes.append(scene)
 
     def pop(self) -> BaseScene:
         self.on_last_exit_scene()
-        pop_scene = self.scenes.pop()
+        pop_scene = self.__scenes.pop()
         self.current.on_enter()
         return pop_scene
 
     def reset(self, scene: BaseScene) -> None:
-        self.on_last_exit_scene()
+        for s in self.__scenes:
+            s.on_last_exit()
         scene.setup()
         scene.on_first_enter()
-        self.scenes = [scene]
+        self.__scenes = [scene]
