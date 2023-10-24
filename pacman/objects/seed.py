@@ -1,6 +1,6 @@
 from math import floor
 
-from pygame import Rect, Surface, draw, time
+from pygame import Rect, Surface, draw, time, SRCALPHA
 
 from pacman.data_core import Colors, IDrawable
 from pacman.data_core.data_classes import Cell
@@ -17,10 +17,13 @@ class SeedContainer(IDrawable):
         self.__seeds: list[list[bool]] = self.prepare_seeds(seed_data)
         self.__energizers = self.prepare_energizers(energizer_data)
 
+        self.__buffer = Surface((len(self.__seeds[0]) * 8, len(self.__seeds) * 8 + 20), SRCALPHA)
+
         self.__ram_img = ImgObj("other/ram")
         self.__yandex_img = ImgObj("other/yandex")
 
         self.__show_energizer = True
+        self.__seeds_counts = sum(sum(i) for i in self.__seeds)
         self.__max_seeds = len(self.__seeds)
 
     @staticmethod
@@ -62,8 +65,11 @@ class SeedContainer(IDrawable):
         for energizer in self.__energizers:
             draw.circle(screen, Colors.WHITE, energizer.rect.center, 4)
 
+    def create_buffer(self):
+        self.__draw_seeds(self.__buffer)
+
     def draw(self, screen: Surface) -> None:
-        self.__draw_seeds(screen)
+        screen.blit(self.__buffer, (0, 0))
         self.__draw_energizers(screen)
 
     def seed_collision(self, rect: Rect) -> bool:
@@ -72,6 +78,8 @@ class SeedContainer(IDrawable):
         cell = Cell(floor(rect.centerx / 8), floor((rect.centery - 20) / 8))
         if self.__seeds[cell.y][cell.x] and cell.rect.center == rect.center:
             self.__seeds[cell.y][cell.x] = False
+            draw.rect(self.__buffer, (0,0,0,0), cell)
+            self.__seeds_counts -= 1
             return True
         return False
 
@@ -83,7 +91,7 @@ class SeedContainer(IDrawable):
         return False
 
     def is_field_empty(self) -> bool:
-        return len(self.__seeds) == 0
+        return self.__seeds_counts==0
 
     def __len__(self):
         return len(self.__seeds)

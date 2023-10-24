@@ -50,6 +50,8 @@ class MainScene(BaseScene):
 
         self.__create_heroes()
 
+        self.__seeds.create_buffer()
+
         self.__update_score_text()
 
     # region Private
