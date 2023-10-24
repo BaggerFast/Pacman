@@ -1,6 +1,6 @@
 from math import floor
 
-from pygame import Rect, Surface, draw, time, SRCALPHA
+from pygame import SRCALPHA, Rect, Surface, draw, time
 
 from pacman.data_core import Colors, IDrawable
 from pacman.data_core.data_classes import Cell
@@ -78,7 +78,7 @@ class SeedContainer(IDrawable):
         cell = Cell(floor(rect.centerx / 8), floor((rect.centery - 20) / 8))
         if self.__seeds[cell.y][cell.x] and cell.rect.center == rect.center:
             self.__seeds[cell.y][cell.x] = False
-            draw.rect(self.__buffer, (0,0,0,0), cell)
+            draw.rect(self.__buffer, (0, 0, 0, 0), cell)
             self.__seeds_counts -= 1
             return True
         return False
@@ -91,7 +91,7 @@ class SeedContainer(IDrawable):
         return False
 
     def is_field_empty(self) -> bool:
-        return self.__seeds_counts==0
+        return self.__seeds_counts == 0
 
     def __len__(self):
         return len(self.__seeds)
