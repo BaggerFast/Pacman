@@ -41,12 +41,23 @@ class RecordsScene(BaseScene):
 
     def __get_medals(self) -> Generator:
         medals_sprite = sprite_slice("other/medals", (16, 16))
-        text_colors = [Colors.GOLD, Colors.SILVER, Colors.BRONZE, Colors.WHITE, Colors.WHITE]
+        text_colors = [
+            Colors.GOLD,
+            Colors.SILVER,
+            Colors.BRONZE,
+            Colors.WHITE,
+            Colors.WHITE,
+        ]
 
         for i in range(len(self.__highscores)):
             if i > len(medals_sprite) and i > len(text_colors):
                 return
-            yield Text(f"{self.__highscores[i]}", 25, Rect(60, 75 + 35 * i, 0, 0), text_colors[i])
+            yield Text(
+                f"{self.__highscores[i]}",
+                25,
+                Rect(60, 75 + 35 * i, 0, 0),
+                text_colors[i],
+            )
             yield ImgObj(medals_sprite[i], (16, 75 + 35 * i)).scale(30, 30)
 
     # endregion

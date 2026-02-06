@@ -24,7 +24,10 @@ class MenuScene(BaseScene):
         self.__pacman_preview = (
             ImgObj(self.__pacman_anim.current_image)
             .scale(75, 75)
-            .move_center(Cfg.RESOLUTION.h_width + Cfg.RESOLUTION.h_width // 2, Cfg.RESOLUTION.h_height)
+            .move_center(
+                Cfg.RESOLUTION.h_width + Cfg.RESOLUTION.h_width // 2,
+                Cfg.RESOLUTION.h_height,
+            )
         )
 
     # region Private

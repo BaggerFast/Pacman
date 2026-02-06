@@ -4,7 +4,12 @@ from random import choice, randrange
 from pygame import Rect, Surface, time
 from pygame.event import Event
 
-from pacman.animator import Animator, SpriteSheetAnimator, advanced_sprite_slice, sprite_slice
+from pacman.animator import (
+    Animator,
+    SpriteSheetAnimator,
+    advanced_sprite_slice,
+    sprite_slice,
+)
 from pacman.data_core import EvenType, IEventful
 from pacman.data_core.data_classes import GhostDifficult
 from pacman.data_core.enums import GhostStateEnum, SoundCh
@@ -32,7 +37,11 @@ class Base(Character, IEventful):
     love_point_in_scatter_mode = (0, 0)
     seed_percent_in_home = 0
     direction2 = {0: (1, 0, 0), 1: (0, 1, 1), 2: (-1, 0, 2), 3: (0, -1, 3)}
-    PEACEFULL_STATES = (GhostStateEnum.EATEN, GhostStateEnum.HIDDEN, GhostStateEnum.INDOOR)
+    PEACEFULL_STATES = (
+        GhostStateEnum.EATEN,
+        GhostStateEnum.HIDDEN,
+        GhostStateEnum.INDOOR,
+    )
 
     def __init__(self, loader, seed_count):
         self.__seed_count = seed_count

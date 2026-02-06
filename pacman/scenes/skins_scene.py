@@ -39,7 +39,10 @@ class SkinsScene(BaseScene):
 
     @staticmethod
     def __get_skin_preview(skin: SkinEnum) -> ImgObj:
-        pos = Cfg.RESOLUTION.h_width + Cfg.RESOLUTION.h_width // 2, Cfg.RESOLUTION.h_height
+        pos = (
+            Cfg.RESOLUTION.h_width + Cfg.RESOLUTION.h_width // 2,
+            Cfg.RESOLUTION.h_height,
+        )
         return skin.value.preview.scale(80, 80).move_center(*pos)
 
     def __get_fruit_bar(self) -> Generator:
@@ -77,7 +80,10 @@ class SkinsScene(BaseScene):
                     select_function=lambda s=skin: self.__set_preview(s),
                     text_size=FontCfg.BUTTON_FOR_SKINS_TEXT_SIZE,
                     colors=colors,
-                ).move_center(self.__button_pos_x, self.__button_pos_y + i * self.__button_pos_multiply_y)
+                ).move_center(
+                    self.__button_pos_x,
+                    self.__button_pos_y + i * self.__button_pos_multiply_y,
+                )
             )
             if skin is SkinStorage().current:
                 btn_active_index = len(buttons) - 1

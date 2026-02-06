@@ -2,7 +2,12 @@ from copy import copy
 
 from pygame import Surface
 
-from pacman.animator import Animator, SpriteSheetAnimator, advanced_sprite_slice, sprite_slice
+from pacman.animator import (
+    Animator,
+    SpriteSheetAnimator,
+    advanced_sprite_slice,
+    sprite_slice,
+)
 from pacman.misc import ImgObj, load_image
 
 

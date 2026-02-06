@@ -26,7 +26,12 @@ class Map(IDrawable):
         return srf
 
     def __load_surface(self) -> Surface:
-        surface = Surface((len(self._map_data[0]) * Cfg.TILE_SIZE, len(self._map_data) * Cfg.TILE_SIZE))
+        surface = Surface(
+            (
+                len(self._map_data[0]) * Cfg.TILE_SIZE,
+                len(self._map_data) * Cfg.TILE_SIZE,
+            )
+        )
         for y, row in enumerate(self._map_data):
             for x, tile in enumerate(row):
                 surface.blit(self._tiles[tile - 1], (x * Cfg.TILE_SIZE, y * Cfg.TILE_SIZE))

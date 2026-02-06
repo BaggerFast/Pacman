@@ -1,6 +1,14 @@
 from typing import Callable, List, Tuple, Union
 
-from pygame import BUTTON_LEFT, MOUSEBUTTONDOWN, MOUSEBUTTONUP, MOUSEMOTION, Rect, Surface, draw
+from pygame import (
+    BUTTON_LEFT,
+    MOUSEBUTTONDOWN,
+    MOUSEBUTTONUP,
+    MOUSEMOTION,
+    Rect,
+    Surface,
+    draw,
+)
 from pygame.event import Event
 from pygame.font import Font
 

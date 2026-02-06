@@ -6,8 +6,26 @@ from pygame.event import Event
 from pacman.data_core import Cfg, EvenType, FontCfg, PathUtl, event_append
 from pacman.data_core.data_classes import Cheat
 from pacman.data_core.enums import DifficultEnum, GameStateEnum, GhostStateEnum, SoundCh
-from pacman.misc import HpSystem, ImgObj, LevelLoader, ScoreSystem, is_esc_pressed, rand_color
-from pacman.objects import Blinky, CheatController, Clyde, Fruit, Inky, Map, Pacman, Pinky, SeedContainer, Text
+from pacman.misc import (
+    HpSystem,
+    ImgObj,
+    LevelLoader,
+    ScoreSystem,
+    is_esc_pressed,
+    rand_color,
+)
+from pacman.objects import (
+    Blinky,
+    CheatController,
+    Clyde,
+    Fruit,
+    Inky,
+    Map,
+    Pacman,
+    Pinky,
+    SeedContainer,
+    Text,
+)
 from pacman.skin import SkinEnum
 from pacman.sound import SoundController, Sounds
 from pacman.storage import LevelStorage, SettingsStorage, SkinStorage
@@ -64,7 +82,9 @@ class MainScene(BaseScene):
         yield Map(self.__loader.map, self._map_color)
 
         yield Text(
-            "MEMORY" if SkinStorage().equals(SkinEnum.CHROME) else "SCORE", FontCfg.MAIN_SCENE_SIZE, Rect(10, 0, 20, 20)
+            "MEMORY" if SkinStorage().equals(SkinEnum.CHROME) else "SCORE",
+            FontCfg.MAIN_SCENE_SIZE,
+            Rect(10, 0, 20, 20),
         )
 
         yield Text(
@@ -72,7 +92,11 @@ class MainScene(BaseScene):
             FontCfg.MAIN_SCENE_SIZE,
             Rect(130, 0, 20, 20),
         )
-        yield Text(f"{LevelStorage().get_highscore()}", FontCfg.MAIN_SCENE_SIZE, Rect(130, 8, 20, 20))
+        yield Text(
+            f"{LevelStorage().get_highscore()}",
+            FontCfg.MAIN_SCENE_SIZE,
+            Rect(130, 8, 20, 20),
+        )
         yield self.__scores_value_text
 
         yield self.__seeds
@@ -93,8 +117,14 @@ class MainScene(BaseScene):
         return CheatController(
             [
                 Cheat("aezakmi", self.hp.add),
-                Cheat("god", lambda: SceneManager().reset(WinScene(self._screen, int(self.__score)))),
-                Cheat("kill", lambda: SceneManager().reset(LoseScene(self._screen, int(self.__score)))),
+                Cheat(
+                    "god",
+                    lambda: SceneManager().reset(WinScene(self._screen, int(self.__score))),
+                ),
+                Cheat(
+                    "kill",
+                    lambda: SceneManager().reset(LoseScene(self._screen, int(self.__score))),
+                ),
             ]
         )
 

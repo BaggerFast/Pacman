@@ -8,7 +8,12 @@ from .character_base import Character
 
 
 class Pacman(Character, IEventful):
-    action = {EvenType.UP_BTN: "up", EvenType.LEFT_BTN: "left", EvenType.DONW_BTN: "down", EvenType.RIGHT_BTN: "right"}
+    action = {
+        EvenType.UP_BTN: "up",
+        EvenType.LEFT_BTN: "left",
+        EvenType.DONW_BTN: "down",
+        EvenType.RIGHT_BTN: "right",
+    }
 
     def __init__(self, loader) -> None:
         skin_instanse = SkinStorage().current_instance

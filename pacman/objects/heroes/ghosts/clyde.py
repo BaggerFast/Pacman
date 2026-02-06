@@ -43,6 +43,8 @@ class Clyde(Base):
                 self.state = GhostStateEnum.CHASE
 
     def generate_difficulty_settings(self) -> GhostDifficult:
-        return (GhostDifficult(8000, 20000, 0), GhostDifficult(4000, 40000, 0), GhostDifficult(2000, 80000, 0))[
-            SettingsStorage().DIFFICULTY
-        ]
+        return (
+            GhostDifficult(8000, 20000, 0),
+            GhostDifficult(4000, 40000, 0),
+            GhostDifficult(2000, 80000, 0),
+        )[SettingsStorage().DIFFICULTY]

@@ -6,7 +6,14 @@ from pacman.misc import RectObj
 
 
 class Text(RectObj, IDrawable):
-    def __init__(self, text: str, size: int, rect: Rect = Rect(0, 0, 0, 0), color=Colors.WHITE, font=FontCfg.DEFAULT):
+    def __init__(
+        self,
+        text: str,
+        size: int,
+        rect: Rect = Rect(0, 0, 0, 0),
+        color=Colors.WHITE,
+        font=FontCfg.DEFAULT,
+    ):
         super().__init__(rect)
         self.__text = ""
         self.__color = color
