@@ -1,4 +1,4 @@
-from typing import Callable, List, Tuple, Union
+from typing import Optional, Callable, List, Tuple, Union
 
 from pygame import (
     BUTTON_LEFT,
@@ -25,8 +25,8 @@ class Btn(RectObj, IDrawable, IEventful):
         self,
         text: str,
         rect: Rect,
-        function: Callable = None,
-        select_function: Callable = None,
+        function: Optional[Callable] = None,
+        select_function: Optional[Callable] = None,
         colors: BtnColor = BTN_DEF_COLORS,
         text_size: int = 60,
         font: str = FontCfg.DEFAULT,

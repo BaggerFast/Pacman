@@ -1,6 +1,6 @@
 from typing import Generator
 
-from pygame import Rect
+from pygame import Rect, Surface
 from pygame.event import Event
 
 from pacman.animator import sprite_slice
@@ -64,7 +64,7 @@ class RecordsScene(BaseScene):
 
     # region Public
 
-    def draw(self) -> None:
+    def draw(self) -> Surface:
         super().draw()
         if not len(self.__highscores):
             self.__error_text.draw(self._screen)

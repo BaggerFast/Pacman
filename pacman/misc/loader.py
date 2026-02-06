@@ -1,9 +1,10 @@
 import json
 import os
+from typing import Any
 
 
 class SeedLoader:
-    def __init__(self, data: json) -> None:
+    def __init__(self, data: dict[str, Any]) -> None:
         self.__json = data
         self.__seeds = []
         self.__prepare_seeds()
@@ -88,6 +89,6 @@ class LevelLoader:
         return self.__json["rects"]["slow_zone"]
 
     @staticmethod
-    def __load_map_json(file_name) -> json:
+    def __load_map_json(file_name) -> dict[str, Any]:
         with open(os.path.join("maps", file_name)) as f:
             return json.load(f)

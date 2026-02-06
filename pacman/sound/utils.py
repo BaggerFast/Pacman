@@ -5,7 +5,7 @@ from secrets import choice
 from pacman.data_core import Dirs, PathUtl
 
 
-class PtxUtl(ABC):
+class SoundUtil(ABC):
     @staticmethod
     def norm(path: str) -> str:
         return f"default/{path}"

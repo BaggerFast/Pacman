@@ -33,7 +33,7 @@ class Fruit(RectObj, IDrawable, ILogical):
         self.change_state(FruitStateEnum.EATEN)
 
     def process_collision(self, rect: Rect) -> bool:
-        return self.state == FruitStateEnum.ACTIVE and self.rect.center == rect.center and self.__fruit_sprite
+        return bool(self.state == FruitStateEnum.ACTIVE and self.rect.center == rect.center and self.__fruit_sprite)
 
     def update(self):
         if self.state is FruitStateEnum.DISABLED and time.get_ticks() - self.timer >= 9000:

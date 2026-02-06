@@ -68,7 +68,7 @@ class MenuScene(BaseScene):
                     text=name,
                     function=fn,
                     text_size=FontCfg.BUTTON_TEXT_SIZE,
-                ).move_center(Cfg.RESOLUTION.h_width // 1.5, 92 + i * 28)
+                ).move_center(int(Cfg.RESOLUTION.h_width // 1.5), 92 + i * 28)
             )
         return buttons
 

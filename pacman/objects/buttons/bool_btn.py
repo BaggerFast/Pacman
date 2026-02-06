@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Optional, Callable
 
 from pygame import Rect
 
@@ -16,8 +16,8 @@ class BoolBtn(Btn):
         state: bool,
         color_true: BtnColor,
         color_false: BtnColor,
-        function: Callable = None,
-        select_function: Callable = None,
+        function: Optional[Callable] = None,
+        select_function: Optional[Callable] = None,
         text_size: int = 60,
         font: str = FontCfg.DEFAULT,
     ):

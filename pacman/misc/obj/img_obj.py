@@ -1,4 +1,4 @@
-from typing import Tuple, Union
+from typing import Optional, Tuple, Union
 
 from PIL import Image, ImageFilter
 from pygame import Rect, Surface
@@ -12,7 +12,7 @@ from .rect_obj import RectObj
 
 
 class ImgObj(RectObj, IDrawable):
-    def __init__(self, image: Union[str, Surface] = None, pos: Tuple[int, int] = (0, 0)) -> None:
+    def __init__(self, image: Optional[Union[str, Surface]] = None, pos: Tuple[int, int] = (0, 0)) -> None:
         if isinstance(image, str):
             self.image = load_image(image).convert_alpha()
         elif isinstance(image, Surface):
@@ -54,9 +54,6 @@ class ImgObj(RectObj, IDrawable):
         self.rect = self.image.get_rect()
         self.rect.topleft = topleft
         return self
-
-    def rect(self) -> Rect:
-        return self.image.get_rect()
 
     def draw(self, screen: Surface) -> None:
         screen.blit(self.image, self.rect)

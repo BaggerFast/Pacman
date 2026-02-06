@@ -56,7 +56,7 @@ class LevelsScene(BaseScene):
             )
         ]
 
-    def __get_level_preview(self, level_id: id) -> ImgObj:
+    def __get_level_preview(self, level_id: int) -> ImgObj:
         map_preview = self.__map_view_loader.get_view(level_id).prerender()
         scale = Cfg.RESOLUTION.WIDTH * 0.6, Cfg.RESOLUTION.HEIGHT * 0.6
         return map_preview.smoothscale(*scale).move_center(Cfg.RESOLUTION.h_width, Cfg.RESOLUTION.h_height)

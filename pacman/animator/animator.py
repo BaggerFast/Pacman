@@ -4,7 +4,7 @@ from pacman.data_core import ILogical
 
 
 class Animator(ILogical):
-    def __init__(self, images: tuple[Surface], time_step: int = 125, endless: bool = True):
+    def __init__(self, images: list[Surface], time_step: int = 125, endless: bool = True):
         self.__time_step = time_step
         self.__animate_timer = 0
         self.__endless = endless
